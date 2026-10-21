@@ -5,6 +5,8 @@
     <string name="alarm_once">Una vez</string>
     <string name="alarm_every_day">Todos los días</string>
     <string name="home_empty">No hay alarmas todavía</string>
+    <string name="home_empty_hint">Crea una alarma para empezar.</string>
+    <string name="home_add_alarm">Nueva alarma</string>
     <string name="permission_notifications_missing">Las notificaciones están desactivadas: la alarma podría no mostrarse.</string>
     <string name="permission_exact_missing">Falta el permiso de alarmas exactas: las alarmas no sonarán a su hora.</string>
     <string name="permission_grant">Conceder</string>
@@ -12,4 +14,15 @@
     <string name="editor_title">Nueva alarma</string>
     <string name="editor_placeholder">El editor de alarmas llegará pronto</string>
     <string name="back">Atrás</string>
+
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_section_appearance">Apariencia</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Sistema</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Oscuro</string>
+    <string name="settings_section_language">Idioma</string>
+    <string name="settings_language_system">Sistema</string>
+    <string name="settings_language_es">Español</string>
+    <string name="settings_language_en">English</string>
 </resources>
