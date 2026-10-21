@@ -1,0 +1,28 @@
+package app.luxion.apexapp.ui.navigation
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import app.luxion.apexapp.ui.editor.AlarmEditorScreen
+import app.luxion.apexapp.ui.home.HomeScreen
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object HomeRoute
+
+@Serializable
+data object AlarmEditorRoute
+
+@Composable
+fun AppNavigation() {
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = HomeRoute) {
+        composable<HomeRoute> {
+            HomeScreen(onAddAlarm = { navController.navigate(AlarmEditorRoute) })
+        }
+        composable<AlarmEditorRoute> {
+            AlarmEditorScreen(onBack = { navController.popBackStack() })
+        }
+    }
+}
