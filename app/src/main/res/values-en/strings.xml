@@ -121,4 +121,14 @@
     <string name="challenge_qr_wrong">That is not the registered code.</string>
     <string name="challenge_qr_rejected_screen">That looks like a screen. Scan the real object.</string>
     <string name="challenge_qr_rejected_static">That looks like a photo. Scan the real object.</string>
+    <string name="qr_register_required">Register a code for this alarm.</string>
+    <string name="qr_register_scanning">Point the camera at the code you want to use.</string>
+    <string name="qr_register_done">Code registered (%1$s).</string>
+    <string name="qr_register_action">Register code</string>
+    <string name="qr_register_replace">Replace code</string>
+    <string name="qr_register_placement_hint">Place the code away from your bed so you have to get up.</string>
+    <string name="qr_format_qr">QR</string>
+    <string name="qr_format_barcode">barcode</string>
+    <string name="steps_unavailable">This device has no step counter.</string>
+    <string name="steps_permission_rationale">To count your steps we need the physical activity permission.</string>
 </resources>

@@ -38,6 +38,8 @@ La app es Kotlin + Compose/M3 con Hilt, Room y navegación tipada. `minSdk` est�
 
 9. **Permisos pedidos en contexto.** `CAMERA` y `ACTIVITY_RECOGNITION` se solicitan al configurar el reto. Con la alarma sonando no se pueden pedir de forma fiable, por lo que el reto delega en la reserva del motor si faltan. `uses-feature` de cámara, acelerómetro y contador de pasos como `required="false"`. Se sube `minSdk` a 29 (aprobado).
 
+10. **Config sin código = no bloquear.** Si el reto QR llega sin código registrado (el editor debe impedirlo), `QrInstance` acepta cualquier escaneo en vivo verificado: la alarma nunca queda sin forma de apagarse. Los retos de movimiento y QR devuelven `ChallengeAnswer.MotionVerified` / `ScanVerified` tras su verificación local; el renderer avisa de fallos con `onUnavailable` y el motor aplica la reserva.
+
 ## Risks / Trade-offs
 
 - [Falsos positivos del anti foto-de-foto con poca luz o mano temblorosa] → umbrales ajustables como constantes únicas, probados con grabaciones; ante duda, pedir más tiempo de escaneo en lugar de rechazar.
