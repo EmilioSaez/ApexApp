@@ -60,6 +60,10 @@ fun AlarmEditorScreen(onBack: () -> Unit, viewModel: AlarmEditorViewModel = hilt
         onBack = onBack,
         onLabelChange = viewModel::setLabel,
         onToggleDay = viewModel::toggleDay,
+        saveEnabled = viewModel.canSave(state),
+        extraContent = {
+            viewModel.sections.forEach { it.Content(state.draft, viewModel::updateDraft) }
+        },
     )
 }
 
@@ -75,6 +79,7 @@ fun AlarmEditorContent(
     onBack: () -> Unit,
     onLabelChange: (String) -> Unit,
     onToggleDay: (DayOfWeek) -> Unit,
+    saveEnabled: Boolean = true,
     extraContent: @Composable ColumnScope.() -> Unit = {},
 ) {
     Scaffold(
@@ -131,6 +136,7 @@ fun AlarmEditorContent(
                 text = stringResource(R.string.editor_save),
                 onClick = { onSave(timeState.hour, timeState.minute) },
                 modifier = Modifier.fillMaxWidth(),
+                enabled = saveEnabled,
             )
         }
     }

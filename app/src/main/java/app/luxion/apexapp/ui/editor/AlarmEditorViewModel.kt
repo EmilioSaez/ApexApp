@@ -29,6 +29,8 @@ data class EditorUiState(
     val minute: Int = 0,
     val repeatDays: Set<DayOfWeek> = emptySet(),
     val label: String = "",
+    /** Alarma en edición con todos sus campos de extensión; las [EditorSection] la transforman. */
+    val draft: Alarm = Alarm(hour = DEFAULT_HOUR, minute = 0),
     val saved: SavedResult? = null,
 )
 
@@ -40,7 +42,11 @@ class AlarmEditorViewModel @Inject constructor(
     private val repository: AlarmRepository,
     private val controller: AlarmController,
     private val clock: Clock,
+    sections: Set<@JvmSuppressWildcards EditorSection> = emptySet(),
 ) : ViewModel() {
+    /** Secciones aportadas por otros módulos, en orden estable. */
+    val sections: List<EditorSection> = sections.sortedForEditor()
+
     /** `0` = alarma nueva. */
     private val alarmId: Long = savedStateHandle["alarmId"] ?: 0L
     private var original: Alarm? = null
@@ -62,10 +68,16 @@ class AlarmEditorViewModel @Inject constructor(
                     minute = alarm.minute,
                     repeatDays = alarm.repeatDays,
                     label = alarm.label.orEmpty(),
+                    draft = alarm,
                 )
             }
         }
     }
+
+    fun updateDraft(draft: Alarm) = _uiState.update { it.copy(draft = draft) }
+
+    /** Falso si alguna sección rechaza la alarma en edición. */
+    fun canSave(state: EditorUiState = _uiState.value): Boolean = sections.all { it.isValid(state.draft) }
 
     fun setLabel(label: String) = _uiState.update { it.copy(label = label) }
 
@@ -77,8 +89,8 @@ class AlarmEditorViewModel @Inject constructor(
     fun save(hour: Int, minute: Int) {
         val state = _uiState.value
         viewModelScope.launch {
-            val base = original ?: Alarm(hour = hour, minute = minute)
-            val alarm = base.copy(
+            if (!canSave(state)) return@launch
+            val alarm = state.draft.copy(
                 hour = hour,
                 minute = minute,
                 repeatDays = state.repeatDays,

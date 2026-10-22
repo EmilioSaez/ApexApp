@@ -78,4 +78,23 @@
     <string name="guide_steps_vivo">1. Allow auto-start for ApexApp.\n2. Under Battery, allow background power use.\n3. Add ApexApp to the allowed high-consumption apps.</string>
     <string name="guide_steps_samsung">1. Under Battery, open Background usage limits.\n2. Remove ApexApp from sleeping apps and add it to never sleeping apps.</string>
     <string name="guide_steps_oneplus">1. Allow auto-start for ApexApp.\n2. Under Battery, choose Dont optimize for ApexApp.\n3. Lock the app in Recents.</string>
+
+    <string name="challenge_test_action">Challenges</string>
+    <string name="challenge_test_title">Try challenges</string>
+    <string name="challenge_test_difficulty">Difficulty</string>
+    <string name="challenge_test_count">Number of challenges</string>
+    <string name="challenge_test_mode">Mode</string>
+    <string name="challenge_test_types">Challenge types</string>
+    <string name="challenge_test_start">Start</string>
+    <string name="challenge_mode_chained">Chained</string>
+    <string name="challenge_mode_random">Random</string>
+    <string name="challenge_type_math">Math</string>
+    <string name="challenge_progress">Challenge %1$d of %2$d</string>
+    <string name="challenge_answer_label">Answer</string>
+    <string name="challenge_confirm">Confirm</string>
+    <string name="challenge_wrong">Wrong answer</string>
+    <string name="challenge_passed">Challenges passed!</string>
+    <string name="challenge_done">Done</string>
+    <string name="challenge_editor_section">Challenges</string>
+    <string name="challenge_editor_none">No challenges: the alarm can be dismissed right away.</string>
 </resources>

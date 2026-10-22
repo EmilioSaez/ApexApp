@@ -78,4 +78,23 @@
     <string name="guide_steps_vivo">1. Permite el inicio automático de ApexApp.\n2. En Batería, permite el consumo en segundo plano.\n3. Añade ApexApp a las apps de alto consumo permitidas.</string>
     <string name="guide_steps_samsung">1. En Batería, abre Límites de uso en segundo plano.\n2. Quita ApexApp de las apps en suspensión y añádela a las que nunca se suspenden.</string>
     <string name="guide_steps_oneplus">1. Permite el inicio automático de ApexApp.\n2. En Batería, elige Sin optimizar para ApexApp.\n3. Fija la app en Recientes.</string>
+
+    <string name="challenge_test_action">Retos</string>
+    <string name="challenge_test_title">Probar retos</string>
+    <string name="challenge_test_difficulty">Dificultad</string>
+    <string name="challenge_test_count">Número de retos</string>
+    <string name="challenge_test_mode">Modo</string>
+    <string name="challenge_test_types">Tipos de reto</string>
+    <string name="challenge_test_start">Empezar</string>
+    <string name="challenge_mode_chained">Encadenado</string>
+    <string name="challenge_mode_random">Aleatorio</string>
+    <string name="challenge_type_math">Matemáticas</string>
+    <string name="challenge_progress">Reto %1$d de %2$d</string>
+    <string name="challenge_answer_label">Respuesta</string>
+    <string name="challenge_confirm">Confirmar</string>
+    <string name="challenge_wrong">Respuesta incorrecta</string>
+    <string name="challenge_passed">¡Retos superados!</string>
+    <string name="challenge_done">Terminar</string>
+    <string name="challenge_editor_section">Retos</string>
+    <string name="challenge_editor_none">Sin retos: la alarma se descarta de inmediato.</string>
 </resources>

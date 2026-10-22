@@ -12,7 +12,14 @@ import kotlinx.serialization.Serializable
 data class ChallengeConfig(
     val difficulty: Int = 0,
     val challenges: List<ChallengeSpec> = emptyList(),
+    /** Número de retos de la sesión (1..10). */
+    val count: Int = 1,
+    val mode: ChallengeMode = ChallengeMode.CHAINED,
 )
+
+/** CHAINED recorre `challenges` en orden y repite el ciclo; RANDOM elige al azar entre ellos. */
+@Serializable
+enum class ChallengeMode { CHAINED, RANDOM }
 
 /** Un reto de la cadena: `params` es JSON opaco, propio de cada `type`. */
 @Serializable
