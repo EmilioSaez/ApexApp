@@ -22,6 +22,9 @@ data class AdaptiveDifficultyConfig(
     val struggleFailures: Int = 3,
     val slowMs: Long = 120_000,
     val easyMs: Long = 30_000,
+    /** Lecturas del historial al esperar a que conste la sesión recién terminada. */
+    val awaitAttempts: Int = 5,
+    val awaitDelayMs: Long = 200,
 )
 
 enum class ChangeReason { SNOOZES, EASY, FAILURES, SLOW }

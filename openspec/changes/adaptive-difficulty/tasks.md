@@ -16,7 +16,7 @@
 
 - [x] 3.1 Definir el puerto `WakeHistorySource` y la escala fija 1..5 (0 = sin definir → 3, fuera de rango se acota) y verificar que el motor se prueba con fakes sin depender de `wake-stats` ni `challenge-engine`
 - [x] 3.2 Implementar `AdaptiveDifficultyEngine` (`levelFor`, `onSessionFinished`, `reset`) con fallback al último nivel o a la dificultad base y verificar con tests unitarios, incluido el caso de fallo de lectura del historial
-- [ ] 3.3 Con `challenge-engine` y `wake-stats` ya integrados, escribir el adaptador real de `wake-stats`, implementar `AdaptiveDifficultyProvider` (cacheado por `sessionId`) sustituyendo el binding de Hilt de `DifficultyProvider`, llamar a `onSessionFinished` al cierre de sesión, y verificar con un test instrumentado que un disparo usa el nivel adaptativo y que con el ajuste desactivado usa el fijo
+- [x] 3.3 Con `challenge-engine` y `wake-stats` ya integrados, escribir el adaptador real de `wake-stats`, implementar `AdaptiveDifficultyProvider` (cacheado por `sessionId`) sustituyendo el binding de Hilt de `DifficultyProvider`, llamar a `onSessionFinished` al cierre de sesión, y verificar con tests unitarios (`AdaptiveDifficultyEngineTest`, `AdaptiveSessionListenerTest`) que el reto usa el nivel adaptativo, que con el ajuste desactivado usa el fijo y que al cerrar la sesión se evalúa el ajuste; la comprobación instrumentada de extremo a extremo queda en 5.1
 
 ## 4. Interfaz y explicación
 
@@ -26,12 +26,12 @@
 
 ## 5. Verificación de conjunto
 
-- [ ] 5.1 Ejecutar `./gradlew :app:testDebugUnitTest` y los tests instrumentados en el emulador y verificar que pasan; recorrer manualmente activar → varios snoozes → subida de nivel → explicación visible
+- [ ] 5.1 Ejecutar `./gradlew :app:testDebugUnitTest` y los tests instrumentados en el emulador y verificar que pasan; ejecutar en emulador los tests instrumentados pendientes (2.2, 2.3, 4.1–4.3) y recorrer manualmente activar → varios snoozes → subida de nivel → explicación visible
 
 ## Estado de la implementación
 
 - Implementado y compilando, con tests escritos pero **sin ejecutar** por falta de emulador libre (`shogun emulator start` rechazado: límite de 2 alcanzado): 2.2, 2.3 (`MigrationTest.migrate2To3_*`, `AdaptiveSettingsRepositoryTest`) y 4.1–4.3 (`AdaptiveDifficultyContentTest`). Quedan sin marcar hasta ejecutarlos en verde.
 - Decisión: el rango inválido (mín > máx) se rechaza en el motor (`setRange`, probado en `AdaptiveDifficultyEngineTest`); en la UI el `RangeSlider` no puede producirlo.
 - Decisión: en una alarma nueva (sin id) la sección aparece desactivada con el aviso "Guarda la alarma para poder activarla", porque el estado cuelga del id de la alarma.
-- Rebasada sobre `feature/wake-stats` (ef4b66a): migración Room renumerada a v4→v5 (`MIGRATION_4_5`, esquema `5.json`), `WakeHistorySource` enlazado a `WakeStatsHistorySource` y la sección registrada como `EditorSection` (order 150, tras Retos).
-- 3.3 pendiente (parte restante): llamar a `AdaptiveDifficultyEngine.onSessionFinished` y `AdaptiveDifficultyProvider.release` al cerrar la sesión. Hoy nadie emite `CHALLENGE_FAILED`/`COMPLETED` a `WakeEventRecorder` y `ChallengeEventSink` sigue siendo `NoOpChallengeEventSink`, así que el historial nunca tendría sesiones completadas. Hay que acordar con `wake-stats` y `challenge-engine` quién registra esos eventos y dónde se engancha el cierre de sesión.
+- Rebasada sobre `develop` (d66a1e1) con `challenge-engine`, `anti-cheat` y `wake-stats` ya fusionadas: migración Room v4→v5 (`MIGRATION_4_5`, esquema `5.json`), `WakeHistorySource` enlazado a `WakeStatsHistorySource` y la sección registrada como `EditorSection` (order 150, tras Retos).
+- 3.3: `AdaptiveSessionListener` se registra en el multibinding `Set<SessionFinishedListener>`; al terminar la sesión libera el nivel y evalúa el ajuste. El sink real registra `COMPLETED` de forma asíncrona, así que el motor espera (máx. 5 lecturas cada 200 ms) a que la sesión conste en el historial. Con `alarmId` nulo (pantalla de prueba) solo libera.

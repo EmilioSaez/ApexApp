@@ -1,6 +1,7 @@
 package app.luxion.apexapp.domain.adaptive
 
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 
 /**
  * Orquesta el ajuste: evalúa al cerrar cada sesión y deja el nivel guardado para la siguiente.
@@ -27,10 +28,19 @@ class AdaptiveDifficultyEngine(
         return s.currentLevel.coerceIn(s.minLevel, s.maxLevel)
     }
 
-    /** Evalúa tras una sesión finalizada. Null si no hay nada que evaluar o falla la lectura. */
-    suspend fun onSessionFinished(alarmId: Long): AdaptiveDecision? {
+    /**
+     * Evalúa tras una sesión finalizada. Null si no hay nada que evaluar o falla la lectura.
+     * Si se indica [finishedSessionId], espera (con un máximo de reintentos) a que el historial ya
+     * la contenga: el sink de retos registra `COMPLETED` de forma asíncrona.
+     */
+    suspend fun onSessionFinished(alarmId: Long, finishedSessionId: String? = null): AdaptiveDecision? {
         val s = settings.get(alarmId)?.takeIf { it.enabled } ?: return null
-        val recent = runCatching { history.recent(alarmId, config.window) }.getOrNull() ?: return null
+        var recent: List<SessionSummary> = emptyList()
+        for (attempt in 1..config.awaitAttempts) {
+            recent = runCatching { history.recent(alarmId, config.window) }.getOrNull() ?: return null
+            if (finishedSessionId == null || recent.any { it.sessionId == finishedSessionId }) break
+            if (attempt < config.awaitAttempts) delay(config.awaitDelayMs)
+        }
         val decision = calculator.decide(s.currentLevel, s.minLevel, s.maxLevel, recent, s.lastChangeSessionId)
         if (!decision.changed) return decision
         settings.save(

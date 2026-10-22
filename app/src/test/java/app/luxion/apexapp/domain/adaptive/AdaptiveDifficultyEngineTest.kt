@@ -150,6 +150,36 @@ class AdaptiveDifficultyEngineTest {
     }
 
     @Test
+    fun waitsUntilTheFinishedSessionIsInTheHistory() = runTest {
+        engine.setEnabled(1, true, 3)
+        // COMPLETED se registra de forma asíncrona: s3 aparece en la tercera lectura.
+        var reads = 0
+        val lagging = object : WakeHistorySource {
+            override suspend fun recent(alarmId: Long, limit: Int) =
+                if (++reads < 3) sleepy.drop(1) else sleepy
+        }
+        val e = AdaptiveDifficultyEngine(settings, lagging, AdaptiveDifficultyCalculator(), AdaptiveDifficultyConfig(), { 1_000L })
+        val d = e.onSessionFinished(1, "s3")
+        assertEquals(3, reads)
+        assertEquals(4, d?.level)
+    }
+
+    @Test
+    fun givesUpWaitingAfterTheMaximumAttempts() = runTest {
+        engine.setEnabled(1, true, 3)
+        var reads = 0
+        val never = object : WakeHistorySource {
+            override suspend fun recent(alarmId: Long, limit: Int): List<SessionSummary> {
+                reads++
+                return emptyList()
+            }
+        }
+        val e = AdaptiveDifficultyEngine(settings, never, AdaptiveDifficultyCalculator(), AdaptiveDifficultyConfig(), { 1_000L })
+        assertFalse(e.onSessionFinished(1, "s9")!!.changed)
+        assertEquals(AdaptiveDifficultyConfig().awaitAttempts, reads)
+    }
+
+    @Test
     fun providerFixesTheLevelForTheWholeSession() = runTest {
         engine.setEnabled(1, true, 3)
         val provider = AdaptiveDifficultyProvider(engine)

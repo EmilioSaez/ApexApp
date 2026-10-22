@@ -1,7 +1,9 @@
 package app.luxion.apexapp.di
 
+import app.luxion.apexapp.domain.adaptive.AdaptiveSessionListener
 import app.luxion.apexapp.domain.adaptive.WakeHistorySource
 import app.luxion.apexapp.domain.adaptive.WakeStatsHistorySource
+import app.luxion.apexapp.domain.challenge.SessionFinishedListener
 import app.luxion.apexapp.ui.adaptive.AdaptiveEditorSection
 import app.luxion.apexapp.ui.editor.EditorSection
 import dagger.Binds
@@ -15,6 +17,10 @@ import dagger.multibindings.IntoSet
 interface AdaptiveModule {
     @Binds
     fun wakeHistorySource(impl: WakeStatsHistorySource): WakeHistorySource
+
+    @Binds
+    @IntoSet
+    fun sessionFinishedListener(impl: AdaptiveSessionListener): SessionFinishedListener
 
     @Binds
     @IntoSet
