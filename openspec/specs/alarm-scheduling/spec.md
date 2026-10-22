@@ -17,15 +17,19 @@ El sistema SHALL programar una alarma exacta para la próxima ocurrencia de cada
 - **THEN** su programación se cancela y no se dispara
 
 ### Requirement: Disparo de la alarma
-El sistema SHALL notificar al usuario cuando llega la hora de una alarma activa, incluso con la app cerrada, y SHALL reprogramar las alarmas repetitivas para su siguiente ocurrencia.
+El sistema SHALL presentar la pantalla de sonar al usuario cuando llega la hora de una alarma activa, incluso con la app cerrada, y SHALL reprogramar las alarmas repetitivas para su siguiente ocurrencia.
 
 #### Scenario: Alarma puntual
 - **WHEN** llega la hora de una alarma sin repetición
-- **THEN** se notifica al usuario y la alarma pasa a inactiva
+- **THEN** se presenta la pantalla de sonar y la alarma pasa a inactiva
 
 #### Scenario: Alarma repetitiva
 - **WHEN** llega la hora de una alarma con días de repetición
-- **THEN** se notifica al usuario y queda programada la siguiente ocurrencia
+- **THEN** se presenta la pantalla de sonar y queda programada la siguiente ocurrencia
+
+#### Scenario: Alarma ya eliminada o inactiva
+- **WHEN** llega la hora de una alarma que se ha borrado o desactivado
+- **THEN** no se presenta nada
 
 ### Requirement: Recuperación tras reinicio
 El sistema SHALL reprogramar todas las alarmas activas cuando el dispositivo se reinicia.
