@@ -10,6 +10,8 @@ import app.luxion.apexapp.alarm.sound.AndroidTonePlayer
 import app.luxion.apexapp.alarm.sound.TimeAnnouncer
 import app.luxion.apexapp.alarm.sound.TonePlayer
 import app.luxion.apexapp.domain.SoundRepository
+import app.luxion.apexapp.ui.editor.sound.AndroidSoundImporter
+import app.luxion.apexapp.ui.editor.sound.SoundImporter
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -35,6 +37,9 @@ interface SoundBindings {
 
     @Binds
     fun announcer(impl: AndroidTimeAnnouncer): TimeAnnouncer
+
+    @Binds
+    fun importer(impl: AndroidSoundImporter): SoundImporter
 }
 
 @Module

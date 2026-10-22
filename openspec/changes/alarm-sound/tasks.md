@@ -35,10 +35,10 @@
 
 ## 6. Editor
 
-- [ ] 6.1 Selector de sonido: por defecto, incluidos en la app, tonos del sistema y `OpenDocument` con `takePersistableUriPermission`
+- [x] 6.1 Selector de sonido: por defecto, incluidos en la app, tonos del sistema y `OpenDocument` con `takePersistableUriPermission`
 - [ ] 6.2 Controles de rampa, vibración (preset/personalizado) y voz en `AlarmEditorScreen` siguiendo `design-taste-compose`
-- [ ] 6.3 Botón de previsualización con parada al salir de la pantalla
-- [ ] 6.4 Strings en `strings.xml` y tests de UI/ViewModel del editor
+- [x] 6.3 Botón de previsualización con parada al salir de la pantalla
+- [x] 6.4 Strings en `strings.xml` y tests de UI/ViewModel del editor
 
 ## 7. Verificación
 
