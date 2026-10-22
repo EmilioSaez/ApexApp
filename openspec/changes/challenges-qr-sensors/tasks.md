@@ -17,8 +17,9 @@
 
 - [x] 3.1 Crear adaptadores de `SensorManager` que emitan muestras con marca de tiempo y manejen sensor ausente; verificar con test instrumentado o fake en JVM
 - [x] 3.2 Implementar los retos agitar, pasos y levantarse contra la interfaz del motor, con progreso y reserva por sensor sin datos; verificar con tests de la lógica del reto
-- [ ] 3.3 Implementar la UI de configuración (objetivo con límites) y de ejecución de cada reto, siguiendo `design-taste-compose`; verificar con tests Compose de rango y de ajuste a límites
+- [x] 3.3 Implementar la UI de configuración (objetivo con límites) y de ejecución de cada reto, siguiendo `design-taste-compose`; verificar con tests Compose de rango y de ajuste a límites
 - [ ] 3.4 Pedir `ACTIVITY_RECOGNITION` al configurar el reto de pasos y ocultar el reto si no hay sensor; verificar manualmente en emulador sin y con permiso
+  - Verificado en emulador (sin contador de pasos): al elegir «Steps» aparece «This device has no step counter.» y Save queda deshabilitado. Sin verificar: el flujo con sensor, que pide ACTIVITY_RECOGNITION (el emulador no tiene contador de pasos).
 
 ## 4. Reto QR
 
@@ -26,11 +27,26 @@
 - [x] 4.2 Implementar el lector CameraX + ML Kit como componente compartido (flujo de lecturas por fotograma + previsualización), en el paquete `app.luxion.apexapp.scanner` con `BarcodeScanner(onScanned, modifier)` según design.md; verificar leyendo un QR y un código de barras en emulador/dispositivo
 - [x] 4.3 Implementar registro del código (hash SHA-256 + formato serializado en `ChallengeSpec.params`, sin tocar Room; sustitución, validación al guardar) y comparación; verificar con tests unitarios de igualdad, distinto y sustitución
 - [ ] 4.4 Implementar el reto QR contra la interfaz del motor con verificación anti foto-de-foto y reserva sin cámara o sin permiso; verificar rechazando una foto en pantalla y aceptando el objeto real
+  - Verificado en emulador: vista de cámara en vivo y recorte correcto. Sin verificar: aceptar el objeto real y rechazar una foto o pantalla (la cámara virtual no permite poner un QR sin modificar los recursos globales del SDK).
 - [ ] 4.5 Implementar UI de registro y escaneo con gestión de permiso de cámara (pendiente, denegado permanente → ajustes) y aviso de colocación del código; verificar con tests Compose y a mano
+  - Verificado en emulador: permiso de cámara pendiente (explicación + «Grant»), denegado una vez (vuelve a ofrecer), denegado permanente (aviso + «Open settings», abre los ajustes de la app), concedido desde ajustes y vuelta con Atrás (pasa solo a cámara; corregido en este change), aviso de colocación, y Save deshabilitado con QR sin código. Sin verificar: escanear y registrar un código real.
 
 ## 5. Integración
 
 - [ ] 5.1 Registrar los cuatro tipos de reto en el módulo Hilt del motor y exponerlos en la configuración de alarma; verificar que aparecen y se guardan por alarma
   - Hecho: registro Hilt de `Challenge`, `ChallengeRenderer` y `ChallengeParamsEditor` por tipo (QR bloquea guardar sin código; pasos exige contador de pasos). Falta verificar en dispositivo que aparecen en la sección «Retos» y se guardan por alarma.
+  - Verificado en emulador: los cuatro tipos aparecen en la sección «Challenges»; Shake con objetivo 40 se guarda y se recupera al reabrir la alarma. Sin verificar: guardar y recuperar un código QR (requiere escanear) y los demás tipos configurados.
 - [ ] 5.2 Prueba de extremo a extremo en emulador/dispositivo: alarma con cada reto, disparo, superación y casos de trampa; verificar con `./gradlew test connectedDebugAndroidTest` y checklist manual
+  - Verificado en la pantalla de pruebas de retos (no con alarma real disparada): Shake se supera con sacudidas simuladas (`adb emu sensor`). Sin verificar: disparo real de la alarma con cada reto, QR, Pasos y Levantarse.
 - [ ] 5.3 Calibrar umbrales (sacudidas, ventana de escaneo, límites de pasos) en dispositivo real y fijarlos en constantes únicas; verificar que los tests siguen en verde
+
+## Manual para el usuario
+
+Pruebas que exigen un móvil físico (el emulador no tiene contador de pasos ni permite escanear un QR real sin tocar recursos compartidos del SDK):
+
+- **Calibrar umbrales (5.3):** sacudidas (`ShakeDetector.DEFAULT_THRESHOLD` = 12 m/s², refractario 200 ms, inactividad 2 s), ventana de escaneo (`FrameLivenessChecker`: 1,5 s y 15 fotogramas) y límites de objetivo (`MotionKind`: sacudidas 10–100, pasos 10–200, segundos 5–60). Dejar los valores ajustados en esas constantes y comprobar que los tests siguen en verde.
+- **Reto QR:** registrar un código real (QR y de barras), escanear el objeto real y comprobar que se acepta; apuntar a una foto impresa y a otra pantalla y comprobar que se rechaza («Parece una foto» / «Parece una pantalla»).
+- **Reto de pasos:** conceder «actividad física» al configurarlo y comprobar que solo cuentan pasos reales caminando, no sacudir el móvil.
+- **Reto de levantarse:** tumbado y quieto durante 2 s, incorporarse y caminar el tiempo configurado; comprobar que girar el móvil sin moverse no lo supera.
+- **Alarma real de extremo a extremo:** con cada reto, dejar sonar la alarma, superar el reto y comprobar que se apaga; con la cámara o el permiso revocados, comprobar que el motor aplica la reserva.
+- **Limitación conocida del detector de sensores falsos:** solo descarta señales con amplitud y periodo casi idénticos (variación < 2 %). Una señal inyectada con un poco de jitter (como un script de `adb emu sensor`) lo supera. Valorar endurecer `SensorPlausibility.MIN_VARIATION` al calibrar con sacudidas humanas reales.
