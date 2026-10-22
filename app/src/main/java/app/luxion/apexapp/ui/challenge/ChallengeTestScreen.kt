@@ -98,9 +98,9 @@ fun ChallengeTestContent(
             Modifier.padding(padding).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
         ) {
-            DifficultySelector(form.difficulty, onDifficulty)
-            CountStepper(form.count, onCount)
-            ModeSelector(form.mode, onMode)
+            DifficultySelector(form.difficulty, onChange = onDifficulty)
+            CountStepper(form.count, onChange = onCount)
+            ModeSelector(form.mode, onChange = onMode)
             TypeChips(availableTypes, form.types, typeLabel, onToggleType)
 
             Button(

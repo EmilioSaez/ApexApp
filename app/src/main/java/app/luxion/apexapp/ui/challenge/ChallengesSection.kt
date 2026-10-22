@@ -8,6 +8,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.ChallengeConfig
@@ -56,6 +57,7 @@ class ChallengesSection @Inject constructor(
                 selected = config.challenges.map { ChallengeType(it.type) }.toSet(),
                 label = { renderersByType[it]?.label() ?: it.id },
                 onToggle = { type -> update { it.toggled(type) } },
+                inset = 0.dp,
             )
             if (config.challenges.isEmpty()) {
                 Text(
@@ -64,9 +66,9 @@ class ChallengesSection @Inject constructor(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            CountStepper(config.count) { value -> update { it.withCount(value) } }
-            DifficultySelector(config.displayDifficulty) { value -> update { it.withDifficulty(value) } }
-            ModeSelector(config.mode) { value -> update { it.withMode(value) } }
+            CountStepper(config.count, onChange = { value -> update { it.withCount(value) } }, inset = 0.dp)
+            DifficultySelector(config.displayDifficulty, onChange = { value -> update { it.withDifficulty(value) } }, inset = 0.dp)
+            ModeSelector(config.mode, onChange = { value -> update { it.withMode(value) } }, inset = 0.dp)
             config.challenges.forEach { spec ->
                 val type = ChallengeType(spec.type)
                 editorsByType[type]?.Content(spec.params) { params -> update { it.withParams(type, params) } }
