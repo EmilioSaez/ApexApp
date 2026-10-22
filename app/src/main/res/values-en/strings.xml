@@ -131,4 +131,11 @@
     <string name="qr_format_barcode">barcode</string>
     <string name="steps_unavailable">This device has no step counter.</string>
     <string name="steps_permission_rationale">To count your steps we need the physical activity permission.</string>
+    <string name="challenge_type_shake">Shake</string>
+    <string name="challenge_type_steps">Steps</string>
+    <string name="challenge_type_standup">Stand up</string>
+    <string name="challenge_type_qr">QR code</string>
+    <string name="challenge_target_unit_shakes">Number of shakes</string>
+    <string name="challenge_target_unit_steps">Number of steps</string>
+    <string name="challenge_target_unit_seconds">Seconds walking</string>
 </resources>

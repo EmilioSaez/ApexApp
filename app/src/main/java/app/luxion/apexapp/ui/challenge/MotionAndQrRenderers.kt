@@ -43,6 +43,15 @@ private class MotionRenderer(
     override val type: ChallengeType = ChallengeType(kind.typeId)
 
     @Composable
+    override fun label(): String = stringResource(
+        when (kind) {
+            MotionKind.SHAKE -> R.string.challenge_type_shake
+            MotionKind.STEPS -> R.string.challenge_type_steps
+            MotionKind.STAND_UP -> R.string.challenge_type_standup
+        },
+    )
+
+    @Composable
     override fun Render(
         instance: ChallengeInstance,
         wrong: Boolean,
@@ -75,6 +84,9 @@ class StandUpRenderer @Inject constructor(sensors: MotionSensors) :
  */
 class QrRenderer @Inject constructor() : ChallengeRenderer {
     override val type: ChallengeType = QrChallenge.TYPE
+
+    @Composable
+    override fun label(): String = stringResource(R.string.challenge_type_qr)
 
     @Composable
     override fun Render(

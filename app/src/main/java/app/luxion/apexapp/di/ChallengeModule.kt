@@ -14,6 +14,10 @@ import app.luxion.apexapp.ui.challenge.ChallengeParamsEditor
 import app.luxion.apexapp.ui.challenge.ChallengeRenderer
 import app.luxion.apexapp.ui.challenge.ChallengesSection
 import app.luxion.apexapp.ui.challenge.MathRenderer
+import app.luxion.apexapp.ui.challenge.QrParamsEditor
+import app.luxion.apexapp.ui.challenge.ShakeParamsEditor
+import app.luxion.apexapp.ui.challenge.StandUpParamsEditor
+import app.luxion.apexapp.ui.challenge.StepsParamsEditor
 import app.luxion.apexapp.ui.editor.EditorSection
 import app.luxion.apexapp.ui.challenge.QrRenderer
 import app.luxion.apexapp.ui.challenge.ShakeRenderer
@@ -95,6 +99,22 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun qrRenderer(impl: QrRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun shakeEditor(impl: ShakeParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun stepsEditor(impl: StepsParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun standUpEditor(impl: StandUpParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun qrEditor(impl: QrParamsEditor): ChallengeParamsEditor
 
     @Binds
     fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities

@@ -131,4 +131,11 @@
     <string name="qr_format_barcode">código de barras</string>
     <string name="steps_unavailable">Este dispositivo no tiene contador de pasos.</string>
     <string name="steps_permission_rationale">Para contar tus pasos necesitamos el permiso de actividad física.</string>
+    <string name="challenge_type_shake">Agitar</string>
+    <string name="challenge_type_steps">Pasos</string>
+    <string name="challenge_type_standup">Levantarse</string>
+    <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_target_unit_shakes">Número de sacudidas</string>
+    <string name="challenge_target_unit_steps">Número de pasos</string>
+    <string name="challenge_target_unit_seconds">Segundos caminando</string>
 </resources>
