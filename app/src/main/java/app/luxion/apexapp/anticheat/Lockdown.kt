@@ -42,6 +42,7 @@ class LockdownController(
     private val recorder: WakeEventRecorder,
     private val clock: Clock,
     private val scope: CoroutineScope,
+    private val showRingScreen: (RingingSession) -> Unit = {},
 ) : RingingLifecycleListener {
     private val _active = MutableStateFlow<ActiveLockdown?>(null)
     val active: StateFlow<ActiveLockdown?> = _active.asStateFlow()
@@ -54,6 +55,9 @@ class LockdownController(
         if (protection.volumeLock) volume.engage(session.sessionId)
         if (protection.lockTask) lockTaskPolicy.allow()
         _active.value = ActiveLockdown(session.sessionId, session.alarm.id, protection)
+        // Con el dispositivo en uso el full-screen intent solo muestra un aviso; con el permiso de
+        // superposición la app puede abrir la pantalla de sonar directamente desde segundo plano.
+        if (protection.foregroundRecovery) runCatching { showRingScreen(session) }
     }
 
     override fun onEnded(session: RingingSession, reason: EndReason) {

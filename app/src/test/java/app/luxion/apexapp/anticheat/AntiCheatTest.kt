@@ -326,7 +326,28 @@ class LockdownControllerTest {
         recorder,
         clock,
         CoroutineScope(Dispatchers.Unconfined),
+        showRingScreen = { shown += it.sessionId },
     )
+    private val shown = mutableListOf<String>()
+
+    @Test
+    fun standard_withOverlay_opensRingScreen() {
+        controller.onStarted(session(AntiCheatLevel.STANDARD))
+        assertEquals(listOf("s1"), shown)
+    }
+
+    @Test
+    fun standard_withoutOverlay_doesNotOpenRingScreen() {
+        caps.caps = Capabilities()
+        controller.onStarted(session(AntiCheatLevel.STANDARD))
+        assertTrue(shown.isEmpty())
+    }
+
+    @Test
+    fun off_doesNotOpenRingScreen() {
+        controller.onStarted(session(AntiCheatLevel.OFF))
+        assertTrue(shown.isEmpty())
+    }
 
     @Test
     fun off_doesNotLockdown() {

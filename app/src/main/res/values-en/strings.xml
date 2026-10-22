@@ -188,4 +188,5 @@
     <string name="anticheat_grant">Grant</string>
     <string name="anticheat_limits_title">Limits</string>
     <string name="anticheat_limits_body">Forced hardware power-off, safe mode, recovery, ADB and removing the battery cannot be prevented. Forced volume does not control external outputs with their own volume, such as some Bluetooth headphones.</string>
+    <string name="anticheat_release">Give up device owner</string>
 </resources>

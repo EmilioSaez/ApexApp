@@ -38,15 +38,15 @@ cuentas del dispositivo y repite.
 ## Salir si algo falla (rescate)
 
 El lock task se libera siempre al terminar el sonado (resuelta, snooze o tiempo máximo de 10 minutos).
-Si el dispositivo se queda atrapado, por ADB:
+Si el dispositivo se queda atrapado:
 
 ```
 adb shell am force-stop app.luxion.apexapp
-adb shell dpm remove-active-admin app.luxion.apexapp/.anticheat.ApexDeviceAdminReceiver
 ```
 
-El segundo comando quita también el propietario del dispositivo en apps de depuración (`debuggable`);
-en una release hay que restablecer de fábrica para retirarlo.
+Para dejar de ser propietario del dispositivo, usa el botón **Renunciar a propietario del dispositivo** de la
+pantalla de estado. Nota: `adb shell dpm remove-active-admin` **no** funciona con esta app (no es `testOnly`)
+y lanza una `SecurityException`; sin el botón solo queda restablecer de fábrica.
 
 ## Snooze
 
@@ -74,15 +74,32 @@ calculan pero no se persisten hasta que `wake-stats` ofrezca un campo para ellos
 - Android 12+ restringe los toques sobre overlays; por eso no se usa el overlay como pantalla de bloqueo.
 - Android 14+ puede revocar el permiso de pantalla completa; entonces queda la notificación del sonado.
 
-## Pruebas manuales en emulador (pendientes de ejecutar)
+## Pruebas manuales en emulador
 
-Estado: pendientes de ejecutar, no se pudo reservar emulador (todos en uso). Checklist:
+Ejecutadas en un emulador API 36 (debug, alarmas creadas con `DebugAlarmReceiver`, que acepta
+`--es level OFF|STANDARD|STRICT --ei snoozeMinutes N --ei snoozeMax M`).
 
-1. `OFF`: la alarma suena, Atrás y Home salen sin restricción.
-2. `STANDARD` sin superposición: Atrás no cierra; Home sale pero la notificación reabre la pantalla.
-3. `STANDARD` con superposición: Home vuelve a la pantalla en menos de un segundo.
-4. Volumen: bajar con la tecla no cambia el volumen; al terminar se restaura el anterior.
-5. `STRICT` sin propietario: se comporta como `STANDARD` y la pantalla de estado lo indica.
-6. `STRICT` con propietario (`dpm set-device-owner`): Home, Recientes y menú de apagado no responden; se liberan al resolver, posponer o agotar el tiempo.
-7. Snooze: aparece el botón solo si la política lo permite; la alarma vuelve a sonar a los minutos configurados con el mismo `sessionId`; tras el máximo no se ofrece.
-8. Matar el proceso durante el sonado (`adb shell am force-stop app.luxion.apexapp`) y comprobar que se emite `SUSPICIOUS` al arrancar de nuevo.
+Verificadas:
+
+- `STANDARD` con otra app en primer plano y superposición concedida: la pantalla de sonar pasa sola al primer plano en modo inmersivo.
+- Atrás no la cierra; Home vuelve a la pantalla de sonar en cerca de 1 segundo.
+- Tres pulsaciones de bajar volumen no cambian el volumen de alarma (7/7).
+- Snooze: aparece el botón; al pulsarlo se libera el lockdown y se detiene el servicio; la alarma se re-dispara al minuto con la misma sesión; con `maxCount = 1` ya no se ofrece de nuevo.
+- Matar el proceso durante el sonado deja la marca de sesión viva; al arrancar la app se consume (se emite `SUSPICIOUS`).
+- `STRICT` con propietario del dispositivo (`dpm set-device-owner`): lock task en estado `LOCKED`; Home, Recientes, panel de notificaciones y pulsación larga de encendido no responden; al posponer pasa a `NONE` y Home vuelve a funcionar.
+
+Pendientes de verificar:
+
+1. Pantalla bloqueada y apagada: la pantalla de sonar se enciende sobre el bloqueo.
+2. `OFF`: la alarma se descarta sin restricciones.
+3. Sin superposición: Atrás no cierra; Home sale y solo la notificación reabre la pantalla.
+4. Restauración del volumen previo al terminar (el volumen de partida no se pudo bajar en el emulador).
+5. Reaplicación del lockdown al recrear la actividad tras matar el proceso.
+6. Liberación del lock task al resolver y por tiempo máximo (solo se probó por snooze).
+7. `STRICT` sin propietario: se comporta como `STANDARD` y la pantalla de estado lo indica.
+8. Botón «Renunciar a propietario del dispositivo» (solo compilado).
+9. Integración con `alarm-sound` (rampa hasta el máximo con lockdown).
+
+Hallazgo: con el dispositivo en uso, el full-screen intent solo muestra un aviso; por eso, con superposición, el
+lockdown abre la pantalla de sonar directamente. Sin superposición el lockdown solo se aplica cuando el usuario
+abre la pantalla.

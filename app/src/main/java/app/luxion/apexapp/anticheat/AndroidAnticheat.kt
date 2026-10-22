@@ -40,6 +40,12 @@ class AndroidCapabilityChecker @Inject constructor(
     fun overlaySettingsIntent(): Intent =
         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
 
+    /** Renuncia a ser propietario del dispositivo (salida de emergencia del lock task). */
+    @Suppress("DEPRECATION")
+    fun clearDeviceOwner() {
+        if (dpm.isDeviceOwnerApp(context.packageName)) dpm.clearDeviceOwnerApp(context.packageName)
+    }
+
     /** Pantalla del sistema para activar el administrador de dispositivo. */
     fun deviceAdminIntent(): Intent =
         Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN)

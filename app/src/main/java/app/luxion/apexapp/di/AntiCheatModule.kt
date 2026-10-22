@@ -1,6 +1,8 @@
 package app.luxion.apexapp.di
 
 import app.luxion.apexapp.alarm.AlarmResolver
+import android.content.Context
+import app.luxion.apexapp.alarm.RingScreenLauncher
 import app.luxion.apexapp.alarm.RingingLifecycleListener
 import app.luxion.apexapp.anticheat.ActiveSessionStore
 import app.luxion.apexapp.anticheat.AlarmVolumeGateway
@@ -25,6 +27,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import java.time.Clock
@@ -75,9 +78,12 @@ object AntiCheatProviders {
         snoozeCounts: SnoozeCounts,
         recorder: WakeEventRecorder,
         clock: Clock,
+        @ApplicationContext context: Context,
+        screenLauncher: RingScreenLauncher,
     ) = LockdownController(
         capabilities, volume, tracker, lockTaskPolicy, activeSessions, snoozeCounts, recorder, clock,
         CoroutineScope(SupervisorJob() + Dispatchers.IO),
+        showRingScreen = { context.startActivity(screenLauncher.intentFor(it)) },
     )
 
     @Provides @IntoSet

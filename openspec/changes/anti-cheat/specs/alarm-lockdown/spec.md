@@ -14,6 +14,17 @@ El sistema SHALL activar el lockdown cuando empieza el sonado de una alarma cuyo
 - **WHEN** empieza a sonar una alarma con nivel `OFF`
 - **THEN** no se aplica ninguna medida y el usuario puede salir de la app libremente
 
+### Requirement: Pantalla de sonar al primer plano
+El sistema SHALL abrir la pantalla de sonar al empezar el lockdown aunque el dispositivo esté en uso, siempre que la app tenga permiso de superposición.
+
+#### Scenario: Dispositivo en uso con superposición
+- **WHEN** empieza el sonado de una alarma `STANDARD` con otra app en primer plano y permiso de superposición
+- **THEN** la pantalla de sonar pasa al primer plano sin esperar a que el usuario toque la notificación
+
+#### Scenario: Dispositivo en uso sin superposición
+- **WHEN** empieza el sonado con otra app en primer plano y sin permiso de superposición
+- **THEN** se muestra la notificación de alarma y el lockdown se aplica cuando el usuario abre la pantalla de sonar
+
 ### Requirement: Modo inmersivo sin salida
 El sistema SHALL ocultar las barras del sistema en la pantalla de sonar durante el lockdown y SHALL ignorar el botón y el gesto de Atrás.
 

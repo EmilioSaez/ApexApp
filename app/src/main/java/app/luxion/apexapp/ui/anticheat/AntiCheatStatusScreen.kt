@@ -48,6 +48,11 @@ class AntiCheatStatusViewModel @Inject constructor(
         _capabilities.value = checker.current()
     }
 
+    fun releaseDeviceOwner() {
+        checker.clearDeviceOwner()
+        refresh()
+    }
+
     fun overlayIntent(): Intent = checker.overlaySettingsIntent()
     fun adminIntent(): Intent = checker.deviceAdminIntent()
 }
@@ -63,6 +68,7 @@ fun AntiCheatStatusScreen(onBack: () -> Unit, viewModel: AntiCheatStatusViewMode
         onBack = onBack,
         onGrantOverlay = { context.launch(viewModel.overlayIntent()) },
         onGrantAdmin = { context.launch(viewModel.adminIntent()) },
+        onReleaseOwner = viewModel::releaseDeviceOwner,
     )
 }
 
@@ -77,6 +83,7 @@ fun AntiCheatStatusContent(
     onBack: () -> Unit,
     onGrantOverlay: () -> Unit,
     onGrantAdmin: () -> Unit,
+    onReleaseOwner: () -> Unit = {},
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -110,6 +117,7 @@ fun AntiCheatStatusContent(
                 description = R.string.anticheat_cap_owner_desc,
                 granted = capabilities.deviceOwner,
                 onGrant = null,
+                onRelease = onReleaseOwner,
             )
             SectionHeader(stringResource(R.string.anticheat_limits_title))
             Text(
@@ -122,7 +130,13 @@ fun AntiCheatStatusContent(
 }
 
 @Composable
-private fun CapabilityRow(title: Int, description: Int, granted: Boolean, onGrant: (() -> Unit)?) {
+private fun CapabilityRow(
+    title: Int,
+    description: Int,
+    granted: Boolean,
+    onGrant: (() -> Unit)?,
+    onRelease: (() -> Unit)? = null,
+) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(stringResource(title), style = MaterialTheme.typography.titleMedium, modifier = Modifier.weight(1f))
@@ -139,6 +153,9 @@ private fun CapabilityRow(title: Int, description: Int, granted: Boolean, onGran
         )
         if (!granted && onGrant != null) {
             OutlinedButton(onClick = onGrant) { Text(stringResource(R.string.anticheat_grant)) }
+        }
+        if (granted && onRelease != null) {
+            OutlinedButton(onClick = onRelease) { Text(stringResource(R.string.anticheat_release)) }
         }
     }
 }
