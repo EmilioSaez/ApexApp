@@ -30,10 +30,16 @@
 - [x] 5.2 Crear `ChallengeParamsEditor`, `ChallengesSection` (tipos del registro, nº 1–10, dificultad 1–5, modo) y `ChallengeRenderer.label()`; verificar con tests: orden de cadena, valores iniciales, alarma sin tipos, parámetros inválidos bloquean el guardado, tipo sin editor no bloquea
 - [x] 5.3 Strings `challenge_editor_*` en es/en y revisión en emulador de la sección en el editor real; verificar que guardar y reabrir conserva los valores
 
-## 6. Integración
+## 6. Oyentes de fin de sesión
 
-- [x] 6.1 Ejecutar `./gradlew :app:testDebugUnitTest :app:assembleDebug` y verificar que todo pasa
-- [x] 6.2 Ejecutar `openspec validate challenge-engine` y verificar que no hay errores
+- [x] 6.1 Añadir `SessionFinishedListener` (multibinding `@IntoSet`, `@Multibinds` declarado) y notificarlos desde `ChallengeSessionFactory` tras el sink, aislando fallos; verificar con tests: orden sink→oyente, un oyente que falla no corta a los demás, sin notificación si la sesión no se supera
+
+- [x] 6.2 Implementar `WakeLoggingChallengeSink` + `SequentialWakeRecorder` sobre `WakeEventRecorder` y `ResolvedWakeListener` (COMPLETED al resolverse una alarma) y enlazarlos en `ChallengeModule`; verificar con tests: CHALLENGE_FAILED con tipo y nivel y COMPLETED con sessionId y alarmId, otros eventos / sin alarma / alarma de prueba no, un fallo del recorder no corta los siguientes, alarma sin retos resuelta registra COMPLETED y snooze/timeout no
+
+## 7. Integración
+
+- [x] 7.1 Ejecutar `./gradlew :app:testDebugUnitTest :app:assembleDebug` y verificar que todo pasa
+- [x] 7.2 Ejecutar `openspec validate challenge-engine` y verificar que no hay errores
 
 ## Workflow follow-up
 

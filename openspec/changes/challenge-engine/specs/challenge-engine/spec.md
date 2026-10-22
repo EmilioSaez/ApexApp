@@ -114,6 +114,47 @@ El sistema SHALL emitir eventos al iniciar y finalizar una sesión y al iniciar,
 - **WHEN** no hay un receptor de eventos propio
 - **THEN** la sesión funciona con normalidad sin registrar nada
 
+### Requirement: Registro de fallos y de fin de sesión en el historial de despertar
+El sistema SHALL registrar en el historial de despertar cada fallo de reto, con tipo y nivel, y el fin de una sesión superada, con identificador de sesión, de alarma y marca de tiempo. Las sesiones sin alarma, como las de la pantalla de prueba, y las de la alarma de prueba SHALL NOT registrarse. Un fallo al registrar SHALL NOT afectar a la sesión ni a los registros siguientes, que se entregan en orden.
+
+#### Scenario: Fallo y acierto registrados
+- **WHEN** una sesión de una alarma tiene dos fallos y se supera
+- **THEN** el historial recibe, en orden, dos fallos de reto con su tipo y nivel y un completado, todos con el identificador de sesión y de alarma
+
+#### Scenario: Sesión de prueba
+- **WHEN** se ejecuta una sesión desde la pantalla de prueba, sin alarma, o con la alarma de prueba
+- **THEN** no se registra ningún evento
+
+#### Scenario: Fallo del historial
+- **WHEN** el historial falla al guardar un evento
+- **THEN** la sesión continúa y los eventos siguientes se guardan
+
+### Requirement: Completado de una alarma sin retos
+El sistema SHALL registrar el completado de una alarma que suena cuando se resuelve, también si no tenía retos, y SHALL NOT registrarlo cuando termina por posponer o por tiempo. El registro es idempotente por sesión.
+
+#### Scenario: Alarma sin retos descartada
+- **WHEN** una alarma sin retos se resuelve
+- **THEN** se registra su completado
+
+#### Scenario: Pospuesta o por tiempo
+- **WHEN** una alarma termina por posponer o por agotar el tiempo
+- **THEN** no se registra completado
+
+### Requirement: Notificación de fin de sesión a oyentes adicionales
+El sistema SHALL permitir que varios módulos se registren como oyentes del fin de una sesión, y SHALL notificarlos una vez por sesión superada, después de entregar el evento de fin de sesión al receptor de eventos, con el identificador de sesión y el de alarma cuando exista. El fallo de un oyente no SHALL impedir que se notifique a los demás ni afectar a la sesión.
+
+#### Scenario: Orden de notificación
+- **WHEN** se supera una sesión y hay un receptor de eventos y un oyente registrados
+- **THEN** el receptor recibe primero el evento de fin de sesión y después el oyente recibe el identificador de sesión y de alarma
+
+#### Scenario: Oyente que falla
+- **WHEN** un oyente falla al ser notificado
+- **THEN** los demás oyentes se notifican igualmente y la sesión sigue superada
+
+#### Scenario: Sesión sin superar
+- **WHEN** una sesión no llega a superarse
+- **THEN** no se notifica a ningún oyente
+
 ### Requirement: Pantalla de prueba de retos
 El sistema SHALL ofrecer una pantalla accesible desde la app que permita configurar dificultad (1 a 5), número de retos, modo y tipos y ejecutar una sesión completa sin que exista ni se dispare ninguna alarma.
 

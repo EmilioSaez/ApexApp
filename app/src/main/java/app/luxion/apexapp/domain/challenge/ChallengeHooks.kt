@@ -86,6 +86,14 @@ fun interface ChallengeEventSink {
     fun onEvent(event: ChallengeEvent)
 }
 
+/**
+ * Oyente del fin de una sesión superada. Se registra con `@Binds @IntoSet` y se invoca después de que
+ * el [ChallengeEventSink] haya recibido `SessionFinished`.
+ */
+fun interface SessionFinishedListener {
+    fun onFinished(sessionId: String, alarmId: Long?)
+}
+
 class NoOpChallengeEventSink @Inject constructor() : ChallengeEventSink {
     override fun onEvent(event: ChallengeEvent) = Unit
 }

@@ -6,7 +6,10 @@ import app.luxion.apexapp.domain.challenge.ChallengeRegistry
 import app.luxion.apexapp.domain.challenge.DifficultyProvider
 import app.luxion.apexapp.domain.challenge.FixedDifficultyProvider
 import app.luxion.apexapp.domain.challenge.MathChallenge
-import app.luxion.apexapp.domain.challenge.NoOpChallengeEventSink
+import app.luxion.apexapp.domain.challenge.SessionFinishedListener
+import app.luxion.apexapp.domain.challenge.WakeLoggingChallengeSink
+import app.luxion.apexapp.alarm.RingingLifecycleListener
+import app.luxion.apexapp.alarm.ResolvedWakeListener
 import app.luxion.apexapp.ui.challenge.ChallengeParamsEditor
 import app.luxion.apexapp.ui.challenge.ChallengeRenderer
 import app.luxion.apexapp.ui.challenge.ChallengesSection
@@ -45,11 +48,21 @@ interface ChallengeModule {
     @Multibinds
     fun paramsEditors(): Set<ChallengeParamsEditor>
 
+    /** Oyentes del fin de sesión: `@Binds @IntoSet SessionFinishedListener`. */
+    @Multibinds
+    fun sessionFinishedListeners(): Set<SessionFinishedListener>
+
     @Binds
     fun difficultyProvider(impl: FixedDifficultyProvider): DifficultyProvider
 
+    /** Sink real: registra fallos de reto y fin de sesión en el historial de despertar. */
     @Binds
-    fun eventSink(impl: NoOpChallengeEventSink): ChallengeEventSink
+    fun eventSink(impl: WakeLoggingChallengeSink): ChallengeEventSink
+
+    /** Registra COMPLETED al resolverse una alarma (cubre las que no tienen retos). */
+    @Binds
+    @IntoSet
+    fun resolvedWakeListener(impl: ResolvedWakeListener): RingingLifecycleListener
 
     companion object {
         @Provides

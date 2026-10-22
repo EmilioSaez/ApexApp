@@ -57,7 +57,13 @@ Alternativa: un callback por sección en la firma del editor. Descartada: obliga
 **11. Sección «Retos» y editores de parámetros.**
 `ChallengesSection` (`order = 100`) lee el `ChallengeRegistry` para ofrecer los tipos, edita `Alarm.challenges` (el orden de `challenges` es el de la cadena; al habilitar un tipo se añade al final) y delega los parámetros en `ChallengeParamsEditor` (`type`, `@Composable Content(params: String, onChange: (String) -> Unit)`, `isValid(params): Boolean = true`), multibound por tipo. La sección es inválida si algún tipo habilitado tiene un editor que rechaza sus parámetros. La etiqueta visible de cada tipo la da `ChallengeRenderer.label()` (por defecto, el id).
 
-**12. Pantalla de prueba.**
+**12. Oyentes de fin de sesión.**
+`ChallengeEventSink` es un único binding que `wake-stats` sustituye, así que otros módulos que deben reaccionar al fin de sesión (p. ej. `adaptive-difficulty`) usan `fun interface SessionFinishedListener { onFinished(sessionId, alarmId) }` registrado con `@Binds @IntoSet`. `ChallengeSessionFactory` los llama tras entregar `SessionFinished` al sink, de modo que ven el estado ya registrado por wake-stats. Cada oyente se invoca aislado: una excepción se registra y no corta a los demás ni a la sesión.
+
+**13. Sink real y registro de despertar.**
+`WakeLoggingChallengeSink` (binding de `ChallengeEventSink`) registra en `WakeEventRecorder` (de alarm-reliability; la implementación real la aporta `wake-stats`) `CHALLENGE_FAILED` con tipo y nivel en cada `ChallengeFailed` y `COMPLETED` en `SessionFinished`, ignorando `alarmId` nulo y `TEST_ALARM_ID`. `record` es `suspend`, así que `SequentialWakeRecorder` lo llama desde una cola secuencial (un canal consumido por una sola corrutina) aislando los fallos de Room. `ResolvedWakeListener` (`RingingLifecycleListener`) añade `COMPLETED` cuando una alarma se resuelve (`EndReason.RESOLVED`), lo que cubre las alarmas sin retos; es idempotente por sesión.
+
+**14. Pantalla de prueba.**
 Ruta `ChallengeTestRoute` con formulario (dificultad 1..5, nº de retos, modo, tipos del registro) que lanza `ChallengeSessionScreen`. Acceso desde una acción en la barra de `HomeScreen` (decidido). No usa `AlarmRepository` ni `AlarmScheduler`.
 
 ## Risks / Trade-offs
