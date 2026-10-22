@@ -36,12 +36,12 @@ El sistema SHALL calcular el nivel efectivo de cada alarma a partir del nivel pe
 - **WHEN** una alarma pide `STANDARD` y las capacidades necesarias están concedidas
 - **THEN** el nivel efectivo es `STANDARD`
 
-### Requirement: Aviso al guardar
-El sistema SHALL avisar al guardar una alarma con nivel `STANDARD` o `STRICT` si faltan permisos o capacidades necesarios, y SHALL ofrecer concederlos.
+### Requirement: Aviso de capacidades que faltan
+El sistema SHALL avisar en el editor, mientras el nivel de la alarma sea `STANDARD` o `STRICT`, de los permisos o capacidades que faltan, y SHALL ofrecer abrir la pantalla de estado para concederlos.
 
 #### Scenario: Falta el permiso de superposición
-- **WHEN** el usuario guarda una alarma `STANDARD` sin permiso de superposición
-- **THEN** la app indica el permiso que falta y ofrece abrir el ajuste correspondiente
+- **WHEN** el usuario elige el nivel `STANDARD` sin permiso de superposición
+- **THEN** el editor indica el permiso que falta y ofrece abrir la pantalla de estado
 
 ### Requirement: Pantalla de estado de capacidades
 El sistema SHALL ofrecer una pantalla que lista cada capacidad delicada (superposición, administrador de dispositivo, propietario del dispositivo), para qué se usa, si está concedida y cómo concederla, y SHALL mostrar también el estado de pantalla completa y notificaciones que ya gestiona la fiabilidad de la alarma.

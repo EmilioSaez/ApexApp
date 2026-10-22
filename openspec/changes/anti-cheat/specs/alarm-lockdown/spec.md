@@ -62,9 +62,13 @@ El sistema SHALL liberar el modo kiosko, las medidas de resistencia y el volumen
 - **WHEN** el sonado termina porque el usuario pospone la alarma
 - **THEN** se libera el lockdown hasta que la alarma vuelva a sonar
 
-### Requirement: Reaplicación tras interrupción
-El sistema SHALL reaplicar el lockdown si el sonado se restaura tras la muerte del proceso o un reinicio del dispositivo.
+### Requirement: Interrupción durante el sonado
+El sistema SHALL tratar como interrupción la muerte del proceso o el reinicio del dispositivo durante un sonado sin resolver, y SHALL registrarla en la sesión. La reanudación del sonado tras la interrupción corresponde a la fiabilidad de la alarma; si el sonado se reanuda, el lockdown se aplica de nuevo.
 
 #### Scenario: Muerte del proceso durante el sonado
-- **WHEN** el proceso muere durante el sonado y el sonado se reanuda
+- **WHEN** el proceso muere durante el sonado y la app vuelve a arrancar
+- **THEN** la sesión interrumpida queda registrada como tal y el lockdown no permanece activo
+
+#### Scenario: Sonado reanudado
+- **WHEN** el sonado se reanuda tras una interrupción
 - **THEN** la pantalla de sonar vuelve en modo kiosko con el volumen forzado

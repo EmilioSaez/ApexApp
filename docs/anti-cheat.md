@@ -76,30 +76,36 @@ calculan pero no se persisten hasta que `wake-stats` ofrezca un campo para ellos
 
 ## Pruebas manuales en emulador
 
-Ejecutadas en un emulador API 36 (debug, alarmas creadas con `DebugAlarmReceiver`, que acepta
-`--es level OFF|STANDARD|STRICT --ei snoozeMinutes N --ei snoozeMax M`).
+Ejecutadas en emuladores API 36 (debug). Las alarmas se crean con `DebugAlarmReceiver`:
+`--es level OFF|STANDARD|STRICT --ei snoozeMinutes N --ei snoozeMax M`; `--ez removeAdmin true` desactiva el
+administrador de dispositivo (limpieza). El volumen de alarma de partida se baja con `adb shell cmd audio set-volume 4 3`.
 
 Verificadas:
 
-- `STANDARD` con otra app en primer plano y superposición concedida: la pantalla de sonar pasa sola al primer plano en modo inmersivo.
-- Atrás no la cierra; Home vuelve a la pantalla de sonar en cerca de 1 segundo.
-- Tres pulsaciones de bajar volumen no cambian el volumen de alarma (7/7).
-- Snooze: aparece el botón; al pulsarlo se libera el lockdown y se detiene el servicio; la alarma se re-dispara al minuto con la misma sesión; con `maxCount = 1` ya no se ofrece de nuevo.
-- Matar el proceso durante el sonado deja la marca de sesión viva; al arrancar la app se consume (se emite `SUSPICIOUS`).
-- `STRICT` con propietario del dispositivo (`dpm set-device-owner`): lock task en estado `LOCKED`; Home, Recientes, panel de notificaciones y pulsación larga de encendido no responden; al posponer pasa a `NONE` y Home vuelve a funcionar.
+| Caso | Resultado |
+| --- | --- |
+| `OFF`, dispositivo en uso | Suena sin abrir la pantalla; volumen intacto; Atrás y Home libres. |
+| `STANDARD` con otra app delante y superposición | La pantalla de sonar pasa sola al primer plano en modo inmersivo; Atrás ignorado; Home vuelve en ~1 s. |
+| `STANDARD`, pantalla apagada | La pantalla se enciende y muestra la pantalla de sonar. |
+| `STANDARD`, pantalla apagada con PIN | La pantalla de sonar queda sobre el bloqueo (`isKeyguardShowing=true`); Atrás ignorado. |
+| `STANDARD` sin superposición | La pantalla no se abre sola; abierta desde la notificación, Atrás se ignora y Home sale y no vuelve; el volumen se fuerza igualmente. |
+| Volumen | Con volumen de partida 3: sube a 7 al empezar, las teclas de bajar no lo mueven y vuelve a 3 al terminar. |
+| Snooze | Libera el lockdown, re-dispara al minuto con la misma sesión y respeta `maxCount`. |
+| Matar el proceso durante el sonado | El sonado se detiene (nada lo reanuda); la marca de sesión viva se consume al arrancar la app (`SUSPICIOUS`). |
+| `STRICT` sin propietario | Se comporta como `STANDARD` (sin lock task). |
+| `STRICT` con propietario (`dpm set-device-owner`) | Lock task `LOCKED`: Home, Recientes, panel y encendido no responden; se libera al resolver, al posponer y por tiempo máximo (10 min); el volumen se restaura. |
+| `alarm-sound` | Con el lockdown activo el `MediaPlayer` suena en `USAGE_ALARM` con el stream al máximo (7/7). |
+| Administrador de dispositivo | Con el administrador activo, `pm uninstall` falla con `DELETE_FAILED_DEVICE_POLICY_MANAGER`. |
+| Botón «Renunciar a propietario» | En el emulador con propietario real (`dpm`), deja `dpm list-owners` vacío y la pantalla de estado pasa a «Pendiente». |
 
-Pendientes de verificar:
+Hallazgos:
 
-1. Pantalla bloqueada y apagada: la pantalla de sonar se enciende sobre el bloqueo.
-2. `OFF`: la alarma se descarta sin restricciones.
-3. Sin superposición: Atrás no cierra; Home sale y solo la notificación reabre la pantalla.
-4. Restauración del volumen previo al terminar (el volumen de partida no se pudo bajar en el emulador).
-5. Reaplicación del lockdown al recrear la actividad tras matar el proceso.
-6. Liberación del lock task al resolver y por tiempo máximo (solo se probó por snooze).
-7. `STRICT` sin propietario: se comporta como `STANDARD` y la pantalla de estado lo indica.
-8. Botón «Renunciar a propietario del dispositivo» (solo compilado).
-9. Integración con `alarm-sound` (rampa hasta el máximo con lockdown).
+- Con el dispositivo en uso, el full-screen intent solo muestra un aviso; por eso, con superposición, el lockdown abre
+  la pantalla de sonar directamente. Sin superposición el lockdown solo se aplica cuando el usuario abre la pantalla.
+- Matar el proceso (por ejemplo, Forzar detención en Ajustes) silencia la alarma: el servicio no se reanuda. Mitigarlo
+  exige que `alarm-reliability` reanude el sonado o, con propietario del dispositivo, impedir la detención forzada
+  (`setUserControlDisabledPackages`); no está implementado.
+- `adb shell dpm remove-active-admin` falla con esta app; usa el botón de la pantalla de estado.
 
-Hallazgo: con el dispositivo en uso, el full-screen intent solo muestra un aviso; por eso, con superposición, el
-lockdown abre la pantalla de sonar directamente. Sin superposición el lockdown solo se aplica cuando el usuario
-abre la pantalla.
+Pendiente para el usuario: probar el lock task y el botón de renuncia en un dispositivo físico, y activar el
+administrador con el diálogo real del sistema.
