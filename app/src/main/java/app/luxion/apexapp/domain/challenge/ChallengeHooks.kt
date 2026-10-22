@@ -82,7 +82,7 @@ sealed interface ChallengeEvent {
 }
 
 /** Receptor de eventos de la sesión. `wake-stats` sustituye la implementación por defecto. */
-interface ChallengeEventSink {
+fun interface ChallengeEventSink {
     fun onEvent(event: ChallengeEvent)
 }
 

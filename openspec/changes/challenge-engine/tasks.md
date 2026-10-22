@@ -16,7 +16,7 @@
 - [x] 3.2 Implementar `ChallengeSession` (estados, `submit`, regeneración tras fallo, selección encadenada en ciclo y aleatoria, `sessionId` recibido, tipos desconocidos ignorados, entrega de `params` solo a su tipo, emisión de eventos); verificar con tests: orden A,B,A, aleatorio dentro de activados, fallo no avanza, `Passed` solo tras el último, secuencia de eventos con el `sessionId` dado
 - [x] 3.3 Implementar la reserva (`availability()` y aviso durante la ejecución → otro tipo habilitado, o `MATH`, con `ChallengeFellBack`); verificar con tests de ambos casos y de config sin tipos utilizables
 - [x] 3.4 Añadir `di/ChallengeModule.kt` con el registro (solo `MATH`) y los bindings por defecto; verificar que `./gradlew :app:assembleDebug` compila con el grafo de Hilt
-- [ ] 3.5 Implementar un `DismissGate` que solo permita descartar con la sesión de la alarma superada (sin activarlo en el flujo real hasta coordinarlo con alarm-reliability/anti-cheat); verificar con test unitario de la puerta
+- [x] 3.5 Implementar un `DismissGate` que solo permita descartar con la sesión de la alarma superada (sin activarlo en el flujo real hasta coordinarlo con alarm-reliability/anti-cheat); verificar con test unitario de la puerta
 
 ## 4. UI de sesión y pantalla de prueba
 

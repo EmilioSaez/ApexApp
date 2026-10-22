@@ -9,6 +9,7 @@ import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.FixedDifficultyProvider
 import app.luxion.apexapp.domain.challenge.MathChallenge
 import app.luxion.apexapp.domain.challenge.NoOpChallengeEventSink
+import app.luxion.apexapp.domain.challenge.PassedAlarms
 import app.luxion.apexapp.domain.challenge.SessionConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -29,7 +30,7 @@ import org.junit.Test
 class ChallengeViewModelsTest {
     private val registry = ChallengeRegistry(listOf(MathChallenge()))
     private val renderer = MathRenderer()
-    private val factory = ChallengeSessionFactory(registry, FixedDifficultyProvider(), NoOpChallengeEventSink())
+    private val factory = ChallengeSessionFactory(registry, FixedDifficultyProvider(), NoOpChallengeEventSink(), PassedAlarms())
 
     @Before
     fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
