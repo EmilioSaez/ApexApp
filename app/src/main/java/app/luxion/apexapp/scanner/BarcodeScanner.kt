@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
@@ -51,7 +52,11 @@ fun BarcodeScanner(
         )
     }
     val previewView = androidx.compose.runtime.remember {
-        PreviewView(context).apply { scaleType = PreviewView.ScaleType.FILL_CENTER }
+        PreviewView(context).apply {
+            scaleType = PreviewView.ScaleType.FILL_CENTER
+            // TextureView: se recorta y se desplaza con el contenido; la SurfaceView se pintaba fuera de su sitio dentro de un scroll.
+            implementationMode = PreviewView.ImplementationMode.COMPATIBLE
+        }
     }
 
     DisposableEffect(lifecycleOwner, previewView) {
@@ -92,7 +97,8 @@ fun BarcodeScanner(
         }
     }
 
-    AndroidView(factory = { previewView }, modifier = modifier)
+    // FILL_CENTER escala la imagen más allá del hueco: hay que recortarla a los límites de la vista.
+    AndroidView(factory = { previewView }, modifier = modifier.clipToBounds())
 }
 
 @androidx.annotation.OptIn(androidx.camera.core.ExperimentalGetImage::class)

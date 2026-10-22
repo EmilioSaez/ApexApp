@@ -26,6 +26,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import app.luxion.apexapp.R
 import app.luxion.apexapp.ui.theme.ApexTheme
 
@@ -43,10 +45,18 @@ fun CameraPermissionGate(
 ) {
     val context = LocalContext.current
     var access by remember { mutableStateOf(currentAccess(context, askedBefore = false)) }
-    var asked by remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        asked = true
         access = if (granted) CameraAccess.GRANTED else currentAccess(context, askedBefore = true)
+    }
+    // El usuario puede conceder o revocar el permiso en los ajustes del sistema y volver a la app.
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        val granted = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) ==
+            PackageManager.PERMISSION_GRANTED
+        if (granted) {
+            access = CameraAccess.GRANTED
+        } else if (access == CameraAccess.GRANTED) {
+            access = currentAccess(context, askedBefore = false)
+        }
     }
 
     when (access) {
@@ -64,8 +74,6 @@ fun CameraPermissionGate(
             modifier = modifier,
         )
     }
-    // `asked` solo fuerza la recomposición tras responder el diálogo del sistema.
-    if (asked) Unit
 }
 
 @Composable
