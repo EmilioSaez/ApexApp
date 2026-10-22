@@ -217,4 +217,15 @@
     <string name="stats_duration_hm">%1$d h %2$d min</string>
     <string name="stats_dialog_ok">Aceptar</string>
     <string name="stats_dialog_cancel">Cancelar</string>
+
+    <string name="adaptive_title">Dificultad adaptativa</string>
+    <string name="adaptive_explanation">La dificultad del reto sube si pospones la alarma o lo resuelves muy fácil, y baja si fallas mucho. Siempre dentro de los límites que elijas.</string>
+    <string name="adaptive_save_first">Guarda la alarma para poder activarla.</string>
+    <string name="adaptive_current_level">Nivel actual: %1$d</string>
+    <string name="adaptive_range">Límites: de %1$d a %2$d</string>
+    <string name="adaptive_reset">Reiniciar aprendizaje</string>
+    <string name="adaptive_reason_snoozes">Subida a %1$d: pospusiste %2$d de las últimas 3 veces</string>
+    <string name="adaptive_reason_easy">Subida a %1$d: las últimas 3 veces lo resolviste muy rápido y sin fallos</string>
+    <string name="adaptive_reason_failures">Bajada a %1$d: fallaste mucho en %2$d de las últimas 3 veces</string>
+    <string name="adaptive_reason_slow">Bajada a %1$d: tardaste mucho en %2$d de las últimas 3 veces</string>
 </resources>

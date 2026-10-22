@@ -25,6 +25,8 @@ import app.luxion.apexapp.domain.challenge.ChallengeAnswer
 import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.SessionConfig
 import app.luxion.apexapp.domain.challenge.SessionState
+import app.luxion.apexapp.ui.adaptive.AdaptiveLevelNotice
+import app.luxion.apexapp.ui.adaptive.AdaptiveNoticeViewModel
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 /**
@@ -44,6 +46,9 @@ fun ChallengeSessionScreen(
 ) {
     LaunchedEffect(config, sessionId) { viewModel.start(config, sessionId, alarmId) }
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val noticeViewModel: AdaptiveNoticeViewModel = hiltViewModel(key = "adaptive-$sessionId")
+    LaunchedEffect(alarmId) { noticeViewModel.load(alarmId) }
+    val notice by noticeViewModel.notice.collectAsStateWithLifecycle()
     state?.let {
         ChallengeSessionContent(
             state = it,
@@ -52,6 +57,7 @@ fun ChallengeSessionScreen(
             onUnavailable = viewModel::reportUnavailable,
             onFinished = onFinished,
             modifier = modifier,
+            header = { notice?.let { n -> AdaptiveLevelNotice(n) } },
         )
     }
 }
@@ -64,6 +70,7 @@ fun ChallengeSessionContent(
     onUnavailable: (reason: String) -> Unit,
     onFinished: () -> Unit,
     modifier: Modifier = Modifier,
+    header: @Composable () -> Unit = {},
 ) {
     Column(
         modifier
@@ -72,6 +79,7 @@ fun ChallengeSessionContent(
             .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.xl),
         verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl),
     ) {
+        header()
         val current = state.current
         if (state.passed || current == null) {
             Box(Modifier.fillMaxWidth().padding(vertical = ApexTheme.spacing.xxl), contentAlignment = Alignment.Center) {

@@ -2,15 +2,18 @@ package app.luxion.apexapp.di
 
 import android.content.Context
 import androidx.room.Room
+import app.luxion.apexapp.data.RoomAdaptiveSettingsRepository
 import app.luxion.apexapp.data.RoomAlarmRepository
 import app.luxion.apexapp.data.RoomFireStateRepository
 import app.luxion.apexapp.data.RoomSoundRepository
+import app.luxion.apexapp.data.local.AdaptiveSettingsDao
 import app.luxion.apexapp.data.local.AlarmDao
 import app.luxion.apexapp.data.local.ApexDatabase
 import app.luxion.apexapp.data.local.FireStateDao
 import app.luxion.apexapp.data.local.MIGRATION_1_2
 import app.luxion.apexapp.data.local.MIGRATION_2_3
 import app.luxion.apexapp.data.local.MIGRATION_3_4
+import app.luxion.apexapp.data.local.MIGRATION_4_5
 import app.luxion.apexapp.data.local.SleepDao
 import app.luxion.apexapp.data.local.SoundDao
 import app.luxion.apexapp.data.local.WakeEventDao
@@ -23,6 +26,7 @@ import app.luxion.apexapp.domain.SleepRepository
 import app.luxion.apexapp.domain.SoundRepository
 import app.luxion.apexapp.domain.WakeEventRecorder
 import app.luxion.apexapp.domain.WakeHistoryRepository
+import app.luxion.apexapp.domain.adaptive.AdaptiveSettingsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -38,7 +42,7 @@ object DatabaseModule {
     @Singleton
     fun database(@ApplicationContext context: Context): ApexDatabase =
         Room.databaseBuilder(context, ApexDatabase::class.java, "apex.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
             .build()
 
     @Provides
@@ -55,6 +59,9 @@ object DatabaseModule {
 
     @Provides
     fun soundDao(db: ApexDatabase): SoundDao = db.soundDao()
+
+    @Provides
+    fun adaptiveSettingsDao(db: ApexDatabase): AdaptiveSettingsDao = db.adaptiveSettingsDao()
 }
 
 @Module
@@ -77,4 +84,7 @@ interface RepositoryModule {
 
     @Binds
     fun sleepRepository(impl: RoomSleepRepository): SleepRepository
+
+    @Binds
+    fun adaptiveSettingsRepository(impl: RoomAdaptiveSettingsRepository): AdaptiveSettingsRepository
 }

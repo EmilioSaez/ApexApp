@@ -217,4 +217,15 @@
     <string name="stats_duration_hm">%1$d h %2$d min</string>
     <string name="stats_dialog_ok">OK</string>
     <string name="stats_dialog_cancel">Cancel</string>
+
+    <string name="adaptive_title">Adaptive difficulty</string>
+    <string name="adaptive_explanation">The challenge gets harder if you snooze or solve it too easily, and easier if you fail a lot. Always within the limits you choose.</string>
+    <string name="adaptive_save_first">Save the alarm to be able to turn this on.</string>
+    <string name="adaptive_current_level">Current level: %1$d</string>
+    <string name="adaptive_range">Limits: %1$d to %2$d</string>
+    <string name="adaptive_reset">Reset learning</string>
+    <string name="adaptive_reason_snoozes">Raised to %1$d: you snoozed %2$d of the last 3 times</string>
+    <string name="adaptive_reason_easy">Raised to %1$d: you solved it quickly with no mistakes the last 3 times</string>
+    <string name="adaptive_reason_failures">Lowered to %1$d: you failed a lot in %2$d of the last 3 times</string>
+    <string name="adaptive_reason_slow">Lowered to %1$d: you took too long in %2$d of the last 3 times</string>
 </resources>
