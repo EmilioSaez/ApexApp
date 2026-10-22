@@ -52,9 +52,7 @@ class AlarmControllerTest {
     private val scheduler = AlarmClockScheduler(gateway, clock, fireState)
     private val handler = AlarmFiringHandler(
         repository, scheduler, RingingRegistry(), launcher,
-        object : AlarmNotifier {
-            override fun notify(alarm: Alarm) = Unit
-        },
+        NoOpNotifier, CountingSessionIds(),
         fireState, clock,
     )
     private val controller = AlarmController(repository, scheduler, fireState, handler, recorder, clock)
@@ -105,9 +103,7 @@ class AlarmControllerTest {
         val newYork = ZoneId.of("America/New_York")
         val nyClock = Clock.fixed(start.toInstant(), newYork)
         val nyScheduler = AlarmClockScheduler(gateway, nyClock, fireState)
-        val nyHandler = AlarmFiringHandler(repository, nyScheduler, RingingRegistry(), launcher, object : AlarmNotifier {
-            override fun notify(alarm: Alarm) = Unit
-        }, fireState, nyClock)
+        val nyHandler = AlarmFiringHandler(repository, nyScheduler, RingingRegistry(), launcher, NoOpNotifier, CountingSessionIds(), fireState, nyClock)
         AlarmController(repository, nyScheduler, fireState, nyHandler, recorder, nyClock).rescheduleAll()
         val expected = ZonedDateTime.of(2026, 10, 21, 8, 0, 0, 0, newYork).toInstant().toEpochMilli()
         assertEquals(expected, gateway.scheduled[id])

@@ -60,7 +60,7 @@ interface AlarmModule {
     @Binds
     fun ringer(impl: SystemToneRinger): AlarmRinger
 
-    /** Pantalla de sonar por defecto; alarm-core la sustituye por su actividad. */
+    /** Abre la RingActivity de alarm-core. */
     @Binds
     fun ringScreenLauncher(impl: AndroidRingScreenLauncher): RingScreenLauncher
 

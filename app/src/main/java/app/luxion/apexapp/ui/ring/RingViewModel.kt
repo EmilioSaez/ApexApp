@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.luxion.apexapp.alarm.AlarmNotifier
+import app.luxion.apexapp.alarm.AlarmResolver
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,7 @@ class RingViewModel @Inject constructor(
     private val repository: AlarmRepository,
     private val gate: DismissGate,
     private val notifier: AlarmNotifier,
+    private val resolver: AlarmResolver,
 ) : ViewModel() {
     private val alarmId: Long = savedStateHandle[EXTRA_ALARM_ID] ?: -1L
     private val sessionId: String? = savedStateHandle[EXTRA_SESSION_ID]
@@ -47,6 +49,8 @@ class RingViewModel @Inject constructor(
         val alarm = _uiState.value.alarm ?: return
         if (!gate.canDismiss(alarm)) return
         notifier.cancel(alarm.id)
+        // Detiene el audio y el servicio de sonado; sin sesión (apertura manual) no hay nada que cerrar.
+        sessionId?.let(resolver::resolve)
         _uiState.update { it.copy(finished = true) }
     }
 

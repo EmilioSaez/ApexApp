@@ -9,11 +9,13 @@ import android.content.Intent
 import android.media.AudioAttributes
 import android.media.Ringtone
 import android.media.RingtoneManager
+import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
-import app.luxion.apexapp.MainActivity
 import app.luxion.apexapp.R
+import app.luxion.apexapp.ui.ring.RingActivity
+import app.luxion.apexapp.ui.ring.RingViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -49,15 +51,18 @@ class SystemToneRinger @Inject constructor(
     }
 }
 
-/** Pantalla de sonar por defecto: la app principal. alarm-core la sustituye por su actividad. */
+/** Abre la pantalla de sonar (RingActivity) de la alarma y la sesión indicadas. */
 class AndroidRingScreenLauncher @Inject constructor(
     @ApplicationContext private val context: Context,
 ) : RingScreenLauncher {
     override fun intentFor(session: RingingSession): Intent =
-        Intent(context, MainActivity::class.java)
-            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            .putExtra(AndroidAlarmClockGateway.EXTRA_ALARM_ID, session.alarm.id)
-            .putExtra(AndroidAlarmClockGateway.EXTRA_SESSION_ID, session.sessionId)
+        Intent(context, RingActivity::class.java).apply {
+            // El data URI evita que se confundan los PendingIntent de alarmas distintas.
+            data = Uri.parse("apexapp://ring/${session.alarm.id}")
+            putExtra(RingViewModel.EXTRA_ALARM_ID, session.alarm.id)
+            putExtra(RingViewModel.EXTRA_SESSION_ID, session.sessionId)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
 }
 
 class AndroidRingingLauncher @Inject constructor(
