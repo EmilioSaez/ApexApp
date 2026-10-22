@@ -77,3 +77,4 @@ Ver proposal.md - Why. Estado actual observado:
 - Con varias alarmas sonando a la vez el servicio es único y la notificación en primer plano es la de la última; el audio sigue a la última sesión activa.
 - `USE_EXACT_ALARM` hace que `canScheduleExactAlarms()` sea siempre verdadero desde API 33, por lo que no se requiere código adicional; `exactAlarmSettingsIntent()` devuelve `null` desde API 33.
 - Integración con alarm-core: `AndroidRingScreenLauncher` abre `RingActivity` (data `apexapp://ring/<id>`, extras `RingViewModel.EXTRA_*`); `RingViewModel.dismiss` llama a `AlarmResolver.resolve(sessionId)`; el `AndroidAlarmNotifier` de alarm-core queda como respaldo cuando el servicio no puede arrancar; `AlarmFiringHandler` usa el `SessionIdGenerator` de alarm-core.
+- `RingingRegistry` es singleton: handler y servicio deben compartir las sesiones activas (detectado en la prueba en emulador, donde el servicio se detenía al no encontrar la sesión).

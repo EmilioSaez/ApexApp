@@ -39,7 +39,11 @@ interface RingingLauncher {
     fun start(session: RingingSession): Boolean
 }
 
-/** Sesiones de sonado activas, a lo sumo una por alarma. */
+/**
+ * Sesiones de sonado activas, a lo sumo una por alarma. Singleton: el handler y el servicio
+ * deben ver el mismo registro.
+ */
+@javax.inject.Singleton
 class RingingRegistry @javax.inject.Inject constructor() {
     private val sessions = ConcurrentHashMap<String, RingingSession>()
 

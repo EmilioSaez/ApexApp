@@ -46,8 +46,8 @@
 
 ## 7. Verificación
 
-- [ ] 7.1 Ejecutar los tests unitarios e instrumentados existentes y los nuevos
-- [ ] 7.2 Probar manualmente en emulador (`shogun emulator start`): pantalla bloqueada, app cerrada, `adb shell dumpsys deviceidle force-idle`, reinicio y cambio de hora/zona
+- [x] 7.1 Ejecutar los tests unitarios e instrumentados existentes y los nuevos
+- [x] 7.2 Probar manualmente en emulador (`shogun emulator start`): pantalla bloqueada, app cerrada, `adb shell dumpsys deviceidle force-idle`, reinicio y cambio de hora/zona
 - [ ] 7.3 Probar en al menos un dispositivo físico con optimización de fabricante agresiva (pendiente manual para el usuario: requiere un móvil real con ROM agresiva)
 
-<!-- Pendiente de 7.x: unit tests, lint y compilación de androidTest en verde (68 tests). Los instrumentados (incl. MigrationTest v2->v3) y la prueba manual en emulador no se han podido ejecutar: shogun no tenía emulador libre (límite de 2, ocupados por otras worktrees). 7.3 requiere un dispositivo físico. -->
+<!-- Verificación 7.1/7.2 (emulador API 36): 27/27 tests instrumentados y 68 unitarios en verde; alarma con app cerrada, pantalla apagada: FGS mediaPlayback en primer plano, RingActivity en foco, audio USAGE_ALARM, descartar detiene audio/servicio/notificación; cambio de zona reprograma a la misma hora local; el reinicio reprograma. Doze profundo (force-idle) no se alcanzó en el emulador (se queda en INACTIVE por estar cargando) pero la alarma se concedió como setAlarmClock con exactAllowReason=policy_permission. Fallo encontrado y corregido: RingingRegistry no era @Singleton. -->
