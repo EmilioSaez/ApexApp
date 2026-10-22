@@ -31,5 +31,6 @@
 ## 5. Integración
 
 - [ ] 5.1 Registrar los cuatro tipos de reto en el módulo Hilt del motor y exponerlos en la configuración de alarma; verificar que aparecen y se guardan por alarma
+  - Registro Hilt (`Challenge` y `ChallengeRenderer` @IntoSet) hecho. Falta exponerlos en el editor: implementar `ChallengeParamsEditor` por tipo (QR: `QrCodeRegistration` + `QrParams.isRegistered`; sensores: `MotionTargetField` y `ActivityRecognitionGate`) cuando `challenge-engine` publique ese contrato.
 - [ ] 5.2 Prueba de extremo a extremo en emulador/dispositivo: alarma con cada reto, disparo, superación y casos de trampa; verificar con `./gradlew test connectedDebugAndroidTest` y checklist manual
 - [ ] 5.3 Calibrar umbrales (sacudidas, ventana de escaneo, límites de pasos) en dispositivo real y fijarlos en constantes únicas; verificar que los tests siguen en verde
