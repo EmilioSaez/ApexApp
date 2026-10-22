@@ -32,16 +32,30 @@ import javax.inject.Inject
 interface ChallengeRenderer {
     val type: ChallengeType
 
-    /** [wrong] es verdadero tras una respuesta incorrecta; [instance] cambia al regenerarse el reto. */
+    /**
+     * [wrong] es verdadero tras una respuesta incorrecta; [instance] cambia al regenerarse el reto.
+     * [onUnavailable] avisa de que el reto no puede completarse (sensor sin datos, permiso revocado):
+     * la sesión lo sustituye por la reserva.
+     */
     @Composable
-    fun Render(instance: ChallengeInstance, wrong: Boolean, onAnswer: (ChallengeAnswer) -> Unit)
+    fun Render(
+        instance: ChallengeInstance,
+        wrong: Boolean,
+        onAnswer: (ChallengeAnswer) -> Unit,
+        onUnavailable: (reason: String) -> Unit,
+    )
 }
 
 class MathRenderer @Inject constructor() : ChallengeRenderer {
     override val type: ChallengeType = ChallengeType.MATH
 
     @Composable
-    override fun Render(instance: ChallengeInstance, wrong: Boolean, onAnswer: (ChallengeAnswer) -> Unit) {
+    override fun Render(
+        instance: ChallengeInstance,
+        wrong: Boolean,
+        onAnswer: (ChallengeAnswer) -> Unit,
+        onUnavailable: (reason: String) -> Unit,
+    ) {
         // Una instancia nueva (tras un fallo o al avanzar) vacía el campo.
         var text by remember(instance) { mutableStateOf("") }
         val submit = { onAnswer(ChallengeAnswer.Text(text)) }

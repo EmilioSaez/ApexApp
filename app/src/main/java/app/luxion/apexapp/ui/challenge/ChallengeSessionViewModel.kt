@@ -40,5 +40,10 @@ class ChallengeSessionViewModel @Inject constructor(
         session?.submit(answer)
     }
 
+    /** El reto en curso no puede completarse: la sesión recurre a la reserva. */
+    fun reportUnavailable(reason: String) {
+        session?.reportUnavailable(reason)
+    }
+
     fun rendererFor(type: ChallengeType): ChallengeRenderer? = renderersByType[type]
 }

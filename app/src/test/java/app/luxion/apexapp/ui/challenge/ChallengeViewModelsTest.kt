@@ -82,6 +82,14 @@ class ChallengeViewModelsTest {
     }
 
     @Test
+    fun `reportUnavailable replaces the current challenge with the fallback`() {
+        val vm = sessionViewModel()
+        vm.start(config, "s1")
+        vm.reportUnavailable("no camera")
+        assertEquals(ChallengeType.MATH, vm.state.value!!.current!!.type)
+    }
+
+    @Test
     fun `renderer is resolved by type`() {
         assertSame(renderer, sessionViewModel().rendererFor(ChallengeType.MATH))
         assertNull(sessionViewModel().rendererFor(ChallengeType("qr")))

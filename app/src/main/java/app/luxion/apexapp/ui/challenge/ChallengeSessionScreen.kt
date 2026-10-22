@@ -49,6 +49,7 @@ fun ChallengeSessionScreen(
             state = it,
             rendererFor = viewModel::rendererFor,
             onAnswer = viewModel::submit,
+            onUnavailable = viewModel::reportUnavailable,
             onFinished = onFinished,
             modifier = modifier,
         )
@@ -60,6 +61,7 @@ fun ChallengeSessionContent(
     state: SessionState,
     rendererFor: (ChallengeType) -> ChallengeRenderer?,
     onAnswer: (ChallengeAnswer) -> Unit,
+    onUnavailable: (reason: String) -> Unit,
     onFinished: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -88,7 +90,7 @@ fun ChallengeSessionContent(
                 progress = { state.solved.toFloat() / state.total },
                 modifier = Modifier.fillMaxWidth(),
             )
-            rendererFor(current.type)?.Render(current, state.lastAnswerWrong, onAnswer)
+            rendererFor(current.type)?.Render(current, state.lastAnswerWrong, onAnswer, onUnavailable)
         }
     }
 }
