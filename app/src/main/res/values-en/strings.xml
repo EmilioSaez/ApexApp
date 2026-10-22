@@ -138,4 +138,28 @@
     <string name="challenge_target_unit_shakes">Number of shakes</string>
     <string name="challenge_target_unit_steps">Number of steps</string>
     <string name="challenge_target_unit_seconds">Seconds walking</string>
+
+    <string name="sound_default">Default tone</string>
+    <string name="sound_not_audio">That file is not audio or cannot be read.</string>
+    <string name="sound_pick_file">Audio file</string>
+    <string name="sound_pick_system">System tone</string>
+    <string name="sound_preview">Test</string>
+    <string name="sound_preview_stop">Stop test</string>
+    <string name="sound_ramp_off">Gradual volume: off</string>
+    <string name="sound_ramp_seconds">Gradual volume: %1$d s</string>
+    <string name="sound_section">Sound</string>
+    <string name="sound_use_default">Default</string>
+    <string name="speech_time">It is %1$s</string>
+    <string name="vibration_custom">Custom</string>
+    <string name="vibration_custom_hint">Pulse and pause in ms (200,100,400)</string>
+    <string name="vibration_custom_invalid">Up to 20 positive values, 10 s total at most.</string>
+    <string name="vibration_enabled">Vibration</string>
+    <string name="vibration_pulse">Pulses</string>
+    <string name="vibration_sos">SOS</string>
+    <string name="vibration_steady">Steady</string>
+    <string name="voice_reminder">Speak a reminder</string>
+    <string name="voice_reminder_text">Reminder</string>
+    <string name="voice_repeat">Repeat while ringing</string>
+    <string name="voice_repeat_every">Repeat every %1$d s</string>
+    <string name="voice_speak_time">Speak the time</string>
 </resources>
