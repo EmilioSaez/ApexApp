@@ -14,6 +14,8 @@ import kotlinx.serialization.json.Json
 
 private const val SOURCE_RESOURCE = "resource"
 private const val SOURCE_URI = "uri"
+private const val SOURCE_SYSTEM = "system"
+private const val SOURCE_BUNDLED = "bundled"
 
 /** Tolerante: ignora claves desconocidas y usa los defaults del dominio para las ausentes. */
 internal val ConfigJson = Json {
@@ -62,6 +64,8 @@ internal fun SoundEntity.toDomain() = Sound(
     source = when (sourceType) {
         SOURCE_RESOURCE -> SoundSource.Resource(sourceValue.toInt())
         SOURCE_URI -> SoundSource.Uri(sourceValue)
+        SOURCE_SYSTEM -> SoundSource.SystemTone(sourceValue)
+        SOURCE_BUNDLED -> SoundSource.Bundled(sourceValue)
         else -> error("Unknown sound source type: $sourceType")
     },
 )
@@ -70,6 +74,8 @@ internal fun Sound.toEntity(): SoundEntity {
     val (type, value) = when (val s = source) {
         is SoundSource.Resource -> SOURCE_RESOURCE to s.resId.toString()
         is SoundSource.Uri -> SOURCE_URI to s.uri
+        is SoundSource.SystemTone -> SOURCE_SYSTEM to s.uri
+        is SoundSource.Bundled -> SOURCE_BUNDLED to s.key
     }
     return SoundEntity(id = id, name = name, sourceType = type, sourceValue = value)
 }

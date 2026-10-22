@@ -97,4 +97,31 @@ class RepositoryTest {
         assertNull(alarms.get(alarmId)!!.soundId)
         assertTrue(sounds.observeAll().first().isEmpty())
     }
+
+    @Test
+    fun sound_roundTripSystemAndBundledSources() = runBlocking {
+        val system = sounds.save(Sound(name = "Beep", source = SoundSource.SystemTone("content://settings/system/alarm_alert")))
+        val bundled = sounds.save(Sound(name = "default", source = SoundSource.Bundled("default")))
+        assertEquals(SoundSource.SystemTone("content://settings/system/alarm_alert"), sounds.get(system)!!.source)
+        assertEquals(SoundSource.Bundled("default"), sounds.get(bundled)!!.source)
+    }
+
+    @Test
+    fun alarm_keepsExtendedSoundConfig() = runBlocking {
+        val config = SoundConfig(
+            volume = 60, rampSeconds = 45, vibrationPattern = "c:200,100,400",
+            speakTime = true, ttsEnabled = true, ttsText = "Arriba", speakRepeatSeconds = 30,
+        )
+        val id = alarms.save(Alarm(hour = 6, minute = 0, soundConfig = config))
+        assertEquals(config, alarms.get(id)!!.soundConfig)
+    }
+
+    @Test
+    fun alarm_withDefaultSoundConfigHasNeutralDefaults() = runBlocking {
+        val id = alarms.save(Alarm(hour = 6, minute = 0))
+        val config = alarms.get(id)!!.soundConfig
+        assertEquals(30, config.rampSeconds)
+        assertEquals("steady", config.vibrationPattern)
+        assertEquals(false, config.speakTime)
+    }
 }
