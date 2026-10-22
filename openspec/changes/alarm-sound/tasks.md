@@ -8,7 +8,7 @@
 
 ## 2. Motor de audio
 
-- [ ] 2.1 Crear `SoundAlarmRinger` (implementa `AlarmRinger.start(session: RingingSession)/stop()` de alarm-reliability, reemplaza el binding Hilt de `SystemToneRinger`) con `MediaPlayer` (`USAGE_ALARM`, bucle, wake lock parcial)
+- [x] 2.1 Crear `SoundAlarmRinger` (implementa `AlarmRinger.start(session: RingingSession)/stop()` de alarm-reliability, reemplaza el binding Hilt de `SystemToneRinger`) con `MediaPlayer` (`USAGE_ALARM`, bucle, wake lock parcial)
 - [x] 2.2 Añadir tono por defecto en `res/raw` y respaldo ante fallo de fuente o error del reproductor
 - [x] 2.3 Gestionar audio focus (solicitar, ignorar pérdida, liberar)
 - [x] 2.4 Implementar la rampa de volumen sin reinicio con el bucle
@@ -30,8 +30,8 @@
 
 ## 5. Integración en el disparo
 
-- [ ] 5.1 Verificar que el servicio de alarm-reliability arranca/para `SoundAlarmRinger` por `AlarmRinger.start/stop` y cubrirlo con tests (sin servicio propio)
-- [ ] 5.2 Detener audio, vibración y voz al parar o posponer la alarma
+- [x] 5.1 Verificar que el servicio de alarm-reliability arranca/para `SoundAlarmRinger` por `AlarmRinger.start/stop` y cubrirlo con tests (sin servicio propio)
+- [x] 5.2 Detener audio, vibración y voz al parar o posponer la alarma
 
 ## 6. Editor
 
@@ -44,4 +44,4 @@
 
 - [ ] 7.1 Prueba instrumentada: la alarma suena por el stream de alarma con la pantalla apagada
 - [ ] 7.2 Prueba manual: audio de otra app en curso, archivo SAF borrado y TTS ausente
-- [ ] 7.3 `openspec validate alarm-sound`
+- [x] 7.3 `openspec validate alarm-sound`

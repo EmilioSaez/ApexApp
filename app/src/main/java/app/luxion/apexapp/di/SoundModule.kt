@@ -1,5 +1,6 @@
 package app.luxion.apexapp.di
 
+import app.luxion.apexapp.alarm.AlarmRinger
 import app.luxion.apexapp.alarm.sound.AlarmSoundEngine
 import app.luxion.apexapp.alarm.sound.AlarmSpeaker
 import app.luxion.apexapp.alarm.sound.AlarmVibrator
@@ -7,6 +8,7 @@ import app.luxion.apexapp.alarm.sound.AndroidAlarmSpeaker
 import app.luxion.apexapp.alarm.sound.AndroidAlarmVibrator
 import app.luxion.apexapp.alarm.sound.AndroidTimeAnnouncer
 import app.luxion.apexapp.alarm.sound.AndroidTonePlayer
+import app.luxion.apexapp.alarm.sound.SoundAlarmRinger
 import app.luxion.apexapp.alarm.sound.TimeAnnouncer
 import app.luxion.apexapp.alarm.sound.TonePlayer
 import app.luxion.apexapp.domain.SoundRepository
@@ -26,6 +28,10 @@ import kotlinx.coroutines.SupervisorJob
 @Module
 @InstallIn(SingletonComponent::class)
 interface SoundBindings {
+    /** Sustituye al binding por defecto (`SystemToneRinger`) del audio del sonado. */
+    @Binds
+    fun ringer(impl: SoundAlarmRinger): AlarmRinger
+
     @Binds
     fun tonePlayer(impl: AndroidTonePlayer): TonePlayer
 
