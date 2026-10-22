@@ -95,4 +95,6 @@
     <string name="challenge_wrong">Wrong answer</string>
     <string name="challenge_passed">Challenges passed!</string>
     <string name="challenge_done">Done</string>
+    <string name="challenge_editor_section">Challenges</string>
+    <string name="challenge_editor_none">No challenges: the alarm can be dismissed right away.</string>
 </resources>

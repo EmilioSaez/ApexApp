@@ -27,7 +27,12 @@ data class RunningTest(val session: SessionConfig, val sessionId: String)
 @HiltViewModel
 class ChallengeTestViewModel @Inject constructor(
     registry: ChallengeRegistry,
+    renderers: Set<@JvmSuppressWildcards ChallengeRenderer> = emptySet(),
 ) : ViewModel() {
+    private val renderersByType = renderers.associateBy { it.type }
+
+    fun rendererFor(type: ChallengeType): ChallengeRenderer? = renderersByType[type]
+
     /** Orden estable para que las fichas no salten de sitio. */
     val availableTypes: List<ChallengeType> = registry.types.sortedBy { it.id }
 

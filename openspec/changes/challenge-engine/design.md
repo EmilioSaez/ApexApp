@@ -50,7 +50,14 @@ Antes de cada reto se consulta `availability()`; si es `Unavailable` (falta cám
 **9. Punto de enganche en el flujo real.**
 `alarm-core` ofrece `DismissGate.canDismiss(alarm)` (por defecto `true`) en la pantalla de sonar. Este change aporta una implementación que solo permite descartar cuando la sesión de retos de la alarma está superada, pero su activación en el flujo real se coordina con `alarm-reliability` y `anti-cheat`; en este change queda probada con la pantalla de prueba. El `sessionId` lo crea `AlarmFiringHandler` y llega por `RingViewModel`.
 
-**10. Pantalla de prueba.**
+**10. Agregador de secciones del editor.**
+`EditorSection` (en `ui/editor`) = `order: Int` + `@Composable Content(draft: Alarm, onChange: (Alarm) -> Unit)` + `isValid(draft): Boolean = true`. Se bindea con `@Binds @IntoSet` y `AlarmEditorViewModel` recibe `Set<EditorSection>` ordenado por `order` y, a igual orden, por nombre de clase (estable). El estado del editor incorpora un borrador `Alarm` con todos los campos de extensión (retos, sonido, anti-trampa): las secciones lo transforman con `onChange` y `save` parte de él, así que los campos que ninguna sección toca se conservan. `AlarmEditorContent` renderiza las secciones en `extraContent` y desactiva guardar si alguna `isValid` es falsa.
+Alternativa: un callback por sección en la firma del editor. Descartada: obliga a tocar el editor con cada change.
+
+**11. Sección «Retos» y editores de parámetros.**
+`ChallengesSection` (`order = 100`) lee el `ChallengeRegistry` para ofrecer los tipos, edita `Alarm.challenges` (el orden de `challenges` es el de la cadena; al habilitar un tipo se añade al final) y delega los parámetros en `ChallengeParamsEditor` (`type`, `@Composable Content(params: String, onChange: (String) -> Unit)`, `isValid(params): Boolean = true`), multibound por tipo. La sección es inválida si algún tipo habilitado tiene un editor que rechaza sus parámetros. La etiqueta visible de cada tipo la da `ChallengeRenderer.label()` (por defecto, el id).
+
+**12. Pantalla de prueba.**
 Ruta `ChallengeTestRoute` con formulario (dificultad 1..5, nº de retos, modo, tipos del registro) que lanza `ChallengeSessionScreen`. Acceso desde una acción en la barra de `HomeScreen` (decidido). No usa `AlarmRepository` ni `AlarmScheduler`.
 
 ## Risks / Trade-offs

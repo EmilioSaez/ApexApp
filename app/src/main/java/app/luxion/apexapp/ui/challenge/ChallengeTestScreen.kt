@@ -2,7 +2,6 @@ package app.luxion.apexapp.ui.challenge
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -10,19 +9,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,8 +23,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.ChallengeMode
 import app.luxion.apexapp.domain.challenge.ChallengeType
-import app.luxion.apexapp.domain.challenge.SessionConfig
-import app.luxion.apexapp.ui.components.SectionHeader
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 /**
@@ -47,6 +38,7 @@ fun ChallengeTestScreen(onBack: () -> Unit, viewModel: ChallengeTestViewModel = 
         ChallengeTestContent(
             form = form,
             availableTypes = viewModel.availableTypes,
+            typeLabel = { viewModel.rendererFor(it)?.label() ?: it.id },
             onDifficulty = viewModel::setDifficulty,
             onCount = viewModel::setCount,
             onMode = viewModel::setMode,
@@ -85,6 +77,7 @@ private fun ChallengeRunScaffold(onBack: () -> Unit, content: @Composable (Modif
 fun ChallengeTestContent(
     form: ChallengeTestForm,
     availableTypes: List<ChallengeType>,
+    typeLabel: @Composable (ChallengeType) -> String,
     onDifficulty: (Int) -> Unit,
     onCount: (Int) -> Unit,
     onMode: (ChallengeMode) -> Unit,
@@ -105,61 +98,10 @@ fun ChallengeTestContent(
             Modifier.padding(padding).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
         ) {
-            SectionHeader(stringResource(R.string.challenge_test_difficulty))
-            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen)) {
-                (SessionConfig.MIN_DIFFICULTY..SessionConfig.MAX_DIFFICULTY).forEachIndexed { index, level ->
-                    SegmentedButton(
-                        selected = level == form.difficulty,
-                        onClick = { onDifficulty(level) },
-                        shape = SegmentedButtonDefaults.itemShape(index, SessionConfig.MAX_DIFFICULTY),
-                    ) { Text(level.toString()) }
-                }
-            }
-
-            SectionHeader(stringResource(R.string.challenge_test_count))
-            Row(
-                Modifier.padding(horizontal = ApexTheme.spacing.screen),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
-            ) {
-                OutlinedIconButton(
-                    onClick = { onCount(form.count - 1) },
-                    enabled = form.count > SessionConfig.MIN_COUNT,
-                ) { Text("-") }
-                Text(form.count.toString(), style = MaterialTheme.typography.titleLarge)
-                OutlinedIconButton(
-                    onClick = { onCount(form.count + 1) },
-                    enabled = form.count < SessionConfig.MAX_COUNT,
-                ) { Text("+") }
-            }
-
-            SectionHeader(stringResource(R.string.challenge_test_mode))
-            SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen)) {
-                listOf(
-                    ChallengeMode.CHAINED to stringResource(R.string.challenge_mode_chained),
-                    ChallengeMode.RANDOM to stringResource(R.string.challenge_mode_random),
-                ).forEachIndexed { index, (mode, label) ->
-                    SegmentedButton(
-                        selected = mode == form.mode,
-                        onClick = { onMode(mode) },
-                        shape = SegmentedButtonDefaults.itemShape(index, 2),
-                    ) { Text(label) }
-                }
-            }
-
-            SectionHeader(stringResource(R.string.challenge_test_types))
-            Row(
-                Modifier.padding(horizontal = ApexTheme.spacing.screen),
-                horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
-            ) {
-                availableTypes.forEach { type ->
-                    FilterChip(
-                        selected = type in form.types,
-                        onClick = { onToggleType(type) },
-                        label = { Text(typeLabel(type)) },
-                    )
-                }
-            }
+            DifficultySelector(form.difficulty, onDifficulty)
+            CountStepper(form.count, onCount)
+            ModeSelector(form.mode, onMode)
+            TypeChips(availableTypes, form.types, typeLabel, onToggleType)
 
             Button(
                 onClick = onStart,
@@ -168,10 +110,4 @@ fun ChallengeTestContent(
             ) { Text(stringResource(R.string.challenge_test_start)) }
         }
     }
-}
-
-@Composable
-private fun typeLabel(type: ChallengeType): String = when (type) {
-    ChallengeType.MATH -> stringResource(R.string.challenge_type_math)
-    else -> type.id
 }

@@ -24,10 +24,16 @@
 - [ ] 4.2 Crear `ChallengeTestScreen` (dificultad 1..5, nº de retos, modo, tipos) y `ChallengeTestRoute` en `AppNavigation`, accesible desde una acción adicional en el slot `actions` de la barra de `HomeScreen`, junto a la de Ajustes de design-system-stitch, con callback propio `onOpenChallengeTest` y `ChallengeTestRoute` (`data object` + `composable<>`) junto a `SettingsRoute` (rebasado antes sobre design-system-stitch para no pisar sus cambios en `HomeScreen.kt` y `AppNavigation.kt`); verificar en emulador (`shogun emulator start`) que se ejecuta una sesión completa, se vuelve atrás y no se crea ni programa ninguna alarma
 - [ ] 4.3 Aplicar la skill `design-taste-compose` y verificar modo claro y oscuro en el emulador
 
-## 5. Integración
+## 5. Sección de retos en el editor
 
-- [x] 5.1 Ejecutar `./gradlew :app:testDebugUnitTest :app:assembleDebug` y verificar que todo pasa
-- [x] 5.2 Ejecutar `openspec validate challenge-engine` y verificar que no hay errores
+- [x] 5.1 Crear `EditorSection` + borrador `Alarm` en `EditorUiState`, `updateDraft`, `Set<EditorSection>` ordenado en `AlarmEditorViewModel` y render en `extraContent` con guardado desactivado si alguna sección es inválida; verificar con tests de ViewModel: orden estable, borrador conservado al guardar, sección inválida bloquea
+- [x] 5.2 Crear `ChallengeParamsEditor`, `ChallengesSection` (tipos del registro, nº 1–10, dificultad 1–5, modo) y `ChallengeRenderer.label()`; verificar con tests: orden de cadena, valores iniciales, alarma sin tipos, parámetros inválidos bloquean el guardado, tipo sin editor no bloquea
+- [ ] 5.3 Strings `challenge_editor_*` en es/en y revisión en emulador de la sección en el editor real; verificar que guardar y reabrir conserva los valores
+
+## 6. Integración
+
+- [x] 6.1 Ejecutar `./gradlew :app:testDebugUnitTest :app:assembleDebug` y verificar que todo pasa
+- [x] 6.2 Ejecutar `openspec validate challenge-engine` y verificar que no hay errores
 
 ## Workflow follow-up
 

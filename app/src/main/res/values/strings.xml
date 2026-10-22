@@ -95,4 +95,6 @@
     <string name="challenge_wrong">Respuesta incorrecta</string>
     <string name="challenge_passed">¡Retos superados!</string>
     <string name="challenge_done">Terminar</string>
+    <string name="challenge_editor_section">Retos</string>
+    <string name="challenge_editor_none">Sin retos: la alarma se descarta de inmediato.</string>
 </resources>

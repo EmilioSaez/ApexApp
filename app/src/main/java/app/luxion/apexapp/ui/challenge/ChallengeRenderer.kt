@@ -32,6 +32,10 @@ import javax.inject.Inject
 interface ChallengeRenderer {
     val type: ChallengeType
 
+    /** Nombre visible del tipo; por defecto, su id. */
+    @Composable
+    fun label(): String = type.id
+
     /**
      * [wrong] es verdadero tras una respuesta incorrecta; [instance] cambia al regenerarse el reto.
      * [onUnavailable] avisa de que el reto no puede completarse (sensor sin datos, permiso revocado):
@@ -48,6 +52,9 @@ interface ChallengeRenderer {
 
 class MathRenderer @Inject constructor() : ChallengeRenderer {
     override val type: ChallengeType = ChallengeType.MATH
+
+    @Composable
+    override fun label(): String = stringResource(R.string.challenge_type_math)
 
     @Composable
     override fun Render(

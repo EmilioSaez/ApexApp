@@ -7,14 +7,18 @@ import app.luxion.apexapp.domain.challenge.DifficultyProvider
 import app.luxion.apexapp.domain.challenge.FixedDifficultyProvider
 import app.luxion.apexapp.domain.challenge.MathChallenge
 import app.luxion.apexapp.domain.challenge.NoOpChallengeEventSink
+import app.luxion.apexapp.ui.challenge.ChallengeParamsEditor
 import app.luxion.apexapp.ui.challenge.ChallengeRenderer
+import app.luxion.apexapp.ui.challenge.ChallengesSection
 import app.luxion.apexapp.ui.challenge.MathRenderer
+import app.luxion.apexapp.ui.editor.EditorSection
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
+import dagger.multibindings.Multibinds
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -28,6 +32,18 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun mathRenderer(impl: MathRenderer): ChallengeRenderer
+
+    /** Sección «Retos» del editor de alarmas. */
+    @Binds
+    @IntoSet
+    fun challengesSection(impl: ChallengesSection): EditorSection
+
+    /** Declarados aquí para que los conjuntos existan aunque ningún módulo aporte elementos. */
+    @Multibinds
+    fun editorSections(): Set<EditorSection>
+
+    @Multibinds
+    fun paramsEditors(): Set<ChallengeParamsEditor>
 
     @Binds
     fun difficultyProvider(impl: FixedDifficultyProvider): DifficultyProvider
