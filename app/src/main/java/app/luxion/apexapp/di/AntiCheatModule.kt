@@ -19,6 +19,8 @@ import app.luxion.apexapp.anticheat.SnoozeCounts
 import app.luxion.apexapp.anticheat.SnoozeScheduler
 import app.luxion.apexapp.anticheat.VolumeLock
 import app.luxion.apexapp.domain.WakeEventRecorder
+import app.luxion.apexapp.ui.anticheat.AntiCheatEditorSection
+import app.luxion.apexapp.ui.editor.EditorSection
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -40,6 +42,8 @@ interface AntiCheatBindings {
     @Binds fun activeSessions(impl: PrefsActiveSessionStore): ActiveSessionStore
     @Binds fun snoozeCounts(impl: PrefsSnoozeCounts): SnoozeCounts
     @Binds fun snoozeScheduler(impl: AndroidSnoozeScheduler): SnoozeScheduler
+
+    @Binds @IntoSet fun editorSection(impl: AntiCheatEditorSection): EditorSection
 }
 
 @Module

@@ -5,7 +5,16 @@ import app.luxion.apexapp.alarm.AlarmNotifier
 import app.luxion.apexapp.alarm.AlarmResolver
 import app.luxion.apexapp.alarm.EndReason
 import app.luxion.apexapp.alarm.FakeAlarmRepository
+import app.luxion.apexapp.anticheat.SnoozeController
+import app.luxion.apexapp.anticheat.SnoozeCounts
+import app.luxion.apexapp.anticheat.SnoozeScheduler
 import app.luxion.apexapp.domain.Alarm
+import app.luxion.apexapp.domain.AntiCheatLevel
+import app.luxion.apexapp.domain.AntiCheatPolicy
+import app.luxion.apexapp.domain.SnoozePolicy
+import app.luxion.apexapp.domain.WakeEventRecorder
+import app.luxion.apexapp.domain.WakeEventType
+import java.time.Clock
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -38,6 +47,39 @@ class RingViewModelTest {
         }
     }
 
+    private val snoozeCalls = mutableListOf<Triple<Long, String, Long>>()
+    private val counts = HashMap<String, Int>()
+    private val snoozeController = SnoozeController(
+        resolver,
+        object : SnoozeScheduler {
+            override fun schedule(alarmId: Long, sessionId: String, triggerAtMillis: Long) {
+                snoozeCalls += Triple(alarmId, sessionId, triggerAtMillis)
+            }
+        },
+        object : SnoozeCounts {
+            override fun get(sessionId: String) = counts[sessionId] ?: 0
+            override fun set(sessionId: String, count: Int) {
+                counts[sessionId] = count
+            }
+
+            override fun clear(sessionId: String) {
+                counts.remove(sessionId)
+            }
+        },
+        object : WakeEventRecorder {
+            override suspend fun record(
+                sessionId: String,
+                type: WakeEventType,
+                alarmId: Long?,
+                timestamp: Long,
+                scheduledAt: Long?,
+                challengeType: String?,
+                difficulty: Int?,
+            ) = Unit
+        },
+        Clock.systemUTC(),
+    )
+
     @Before
     fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
 
@@ -50,6 +92,7 @@ class RingViewModelTest {
         gate,
         notifier,
         resolver,
+        snoozeController,
     )
 
     @Test
@@ -87,5 +130,26 @@ class RingViewModelTest {
     fun deletedAlarm_finishesWithoutShowingAnything() = runTest {
         val vm = viewModel(alarmId = 99)
         assertTrue(vm.uiState.first { it.finished }.alarm == null)
+    }
+
+    private val snoozable = AntiCheatPolicy(AntiCheatLevel.STANDARD, SnoozePolicy(allowed = true, minutes = 5, maxCount = 1))
+
+    @Test
+    fun snooze_isOfferedOnlyWhenPolicyAllowsIt() = runTest {
+        val plain = repository.save(Alarm(hour = 7, minute = 0))
+        val allowed = repository.save(Alarm(hour = 7, minute = 0, antiCheat = snoozable))
+        assertFalse(viewModel(plain).uiState.first { it.alarm != null }.canSnooze)
+        assertTrue(viewModel(allowed).uiState.first { it.alarm != null }.canSnooze)
+    }
+
+    @Test
+    fun snooze_reschedulesSameSessionAndFinishes() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0, antiCheat = snoozable))
+        val vm = viewModel(id)
+        vm.uiState.first { it.alarm != null }
+        vm.snooze()
+        assertEquals(listOf(id), cancelled)
+        assertEquals(listOf("s-1"), snoozeCalls.map { it.second })
+        assertTrue(vm.uiState.value.finished)
     }
 }

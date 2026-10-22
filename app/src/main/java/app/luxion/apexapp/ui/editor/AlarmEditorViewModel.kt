@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import app.luxion.apexapp.alarm.AlarmController
 import app.luxion.apexapp.alarm.ScheduleResult
 import app.luxion.apexapp.domain.Alarm
+import app.luxion.apexapp.domain.AntiCheatLevel
+import app.luxion.apexapp.domain.AntiCheatPolicy
 import app.luxion.apexapp.domain.AlarmRepository
 import app.luxion.apexapp.domain.nextOccurrence
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +32,12 @@ data class EditorUiState(
     val repeatDays: Set<DayOfWeek> = emptySet(),
     val label: String = "",
     /** Alarma en edición con todos sus campos de extensión; las [EditorSection] la transforman. */
-    val draft: Alarm = Alarm(hour = DEFAULT_HOUR, minute = 0),
+    val draft: Alarm = Alarm(
+        hour = DEFAULT_HOUR,
+        minute = 0,
+        // Una alarma nueva nace con anti-trampas estándar; las existentes conservan su política.
+        antiCheat = AntiCheatPolicy(level = AntiCheatLevel.STANDARD),
+    ),
     val saved: SavedResult? = null,
 )
 

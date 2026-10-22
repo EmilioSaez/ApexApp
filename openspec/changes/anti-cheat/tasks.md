@@ -37,7 +37,7 @@
 
 - [ ] 6.1 Añadir los controles de snooze al editor (permitido, minutos, máximo); verificar con tests de UI y de persistencia.
 - [ ] 6.2 Implementar `SnoozeController` (re-disparo único con el mismo `sessionId` y contador, sin tocar la siguiente ocurrencia repetitiva) y el botón de posponer en `RingActivity` según política y contador; verificar con tests unitarios con reloj y gateway falsos y manualmente en emulador.
-- [ ] 6.3 Emitir `Snoozed` por `AntiCheatEventSink` y `onEnded(SNOOZED)`; verificar con un test del sink con un fake.
+- [x] 6.3 Emitir `Snoozed` por `AntiCheatEventSink` y `onEnded(SNOOZED)`; verificar con un test del sink con un fake.
 
 ## 7. Integridad de sesión
 
