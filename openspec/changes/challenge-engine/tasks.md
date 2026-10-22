@@ -2,20 +2,20 @@
 
 ## 1. Contrato y configuración de retos (dominio)
 
-- [ ] 1.1 Crear en `domain/challenge` `ChallengeMode`, `ChallengeType`, `SessionConfig` (dificultad acotada a 1..5, `require(count in 1..10)`), `ChallengeAnswer`, `Availability`, `Challenge` y `ChallengeInstance`; verificar con tests JVM de `SessionConfig` (acotado, rango de nº de retos) con `./gradlew :app:testDebugUnitTest`
-- [ ] 1.2 Añadir `count: Int = 1` y `mode` (default `CHAINED`) a la `ChallengeConfig` de alarm-core (sin columnas ni migración) e implementar `SessionConfig.from(ChallengeConfig)` (tipos con `ChallengeSpec.params`, dificultad con 0 = 3); verificar con tests: config solo con tipos y dificultad da 1 reto encadenado, JSON antiguo sin `count`/`mode` se deserializa. Requiere alarm-core fusionado
-- [ ] 1.3 Crear `ChallengeRegistry` (tipo → `Challenge` + UI) y verificar con test que un tipo registrado se resuelve y uno desconocido se ignora
+- [x] 1.1 Crear en `domain/challenge` `ChallengeMode`, `ChallengeType`, `SessionConfig` (dificultad acotada a 1..5, `require(count in 1..10)`), `ChallengeAnswer`, `Availability`, `Challenge` y `ChallengeInstance`; verificar con tests JVM de `SessionConfig` (acotado, rango de nº de retos) con `./gradlew :app:testDebugUnitTest`
+- [x] 1.2 Añadir `count: Int = 1` y `mode` (default `CHAINED`) a la `ChallengeConfig` de alarm-core (sin columnas ni migración) e implementar `SessionConfig.from(ChallengeConfig)` (tipos con `ChallengeSpec.params`, dificultad con 0 = 3); verificar con tests: config solo con tipos y dificultad da 1 reto encadenado, JSON antiguo sin `count`/`mode` se deserializa. Requiere alarm-core fusionado
+- [x] 1.3 Crear `ChallengeRegistry` (tipo → `Challenge` + UI) y verificar con test que un tipo registrado se resuelve y uno desconocido se ignora
 
 ## 2. Reto de matemáticas
 
-- [ ] 2.1 Implementar `MathChallenge` con plantillas por nivel 1..5 desde el resultado y validación de `ChallengeAnswer.Text`; verificar con tests con `Random` semillado: resultado entero, sin divisiones inexactas, complejidad creciente, entrada vacía o no numérica rechazada
+- [x] 2.1 Implementar `MathChallenge` con plantillas por nivel 1..5 desde el resultado y validación de `ChallengeAnswer.Text`; verificar con tests con `Random` semillado: resultado entero, sin divisiones inexactas, complejidad creciente, entrada vacía o no numérica rechazada
 
 ## 3. Motor de sesión y ganchos
 
-- [ ] 3.1 Crear `DifficultyProvider` + `FixedDifficultyProvider` y `ChallengeEvent` + `ChallengeEventSink` + `NoOpChallengeEventSink`; verificar con test que el proveedor por defecto devuelve el nivel base
-- [ ] 3.2 Implementar `ChallengeSession` (estados, `submit`, regeneración tras fallo, selección encadenada en ciclo y aleatoria, `sessionId` recibido, tipos desconocidos ignorados, entrega de `params` solo a su tipo, emisión de eventos); verificar con tests: orden A,B,A, aleatorio dentro de activados, fallo no avanza, `Passed` solo tras el último, secuencia de eventos con el `sessionId` dado
-- [ ] 3.3 Implementar la reserva (`availability()` y aviso durante la ejecución → otro tipo habilitado, o `MATH`, con `ChallengeFellBack`); verificar con tests de ambos casos y de config sin tipos utilizables
-- [ ] 3.4 Añadir `di/ChallengeModule.kt` con el registro (solo `MATH`) y los bindings por defecto; verificar que `./gradlew :app:assembleDebug` compila con el grafo de Hilt
+- [x] 3.1 Crear `DifficultyProvider` + `FixedDifficultyProvider` y `ChallengeEvent` + `ChallengeEventSink` + `NoOpChallengeEventSink`; verificar con test que el proveedor por defecto devuelve el nivel base
+- [x] 3.2 Implementar `ChallengeSession` (estados, `submit`, regeneración tras fallo, selección encadenada en ciclo y aleatoria, `sessionId` recibido, tipos desconocidos ignorados, entrega de `params` solo a su tipo, emisión de eventos); verificar con tests: orden A,B,A, aleatorio dentro de activados, fallo no avanza, `Passed` solo tras el último, secuencia de eventos con el `sessionId` dado
+- [x] 3.3 Implementar la reserva (`availability()` y aviso durante la ejecución → otro tipo habilitado, o `MATH`, con `ChallengeFellBack`); verificar con tests de ambos casos y de config sin tipos utilizables
+- [x] 3.4 Añadir `di/ChallengeModule.kt` con el registro (solo `MATH`) y los bindings por defecto; verificar que `./gradlew :app:assembleDebug` compila con el grafo de Hilt
 - [ ] 3.5 Implementar un `DismissGate` que solo permita descartar con la sesión de la alarma superada (sin activarlo en el flujo real hasta coordinarlo con alarm-reliability/anti-cheat); verificar con test unitario de la puerta
 
 ## 4. UI de sesión y pantalla de prueba
