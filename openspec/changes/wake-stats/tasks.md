@@ -3,12 +3,12 @@
 ## 1. Modelo y persistencia
 
 - [x] 1.1 Añadir `WakeEventEntity`, `SleepLogEntity`, `SleepPreferencesEntity` y sus DAOs; registrar en `ApexDatabase` con una migración aditiva N→N+1 sobre la versión vigente al rebasar (no fijar el número de versión: lo fija `alarm-core`); verificar que se genera el schema JSON de la versión resultante
-- [ ] 1.2 Test instrumentado de migración N→N+1 con `MigrationTestHelper`: alarmas y sonidos intactos, tablas nuevas vacías
-- [ ] 1.3 Test de DAO: eliminar una alarma deja sus eventos con `alarmId` nulo; `INSERT OR IGNORE` ignora «sonó»/«completado» duplicados
+- [x] 1.2 Test instrumentado de migración N→N+1 con `MigrationTestHelper`: alarmas y sonidos intactos, tablas nuevas vacías
+- [x] 1.3 Test de DAO: eliminar una alarma deja sus eventos con `alarmId` nulo; `INSERT OR IGNORE` ignora «sonó»/«completado» duplicados
 
 ## 2. Dominio y contrato
 
-- [ ] 2.1 Definir modelos (`WakeEvent`, `WakeEventType`, `WakeSession`), `WakeEventRecorder` y `WakeHistoryRepository`, con implementaciones Room y bindings Hilt; verificar con `RepositoryTest` instrumentado (registro, flujo reactivo, filtro por rango y por `challengeType`, `recentSessions` con límite y exclusión de sospechosas)
+- [x] 2.1 Definir modelos (`WakeEvent`, `WakeEventType`, `WakeSession`), `WakeEventRecorder` y `WakeHistoryRepository`, con implementaciones Room y bindings Hilt; verificar con `RepositoryTest` instrumentado (registro, flujo reactivo, filtro por rango y por `challengeType`, `recentSessions` con límite y exclusión de sospechosas)
 - [x] 2.2 Implementar el agrupador de eventos en sesiones con `Clock` inyectado (sesión sin resolver tras 24 h, sesión implícita); verificar con tests unitarios JVM
 - [x] 2.3 Implementar `WakeStatsCalculator` (tiempo hasta despertar, snoozes, fallos, puntualidad) y `StreakCalculator` y `observeStreak()`; tests unitarios con los escenarios de `wake-statistics` (racha continúa, día fallido, día sin alarma)
 
@@ -18,7 +18,7 @@
 
 ## 4. Sueño
 
-- [ ] 4.1 Implementar `SleepRepository` y `SleepCalculator` (manual prevalece sobre estimada, sin datos, sin completado); tests unitarios JVM de los escenarios de `sleep-tracking` y test instrumentado de persistencia
+- [x] 4.1 Implementar `SleepRepository` y `SleepCalculator` (manual prevalece sobre estimada, sin datos, sin completado); tests unitarios JVM de los escenarios de `sleep-tracking` y test instrumentado de persistencia
 
 ## 5. UI de estadísticas
 
