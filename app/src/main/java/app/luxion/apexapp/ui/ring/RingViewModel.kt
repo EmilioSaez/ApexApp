@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import app.luxion.apexapp.alarm.AlarmNotifier
 import app.luxion.apexapp.alarm.AlarmResolver
+import app.luxion.apexapp.alarm.RingingSession
+import app.luxion.apexapp.anticheat.SnoozeController
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AlarmRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,6 +20,7 @@ data class RingUiState(
     val alarm: Alarm? = null,
     val sessionId: String? = null,
     val canDismiss: Boolean = false,
+    val canSnooze: Boolean = false,
     val finished: Boolean = false,
 )
 
@@ -28,6 +31,7 @@ class RingViewModel @Inject constructor(
     private val gate: DismissGate,
     private val notifier: AlarmNotifier,
     private val resolver: AlarmResolver,
+    private val snoozeController: SnoozeController,
 ) : ViewModel() {
     private val alarmId: Long = savedStateHandle[EXTRA_ALARM_ID] ?: -1L
     private val sessionId: String? = savedStateHandle[EXTRA_SESSION_ID]
@@ -40,7 +44,11 @@ class RingViewModel @Inject constructor(
             val alarm = repository.get(alarmId)
             // La alarma pudo borrarse entre el disparo y la apertura: no hay nada que mostrar.
             _uiState.update {
-                if (alarm == null) it.copy(finished = true) else it.copy(alarm = alarm, canDismiss = gate.canDismiss(alarm))
+                if (alarm == null) {
+                    it.copy(finished = true)
+                } else {
+                    it.copy(alarm = alarm, canDismiss = gate.canDismiss(alarm), canSnooze = canSnooze(alarm))
+                }
             }
         }
     }
@@ -52,6 +60,21 @@ class RingViewModel @Inject constructor(
         // Detiene el audio y el servicio de sonado; sin sesión (apertura manual) no hay nada que cerrar.
         sessionId?.let(resolver::resolve)
         _uiState.update { it.copy(finished = true) }
+    }
+
+    private fun canSnooze(alarm: Alarm): Boolean =
+        sessionId != null && snoozeController.canSnooze(RingingSession(sessionId, alarm))
+
+    /** Pospone la alarma: la sesión continúa cuando vuelva a sonar. */
+    fun snooze() {
+        val alarm = _uiState.value.alarm ?: return
+        val id = sessionId ?: return
+        viewModelScope.launch {
+            if (snoozeController.snooze(RingingSession(id, alarm))) {
+                notifier.cancel(alarm.id)
+                _uiState.update { it.copy(finished = true) }
+            }
+        }
     }
 
     companion object {

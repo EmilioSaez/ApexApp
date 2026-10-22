@@ -1,9 +1,12 @@
 package app.luxion.apexapp.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import app.luxion.apexapp.ui.anticheat.AntiCheatStatusScreen
+import app.luxion.apexapp.ui.anticheat.LocalOpenAntiCheatStatus
 import app.luxion.apexapp.ui.challenge.ChallengeTestScreen
 import app.luxion.apexapp.ui.editor.AlarmEditorScreen
 import app.luxion.apexapp.ui.home.HomeScreen
@@ -27,6 +30,9 @@ data object ReliabilityRoute
 @Serializable
 data object ChallengeTestRoute
 
+@Serializable
+data object AntiCheatStatusRoute
+
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -41,10 +47,17 @@ fun AppNavigation() {
             )
         }
         composable<AlarmEditorRoute> {
-            AlarmEditorScreen(onBack = { navController.popBackStack() })
+            CompositionLocalProvider(
+                LocalOpenAntiCheatStatus provides { navController.navigate(AntiCheatStatusRoute) },
+            ) {
+                AlarmEditorScreen(onBack = { navController.popBackStack() })
+            }
         }
         composable<SettingsRoute> {
             SettingsScreen(onBack = { navController.popBackStack() })
+        }
+        composable<AntiCheatStatusRoute> {
+            AntiCheatStatusScreen(onBack = { navController.popBackStack() })
         }
         composable<ReliabilityRoute> {
             ReliabilityScreen(onBack = { navController.popBackStack() })
