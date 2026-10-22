@@ -16,10 +16,11 @@ class AlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val alarmId = intent.getLongExtra(AndroidAlarmClockGateway.EXTRA_ALARM_ID, -1)
         if (alarmId < 0) return
+        val sessionId = intent.getStringExtra(AndroidAlarmClockGateway.EXTRA_SESSION_ID)
         val pending = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                handler.onFire(alarmId)
+                handler.onFire(alarmId, sessionId)
             } finally {
                 pending.finish()
             }

@@ -20,7 +20,10 @@ data class PermissionState(
 interface AlarmPermissions {
     fun current(): PermissionState
 
-    /** Intent al ajuste de alarmas exactas de la app, o `null` si no hace falta (API < 31). */
+    /**
+     * Intent al ajuste de alarmas exactas de la app, o `null` si no hace falta: API < 31 no lo
+     * pide y desde API 33 `USE_EXACT_ALARM` se concede al instalar.
+     */
     fun exactAlarmSettingsIntent(): Intent?
 }
 
@@ -34,7 +37,7 @@ class AndroidAlarmPermissions @Inject constructor(
     )
 
     override fun exactAlarmSettingsIntent(): Intent? {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return null
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) return null
         return Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:${context.packageName}"))
     }
 }

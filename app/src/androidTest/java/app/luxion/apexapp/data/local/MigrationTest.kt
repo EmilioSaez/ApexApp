@@ -37,6 +37,31 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun migrate2To3_keepsAlarmsAndCreatesFireStateTable() {
+        helper.createDatabase(DB, 2).apply {
+            execSQL(
+                "INSERT INTO alarms (id, hour, minute, repeatMask, enabled, label, soundId, challengesJson, soundJson, antiCheatJson) " +
+                    "VALUES (1, 6, 45, 0, 1, 'Gym', NULL, '{}', '{}', '{}')",
+            )
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(DB, 3, true, MIGRATION_2_3)
+        db.query("SELECT hour, minute, label FROM alarms WHERE id = 1").use {
+            it.moveToFirst()
+            assertEquals(6, it.getInt(0))
+            assertEquals(45, it.getInt(1))
+            assertEquals("Gym", it.getString(2))
+        }
+        db.execSQL("INSERT INTO alarm_fire_state (alarmId, scheduledAt, lastFiredAt) VALUES (1, 1000, NULL)")
+        db.query("SELECT scheduledAt, lastFiredAt FROM alarm_fire_state WHERE alarmId = 1").use {
+            it.moveToFirst()
+            assertEquals(1000L, it.getLong(0))
+            assertEquals(true, it.isNull(1))
+        }
+    }
+
     private companion object {
         const val DB = "migration-test"
     }

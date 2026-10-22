@@ -1,11 +1,10 @@
 package app.luxion.apexapp.ui.editor
 
 import androidx.lifecycle.SavedStateHandle
-import app.luxion.apexapp.alarm.AlarmClockScheduler
-import app.luxion.apexapp.alarm.AlarmController
 import app.luxion.apexapp.alarm.FakeAlarmRepository
 import app.luxion.apexapp.alarm.FakeGateway
 import app.luxion.apexapp.alarm.ScheduleResult
+import app.luxion.apexapp.alarm.testController
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.AntiCheatPolicy
@@ -35,7 +34,7 @@ class AlarmEditorViewModelTest {
     private val clock = Clock.fixed(ZonedDateTime.of(2026, 10, 21, 8, 0, 0, 0, zone).toInstant(), zone)
     private val repository = FakeAlarmRepository()
     private val gateway = FakeGateway()
-    private val controller = AlarmController(repository, AlarmClockScheduler(gateway, clock))
+    private val controller = testController(repository, gateway, clock)
 
     @Before
     fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())

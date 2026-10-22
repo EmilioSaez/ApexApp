@@ -2,6 +2,9 @@ package app.luxion.apexapp.alarm
 
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AlarmRepository
+import app.luxion.apexapp.domain.FireStateRepository
+import java.time.Clock
+import java.time.ZonedDateTime
 import java.util.UUID
 import javax.inject.Inject
 
@@ -22,20 +25,50 @@ class UuidSessionIdGenerator @Inject constructor() : SessionIdGenerator {
     override fun next(): String = UUID.randomUUID().toString()
 }
 
-/** Qué ocurre cuando llega la hora de una alarma: notificar y reprogramar o desactivar. */
+/**
+ * Qué ocurre cuando llega la hora de una alarma: crear la sesión, iniciar el sonado y
+ * reprogramar o desactivar la alarma, una sola vez por disparo.
+ */
 class AlarmFiringHandler @Inject constructor(
     private val repository: AlarmRepository,
     private val scheduler: AlarmScheduler,
+    private val registry: RingingRegistry,
+    private val launcher: RingingLauncher,
     private val notifier: AlarmNotifier,
     private val sessionIds: SessionIdGenerator,
+    private val fireState: FireStateRepository,
+    private val clock: Clock,
 ) {
-    suspend fun onFire(alarmId: Long) {
-        val alarm = repository.get(alarmId)?.takeIf { it.enabled } ?: return
-        notifier.notify(alarm, sessionIds.next())
-        if (alarm.repeatDays.isEmpty()) {
-            repository.save(alarm.copy(enabled = false))
-        } else {
-            scheduler.schedule(alarm)
+    /**
+     * Devuelve la sesión iniciada, o `null` si no hay nada que sonar (alarma inexistente, inactiva
+     * o ya sonando). Con [sessionId] (re-disparo de un snooze) se reutiliza la sesión y no se
+     * reprograma ni desactiva la alarma.
+     */
+    suspend fun onFire(alarmId: Long, sessionId: String? = null): RingingSession? {
+        val isTest = alarmId == TEST_ALARM_ID
+        val alarm = when {
+            isTest -> ZonedDateTime.now(clock).let { Alarm(id = TEST_ALARM_ID, hour = it.hour, minute = it.minute) }
+            sessionId == null -> repository.get(alarmId)?.takeIf { it.enabled }
+            else -> repository.get(alarmId)
+        } ?: return null
+
+        val session = RingingSession(sessionId ?: sessionIds.next(), alarm)
+        if (!registry.tryBegin(session)) return null
+
+        // Primero el sonado: lo que venga después no debe poder impedirlo.
+        if (!launcher.start(session)) {
+            registry.end(session.sessionId)
+            notifier.notify(alarm, session.sessionId)
         }
+        if (!isTest && sessionId == null) {
+            fireState.markFired(alarm.id, clock.millis())
+            if (alarm.repeatDays.isEmpty()) {
+                repository.save(alarm.copy(enabled = false))
+                scheduler.cancel(alarm.id)
+            } else {
+                scheduler.schedule(alarm)
+            }
+        }
+        return session
     }
 }

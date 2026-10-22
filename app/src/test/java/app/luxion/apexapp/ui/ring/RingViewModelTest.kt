@@ -2,6 +2,8 @@ package app.luxion.apexapp.ui.ring
 
 import androidx.lifecycle.SavedStateHandle
 import app.luxion.apexapp.alarm.AlarmNotifier
+import app.luxion.apexapp.alarm.AlarmResolver
+import app.luxion.apexapp.alarm.EndReason
 import app.luxion.apexapp.alarm.FakeAlarmRepository
 import app.luxion.apexapp.domain.Alarm
 import kotlinx.coroutines.Dispatchers
@@ -29,6 +31,13 @@ class RingViewModelTest {
         }
     }
 
+    private val resolved = mutableListOf<String>()
+    private val resolver = object : AlarmResolver {
+        override fun resolve(sessionId: String, reason: EndReason) {
+            resolved += sessionId
+        }
+    }
+
     @Before
     fun setUp() = Dispatchers.setMain(UnconfinedTestDispatcher())
 
@@ -40,6 +49,7 @@ class RingViewModelTest {
         repository,
         gate,
         notifier,
+        resolver,
     )
 
     @Test
@@ -57,6 +67,7 @@ class RingViewModelTest {
         val vm = viewModel(id)
         vm.dismiss()
         assertEquals(listOf(id), cancelled)
+        assertEquals(listOf("s-1"), resolved)
         assertTrue(vm.uiState.value.finished)
     }
 

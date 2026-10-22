@@ -1,7 +1,10 @@
 package app.luxion.apexapp.ui.home
 
 import android.content.Intent
-import app.luxion.apexapp.alarm.AlarmClockScheduler
+import app.luxion.apexapp.alarm.FakeDeviceProbe
+import app.luxion.apexapp.alarm.FakeGuideStore
+import app.luxion.apexapp.alarm.ReliabilityChecker
+import app.luxion.apexapp.alarm.testController
 import app.luxion.apexapp.alarm.AlarmController
 import app.luxion.apexapp.alarm.AlarmPermissions
 import app.luxion.apexapp.alarm.FakeAlarmRepository
@@ -43,8 +46,9 @@ class HomeViewModelTest {
 
     private fun viewModel() = HomeViewModel(
         repository,
-        AlarmController(repository, AlarmClockScheduler(gateway, Clock.systemDefaultZone())),
+        testController(repository, gateway, Clock.systemDefaultZone()),
         permissions,
+        ReliabilityChecker(FakeDeviceProbe(), FakeGuideStore()),
     )
 
     @Test
