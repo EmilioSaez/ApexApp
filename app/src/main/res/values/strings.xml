@@ -12,7 +12,18 @@
     <string name="permission_grant">Conceder</string>
     <string name="permission_open_settings">Abrir ajustes</string>
     <string name="editor_title">Nueva alarma</string>
-    <string name="editor_placeholder">El editor de alarmas llegará pronto</string>
+    <string name="editor_title_edit">Editar alarma</string>
+    <string name="editor_label">Etiqueta</string>
+    <string name="editor_repeat">Repetir</string>
+    <string name="editor_save">Guardar</string>
+    <string name="editor_saved_in">Sonará en %1$s</string>
+    <string name="editor_remaining_dhm">%1$d d %2$d h %3$d min</string>
+    <string name="editor_remaining_hm">%1$d h %2$d min</string>
+    <string name="editor_remaining_m">%1$d min</string>
+    <string name="home_delete">Borrar</string>
+    <string name="home_deleted">Alarma borrada</string>
+    <string name="home_undo">Deshacer</string>
+    <string name="ring_dismiss">Apagar</string>
     <string name="back">Atrás</string>
 
     <string name="settings_title">Ajustes</string>

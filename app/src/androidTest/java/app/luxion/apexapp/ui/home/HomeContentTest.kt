@@ -55,6 +55,29 @@ class HomeContentTest {
     }
 
     @Test
+    fun tapRow_opensEditorAndDelete_reportsAlarmId() {
+        var edited: Long? = null
+        var deleted: Long? = null
+        compose.setContent {
+            ApexAppTheme {
+                HomeContent(
+                    HomeUiState(isLoading = false, alarms = listOf(Alarm(id = 9, hour = 7, minute = 5))),
+                    onAddAlarm = {},
+                    onToggle = { _, _ -> },
+                    onRequestNotifications = {},
+                    onOpenExactAlarmSettings = {},
+                    onEditAlarm = { edited = it },
+                    onDeleteAlarm = { deleted = it },
+                )
+            }
+        }
+        compose.onNodeWithText("07:05").performClick()
+        assertEquals(9L, edited)
+        compose.onNodeWithText(str(R.string.home_delete)).performClick()
+        assertEquals(9L, deleted)
+    }
+
+    @Test
     fun toggle_reportsAlarmId() {
         var toggled: Pair<Long, Boolean>? = null
         show(HomeUiState(isLoading = false, alarms = listOf(Alarm(id = 4, hour = 7, minute = 5, enabled = true)))) { id, on ->

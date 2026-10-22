@@ -8,6 +8,10 @@ import app.luxion.apexapp.alarm.AndroidAlarmPermissions
 import app.luxion.apexapp.alarm.AlarmScheduler
 import app.luxion.apexapp.alarm.AndroidAlarmClockGateway
 import app.luxion.apexapp.alarm.AndroidAlarmNotifier
+import app.luxion.apexapp.alarm.SessionIdGenerator
+import app.luxion.apexapp.alarm.UuidSessionIdGenerator
+import app.luxion.apexapp.ui.ring.DefaultDismissGate
+import app.luxion.apexapp.ui.ring.DismissGate
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -26,6 +30,12 @@ interface AlarmModule {
 
     @Binds
     fun permissions(impl: AndroidAlarmPermissions): AlarmPermissions
+
+    @Binds
+    fun sessionIds(impl: UuidSessionIdGenerator): SessionIdGenerator
+
+    @Binds
+    fun dismissGate(impl: DefaultDismissGate): DismissGate
 
     @Binds
     fun notifier(impl: AndroidAlarmNotifier): AlarmNotifier

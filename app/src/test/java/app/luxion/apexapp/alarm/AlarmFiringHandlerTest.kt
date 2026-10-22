@@ -17,13 +17,21 @@ class AlarmFiringHandlerTest {
     private val gateway = FakeGateway()
     private val repository = FakeAlarmRepository()
     private val notified = mutableListOf<Alarm>()
+    private val sessions = mutableListOf<String>()
+    private var counter = 0
     private val handler = AlarmFiringHandler(
         repository,
         AlarmClockScheduler(gateway, clock),
         object : AlarmNotifier {
-            override fun notify(alarm: Alarm) {
+            override fun notify(alarm: Alarm, sessionId: String) {
                 notified += alarm
+                sessions += sessionId
             }
+
+            override fun cancel(alarmId: Long) = Unit
+        },
+        object : SessionIdGenerator {
+            override fun next() = "session-${++counter}"
         },
     )
 
@@ -44,6 +52,21 @@ class AlarmFiringHandlerTest {
         assertTrue(repository.get(id)!!.enabled)
         val next = ZonedDateTime.of(2026, 10, 28, 8, 0, 0, 0, zone).toInstant().toEpochMilli()
         assertEquals(next, gateway.scheduled[id])
+    }
+
+    @Test
+    fun everyFiring_getsItsOwnSessionId() = runBlocking {
+        val id = repository.save(Alarm(hour = 8, minute = 0, repeatDays = setOf(DayOfWeek.WEDNESDAY)))
+        handler.onFire(id)
+        handler.onFire(id)
+        assertEquals(listOf("session-1", "session-2"), sessions)
+    }
+
+    @Test
+    fun repeating_keepsNextOccurrenceScheduled() = runBlocking {
+        val id = repository.save(Alarm(hour = 8, minute = 0, repeatDays = setOf(DayOfWeek.WEDNESDAY)))
+        handler.onFire(id)
+        assertTrue(id in gateway.scheduled)
     }
 
     @Test

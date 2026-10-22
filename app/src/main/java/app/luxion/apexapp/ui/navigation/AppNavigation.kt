@@ -12,8 +12,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object HomeRoute
 
+/** `alarmId == 0` abre el editor para una alarma nueva. */
 @Serializable
-data object AlarmEditorRoute
+data class AlarmEditorRoute(val alarmId: Long = 0L)
 
 @Serializable
 data object SettingsRoute
@@ -24,7 +25,8 @@ fun AppNavigation() {
     NavHost(navController = navController, startDestination = HomeRoute) {
         composable<HomeRoute> {
             HomeScreen(
-                onAddAlarm = { navController.navigate(AlarmEditorRoute) },
+                onAddAlarm = { navController.navigate(AlarmEditorRoute()) },
+                onEditAlarm = { navController.navigate(AlarmEditorRoute(it)) },
                 onOpenSettings = { navController.navigate(SettingsRoute) },
             )
         }

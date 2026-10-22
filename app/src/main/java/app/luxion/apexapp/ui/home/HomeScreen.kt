@@ -4,6 +4,7 @@ import android.Manifest
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,12 +24,18 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -50,6 +57,7 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     onAddAlarm: () -> Unit,
+    onEditAlarm: (Long) -> Unit,
     onOpenSettings: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
@@ -62,11 +70,23 @@ fun HomeScreen(
         viewModel.refreshPermissions()
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val deletedMessage = stringResource(R.string.home_deleted)
+    val undoLabel = stringResource(R.string.home_undo)
+    LaunchedEffect(state.deleted) {
+        if (state.deleted == null) return@LaunchedEffect
+        val result = snackbarHostState.showSnackbar(deletedMessage, actionLabel = undoLabel, duration = SnackbarDuration.Short)
+        if (result == SnackbarResult.ActionPerformed) viewModel.undoDelete() else viewModel.consumeDeleted()
+    }
+
     HomeContent(
         state = state,
         onAddAlarm = onAddAlarm,
         onOpenSettings = onOpenSettings,
         onToggle = viewModel::setEnabled,
+        onEditAlarm = onEditAlarm,
+        onDeleteAlarm = viewModel::delete,
+        snackbarHostState = snackbarHostState,
         onRequestNotifications = {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 notificationLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
@@ -85,9 +105,13 @@ fun HomeContent(
     onRequestNotifications: () -> Unit,
     onOpenExactAlarmSettings: () -> Unit,
     onOpenSettings: () -> Unit = {},
+    onEditAlarm: (Long) -> Unit = {},
+    onDeleteAlarm: (Long) -> Unit = {},
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge) },
@@ -124,7 +148,7 @@ fun HomeContent(
                     ),
                     verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl),
                 ) {
-                    items(state.alarms, key = { it.id }) { alarm -> AlarmRow(alarm, onToggle) }
+                    items(state.alarms, key = { it.id }) { alarm -> AlarmRow(alarm, onToggle, onEditAlarm, onDeleteAlarm) }
                 }
             }
         }
@@ -159,10 +183,15 @@ private fun Banner(message: String, action: String, onAction: () -> Unit) {
 }
 
 @Composable
-private fun AlarmRow(alarm: Alarm, onToggle: (Long, Boolean) -> Unit) {
+private fun AlarmRow(
+    alarm: Alarm,
+    onToggle: (Long, Boolean) -> Unit,
+    onEdit: (Long) -> Unit,
+    onDelete: (Long) -> Unit,
+) {
     // Fila sin tarjeta: la hora manda y el resto queda subordinado.
     Row(
-        Modifier.fillMaxWidth(),
+        Modifier.fillMaxWidth().clickable { onEdit(alarm.id) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
     ) {
@@ -174,6 +203,7 @@ private fun AlarmRow(alarm: Alarm, onToggle: (Long, Boolean) -> Unit) {
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
+        TextButton(onClick = { onDelete(alarm.id) }) { Text(stringResource(R.string.home_delete)) }
         Switch(checked = alarm.enabled, onCheckedChange = { onToggle(alarm.id, it) })
     }
 }
