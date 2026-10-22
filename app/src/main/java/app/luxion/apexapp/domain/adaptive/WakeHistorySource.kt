@@ -15,8 +15,3 @@ class WakeStatsHistorySource @Inject constructor(
     override suspend fun recent(alarmId: Long, limit: Int): List<SessionSummary> =
         history.recentSessions(alarmId, limit, excludeSuspicious = true).toSummaries(alarmId)
 }
-
-/** Sin historial: el nivel nunca se ajusta. Se usa mientras `wake-stats` no tenga implementación persistente. */
-class NoWakeHistorySource @Inject constructor() : WakeHistorySource {
-    override suspend fun recent(alarmId: Long, limit: Int): List<SessionSummary> = emptyList()
-}

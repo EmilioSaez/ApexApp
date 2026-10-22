@@ -27,3 +27,10 @@
 ## 5. Verificación de conjunto
 
 - [ ] 5.1 Ejecutar `./gradlew :app:testDebugUnitTest` y los tests instrumentados en el emulador y verificar que pasan; recorrer manualmente activar → varios snoozes → subida de nivel → explicación visible
+
+## Estado de la implementación
+
+- Implementado y compilando, con tests escritos pero **sin ejecutar** por falta de emulador libre (`shogun emulator start` rechazado: límite de 2 alcanzado): 2.2, 2.3 (`MigrationTest.migrate2To3_*`, `AdaptiveSettingsRepositoryTest`) y 4.1–4.3 (`AdaptiveDifficultyContentTest`). Quedan sin marcar hasta ejecutarlos en verde.
+- Decisión: el rango inválido (mín > máx) se rechaza en el motor (`setRange`, probado en `AdaptiveDifficultyEngineTest`); en la UI el `RangeSlider` no puede producirlo.
+- Decisión: en una alarma nueva (sin id) la sección aparece desactivada con el aviso "Guarda la alarma para poder activarla", porque el estado cuelga del id de la alarma.
+- 3.3 pendiente: `WakeHistorySource` está enlazado a `NoWakeHistorySource` (nunca ajusta) hasta que la rama de `wake-stats` (f20f4ce, Room v4) esté integrada con `challenge-engine`; entonces cambiar el binding a `WakeStatsHistorySource` y renumerar la migración de v3 a v5.

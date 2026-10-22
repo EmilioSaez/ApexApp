@@ -27,8 +27,6 @@ import app.luxion.apexapp.domain.SoundRepository
 import app.luxion.apexapp.domain.WakeEventRecorder
 import app.luxion.apexapp.domain.WakeHistoryRepository
 import app.luxion.apexapp.domain.adaptive.AdaptiveSettingsRepository
-import app.luxion.apexapp.domain.adaptive.NoWakeHistorySource
-import app.luxion.apexapp.domain.adaptive.WakeHistorySource
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -89,8 +87,4 @@ interface RepositoryModule {
 
     @Binds
     fun adaptiveSettingsRepository(impl: RoomAdaptiveSettingsRepository): AdaptiveSettingsRepository
-
-    /** Provisional: pasa a `WakeStatsHistorySource` cuando `wake-stats` tenga su repositorio persistente. */
-    @Binds
-    fun wakeHistorySource(impl: NoWakeHistorySource): WakeHistorySource
 }
