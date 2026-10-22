@@ -10,6 +10,9 @@ data class Alarm(
     val enabled: Boolean = true,
     val label: String? = null,
     val soundId: Long? = null,
+    val challenges: ChallengeConfig = ChallengeConfig(),
+    val soundConfig: SoundConfig = SoundConfig(),
+    val antiCheat: AntiCheatPolicy = AntiCheatPolicy(),
 ) {
     init {
         require(hour in 0..23) { "hour must be in 0..23" }
