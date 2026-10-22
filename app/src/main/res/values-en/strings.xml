@@ -189,4 +189,32 @@
     <string name="anticheat_limits_title">Limits</string>
     <string name="anticheat_limits_body">Forced hardware power-off, safe mode, recovery, ADB and removing the battery cannot be prevented. Forced volume does not control external outputs with their own volume, such as some Bluetooth headphones.</string>
     <string name="anticheat_release">Give up device owner</string>
+    <string name="stats_title">Statistics</string>
+    <string name="stats_open">Statistics</string>
+    <string name="stats_empty">No statistics yet</string>
+    <string name="stats_empty_hint">They will appear after your first alarm.</string>
+    <string name="stats_range_days">%1$d days</string>
+    <string name="stats_no_data">no data</string>
+    <string name="stats_streak">Streak: %1$d · Best: %2$d</string>
+    <string name="stats_wake_time">Time to wake up</string>
+    <string name="stats_wake_time_avg">average %1$s</string>
+    <string name="stats_snoozes">Snoozes</string>
+    <string name="stats_fails">Failed challenges</string>
+    <plurals name="stats_total">
+        <item quantity="one">%1$d in total</item>
+        <item quantity="other">%1$d in total</item>
+    </plurals>
+    <string name="stats_punctuality">Punctuality</string>
+    <string name="stats_punctuality_value">%1$s of alarms on time</string>
+    <string name="stats_sleep_title">Sleep</string>
+    <string name="stats_sleep">Hours of sleep</string>
+    <string name="stats_sleep_avg">average %1$s</string>
+    <string name="stats_sleep_legend">Lighter bars use an estimated bedtime.</string>
+    <string name="stats_set_bedtime">Last night I went to bed at…</string>
+    <string name="stats_set_usual_bedtime">Usual bedtime</string>
+    <string name="stats_usual_bedtime_value">Usual bedtime: %1$s</string>
+    <string name="stats_duration_ms">%1$d min %2$d s</string>
+    <string name="stats_duration_hm">%1$d h %2$d min</string>
+    <string name="stats_dialog_ok">OK</string>
+    <string name="stats_dialog_cancel">Cancel</string>
 </resources>

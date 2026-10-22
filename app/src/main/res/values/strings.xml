@@ -189,4 +189,32 @@
     <string name="anticheat_limits_title">Límites</string>
     <string name="anticheat_limits_body">No se puede impedir el apagado forzado por hardware, el modo seguro, la recuperación, ADB ni retirar la batería. El volumen forzado no controla salidas externas con volumen propio, como algunos auriculares Bluetooth.</string>
     <string name="anticheat_release">Renunciar a propietario del dispositivo</string>
+    <string name="stats_title">Estadísticas</string>
+    <string name="stats_open">Estadísticas</string>
+    <string name="stats_empty">Aún no hay estadísticas</string>
+    <string name="stats_empty_hint">Aparecerán tras tu primera alarma.</string>
+    <string name="stats_range_days">%1$d días</string>
+    <string name="stats_no_data">sin datos</string>
+    <string name="stats_streak">Racha: %1$d · Mejor: %2$d</string>
+    <string name="stats_wake_time">Tiempo en despertar</string>
+    <string name="stats_wake_time_avg">media %1$s</string>
+    <string name="stats_snoozes">Snoozes</string>
+    <string name="stats_fails">Fallos de reto</string>
+    <plurals name="stats_total">
+        <item quantity="one">%1$d en total</item>
+        <item quantity="other">%1$d en total</item>
+    </plurals>
+    <string name="stats_punctuality">Puntualidad</string>
+    <string name="stats_punctuality_value">%1$s de las alarmas a tiempo</string>
+    <string name="stats_sleep_title">Sueño</string>
+    <string name="stats_sleep">Horas de sueño</string>
+    <string name="stats_sleep_avg">media %1$s</string>
+    <string name="stats_sleep_legend">Las barras claras usan una hora de acostarse estimada.</string>
+    <string name="stats_set_bedtime">Anoche me acosté a…</string>
+    <string name="stats_set_usual_bedtime">Hora habitual de acostarse</string>
+    <string name="stats_usual_bedtime_value">Hora habitual de acostarse: %1$s</string>
+    <string name="stats_duration_ms">%1$d min %2$d s</string>
+    <string name="stats_duration_hm">%1$d h %2$d min</string>
+    <string name="stats_dialog_ok">Aceptar</string>
+    <string name="stats_dialog_cancel">Cancelar</string>
 </resources>
