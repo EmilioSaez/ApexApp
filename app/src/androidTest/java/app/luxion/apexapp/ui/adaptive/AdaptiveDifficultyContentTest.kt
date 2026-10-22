@@ -1,14 +1,20 @@
 package app.luxion.apexapp.ui.adaptive
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.semantics.SemanticsActions
+import androidx.compose.ui.semantics.SemanticsProperties
+import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performSemanticsAction
 import androidx.test.platform.app.InstrumentationRegistry
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.adaptive.ChangeReason
+import app.luxion.apexapp.domain.challenge.SessionState
+import app.luxion.apexapp.ui.challenge.ChallengeSessionContent
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -94,5 +100,59 @@ class AdaptiveDifficultyContentTest {
     fun noticeShowsOnlyWhenPresent() {
         compose.setContent { ApexAppTheme { AdaptiveLevelNotice(AdaptiveNotice(4, ChangeReason.SNOOZES, 2)) } }
         compose.onNodeWithText(str(R.string.adaptive_reason_snoozes, 4, 2)).assertExists()
+    }
+
+    @Test
+    fun movingTheRangeSliderNeverProducesAnInvalidRange() {
+        val ranges = mutableListOf<Pair<Int, Int>>()
+        compose.setContent {
+            ApexAppTheme {
+                AdaptiveDifficultyContent(
+                    AdaptiveUiState(available = true, enabled = true, min = 2, max = 4),
+                    onEnabled = {}, onRange = { min, max -> ranges += min to max }, onReset = {},
+                )
+            }
+        }
+        val thumbs = compose.onAllNodes(SemanticsMatcher.keyIsDefined(SemanticsProperties.ProgressBarRangeInfo))
+        // El primer nodo es el extremo inferior: se intenta superar el superior (4) y bajar del mínimo (1).
+        thumbs[0].performSemanticsAction(SemanticsActions.SetProgress) { it(5f) }
+        thumbs[0].performSemanticsAction(SemanticsActions.SetProgress) { it(1f) }
+        compose.waitForIdle()
+
+        assertEquals(true, ranges.isNotEmpty())
+        ranges.forEach { (min, max) ->
+            assertEquals("rango invalido $min..$max", true, min in 1..5 && max in 1..5 && min <= max)
+        }
+    }
+
+    private fun showChallenge(header: @androidx.compose.runtime.Composable () -> Unit) {
+        compose.setContent {
+            ApexAppTheme {
+                ChallengeSessionContent(
+                    state = SessionState(solved = 3, total = 3, current = null, passed = true),
+                    rendererFor = { null },
+                    onAnswer = {},
+                    onUnavailable = {},
+                    onFinished = {},
+                    header = header,
+                )
+            }
+        }
+    }
+
+    @Test
+    fun challengeScreenShowsTheNoticeOnlyWhenTheLevelChanged() {
+        showChallenge { AdaptiveLevelNotice(AdaptiveNotice(4, ChangeReason.SNOOZES, 2)) }
+        compose.onNodeWithText(str(R.string.adaptive_reason_snoozes, 4, 2)).assertExists()
+    }
+
+    @Test
+    fun challengeScreenHasNoNoticeWithoutAChange() {
+        showChallenge {}
+        compose.onNodeWithText(str(R.string.challenge_passed)).assertExists()
+        compose.onNodeWithText(str(R.string.adaptive_reason_snoozes, 4, 2)).assertDoesNotExist()
+        compose.onNodeWithText(str(R.string.adaptive_reason_easy, 4)).assertDoesNotExist()
+        compose.onNodeWithText(str(R.string.adaptive_reason_failures, 2, 2)).assertDoesNotExist()
+        compose.onNodeWithText(str(R.string.adaptive_reason_slow, 2, 3)).assertDoesNotExist()
     }
 }
