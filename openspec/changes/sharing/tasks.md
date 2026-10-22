@@ -2,14 +2,14 @@
 
 ## 1. Modelo de payload y codec
 
-- [ ] 1.1 Crear DTOs `SharedAlarm` (versión `v`, bloque `alarm`, bloques opcionales `challenge`, `sound`, `antiCheat`) y mappers contra `Alarm`, `ChallengeConfig`, `SoundConfig` y `AntiCheatPolicy` de `alarm-core`; verificar con test unitario de ida y vuelta que no se exportan id, `enabled`, `sessionId` ni URIs externas
-- [ ] 1.2 Implementar codec JSON → Deflate → Base64 URL-safe (enlace) y binario (archivo) con límites de entrada (8 KB) y de salida descomprimida (16 KB); verificar con tests unitarios de ida y vuelta y de rechazo por tamaño/zip-bomb
-- [ ] 1.3 Implementar la política de versiones (aceptar v1, ignorar claves opcionales desconocidas, rechazar versión mayor); verificar con tests unitarios de los tres escenarios de versión
+- [x] 1.1 Crear DTOs `SharedAlarm` (versión `v`, bloque `alarm`, bloques opcionales `challenge`, `sound`, `antiCheat`) y mappers contra `Alarm`, `ChallengeConfig`, `SoundConfig` y `AntiCheatPolicy` de `alarm-core`; verificar con test unitario de ida y vuelta que no se exportan id, `enabled`, `sessionId` ni URIs externas
+- [x] 1.2 Implementar codec JSON → Deflate → Base64 URL-safe (enlace) y binario (archivo) con límites de entrada (8 KB) y de salida descomprimida (16 KB); verificar con tests unitarios de ida y vuelta y de rechazo por tamaño/zip-bomb
+- [x] 1.3 Implementar la política de versiones (aceptar v1, ignorar claves opcionales desconocidas, rechazar versión mayor); verificar con tests unitarios de los tres escenarios de versión
 
 ## 2. Validación e importación
 
-- [ ] 2.1 Implementar `SharedAlarmValidator` puro (rangos de hora/minuto, días únicos, longitud de etiqueta, tipos conocidos, tipo de reto desconocido → reto por defecto con aviso); verificar con tests unitarios de casos válidos y malformados, fuera de rango y todo-o-nada
-- [ ] 2.1b Omitir el reto QR al importar (sin `params` al exportar) con aviso en la vista previa; verificar con test unitario
+- [x] 2.1 Implementar `SharedAlarmValidator` puro (rangos de hora/minuto, días únicos, longitud de etiqueta, tipos conocidos, tipo de reto desconocido → reto por defecto con aviso); verificar con tests unitarios de casos válidos y malformados, fuera de rango y todo-o-nada
+- [x] 2.1b Omitir el reto QR al importar (sin `params` al exportar) con aviso en la vista previa; verificar con test unitario
 - [ ] 2.2 Implementar `ImportPreview` y el caso de uso de importación que guarda con `enabled = false` vía `AlarmRepository` solo tras confirmación; verificar con test unitario (aceptar crea 1 alarma desactivada, cancelar no crea, importar dos veces crea dos) y que no se invoca el programador
 - [ ] 2.3 Mapear sonido: exportar solo `SoundSource.Bundled(key)` y resolver al importar con `BundledSounds.resolve(key)` (por defecto si es null/desconocida; contrato provisional de `alarm-sound`); `soundId == null` no exporta clave; verificar con test unitario incluyendo URI externa/tono del sistema omitidos
 
