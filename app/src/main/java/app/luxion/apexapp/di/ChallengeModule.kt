@@ -7,6 +7,8 @@ import app.luxion.apexapp.domain.challenge.DifficultyProvider
 import app.luxion.apexapp.domain.challenge.FixedDifficultyProvider
 import app.luxion.apexapp.domain.challenge.MathChallenge
 import app.luxion.apexapp.domain.challenge.NoOpChallengeEventSink
+import app.luxion.apexapp.ui.challenge.ChallengeRenderer
+import app.luxion.apexapp.ui.challenge.MathRenderer
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -21,6 +23,11 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun math(impl: MathChallenge): Challenge
+
+    /** Cada tipo registra también su UI con `@Binds @IntoSet ChallengeRenderer`. */
+    @Binds
+    @IntoSet
+    fun mathRenderer(impl: MathRenderer): ChallengeRenderer
 
     @Binds
     fun difficultyProvider(impl: FixedDifficultyProvider): DifficultyProvider

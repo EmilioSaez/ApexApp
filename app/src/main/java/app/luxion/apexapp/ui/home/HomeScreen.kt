@@ -61,6 +61,7 @@ fun HomeScreen(
     onEditAlarm: (Long) -> Unit,
     onOpenSettings: () -> Unit,
     onOpenReliability: () -> Unit,
+    onOpenChallengeTest: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -86,6 +87,7 @@ fun HomeScreen(
         onAddAlarm = onAddAlarm,
         onOpenSettings = onOpenSettings,
         onOpenReliability = onOpenReliability,
+        onOpenChallengeTest = onOpenChallengeTest,
         onToggle = viewModel::setEnabled,
         onEditAlarm = onEditAlarm,
         onDeleteAlarm = viewModel::delete,
@@ -112,6 +114,7 @@ fun HomeContent(
     onDeleteAlarm: (Long) -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     onOpenReliability: () -> Unit = {},
+    onOpenChallengeTest: () -> Unit = {},
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -119,7 +122,10 @@ fun HomeContent(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge) },
-                actions = { TextButton(onClick = onOpenSettings) { Text(stringResource(R.string.settings_title)) } },
+                actions = {
+                    TextButton(onClick = onOpenChallengeTest) { Text(stringResource(R.string.challenge_test_action)) }
+                    TextButton(onClick = onOpenSettings) { Text(stringResource(R.string.settings_title)) }
+                },
             )
         },
         floatingActionButton = {

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import app.luxion.apexapp.ui.challenge.ChallengeTestScreen
 import app.luxion.apexapp.ui.editor.AlarmEditorScreen
 import app.luxion.apexapp.ui.home.HomeScreen
 import app.luxion.apexapp.ui.reliability.ReliabilityScreen
@@ -22,6 +23,7 @@ data object SettingsRoute
 
 @Serializable
 data object ReliabilityRoute
+data object ChallengeTestRoute
 
 @Composable
 fun AppNavigation() {
@@ -33,6 +35,7 @@ fun AppNavigation() {
                 onEditAlarm = { navController.navigate(AlarmEditorRoute(it)) },
                 onOpenSettings = { navController.navigate(SettingsRoute) },
                 onOpenReliability = { navController.navigate(ReliabilityRoute) },
+                onOpenChallengeTest = { navController.navigate(ChallengeTestRoute) },
             )
         }
         composable<AlarmEditorRoute> {
@@ -43,6 +46,9 @@ fun AppNavigation() {
         }
         composable<ReliabilityRoute> {
             ReliabilityScreen(onBack = { navController.popBackStack() })
+        }
+        composable<ChallengeTestRoute> {
+            ChallengeTestScreen(onBack = { navController.popBackStack() })
         }
     }
 }
