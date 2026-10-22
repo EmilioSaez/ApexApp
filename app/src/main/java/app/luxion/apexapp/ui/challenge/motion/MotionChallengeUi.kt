@@ -128,7 +128,8 @@ fun MotionTargetField(
             horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md),
         ) {
             OutlinedButton(onClick = {
-                val next = kind.clamp(value - step)
+                // clamp() trata 0 como "sin definir" y lo cambia por el valor por defecto, así que se acota antes.
+                val next = kind.clamp(maxOf(value - step, kind.min))
                 clamped = value - step < kind.min
                 onValueChange(next)
             }) { Text(stringResource(R.string.challenge_target_decrease)) }

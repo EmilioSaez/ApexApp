@@ -1,5 +1,6 @@
 package app.luxion.apexapp.ui.adaptive
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.assertIsEnabled
 import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.junit4.createComposeRule
@@ -72,6 +73,10 @@ class AdaptiveDifficultyContentTest {
             ChangeReason.FAILURES to str(R.string.adaptive_reason_failures, 2, 2),
             ChangeReason.SLOW to str(R.string.adaptive_reason_slow, 2, 3),
         )
+        val notice = mutableStateOf<AdaptiveNotice?>(null)
+        compose.setContent {
+            ApexAppTheme { notice.value?.let { AdaptiveLevelNotice(it) } }
+        }
         cases.forEach { (reason, text) ->
             val (level, hits) = when (reason) {
                 ChangeReason.SNOOZES -> 4 to 2
@@ -79,9 +84,8 @@ class AdaptiveDifficultyContentTest {
                 ChangeReason.FAILURES -> 2 to 2
                 ChangeReason.SLOW -> 2 to 3
             }
-            compose.setContent {
-                ApexAppTheme { AdaptiveLevelNotice(AdaptiveNotice(level, reason, hits)) }
-            }
+            notice.value = AdaptiveNotice(level, reason, hits)
+            compose.waitForIdle()
             compose.onNodeWithText(text).assertExists()
         }
     }
