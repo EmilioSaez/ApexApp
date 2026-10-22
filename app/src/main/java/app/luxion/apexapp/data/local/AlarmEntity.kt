@@ -1,5 +1,6 @@
 package app.luxion.apexapp.data.local
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -26,4 +27,10 @@ data class AlarmEntity(
     val enabled: Boolean,
     val label: String?,
     val soundId: Long?,
+    /** JSON de `ChallengeConfig`. */
+    @ColumnInfo(defaultValue = "{}") val challengesJson: String = "{}",
+    /** JSON de `SoundConfig`. */
+    @ColumnInfo(defaultValue = "{}") val soundJson: String = "{}",
+    /** JSON de `AntiCheatPolicy`. */
+    @ColumnInfo(defaultValue = "{}") val antiCheatJson: String = "{}",
 )

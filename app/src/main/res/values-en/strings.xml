@@ -1,0 +1,39 @@
+<resources>
+    <string name="app_name">ApexApp</string>
+    <string name="alarm_default_title">Alarm</string>
+    <string name="alarm_channel_name">Alarms</string>
+    <string name="alarm_once">Once</string>
+    <string name="alarm_every_day">Every day</string>
+    <string name="home_empty">No alarms yet</string>
+    <string name="home_empty_hint">Create an alarm to get started.</string>
+    <string name="home_add_alarm">New alarm</string>
+    <string name="permission_notifications_missing">Notifications are off: the alarm might not show.</string>
+    <string name="permission_exact_missing">Exact alarm permission is missing: alarms won\'t ring on time.</string>
+    <string name="permission_grant">Grant</string>
+    <string name="permission_open_settings">Open settings</string>
+    <string name="editor_title">New alarm</string>
+    <string name="editor_title_edit">Edit alarm</string>
+    <string name="editor_label">Label</string>
+    <string name="editor_repeat">Repeat</string>
+    <string name="editor_save">Save</string>
+    <string name="editor_saved_in">Rings in %1$s</string>
+    <string name="editor_remaining_dhm">%1$d d %2$d h %3$d min</string>
+    <string name="editor_remaining_hm">%1$d h %2$d min</string>
+    <string name="editor_remaining_m">%1$d min</string>
+    <string name="home_delete">Delete</string>
+    <string name="home_deleted">Alarm deleted</string>
+    <string name="home_undo">Undo</string>
+    <string name="ring_dismiss">Dismiss</string>
+    <string name="back">Back</string>
+
+    <string name="settings_title">Settings</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_section_language">Language</string>
+    <string name="settings_language_system">System</string>
+    <string name="settings_language_es">Español</string>
+    <string name="settings_language_en">English</string>
+</resources>

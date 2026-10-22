@@ -1,11 +1,77 @@
 package app.luxion.apexapp.ui.theme
 
+import androidx.compose.material3.ColorScheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Acento único: naranja señal. Éxito (tertiary) y fallo (error) son los colores semánticos de estado.
+internal val DarkColorScheme: ColorScheme = darkColorScheme(
+    primary = Color(0xFFFF8A4C),
+    onPrimary = Color(0xFF3B1500),
+    primaryContainer = Color(0xFF7A3410),
+    onPrimaryContainer = Color(0xFFFFDBC8),
+    secondary = Color(0xFFB4BAC4),
+    onSecondary = Color(0xFF1B1E23),
+    secondaryContainer = Color(0xFF2E333B),
+    onSecondaryContainer = Color(0xFFE6E8EC),
+    tertiary = Color(0xFF5BD68A),
+    onTertiary = Color(0xFF00391B),
+    tertiaryContainer = Color(0xFF14522E),
+    onTertiaryContainer = Color(0xFFB6F2CB),
+    error = Color(0xFFFF6B6B),
+    onError = Color(0xFF4A0004),
+    errorContainer = Color(0xFF5C1A1E),
+    onErrorContainer = Color(0xFFFFDAD8),
+    background = Color(0xFF14161A),
+    onBackground = Color(0xFFE6E8EC),
+    surface = Color(0xFF14161A),
+    onSurface = Color(0xFFE6E8EC),
+    surfaceVariant = Color(0xFF2E333B),
+    onSurfaceVariant = Color(0xFFA3A9B3),
+    surfaceContainerLowest = Color(0xFF0F1114),
+    surfaceContainerLow = Color(0xFF1A1D22),
+    surfaceContainer = Color(0xFF1F2228),
+    surfaceContainerHigh = Color(0xFF262A31),
+    surfaceContainerHighest = Color(0xFF2E333B),
+    outline = Color(0xFF7A818C),
+    outlineVariant = Color(0xFF3A3F48),
+    inverseSurface = Color(0xFFE6E8EC),
+    inverseOnSurface = Color(0xFF14161A),
+    inversePrimary = Color(0xFFB93E00),
+)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+internal val LightColorScheme: ColorScheme = lightColorScheme(
+    primary = Color(0xFFB93E00),
+    onPrimary = Color(0xFFFFFFFF),
+    primaryContainer = Color(0xFFFFDBC8),
+    onPrimaryContainer = Color(0xFF3B1500),
+    secondary = Color(0xFF4D545E),
+    onSecondary = Color(0xFFFFFFFF),
+    secondaryContainer = Color(0xFFDADEE4),
+    onSecondaryContainer = Color(0xFF14161A),
+    tertiary = Color(0xFF1B7A43),
+    onTertiary = Color(0xFFFFFFFF),
+    tertiaryContainer = Color(0xFFB6F2CB),
+    onTertiaryContainer = Color(0xFF00210F),
+    error = Color(0xFFBA1A1A),
+    onError = Color(0xFFFFFFFF),
+    errorContainer = Color(0xFFFFDAD6),
+    onErrorContainer = Color(0xFF410002),
+    background = Color(0xFFF6F7F9),
+    onBackground = Color(0xFF14161A),
+    surface = Color(0xFFF6F7F9),
+    onSurface = Color(0xFF14161A),
+    surfaceVariant = Color(0xFFDADEE4),
+    onSurfaceVariant = Color(0xFF4D545E),
+    surfaceContainerLowest = Color(0xFFFFFFFF),
+    surfaceContainerLow = Color(0xFFF0F2F5),
+    surfaceContainer = Color(0xFFE9ECF0),
+    surfaceContainerHigh = Color(0xFFE2E5EA),
+    surfaceContainerHighest = Color(0xFFDADEE4),
+    outline = Color(0xFF6B727D),
+    outlineVariant = Color(0xFFC4C9D0),
+    inverseSurface = Color(0xFF2E333B),
+    inverseOnSurface = Color(0xFFF0F2F5),
+    inversePrimary = Color(0xFFFF8A4C),
+)

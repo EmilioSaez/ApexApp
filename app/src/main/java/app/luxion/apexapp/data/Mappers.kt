@@ -5,10 +5,25 @@ import app.luxion.apexapp.data.local.SoundEntity
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.Sound
 import app.luxion.apexapp.domain.SoundSource
+import app.luxion.apexapp.domain.AntiCheatPolicy
+import app.luxion.apexapp.domain.ChallengeConfig
+import app.luxion.apexapp.domain.SoundConfig
 import java.time.DayOfWeek
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 private const val SOURCE_RESOURCE = "resource"
 private const val SOURCE_URI = "uri"
+
+/** Tolerante: ignora claves desconocidas y usa los defaults del dominio para las ausentes. */
+internal val ConfigJson = Json {
+    ignoreUnknownKeys = true
+    encodeDefaults = true
+    coerceInputValues = true
+}
+
+private inline fun <reified T> decodeConfig(json: String, default: T): T =
+    runCatching { ConfigJson.decodeFromString<T>(json) }.getOrDefault(default)
 
 internal fun Set<DayOfWeek>.toMask(): Int = fold(0) { mask, day -> mask or (1 shl (day.value - 1)) }
 
@@ -23,6 +38,9 @@ internal fun AlarmEntity.toDomain() = Alarm(
     enabled = enabled,
     label = label,
     soundId = soundId,
+    challenges = decodeConfig(challengesJson, ChallengeConfig()),
+    soundConfig = decodeConfig(soundJson, SoundConfig()),
+    antiCheat = decodeConfig(antiCheatJson, AntiCheatPolicy()),
 )
 
 internal fun Alarm.toEntity() = AlarmEntity(
@@ -33,6 +51,9 @@ internal fun Alarm.toEntity() = AlarmEntity(
     enabled = enabled,
     label = label,
     soundId = soundId,
+    challengesJson = ConfigJson.encodeToString(challenges),
+    soundJson = ConfigJson.encodeToString(soundConfig),
+    antiCheatJson = ConfigJson.encodeToString(antiCheat),
 )
 
 internal fun SoundEntity.toDomain() = Sound(

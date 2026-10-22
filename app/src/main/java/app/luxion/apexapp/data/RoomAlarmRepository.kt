@@ -18,7 +18,7 @@ class RoomAlarmRepository @Inject constructor(
 
     override suspend fun save(alarm: Alarm): Long {
         if (alarm.id == 0L) return dao.insert(alarm.toEntity())
-        dao.update(alarm.toEntity())
+        dao.upsert(alarm.toEntity())
         return alarm.id
     }
 

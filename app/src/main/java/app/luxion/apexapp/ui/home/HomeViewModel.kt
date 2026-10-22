@@ -20,18 +20,21 @@ data class HomeUiState(
     val isLoading: Boolean = true,
     val alarms: List<Alarm> = emptyList(),
     val permissions: PermissionState = PermissionState(),
+    /** Última alarma borrada, disponible para deshacer hasta que la pantalla la consuma. */
+    val deleted: Alarm? = null,
 )
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    repository: AlarmRepository,
+    private val repository: AlarmRepository,
     private val controller: AlarmController,
     private val alarmPermissions: AlarmPermissions,
 ) : ViewModel() {
     private val permissions = MutableStateFlow(alarmPermissions.current())
+    private val deleted = MutableStateFlow<Alarm?>(null)
 
-    val uiState: StateFlow<HomeUiState> = combine(repository.observeAll(), permissions) { alarms, permissions ->
-        HomeUiState(isLoading = false, alarms = alarms, permissions = permissions)
+    val uiState: StateFlow<HomeUiState> = combine(repository.observeAll(), permissions, deleted) { alarms, permissions, deleted ->
+        HomeUiState(isLoading = false, alarms = alarms, permissions = permissions, deleted = deleted)
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), HomeUiState())
 
     /** Se llama al volver a la pantalla: el usuario pudo cambiar los permisos en Ajustes. */
@@ -44,6 +47,29 @@ class HomeViewModel @Inject constructor(
             controller.setEnabled(id, enabled)
             refreshPermissions()
         }
+    }
+
+    fun delete(id: Long) {
+        viewModelScope.launch {
+            val alarm = repository.get(id) ?: return@launch
+            controller.delete(id)
+            deleted.value = alarm
+        }
+    }
+
+    /** Restaura la última alarma borrada con el mismo `id` y la reprograma si estaba activa. */
+    fun undoDelete() {
+        val alarm = deleted.value ?: return
+        deleted.value = null
+        viewModelScope.launch {
+            controller.save(alarm)
+            refreshPermissions()
+        }
+    }
+
+    /** La pantalla ya mostró el aviso de borrado: ya no se puede deshacer. */
+    fun consumeDeleted() {
+        deleted.value = null
     }
 
     fun exactAlarmSettingsIntent() = alarmPermissions.exactAlarmSettingsIntent()

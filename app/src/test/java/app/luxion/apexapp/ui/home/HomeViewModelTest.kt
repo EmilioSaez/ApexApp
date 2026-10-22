@@ -19,6 +19,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -67,6 +68,29 @@ class HomeViewModelTest {
         permissions.state = PermissionState(notificationsGranted = false)
         vm.refreshPermissions()
         assertFalse(vm.uiState.first { !it.permissions.notificationsGranted }.permissions.notificationsGranted)
+    }
+
+    @Test
+    fun delete_removesAlarmCancelsScheduleAndOffersUndo() = runTest {
+        val id = repository.save(Alarm(hour = 8, minute = 0))
+        val vm = viewModel()
+        vm.setEnabled(id, true)
+        vm.delete(id)
+        assertNull(repository.get(id))
+        assertFalse(id in gateway.scheduled)
+        assertEquals(id, vm.uiState.first { it.deleted != null }.deleted!!.id)
+    }
+
+    @Test
+    fun undoDelete_restoresSameAlarmAndReschedules() = runTest {
+        val id = repository.save(Alarm(hour = 8, minute = 0, label = "Gym"))
+        val vm = viewModel()
+        vm.delete(id)
+        vm.undoDelete()
+        assertEquals("Gym", repository.get(id)!!.label)
+        assertEquals(id, repository.get(id)!!.id)
+        assertTrue(id in gateway.scheduled)
+        assertNull(vm.uiState.first { !it.isLoading }.deleted)
     }
 
     @Test

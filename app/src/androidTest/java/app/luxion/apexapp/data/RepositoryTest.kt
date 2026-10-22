@@ -6,6 +6,12 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import app.luxion.apexapp.data.local.ApexDatabase
 import app.luxion.apexapp.domain.Alarm
+import app.luxion.apexapp.domain.AntiCheatLevel
+import app.luxion.apexapp.domain.AntiCheatPolicy
+import app.luxion.apexapp.domain.ChallengeConfig
+import app.luxion.apexapp.domain.ChallengeSpec
+import app.luxion.apexapp.domain.SnoozePolicy
+import app.luxion.apexapp.domain.SoundConfig
 import app.luxion.apexapp.domain.Sound
 import app.luxion.apexapp.domain.SoundSource
 import java.time.DayOfWeek
@@ -44,6 +50,9 @@ class RepositoryTest {
             repeatDays = setOf(DayOfWeek.MONDAY, DayOfWeek.SUNDAY),
             enabled = false,
             label = "Gym",
+            challenges = ChallengeConfig(3, listOf(ChallengeSpec("math", """{"ops":2}"""))),
+            soundConfig = SoundConfig(volume = 70, vibrate = false, ttsEnabled = true, ttsText = "Hola"),
+            antiCheat = AntiCheatPolicy(AntiCheatLevel.STANDARD, SnoozePolicy(allowed = true)),
         )
         val id = alarms.save(alarm)
         assertEquals(alarm.copy(id = id), alarms.get(id))

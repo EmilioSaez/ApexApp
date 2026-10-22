@@ -1,6 +1,8 @@
 package app.luxion.apexapp.ui.home
 
 import androidx.compose.ui.test.isToggleable
+import androidx.test.platform.app.InstrumentationRegistry
+import app.luxion.apexapp.R
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -15,6 +17,8 @@ class HomeContentTest {
     @get:Rule
     val compose = createComposeRule()
 
+    private fun str(id: Int) = InstrumentationRegistry.getInstrumentation().targetContext.getString(id)
+
     private fun show(state: HomeUiState, onToggle: (Long, Boolean) -> Unit = { _, _ -> }) {
         compose.setContent {
             ApexAppTheme {
@@ -26,28 +30,51 @@ class HomeContentTest {
     @Test
     fun withoutAlarms_showsEmptyState() {
         show(HomeUiState(isLoading = false))
-        compose.onNodeWithText("No hay alarmas todavía").assertExists()
+        compose.onNodeWithText(str(R.string.home_empty)).assertExists()
     }
 
     @Test
     fun withAlarms_showsList() {
         show(HomeUiState(isLoading = false, alarms = listOf(Alarm(id = 1, hour = 7, minute = 5, label = "Gym"))))
         compose.onNodeWithText("07:05").assertExists()
-        compose.onNodeWithText("Gym · Una vez").assertExists()
-        compose.onNodeWithText("No hay alarmas todavía").assertDoesNotExist()
+        compose.onNodeWithText("Gym · " + str(R.string.alarm_once)).assertExists()
+        compose.onNodeWithText(str(R.string.home_empty)).assertDoesNotExist()
     }
 
     @Test
     fun missingPermissions_showBanners() {
         show(HomeUiState(isLoading = false, permissions = PermissionState(notificationsGranted = false, exactAlarmsGranted = false)))
-        compose.onNodeWithText("Conceder").assertExists()
-        compose.onNodeWithText("Abrir ajustes").assertExists()
+        compose.onNodeWithText(str(R.string.permission_grant)).assertExists()
+        compose.onNodeWithText(str(R.string.permission_open_settings)).assertExists()
     }
 
     @Test
     fun grantedPermissions_showNoBanners() {
         show(HomeUiState(isLoading = false))
-        compose.onNodeWithText("Conceder").assertDoesNotExist()
+        compose.onNodeWithText(str(R.string.permission_grant)).assertDoesNotExist()
+    }
+
+    @Test
+    fun tapRow_opensEditorAndDelete_reportsAlarmId() {
+        var edited: Long? = null
+        var deleted: Long? = null
+        compose.setContent {
+            ApexAppTheme {
+                HomeContent(
+                    HomeUiState(isLoading = false, alarms = listOf(Alarm(id = 9, hour = 7, minute = 5))),
+                    onAddAlarm = {},
+                    onToggle = { _, _ -> },
+                    onRequestNotifications = {},
+                    onOpenExactAlarmSettings = {},
+                    onEditAlarm = { edited = it },
+                    onDeleteAlarm = { deleted = it },
+                )
+            }
+        }
+        compose.onNodeWithText("07:05").performClick()
+        assertEquals(9L, edited)
+        compose.onNodeWithText(str(R.string.home_delete)).performClick()
+        assertEquals(9L, deleted)
     }
 
     @Test

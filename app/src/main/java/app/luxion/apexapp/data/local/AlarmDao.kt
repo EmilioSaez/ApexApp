@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,6 +24,10 @@ interface AlarmDao {
 
     @Update
     suspend fun update(alarm: AlarmEntity)
+
+    /** Inserta conservando el `id` o actualiza si ya existe (p. ej. al deshacer un borrado). */
+    @Upsert
+    suspend fun upsert(alarm: AlarmEntity)
 
     @Delete
     suspend fun delete(alarm: AlarmEntity)

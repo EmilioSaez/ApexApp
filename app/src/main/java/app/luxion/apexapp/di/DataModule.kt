@@ -6,6 +6,7 @@ import app.luxion.apexapp.data.RoomAlarmRepository
 import app.luxion.apexapp.data.RoomSoundRepository
 import app.luxion.apexapp.data.local.AlarmDao
 import app.luxion.apexapp.data.local.ApexDatabase
+import app.luxion.apexapp.data.local.MIGRATION_1_2
 import app.luxion.apexapp.data.local.SoundDao
 import app.luxion.apexapp.domain.AlarmRepository
 import app.luxion.apexapp.domain.SoundRepository
@@ -23,7 +24,9 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun database(@ApplicationContext context: Context): ApexDatabase =
-        Room.databaseBuilder(context, ApexDatabase::class.java, "apex.db").build()
+        Room.databaseBuilder(context, ApexDatabase::class.java, "apex.db")
+            .addMigrations(MIGRATION_1_2)
+            .build()
 
     @Provides
     fun alarmDao(db: ApexDatabase): AlarmDao = db.alarmDao()

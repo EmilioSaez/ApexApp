@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         applicationId = "app.luxion.apexapp"
-        minSdk = 28
+        minSdk = 29
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -41,6 +41,9 @@ android {
     buildFeatures {
         compose = true
     }
+    lint {
+        error += setOf("MissingTranslation", "HardcodedText")
+    }
 }
 
 ksp {
@@ -55,6 +58,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
