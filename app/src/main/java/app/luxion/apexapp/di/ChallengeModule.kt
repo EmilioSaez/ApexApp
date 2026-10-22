@@ -15,6 +15,13 @@ import app.luxion.apexapp.ui.challenge.ChallengeRenderer
 import app.luxion.apexapp.ui.challenge.ChallengesSection
 import app.luxion.apexapp.ui.challenge.MathRenderer
 import app.luxion.apexapp.ui.editor.EditorSection
+import app.luxion.apexapp.domain.challenge.DeviceCapabilities
+import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
+import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
+import app.luxion.apexapp.domain.challenge.sensor.StandUpChallenge
+import app.luxion.apexapp.domain.challenge.sensor.StepsChallenge
+import app.luxion.apexapp.platform.AndroidDeviceCapabilities
+import app.luxion.apexapp.platform.AndroidMotionSensors
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -51,6 +58,24 @@ interface ChallengeModule {
     /** Oyentes del fin de sesión: `@Binds @IntoSet SessionFinishedListener`. */
     @Multibinds
     fun sessionFinishedListeners(): Set<SessionFinishedListener>
+
+    @Binds
+    @IntoSet
+    fun shake(impl: ShakeChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun steps(impl: StepsChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun standUp(impl: StandUpChallenge): Challenge
+
+    @Binds
+    fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities
+
+    @Binds
+    fun motionSensors(impl: AndroidMotionSensors): MotionSensors
 
     @Binds
     fun difficultyProvider(impl: FixedDifficultyProvider): DifficultyProvider
