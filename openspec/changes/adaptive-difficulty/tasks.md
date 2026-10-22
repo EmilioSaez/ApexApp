@@ -20,9 +20,9 @@
 
 ## 4. Interfaz y explicación
 
-- [ ] 4.1 Añadir en `AlarmEditorScreen` la sección con interruptor, texto explicativo, selector de rango y botón de reiniciar, y verificar con tests de Compose que el rango inválido se rechaza y que el interruptor persiste
+- [x] 4.1 Añadir en `AlarmEditorScreen` la sección con interruptor, texto explicativo, selector de rango y botón de reiniciar, y verificar con tests de Compose que el rango inválido se rechaza y que el interruptor persiste
 - [x] 4.2 Mostrar nivel actual y motivo del último cambio en el editor, con strings localizados desde `ChangeReason`, y verificar con test de Compose para cada motivo
-- [ ] 4.3 Mostrar la línea de aviso en la pantalla del reto cuando el nivel cambia y verificar con test de Compose (visible solo si hay cambio)
+- [x] 4.3 Mostrar la línea de aviso en la pantalla del reto cuando el nivel cambia y verificar con test de Compose (visible solo si hay cambio)
 
 ## 5. Verificación de conjunto
 
@@ -33,9 +33,9 @@
 Suite instrumentada ejecutada sobre `develop` (e50cb8f más los arreglos de la PR #14) en emulador API 36: 57 de 57 en verde. Sin emulador en este worktree.
 
 - Marcadas por sus tests: 2.2 (`MigrationTest.migrate4To5_*`, además de 1→2, 2→3 y 3→4), 2.3 (`AdaptiveSettingsRepositoryTest`: lectura completa, actualización, fila ausente, borrado en cascada y persistencia tras reabrir la base) y 4.2 (`AdaptiveDifficultyContentTest`: nivel actual y motivo en el editor, y el texto de cada `ChangeReason`).
-- 4.1 sin marcar: los tests de Compose comprueban la explicación, el interruptor (callback), el rango mostrado y el botón de reiniciar, pero ninguno mueve el `RangeSlider` ni comprueba que el interruptor persiste a través de `AdaptiveDifficultyViewModel`. El rechazo de un rango inválido está probado en el motor (`AdaptiveDifficultyEngineTest`) y la persistencia en `AdaptiveSettingsRepositoryTest`. Falta un test de Compose o del ViewModel que lo una, y revisar a ojo la sección en el editor.
-- 4.3 sin marcar: `noticeShowsOnlyWhenPresent` solo comprueba que el aviso se ve cuando hay cambio; no hay test que verifique que no aparece sin cambio ni que `ChallengeSessionContent` lo muestra con su `header`. Falta ese test y revisar a ojo la pantalla del reto con un cambio de nivel.
-- 5.1 sin marcar: `testDebugUnitTest` y la suite instrumentada pasan, pero falta el recorrido manual activar → varios snoozes → subida de nivel → explicación visible.
+- 4.1 marcada: `AdaptiveViewModelsTest` comprueba que el interruptor persiste y se refleja en el estado, que un rango válido se guarda y uno inválido se rechaza conservando el anterior, y que una alarma nueva no guarda nada; `AdaptiveDifficultyContentTest.movingTheRangeSliderNeverProducesAnInvalidRange` mueve el `RangeSlider` y comprueba que nunca emite mín > máx. Revisada a ojo en emulador (API 36): la sección aparece tras Retos y el interruptor sigue activado al reabrir la alarma.
+- 4.3 marcada: `ChallengeSessionContent` muestra el aviso solo cuando recibe uno (`challengeScreenShowsTheNoticeOnlyWhenTheLevelChanged`, `challengeScreenHasNoNoticeWithoutAChange`), y `AdaptiveViewModelsTest` cubre que el aviso se consume una vez y no aparece sin cambio, con ajuste desactivado o sin alarma.
+- 5.1 sin marcar: `testDebugUnitTest` y la suite instrumentada (76 de 76, emulador API 36) pasan, pero falta el recorrido manual activar → varios snoozes → subida de nivel → explicación visible.
 - Decisión: el rango inválido (mín > máx) se rechaza en el motor (`setRange`); en la UI el `RangeSlider` no puede producirlo.
 - Decisión: en una alarma nueva (sin id) la sección aparece desactivada con el aviso "Guarda la alarma para poder activarla", porque el estado cuelga del id de la alarma.
 - Integración: migración Room v4→v5 (`MIGRATION_4_5`, esquema `5.json`), `WakeHistorySource` enlazado a `WakeStatsHistorySource`, sección registrada como `EditorSection` (order 150, tras Retos).
