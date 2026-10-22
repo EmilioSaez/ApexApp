@@ -16,8 +16,8 @@
 ## 3. Exportar y compartir alarma
 
 - [ ] 3.1 Generar enlace `apexapp://alarm?d=…` y compartirlo con `ACTION_SEND`; verificar con test unitario del enlace y manualmente en emulador que aparece la share sheet
-- [ ] 3.2 Añadir ZXing core al catálogo para generar el QR y no añadir CameraX ni ML Kit (los aporta `challenges-qr-sensors`); verificar que el proyecto compila
-- [ ] 3.3 Generar y mostrar el QR de la alarma con tope de tamaño y fallback a archivo si no cabe; verificar con test unitario del tope y prueba de lectura del QR generado
+- [x] 3.2 Añadir ZXing core al catálogo para generar el QR y no añadir CameraX ni ML Kit (los aporta `challenges-qr-sensors`); verificar que el proyecto compila
+- [x] 3.3 Generar y mostrar el QR de la alarma con tope de tamaño y fallback a archivo si no cabe; verificar con test unitario del tope y prueba de lectura del QR generado
 - [ ] 3.4 Exportar archivo `.apexalarm` con `FileProvider` (`file_paths.xml` limitado a `cache/shared/`); verificar manualmente que otra app lo recibe y que no accede a otros archivos
 - [ ] 3.5 Añadir acción "Compartir" en `AlarmEditorScreen`/`HomeScreen` con selector enlace/QR/archivo; verificar con test de UI Compose
 

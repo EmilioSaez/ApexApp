@@ -2,6 +2,7 @@ package app.luxion.apexapp.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -12,6 +13,8 @@ import app.luxion.apexapp.ui.editor.AlarmEditorScreen
 import app.luxion.apexapp.ui.home.HomeScreen
 import app.luxion.apexapp.ui.reliability.ReliabilityScreen
 import app.luxion.apexapp.ui.settings.SettingsScreen
+import app.luxion.apexapp.ui.sharing.ImportScreen
+import app.luxion.apexapp.ui.sharing.ShareAlarmScreen
 import app.luxion.apexapp.ui.stats.StatsScreen
 import kotlinx.serialization.Serializable
 
@@ -37,9 +40,19 @@ data object AntiCheatStatusRoute
 @Serializable
 data object StatsRoute
 
+@Serializable
+data class ShareAlarmRoute(val alarmId: Long)
+
+@Serializable
+data object ImportRoute
+
+/** [importRequested] pasa a verdadero cuando llega un enlace o archivo de ApexApp desde fuera de la app. */
 @Composable
-fun AppNavigation() {
+fun AppNavigation(importRequested: Boolean = false) {
     val navController = rememberNavController()
+    LaunchedEffect(importRequested) {
+        if (importRequested) navController.navigate(ImportRoute) { launchSingleTop = true }
+    }
     NavHost(navController = navController, startDestination = HomeRoute) {
         composable<HomeRoute> {
             HomeScreen(
@@ -49,14 +62,24 @@ fun AppNavigation() {
                 onOpenReliability = { navController.navigate(ReliabilityRoute) },
                 onOpenChallengeTest = { navController.navigate(ChallengeTestRoute) },
                 onOpenStats = { navController.navigate(StatsRoute) },
+                onOpenImport = { navController.navigate(ImportRoute) },
             )
         }
         composable<AlarmEditorRoute> {
             CompositionLocalProvider(
                 LocalOpenAntiCheatStatus provides { navController.navigate(AntiCheatStatusRoute) },
             ) {
-                AlarmEditorScreen(onBack = { navController.popBackStack() })
+                AlarmEditorScreen(
+                    onBack = { navController.popBackStack() },
+                    onShare = { navController.navigate(ShareAlarmRoute(it)) },
+                )
             }
+        }
+        composable<ShareAlarmRoute> {
+            ShareAlarmScreen(onBack = { navController.popBackStack() })
+        }
+        composable<ImportRoute> {
+            ImportScreen(onBack = { navController.popBackStack() })
         }
         composable<StatsRoute> {
             StatsScreen(onBack = { navController.popBackStack() })
