@@ -26,8 +26,8 @@
 
 ## 5. Integración
 
-- [ ] 5.1 Ejecutar `./gradlew :app:testDebugUnitTest :app:assembleDebug` y verificar que todo pasa
-- [ ] 5.2 Ejecutar `openspec validate challenge-engine` y verificar que no hay errores
+- [x] 5.1 Ejecutar `./gradlew :app:testDebugUnitTest :app:assembleDebug` y verificar que todo pasa
+- [x] 5.2 Ejecutar `openspec validate challenge-engine` y verificar que no hay errores
 
 ## Workflow follow-up
 
