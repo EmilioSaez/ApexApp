@@ -48,6 +48,6 @@
 
 - [ ] 7.1 Ejecutar los tests unitarios e instrumentados existentes y los nuevos
 - [ ] 7.2 Probar manualmente en emulador (`shogun emulator start`): pantalla bloqueada, app cerrada, `adb shell dumpsys deviceidle force-idle`, reinicio y cambio de hora/zona
-- [ ] 7.3 Probar en al menos un dispositivo físico con optimización de fabricante agresiva
+- [ ] 7.3 Probar en al menos un dispositivo físico con optimización de fabricante agresiva (pendiente manual para el usuario: requiere un móvil real con ROM agresiva)
 
 <!-- Pendiente de 7.x: unit tests, lint y compilación de androidTest en verde (68 tests). Los instrumentados (incl. MigrationTest v2->v3) y la prueba manual en emulador no se han podido ejecutar: shogun no tenía emulador libre (límite de 2, ocupados por otras worktrees). 7.3 requiere un dispositivo físico. -->
