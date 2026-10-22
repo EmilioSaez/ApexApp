@@ -2,9 +2,9 @@
 
 ## 1. Algoritmo puro
 
-- [ ] 1.1 Crear `SessionSummary`, `AdaptiveDifficultyConfig` (constantes por defecto) y `AdaptiveDecision` con `ChangeReason`; verificar que compila con `./gradlew :app:compileDebugKotlin`
-- [ ] 1.2 Implementar `AdaptiveDifficultyCalculator` (ventana de 5, mínimo 3, reglas de subida/bajada, bajada prioritaria, límites mín/máx, histéresis por `lastChangeSessionId`) y verificar con tests unitarios en `app/src/test` que cubren cada escenario de las specs (historial insuficiente, subida por snoozes, subida por reto fácil, bajada por fallos, contradicción, límites, estabilidad tras cambio)
-- [ ] 1.3 Excluir sesiones sin resultado fiable (no atendidas, sospechosas, alarma desactivada) y verificarlo con tests unitarios
+- [x] 1.1 Crear `SessionSummary`, `AdaptiveDifficultyConfig` (constantes por defecto) y `AdaptiveDecision` con `ChangeReason`; verificar que compila con `./gradlew :app:compileDebugKotlin`
+- [x] 1.2 Implementar `AdaptiveDifficultyCalculator` (ventana de 5, mínimo 3, reglas de subida/bajada, bajada prioritaria, límites mín/máx, histéresis por `lastChangeSessionId`) y verificar con tests unitarios en `app/src/test` que cubren cada escenario de las specs (historial insuficiente, subida por snoozes, subida por reto fácil, bajada por fallos, contradicción, límites, estabilidad tras cambio)
+- [x] 1.3 Excluir sesiones sin resultado fiable (no atendidas, sospechosas, alarma desactivada) y verificarlo con tests unitarios
 
 ## 2. Persistencia
 
