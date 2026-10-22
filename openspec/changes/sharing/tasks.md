@@ -23,7 +23,7 @@
 
 ## 4. Recepción e importación en la UI
 
-- [ ] 4.1 Añadir `intent-filter` (deep link y archivo/MIME `.apexalarm`) en `MainActivity` y lectura acotada por `ContentResolver`; verificar con `adb shell am start -d "apexapp://alarm?d=…"` y apertura de archivo
+- [x] 4.1 Añadir `intent-filter` (deep link y archivo/MIME `.apexalarm`) en `MainActivity` y lectura acotada por `ContentResolver`; verificar con `adb shell am start -d "apexapp://alarm?d=…"` y apertura de archivo
 - [x] 4.2 Añadir `ImportRoute` en `AppNavigation` y pantalla de vista previa (hora, días, etiqueta, reto, sonido, anti-trampa) con Aceptar/Cancelar y estados de error, siguiendo el skill `design-taste-compose`; verificar con tests de UI Compose
 - [x] 4.3 Usar `BarcodeScanner` (paquete `scanner`, provisional) de `challenges-qr-sensors`, pidiendo CAMERA con su helper, para escanear un QR desde la app y llevar a `ImportRoute`; verificar escaneando el QR generado en 3.3 en emulador/dispositivo
 
