@@ -114,4 +114,11 @@
     <string name="challenge_target_decrease">−</string>
     <string name="challenge_target_increase">+</string>
     <string name="challenge_target_clamped">Ajustado al rango permitido (%1$d–%2$d).</string>
+    <string name="scanner_permission_rationale">Necesitamos la cámara para leer el código. La imagen no sale del móvil.</string>
+    <string name="scanner_permission_blocked">El permiso de cámara está denegado. Actívalo en los ajustes de la app para usar este reto.</string>
+    <string name="challenge_qr_prompt">Escanea tu código</string>
+    <string name="challenge_qr_hold">Mantén el código en el encuadre…</string>
+    <string name="challenge_qr_wrong">Ese no es el código registrado.</string>
+    <string name="challenge_qr_rejected_screen">Parece una pantalla. Escanea el objeto real.</string>
+    <string name="challenge_qr_rejected_static">Parece una foto. Escanea el objeto real.</string>
 </resources>

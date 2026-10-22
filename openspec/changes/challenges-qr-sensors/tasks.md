@@ -22,9 +22,9 @@
 
 ## 4. Reto QR
 
-- [ ] 4.1 Implementar `FrameLivenessChecker` (coherencia temporal, varianza de fondo, parpadeo de pantalla) como función pura; verificar con tests sobre secuencias de fotogramas sintéticas estáticas y dinámicas
-- [ ] 4.2 Implementar el lector CameraX + ML Kit como componente compartido (flujo de lecturas por fotograma + previsualización), en el paquete `app.luxion.apexapp.scanner` con `BarcodeScanner(onScanned, modifier)` según design.md; verificar leyendo un QR y un código de barras en emulador/dispositivo
-- [ ] 4.3 Implementar registro del código (hash SHA-256 + formato serializado en `ChallengeSpec.params`, sin tocar Room; sustitución, validación al guardar) y comparación; verificar con tests unitarios de igualdad, distinto y sustitución
+- [x] 4.1 Implementar `FrameLivenessChecker` (coherencia temporal, varianza de fondo, parpadeo de pantalla) como función pura; verificar con tests sobre secuencias de fotogramas sintéticas estáticas y dinámicas
+- [x] 4.2 Implementar el lector CameraX + ML Kit como componente compartido (flujo de lecturas por fotograma + previsualización), en el paquete `app.luxion.apexapp.scanner` con `BarcodeScanner(onScanned, modifier)` según design.md; verificar leyendo un QR y un código de barras en emulador/dispositivo
+- [x] 4.3 Implementar registro del código (hash SHA-256 + formato serializado en `ChallengeSpec.params`, sin tocar Room; sustitución, validación al guardar) y comparación; verificar con tests unitarios de igualdad, distinto y sustitución
 - [ ] 4.4 Implementar el reto QR contra la interfaz del motor con verificación anti foto-de-foto y reserva sin cámara o sin permiso; verificar rechazando una foto en pantalla y aceptando el objeto real
 - [ ] 4.5 Implementar UI de registro y escaneo con gestión de permiso de cámara (pendiente, denegado permanente → ajustes) y aviso de colocación del código; verificar con tests Compose y a mano
 

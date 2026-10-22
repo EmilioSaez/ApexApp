@@ -15,6 +15,11 @@ import app.luxion.apexapp.ui.challenge.ChallengeRenderer
 import app.luxion.apexapp.ui.challenge.ChallengesSection
 import app.luxion.apexapp.ui.challenge.MathRenderer
 import app.luxion.apexapp.ui.editor.EditorSection
+import app.luxion.apexapp.ui.challenge.QrRenderer
+import app.luxion.apexapp.ui.challenge.ShakeRenderer
+import app.luxion.apexapp.ui.challenge.StandUpRenderer
+import app.luxion.apexapp.ui.challenge.StepsRenderer
+import app.luxion.apexapp.domain.challenge.qr.QrChallenge
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
@@ -70,6 +75,26 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun standUp(impl: StandUpChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun qr(impl: QrChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun shakeRenderer(impl: ShakeRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun stepsRenderer(impl: StepsRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun standUpRenderer(impl: StandUpRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun qrRenderer(impl: QrRenderer): ChallengeRenderer
 
     @Binds
     fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities
