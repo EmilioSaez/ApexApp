@@ -62,6 +62,28 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun migrate3To4_keepsAlarmsAndAddsEmptyWakeTables() {
+        helper.createDatabase(DB, 3).apply {
+            execSQL("INSERT INTO alarms (id, hour, minute, repeatMask, enabled, label, soundId, challengesJson, soundJson, antiCheatJson) VALUES (1, 6, 45, 3, 1, 'Gym', NULL, '{}', '{}', '{}')")
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(DB, 4, true, MIGRATION_3_4)
+        db.query("SELECT hour, minute, label FROM alarms WHERE id = 1").use {
+            it.moveToFirst()
+            assertEquals(6, it.getInt(0))
+            assertEquals(45, it.getInt(1))
+            assertEquals("Gym", it.getString(2))
+        }
+        listOf("wake_events", "sleep_logs", "sleep_preferences").forEach { table ->
+            db.query("SELECT COUNT(*) FROM $table").use {
+                it.moveToFirst()
+                assertEquals(0, it.getInt(0))
+            }
+        }
+    }
+
     private companion object {
         const val DB = "migration-test"
     }

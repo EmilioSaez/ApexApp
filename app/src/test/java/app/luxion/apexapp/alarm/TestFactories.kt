@@ -22,11 +22,12 @@ fun testController(
     clock: Clock,
     launcher: RingingLauncher = FakeRingingLauncher(),
     fireState: FireStateRepository = FakeFireStateRepository(),
-    recorder: WakeEventRecorder = NoOpWakeEventRecorder(),
+    recorder: WakeEventRecorder = FakeWakeEventRecorder(),
 ): AlarmController {
     val scheduler = AlarmClockScheduler(gateway, clock, fireState)
     val handler = AlarmFiringHandler(
         repository, scheduler, RingingRegistry(), launcher, NoOpNotifier, CountingSessionIds(), fireState, clock,
+        FakeWakeEventRecorder(),
     )
     return AlarmController(repository, scheduler, fireState, handler, recorder, clock)
 }

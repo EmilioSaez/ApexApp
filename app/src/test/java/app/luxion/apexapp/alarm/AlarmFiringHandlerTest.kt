@@ -1,6 +1,7 @@
 package app.luxion.apexapp.alarm
 
 import app.luxion.apexapp.domain.Alarm
+import app.luxion.apexapp.domain.WakeEventType
 import java.time.Clock
 import java.time.DayOfWeek
 import java.time.ZoneId
@@ -33,6 +34,7 @@ class AlarmFiringHandlerTest {
     private val notified = mutableListOf<Alarm>()
     private val sessions = mutableListOf<String>()
     private var counter = 0
+    private val recorder = FakeWakeEventRecorder()
     private val handler = AlarmFiringHandler(
         repository,
         AlarmClockScheduler(gateway, clock, fireState),
@@ -51,6 +53,7 @@ class AlarmFiringHandlerTest {
         },
         fireState,
         clock,
+        recorder,
     )
 
     @Test
@@ -124,5 +127,33 @@ class AlarmFiringHandlerTest {
         assertNotNull(session)
         assertEquals(1, launcher.started.size)
         assertNull(fireState.get(TEST_ALARM_ID))
+    }
+
+    @Test
+    fun firing_recordsRangWithSessionId() = runBlocking {
+        val id = repository.save(Alarm(hour = 8, minute = 0))
+        val session = handler.onFire(id)!!
+        val event = recorder.events.single()
+        assertEquals(WakeEventType.RANG, event.type)
+        assertEquals(session.sessionId, event.sessionId)
+        assertEquals(id, event.alarmId)
+        assertEquals(clock.millis(), event.timestamp)
+    }
+
+    @Test
+    fun recorderFailure_doesNotPreventRingingNorReschedule() = runBlocking {
+        recorder.failWith = IllegalStateException("db")
+        val id = repository.save(Alarm(hour = 8, minute = 0, repeatDays = setOf(DayOfWeek.WEDNESDAY)))
+        val session = handler.onFire(id)
+        assertNotNull(session)
+        assertEquals(listOf(session), launcher.started)
+        assertTrue(gateway.scheduled.containsKey(id))
+    }
+
+    @Test
+    fun snoozeRefire_doesNotRecordASecondRang() = runBlocking {
+        val id = repository.save(Alarm(hour = 8, minute = 0))
+        handler.onFire(id, sessionId = "existing")
+        assertTrue(recorder.events.isEmpty())
     }
 }
