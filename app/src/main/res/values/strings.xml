@@ -97,4 +97,9 @@
     <string name="challenge_done">Terminar</string>
     <string name="challenge_editor_section">Retos</string>
     <string name="challenge_editor_none">Sin retos: la alarma se descarta de inmediato.</string>
+
+
+
+
+    <string name="speech_time">Son las %1$s</string>
 </resources>

@@ -38,7 +38,23 @@ data class SoundConfig(
     val vibrationPattern: String = "steady",
     val speakTime: Boolean = false,
     val speakRepeatSeconds: Int = 0,
-)
+) {
+    init {
+        require(volume in 0..100) { "volume must be in 0..100" }
+        require(rampSeconds in 0..MAX_RAMP_SECONDS) { "rampSeconds must be in 0..$MAX_RAMP_SECONDS" }
+        require(speakRepeatSeconds == 0 || speakRepeatSeconds >= MIN_SPEAK_REPEAT_SECONDS) {
+            "speakRepeatSeconds must be 0 or >= $MIN_SPEAK_REPEAT_SECONDS"
+        }
+        require((ttsText?.length ?: 0) <= MAX_TTS_TEXT_LENGTH) { "ttsText too long" }
+        require(VibrationPatterns.isValid(vibrationPattern)) { "invalid vibrationPattern" }
+    }
+
+    companion object {
+        const val MAX_RAMP_SECONDS = 120
+        const val MIN_SPEAK_REPEAT_SECONDS = 15
+        const val MAX_TTS_TEXT_LENGTH = 140
+    }
+}
 
 @Serializable
 enum class AntiCheatLevel { OFF, STANDARD, STRICT }
