@@ -30,4 +30,4 @@
 
 ## 5. Integración
 
-- [ ] 5.1 Flujo completo en emulador (`shogun emulator start`): crear alarma, esperar disparo, ver pantalla de sonar, descartar, reiniciar y comprobar reprogramación; verificar `./gradlew test connectedAndroidTest` en verde
+- [x] 5.1 Flujo completo en emulador (`shogun emulator start`): crear alarma, esperar disparo, ver pantalla de sonar, descartar, reiniciar y comprobar reprogramación; verificar `./gradlew test connectedAndroidTest` en verde
