@@ -8,7 +8,7 @@
 
 ## 2. Persistencia
 
-- [ ] 2.1 Añadir `AdaptiveSettingsEntity` y `AdaptiveSettingsDao` (FK con `CASCADE` a `alarms`), registrarlos en `ApexDatabase` y verificar que se genera el esquema exportado
+- [x] 2.1 Añadir `AdaptiveSettingsEntity` y `AdaptiveSettingsDao` (FK con `CASCADE` a `alarms`), registrarlos en `ApexDatabase` y verificar que se genera el esquema exportado
 - [ ] 2.2 Escribir la migración Room aditiva v(n+1) sobre la versión vigente en el momento de implementar (tras el merge de `wake-stats`; `alarm-core` fija v2) y verificar con un test de migración instrumentado que las alarmas existentes se conservan
 - [ ] 2.3 Crear `AdaptiveSettingsRepository` (observar, guardar, reiniciar, validar mín ≤ máx) y verificar con tests de repositorio, incluyendo borrado en cascada y persistencia tras reabrir la base
 

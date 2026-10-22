@@ -84,6 +84,26 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun migrate4To5_keepsAlarmsAndCreatesAdaptiveTable() {
+        helper.createDatabase(DB, 4).apply {
+            execSQL("INSERT INTO alarms (id, hour, minute, repeatMask, enabled, label, soundId, challengesJson, soundJson, antiCheatJson) VALUES (1, 6, 45, 3, 1, 'Gym', NULL, '{}', '{}', '{}')")
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(DB, 5, true, MIGRATION_4_5)
+        db.query("SELECT hour, minute, label FROM alarms WHERE id = 1").use {
+            it.moveToFirst()
+            assertEquals(6, it.getInt(0))
+            assertEquals(45, it.getInt(1))
+            assertEquals("Gym", it.getString(2))
+        }
+        db.query("SELECT COUNT(*) FROM adaptive_difficulty_settings").use {
+            it.moveToFirst()
+            assertEquals(0, it.getInt(0))
+        }
+    }
+
     private companion object {
         const val DB = "migration-test"
     }
