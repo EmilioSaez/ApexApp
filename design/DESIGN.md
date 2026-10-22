@@ -1,0 +1,46 @@
+# Apex — design system (exportado de Stitch)
+
+Proyecto Stitch `3824318768696066700`, design system `assets/8284090323799835001` (v2). Modo base: oscuro.
+
+Despertador que obliga a despertar con retos. Oscuro primero (uso nocturno y matutino).
+
+- Superficies neutras frías en escalones de tono, sin sombras ni degradados.
+- Un único acento naranja señal (#FF8A4C oscuro / #B93E00 claro) solo en la acción principal y el dato clave.
+- Colores semánticos: éxito #5BD68A, fallo #FF6B6B.
+- La hora es lo dominante: display grande Sora, cifras tabulares, interlineado 1.0.
+- Radio pequeño único (4 dp), listas como filas separadas por espacio, no rejillas de tarjetas.
+- Sin emoji, sin iconos decorativos, sin glassmorphism.
+- Áreas táctiles >= 48 dp, contraste AA.
+
+## Tema de Stitch
+
+| Campo | Valor |
+|---|---|
+| Titulares | Sora |
+| Cuerpo / etiquetas | Inter |
+| Roundness | ROUND_FOUR |
+| Color primario (seed) | #FF8A4C |
+| Neutro | #14161A |
+| Variante | NEUTRAL |
+
+Paleta tonal calculada por Stitch (oscuro): background `#0c0e12`, surface_container `#161a21`,
+surface_container_high `#1b2029`, surface_container_highest `#202631`, on_surface `#e0e5f4`,
+outline `#6f7682`, outline_variant `#424854`, primary `#ffb693`, primary_container `#7a3000`.
+
+> La app **no** usa la paleta tonal de Stitch: `ui/theme/Color.kt` define sus propios esquemas claro y oscuro
+> con el mismo acento. Esta tabla es solo referencia visual.
+
+## Pantallas de referencia
+
+Capturas en `design/screens/*.png` y HTML en `design/screens/html/*.html` (solo tema oscuro).
+
+| Pantalla | Archivo | Id Stitch |
+|---|---|---|
+| Lista de alarmas | lista-alarmas | c1d90860c8b54da78178d6629f136955 |
+| Editar alarma | editor | 9175576ae0454293a65d74ed78caa505 |
+| Alarma sonando | alarma-sonando | 959a782682d04f118a55b5859ccade8a |
+| Estadísticas | estadisticas | f0cb0f8a71994c3989349a213375bce2 |
+| Ajustes | ajustes | 01110cd4dab4462a8f4076cf83340d1a |
+
+Son guía de composición, no especificación pixel a pixel: p. ej. la barra inferior (Alarmas / Retos / Historial)
+que propone Stitch en la lista no forma parte de ningún change.

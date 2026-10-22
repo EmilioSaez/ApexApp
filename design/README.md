@@ -6,9 +6,11 @@ Referencia para quien implemente pantallas. Dirección de arte: skill `design-ta
 
 Proyecto `3824318768696066700` ("ApexApp"), design system `assets/8284090323799835001` ("Apex"):
 oscuro primero, acento naranja señal, Sora (titulares/hora) + Inter (resto), radio 4 dp.
-Las pantallas de referencia (lista, edición, sonar/retos, estadísticas, compartir, ajustes) **aún no se han
-podido generar**: `generate_screen_from_text` agotó el tiempo en todos los intentos. Cuando funcione, guardar
-aquí `DESIGN.md` y las capturas.
+`design/DESIGN.md` resume el sistema; capturas en `design/screens/` y HTML en `design/screens/html/`
+(lista de alarmas, editor, alarma sonando, estadísticas, ajustes; solo oscuro).
+
+Pendiente: pantalla de **Compartir** (Stitch la generó pero no devuelve su id; `list_screens` sale vacío),
+**reto matemático** (timeout) y las variantes en **claro**. Usar `modelId: GEMINI_3_5_FLASH_LITE`, una a una.
 
 ## Tema (`ui/theme`)
 
