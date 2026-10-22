@@ -36,7 +36,7 @@
 ## 6. Editor
 
 - [x] 6.1 Selector de sonido: por defecto, incluidos en la app, tonos del sistema y `OpenDocument` con `takePersistableUriPermission`
-- [ ] 6.2 Controles de rampa, vibración (preset/personalizado) y voz en `AlarmEditorScreen` siguiendo `design-taste-compose` *(pendiente: `SoundSettingsSection(alarm, onChange)` está hecha; falta incrustarla en el editor real de alarm-core, hoy provisional)*
+- [x] 6.2 Controles de rampa, vibración (preset/personalizado) y voz en `AlarmEditorScreen` siguiendo `design-taste-compose`
 - [x] 6.3 Botón de previsualización con parada al salir de la pantalla
 - [x] 6.4 Strings en `strings.xml` y tests de UI/ViewModel del editor
 

@@ -12,11 +12,14 @@ import app.luxion.apexapp.alarm.sound.SoundAlarmRinger
 import app.luxion.apexapp.alarm.sound.TimeAnnouncer
 import app.luxion.apexapp.alarm.sound.TonePlayer
 import app.luxion.apexapp.domain.SoundRepository
+import app.luxion.apexapp.ui.editor.EditorSection
 import app.luxion.apexapp.ui.editor.sound.AndroidSoundImporter
 import app.luxion.apexapp.ui.editor.sound.SoundImporter
+import app.luxion.apexapp.ui.editor.sound.SoundSection
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
+import dagger.multibindings.IntoSet
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import java.time.Clock
@@ -46,6 +49,10 @@ interface SoundBindings {
 
     @Binds
     fun importer(impl: AndroidSoundImporter): SoundImporter
+
+    @Binds
+    @IntoSet
+    fun soundSection(impl: SoundSection): EditorSection
 }
 
 @Module
