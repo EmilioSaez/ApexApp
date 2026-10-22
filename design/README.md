@@ -10,7 +10,7 @@ oscuro primero, acento naranja señal, Sora (titulares/hora) + Inter (resto), ra
 (lista de alarmas, editor, alarma sonando, estadísticas, ajustes; solo oscuro).
 
 Pendiente: pantalla de **Compartir** (Stitch la generó pero no devuelve su id; `list_screens` sale vacío),
-**reto matemático** (timeout) y las variantes en **claro**. Usar `modelId: GEMINI_3_5_FLASH_LITE`, una a una.
+**reto matemático** (generado dos veces, sin id devuelto) y las variantes en **claro**. Usar `modelId: GEMINI_3_5_FLASH_LITE`, una a una.
 
 ## Tema (`ui/theme`)
 

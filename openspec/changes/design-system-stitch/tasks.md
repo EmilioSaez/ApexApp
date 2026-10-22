@@ -1,8 +1,8 @@
 ## 1. Diseño en Stitch
 
 - [x] 1.1 Crear proyecto y design system en Stitch (paleta clara/oscura, tipografía, formas) siguiendo `design-taste-compose`
-- [ ] 1.2 Generar las pantallas de referencia: lista de alarmas, edición, sonar/retos, estadísticas, compartir y ajustes, en claro y oscuro
-- [ ] 1.3 Iterar con variantes/ediciones y validar contraste AA y escala de fuente 1.3
+- [ ] 1.2 (parcial/diferido) Generar las pantallas de referencia: lista de alarmas, edición, sonar/retos, estadísticas, compartir y ajustes, en claro y oscuro. Hecho: 5 pantallas en oscuro (lista, editor, alarma sonando, estadísticas, ajustes). Falta: Compartir y reto matemático (generadas en Stitch, pero la API no devuelve su id y no se pueden descargar) y las variantes en claro. Proyecto Stitch 3824318768696066700.
+- [ ] 1.3 (diferido) Iterar con variantes/ediciones y validar contraste AA y escala de fuente 1.3 sobre los diseños de Stitch (la app sí se verificó en emulador, ver 7.1). Proyecto Stitch 3824318768696066700.
 - [x] 1.4 Guardar `DESIGN.md` y capturas en `design/` del repo
 
 ## 2. Tema
