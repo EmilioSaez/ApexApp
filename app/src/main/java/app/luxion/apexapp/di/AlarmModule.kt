@@ -5,7 +5,6 @@ import app.luxion.apexapp.alarm.AlarmClockScheduler
 import app.luxion.apexapp.alarm.AlarmNotifier
 import app.luxion.apexapp.alarm.AlarmPermissions
 import app.luxion.apexapp.alarm.AlarmResolver
-import app.luxion.apexapp.alarm.AlarmRinger
 import app.luxion.apexapp.alarm.AlarmScheduler
 import app.luxion.apexapp.alarm.AndroidAlarmClockGateway
 import app.luxion.apexapp.alarm.AndroidAlarmNotifier
@@ -25,7 +24,6 @@ import app.luxion.apexapp.alarm.RingScreenLauncher
 import app.luxion.apexapp.alarm.RingingController
 import app.luxion.apexapp.alarm.RingingLauncher
 import app.luxion.apexapp.alarm.RingingLifecycleListener
-import app.luxion.apexapp.alarm.SystemToneRinger
 import app.luxion.apexapp.domain.WakeEventRecorder
 import dagger.Binds
 import dagger.Module
@@ -55,10 +53,6 @@ interface AlarmModule {
 
     @Binds
     fun notifier(impl: AndroidAlarmNotifier): AlarmNotifier
-
-    /** Binding por defecto del audio; alarm-sound lo sustituye. */
-    @Binds
-    fun ringer(impl: SystemToneRinger): AlarmRinger
 
     /** Abre la RingActivity de alarm-core. */
     @Binds

@@ -97,4 +97,32 @@
     <string name="challenge_done">Terminar</string>
     <string name="challenge_editor_section">Retos</string>
     <string name="challenge_editor_none">Sin retos: la alarma se descarta de inmediato.</string>
+
+
+
+
+    <string name="speech_time">Son las %1$s</string>
+
+    <string name="sound_section">Sonido</string>
+    <string name="sound_default">Tono por defecto</string>
+    <string name="sound_use_default">Por defecto</string>
+    <string name="sound_pick_system">Tono del sistema</string>
+    <string name="sound_pick_file">Archivo de audio</string>
+    <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
+    <string name="sound_ramp_off">Volumen progresivo: desactivado</string>
+    <string name="sound_ramp_seconds">Volumen progresivo: %1$d s</string>
+    <string name="sound_preview">Probar</string>
+    <string name="sound_preview_stop">Detener prueba</string>
+    <string name="vibration_enabled">Vibración</string>
+    <string name="vibration_steady">Continua</string>
+    <string name="vibration_pulse">Pulsos</string>
+    <string name="vibration_sos">SOS</string>
+    <string name="vibration_custom">Personalizada</string>
+    <string name="vibration_custom_hint">Pulso y pausa en ms (200,100,400)</string>
+    <string name="vibration_custom_invalid">Hasta 20 valores positivos, máximo 10 s en total.</string>
+    <string name="voice_speak_time">Leer la hora</string>
+    <string name="voice_reminder">Leer un recordatorio</string>
+    <string name="voice_reminder_text">Recordatorio</string>
+    <string name="voice_repeat">Repetir mientras suena</string>
+    <string name="voice_repeat_every">Repetir cada %1$d s</string>
 </resources>
