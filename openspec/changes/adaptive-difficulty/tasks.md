@@ -14,8 +14,8 @@
 
 ## 3. Integración con dependencias
 
-- [ ] 3.1 Definir el puerto `WakeHistorySource` y la escala fija 1..5 (0 = sin definir → 3, fuera de rango se acota) y verificar que el motor se prueba con fakes sin depender de `wake-stats` ni `challenge-engine`
-- [ ] 3.2 Implementar `AdaptiveDifficultyEngine` (`levelFor`, `onSessionFinished`, `reset`) con fallback al último nivel o a la dificultad base y verificar con tests unitarios, incluido el caso de fallo de lectura del historial
+- [x] 3.1 Definir el puerto `WakeHistorySource` y la escala fija 1..5 (0 = sin definir → 3, fuera de rango se acota) y verificar que el motor se prueba con fakes sin depender de `wake-stats` ni `challenge-engine`
+- [x] 3.2 Implementar `AdaptiveDifficultyEngine` (`levelFor`, `onSessionFinished`, `reset`) con fallback al último nivel o a la dificultad base y verificar con tests unitarios, incluido el caso de fallo de lectura del historial
 - [ ] 3.3 Con `challenge-engine` y `wake-stats` ya integrados, escribir el adaptador real de `wake-stats`, implementar `AdaptiveDifficultyProvider` (cacheado por `sessionId`) sustituyendo el binding de Hilt de `DifficultyProvider`, llamar a `onSessionFinished` al cierre de sesión, y verificar con un test instrumentado que un disparo usa el nivel adaptativo y que con el ajuste desactivado usa el fijo
 
 ## 4. Interfaz y explicación

@@ -1,10 +1,10 @@
 package app.luxion.apexapp.di
 
+import app.luxion.apexapp.domain.adaptive.AdaptiveDifficultyProvider
 import app.luxion.apexapp.domain.challenge.Challenge
 import app.luxion.apexapp.domain.challenge.ChallengeEventSink
 import app.luxion.apexapp.domain.challenge.ChallengeRegistry
 import app.luxion.apexapp.domain.challenge.DifficultyProvider
-import app.luxion.apexapp.domain.challenge.FixedDifficultyProvider
 import app.luxion.apexapp.domain.challenge.MathChallenge
 import app.luxion.apexapp.domain.challenge.SessionFinishedListener
 import app.luxion.apexapp.domain.challenge.WakeLoggingChallengeSink
@@ -123,7 +123,7 @@ interface ChallengeModule {
     fun motionSensors(impl: AndroidMotionSensors): MotionSensors
 
     @Binds
-    fun difficultyProvider(impl: FixedDifficultyProvider): DifficultyProvider
+    fun difficultyProvider(impl: AdaptiveDifficultyProvider): DifficultyProvider
 
     /** Sink real: registra fallos de reto y fin de sesión en el historial de despertar. */
     @Binds
