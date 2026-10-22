@@ -63,6 +63,7 @@ fun HomeScreen(
     onOpenReliability: () -> Unit,
     onOpenChallengeTest: () -> Unit,
     onOpenStats: () -> Unit,
+    onOpenImport: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -90,6 +91,7 @@ fun HomeScreen(
         onOpenReliability = onOpenReliability,
         onOpenChallengeTest = onOpenChallengeTest,
         onOpenStats = onOpenStats,
+        onOpenImport = onOpenImport,
         onToggle = viewModel::setEnabled,
         onEditAlarm = onEditAlarm,
         onDeleteAlarm = viewModel::delete,
@@ -118,6 +120,7 @@ fun HomeContent(
     onOpenReliability: () -> Unit = {},
     onOpenChallengeTest: () -> Unit = {},
     onOpenStats: () -> Unit = {},
+    onOpenImport: () -> Unit = {},
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -150,10 +153,13 @@ fun HomeContent(
                 }
 
                 state.alarms.isEmpty() -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    EmptyState(
-                        message = stringResource(R.string.home_empty),
-                        hint = stringResource(R.string.home_empty_hint),
-                    )
+                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                        EmptyState(
+                            message = stringResource(R.string.home_empty),
+                            hint = stringResource(R.string.home_empty_hint),
+                        )
+                        TextButton(onClick = onOpenImport) { Text(stringResource(R.string.import_action)) }
+                    }
                 }
 
                 else -> LazyColumn(
@@ -164,6 +170,7 @@ fun HomeContent(
                     verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl),
                 ) {
                     items(state.alarms, key = { it.id }) { alarm -> AlarmRow(alarm, onToggle, onEditAlarm, onDeleteAlarm) }
+                    item { TextButton(onClick = onOpenImport) { Text(stringResource(R.string.import_action)) } }
                 }
             }
         }
@@ -234,7 +241,7 @@ private fun AlarmRow(
 }
 
 @Composable
-private fun daysSummary(days: Set<DayOfWeek>): String = when {
+internal fun daysSummary(days: Set<DayOfWeek>): String = when {
     days.isEmpty() -> stringResource(R.string.alarm_once)
     days.size == 7 -> stringResource(R.string.alarm_every_day)
     else -> DayOfWeek.entries.filter { it in days }

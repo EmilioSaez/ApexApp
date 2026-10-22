@@ -40,7 +40,7 @@ import java.time.format.TextStyle
 import java.util.Locale
 
 @Composable
-fun AlarmEditorScreen(onBack: () -> Unit, viewModel: AlarmEditorViewModel = hiltViewModel()) {
+fun AlarmEditorScreen(onBack: () -> Unit, onShare: (Long) -> Unit = {}, viewModel: AlarmEditorViewModel = hiltViewModel()) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
@@ -58,6 +58,7 @@ fun AlarmEditorScreen(onBack: () -> Unit, viewModel: AlarmEditorViewModel = hilt
         state = state,
         onSave = viewModel::save,
         onBack = onBack,
+        onShare = { onShare(state.draft.id) },
         onLabelChange = viewModel::setLabel,
         onToggleDay = viewModel::toggleDay,
         saveEnabled = viewModel.canSave(state),
@@ -80,6 +81,7 @@ fun AlarmEditorContent(
     onLabelChange: (String) -> Unit,
     onToggleDay: (DayOfWeek) -> Unit,
     saveEnabled: Boolean = true,
+    onShare: (() -> Unit)? = null,
     extraContent: @Composable ColumnScope.() -> Unit = {},
 ) {
     Scaffold(
@@ -90,6 +92,11 @@ fun AlarmEditorContent(
                     Text(stringResource(if (state.isNew) R.string.editor_title else R.string.editor_title_edit))
                 },
                 navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
+                actions = {
+                    if (!state.isNew && onShare != null) {
+                        TextButton(onClick = onShare) { Text(stringResource(R.string.share_open)) }
+                    }
+                },
             )
         },
     ) { padding ->

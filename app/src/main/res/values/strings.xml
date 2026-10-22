@@ -228,4 +228,57 @@
     <string name="adaptive_reason_easy">Subida a %1$d: las últimas 3 veces lo resolviste muy rápido y sin fallos</string>
     <string name="adaptive_reason_failures">Bajada a %1$d: fallaste mucho en %2$d de las últimas 3 veces</string>
     <string name="adaptive_reason_slow">Bajada a %1$d: tardaste mucho en %2$d de las últimas 3 veces</string>
+
+    <string name="share_title">Compartir alarma</string>
+    <string name="share_qr_caption">Tu amigo puede escanear este código desde Importar alarma.</string>
+    <string name="share_qr_too_large">La configuración es demasiado grande para un QR. Compártela como enlace o archivo.</string>
+    <string name="share_link_action">Compartir enlace</string>
+    <string name="share_file_action">Compartir archivo</string>
+    <string name="share_link_text">Te paso una alarma de ApexApp: %1$s</string>
+    <string name="share_chooser_link">Compartir enlace de la alarma</string>
+    <string name="share_chooser_file">Compartir archivo de la alarma</string>
+    <string name="share_not_found">Esta alarma ya no existe.</string>
+    <string name="share_open">Compartir</string>
+    <string name="import_action">Importar alarma</string>
+    <string name="import_title">Importar alarma</string>
+    <string name="import_entry_hint">Abre un enlace o un archivo de ApexApp, escanea un QR o elige un archivo .apexalarm.</string>
+    <string name="import_scan">Escanear QR</string>
+    <string name="import_scan_hint">Apunta al código QR de la alarma.</string>
+    <string name="import_pick_file">Elegir archivo</string>
+    <string name="import_preview_heading">Vista previa</string>
+    <string name="import_accept">Importar</string>
+    <string name="import_discard">Descartar</string>
+    <string name="import_disabled_note">Se añadirá desactivada; actívala cuando quieras.</string>
+    <string name="import_imported">Alarma importada, desactivada</string>
+    <string name="import_challenges_default">Retos: los de por defecto</string>
+    <string name="import_challenges">Retos: %1$s · dificultad %2$d · %3$d por sesión</string>
+    <string name="import_sound_default">Sonido por defecto · volumen %1$d %%</string>
+    <string name="import_snooze_allowed">Posponer: %1$d min, hasta %2$d veces</string>
+    <string name="import_snooze_denied">Sin posponer</string>
+    <string name="import_anticheat">Anti-trampa: %1$s</string>
+    <string name="import_error_malformed">Este contenido no es una alarma de ApexApp válida.</string>
+    <string name="import_error_too_large">El contenido es demasiado grande para importarlo.</string>
+    <string name="import_error_version">Necesitas una versión más reciente de ApexApp para abrir esta alarma.</string>
+    <string name="import_error_invalid">La alarma tiene valores no válidos y no se ha importado.</string>
+    <string name="import_error_file">No se pudo leer el archivo.</string>
+    <string name="import_note_qr">Se omite el reto QR: registra tu propio código al editar la alarma.</string>
+    <string name="import_note_challenge">Se omite un reto que esta versión no conoce.</string>
+    <string name="import_note_sound">El sonido no está disponible: se usará el de por defecto.</string>
+    <string name="streak_share_open">Compartir racha</string>
+    <string name="streak_card_title">Tu racha</string>
+    <string name="streak_card_current">Racha actual</string>
+    <string name="streak_card_best">Mejor racha</string>
+    <string name="streak_card_footer">Despierto con ApexApp</string>
+    <string name="streak_empty">Aún no hay logros que compartir. Apaga alguna alarma a tiempo para empezar tu racha.</string>
+    <string name="streak_share_action">Compartir tarjeta</string>
+    <string name="streak_chooser">Compartir tarjeta de racha</string>
+    <string name="streak_card_description">Tarjeta con racha actual de %1$d y mejor racha de %2$d</string>
+    <plurals name="streak_unit">
+        <item quantity="one">día</item>
+        <item quantity="other">días</item>
+    </plurals>
+    <plurals name="streak_days">
+        <item quantity="one">%1$d día</item>
+        <item quantity="other">%1$d días</item>
+    </plurals>
 </resources>
