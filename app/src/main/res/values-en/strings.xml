@@ -97,32 +97,45 @@
     <string name="challenge_done">Done</string>
     <string name="challenge_editor_section">Challenges</string>
     <string name="challenge_editor_none">No challenges: the alarm can be dismissed right away.</string>
-
-
-
-
-    <string name="speech_time">It is %1$s</string>
-
-    <string name="sound_section">Sound</string>
-    <string name="sound_default">Default tone</string>
-    <string name="sound_use_default">Default</string>
-    <string name="sound_pick_system">System tone</string>
-    <string name="sound_pick_file">Audio file</string>
-    <string name="sound_not_audio">That file is not audio or cannot be read.</string>
-    <string name="sound_ramp_off">Gradual volume: off</string>
-    <string name="sound_ramp_seconds">Gradual volume: %1$d s</string>
-    <string name="sound_preview">Test</string>
-    <string name="sound_preview_stop">Stop test</string>
-    <string name="vibration_enabled">Vibration</string>
-    <string name="vibration_steady">Steady</string>
-    <string name="vibration_pulse">Pulses</string>
-    <string name="vibration_sos">SOS</string>
-    <string name="vibration_custom">Custom</string>
-    <string name="vibration_custom_hint">Pulse and pause in ms (200,100,400)</string>
-    <string name="vibration_custom_invalid">Up to 20 positive values, 10 s total at most.</string>
-    <string name="voice_speak_time">Speak the time</string>
-    <string name="voice_reminder">Speak a reminder</string>
-    <string name="voice_reminder_text">Reminder</string>
-    <string name="voice_repeat">Repeat while ringing</string>
-    <string name="voice_repeat_every">Repeat every %1$d s</string>
+    <plurals name="challenge_shake_prompt">
+        <item quantity="one">Shake your phone %d time</item>
+        <item quantity="other">Shake your phone %d times</item>
+    </plurals>
+    <plurals name="challenge_steps_prompt">
+        <item quantity="one">Take %d step</item>
+        <item quantity="other">Take %d steps</item>
+    </plurals>
+    <plurals name="challenge_standup_prompt">
+        <item quantity="one">Get up and walk for %d second</item>
+        <item quantity="other">Get up and walk for %d seconds</item>
+    </plurals>
+    <string name="challenge_motion_progress">Progress: %d %%</string>
+    <string name="challenge_motion_rejected">That movement does not look real. Try again.</string>
+    <string name="challenge_target_decrease">−</string>
+    <string name="challenge_target_increase">+</string>
+    <string name="challenge_target_clamped">Adjusted to the allowed range (%1$d–%2$d).</string>
+    <string name="scanner_permission_rationale">We need the camera to read the code. The image never leaves your phone.</string>
+    <string name="scanner_permission_blocked">Camera permission is denied. Enable it in the app settings to use this challenge.</string>
+    <string name="challenge_qr_prompt">Scan your code</string>
+    <string name="challenge_qr_hold">Keep the code in view…</string>
+    <string name="challenge_qr_wrong">That is not the registered code.</string>
+    <string name="challenge_qr_rejected_screen">That looks like a screen. Scan the real object.</string>
+    <string name="challenge_qr_rejected_static">That looks like a photo. Scan the real object.</string>
+    <string name="qr_register_required">Register a code for this alarm.</string>
+    <string name="qr_register_scanning">Point the camera at the code you want to use.</string>
+    <string name="qr_register_done">Code registered (%1$s).</string>
+    <string name="qr_register_action">Register code</string>
+    <string name="qr_register_replace">Replace code</string>
+    <string name="qr_register_placement_hint">Place the code away from your bed so you have to get up.</string>
+    <string name="qr_format_qr">QR</string>
+    <string name="qr_format_barcode">barcode</string>
+    <string name="steps_unavailable">This device has no step counter.</string>
+    <string name="steps_permission_rationale">To count your steps we need the physical activity permission.</string>
+    <string name="challenge_type_shake">Shake</string>
+    <string name="challenge_type_steps">Steps</string>
+    <string name="challenge_type_standup">Stand up</string>
+    <string name="challenge_type_qr">QR code</string>
+    <string name="challenge_target_unit_shakes">Number of shakes</string>
+    <string name="challenge_target_unit_steps">Number of steps</string>
+    <string name="challenge_target_unit_seconds">Seconds walking</string>
 </resources>

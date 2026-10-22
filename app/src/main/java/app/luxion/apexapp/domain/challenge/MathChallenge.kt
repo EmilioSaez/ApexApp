@@ -76,6 +76,7 @@ class MathChallenge @Inject constructor() : Challenge {
 
         override fun check(answer: ChallengeAnswer): Boolean = when (answer) {
             is ChallengeAnswer.Text -> answer.value.trim().toIntOrNull() == expected
+            else -> false
         }
     }
 }

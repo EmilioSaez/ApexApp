@@ -97,32 +97,45 @@
     <string name="challenge_done">Terminar</string>
     <string name="challenge_editor_section">Retos</string>
     <string name="challenge_editor_none">Sin retos: la alarma se descarta de inmediato.</string>
-
-
-
-
-    <string name="speech_time">Son las %1$s</string>
-
-    <string name="sound_section">Sonido</string>
-    <string name="sound_default">Tono por defecto</string>
-    <string name="sound_use_default">Por defecto</string>
-    <string name="sound_pick_system">Tono del sistema</string>
-    <string name="sound_pick_file">Archivo de audio</string>
-    <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
-    <string name="sound_ramp_off">Volumen progresivo: desactivado</string>
-    <string name="sound_ramp_seconds">Volumen progresivo: %1$d s</string>
-    <string name="sound_preview">Probar</string>
-    <string name="sound_preview_stop">Detener prueba</string>
-    <string name="vibration_enabled">Vibración</string>
-    <string name="vibration_steady">Continua</string>
-    <string name="vibration_pulse">Pulsos</string>
-    <string name="vibration_sos">SOS</string>
-    <string name="vibration_custom">Personalizada</string>
-    <string name="vibration_custom_hint">Pulso y pausa en ms (200,100,400)</string>
-    <string name="vibration_custom_invalid">Hasta 20 valores positivos, máximo 10 s en total.</string>
-    <string name="voice_speak_time">Leer la hora</string>
-    <string name="voice_reminder">Leer un recordatorio</string>
-    <string name="voice_reminder_text">Recordatorio</string>
-    <string name="voice_repeat">Repetir mientras suena</string>
-    <string name="voice_repeat_every">Repetir cada %1$d s</string>
+    <plurals name="challenge_shake_prompt">
+        <item quantity="one">Agita el móvil %d vez</item>
+        <item quantity="other">Agita el móvil %d veces</item>
+    </plurals>
+    <plurals name="challenge_steps_prompt">
+        <item quantity="one">Da %d paso</item>
+        <item quantity="other">Da %d pasos</item>
+    </plurals>
+    <plurals name="challenge_standup_prompt">
+        <item quantity="one">Levántate y camina %d segundo</item>
+        <item quantity="other">Levántate y camina %d segundos</item>
+    </plurals>
+    <string name="challenge_motion_progress">Progreso: %d %%</string>
+    <string name="challenge_motion_rejected">Ese movimiento no parece real. Inténtalo de nuevo.</string>
+    <string name="challenge_target_decrease">−</string>
+    <string name="challenge_target_increase">+</string>
+    <string name="challenge_target_clamped">Ajustado al rango permitido (%1$d–%2$d).</string>
+    <string name="scanner_permission_rationale">Necesitamos la cámara para leer el código. La imagen no sale del móvil.</string>
+    <string name="scanner_permission_blocked">El permiso de cámara está denegado. Actívalo en los ajustes de la app para usar este reto.</string>
+    <string name="challenge_qr_prompt">Escanea tu código</string>
+    <string name="challenge_qr_hold">Mantén el código en el encuadre…</string>
+    <string name="challenge_qr_wrong">Ese no es el código registrado.</string>
+    <string name="challenge_qr_rejected_screen">Parece una pantalla. Escanea el objeto real.</string>
+    <string name="challenge_qr_rejected_static">Parece una foto. Escanea el objeto real.</string>
+    <string name="qr_register_required">Registra un código para esta alarma.</string>
+    <string name="qr_register_scanning">Apunta la cámara al código que quieres usar.</string>
+    <string name="qr_register_done">Código registrado (%1$s).</string>
+    <string name="qr_register_action">Registrar código</string>
+    <string name="qr_register_replace">Sustituir código</string>
+    <string name="qr_register_placement_hint">Coloca el código lejos de la cama, para tener que levantarte.</string>
+    <string name="qr_format_qr">QR</string>
+    <string name="qr_format_barcode">código de barras</string>
+    <string name="steps_unavailable">Este dispositivo no tiene contador de pasos.</string>
+    <string name="steps_permission_rationale">Para contar tus pasos necesitamos el permiso de actividad física.</string>
+    <string name="challenge_type_shake">Agitar</string>
+    <string name="challenge_type_steps">Pasos</string>
+    <string name="challenge_type_standup">Levantarse</string>
+    <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_target_unit_shakes">Número de sacudidas</string>
+    <string name="challenge_target_unit_steps">Número de pasos</string>
+    <string name="challenge_target_unit_seconds">Segundos caminando</string>
 </resources>
