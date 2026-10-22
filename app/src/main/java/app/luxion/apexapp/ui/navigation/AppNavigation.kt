@@ -15,6 +15,7 @@ import app.luxion.apexapp.ui.reliability.ReliabilityScreen
 import app.luxion.apexapp.ui.settings.SettingsScreen
 import app.luxion.apexapp.ui.sharing.ImportScreen
 import app.luxion.apexapp.ui.sharing.ShareAlarmScreen
+import app.luxion.apexapp.ui.sharing.StreakCardScreen
 import app.luxion.apexapp.ui.stats.StatsScreen
 import kotlinx.serialization.Serializable
 
@@ -45,6 +46,9 @@ data class ShareAlarmRoute(val alarmId: Long)
 
 @Serializable
 data object ImportRoute
+
+@Serializable
+data object StreakCardRoute
 
 /** [importRequested] pasa a verdadero cuando llega un enlace o archivo de ApexApp desde fuera de la app. */
 @Composable
@@ -82,7 +86,13 @@ fun AppNavigation(importRequested: Boolean = false) {
             ImportScreen(onBack = { navController.popBackStack() })
         }
         composable<StatsRoute> {
-            StatsScreen(onBack = { navController.popBackStack() })
+            StatsScreen(
+                onBack = { navController.popBackStack() },
+                onShareStreak = { navController.navigate(StreakCardRoute) },
+            )
+        }
+        composable<StreakCardRoute> {
+            StreakCardScreen(onBack = { navController.popBackStack() })
         }
         composable<SettingsRoute> {
             SettingsScreen(onBack = { navController.popBackStack() })

@@ -273,6 +273,10 @@
     <string name="streak_share_action">Share card</string>
     <string name="streak_chooser">Share streak card</string>
     <string name="streak_card_description">Card showing a current streak of %1$d and a best streak of %2$d</string>
+    <plurals name="streak_unit">
+        <item quantity="one">day</item>
+        <item quantity="other">days</item>
+    </plurals>
     <plurals name="streak_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

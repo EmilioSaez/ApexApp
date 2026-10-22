@@ -273,6 +273,10 @@
     <string name="streak_share_action">Compartir tarjeta</string>
     <string name="streak_chooser">Compartir tarjeta de racha</string>
     <string name="streak_card_description">Tarjeta con racha actual de %1$d y mejor racha de %2$d</string>
+    <plurals name="streak_unit">
+        <item quantity="one">día</item>
+        <item quantity="other">días</item>
+    </plurals>
     <plurals name="streak_days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

@@ -39,11 +39,16 @@ import app.luxion.apexapp.ui.theme.ApexTheme
 import java.time.LocalTime
 
 @Composable
-fun StatsScreen(onBack: () -> Unit, viewModel: StatsViewModel = hiltViewModel()) {
+fun StatsScreen(
+    onBack: () -> Unit,
+    onShareStreak: () -> Unit = {},
+    viewModel: StatsViewModel = hiltViewModel(),
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     StatsContent(
         state = state,
         onBack = onBack,
+        onShareStreak = onShareStreak,
         onSelectRange = viewModel::selectRange,
         onSetLastNightBedtime = viewModel::setLastNightBedtime,
         onSetUsualBedtime = viewModel::setUsualBedtime,
@@ -60,6 +65,7 @@ fun StatsContent(
     onSelectRange: (StatsRange) -> Unit,
     onSetLastNightBedtime: (LocalTime) -> Unit,
     onSetUsualBedtime: (LocalTime?) -> Unit,
+    onShareStreak: () -> Unit = {},
 ) {
     var dialog by rememberSaveable { mutableStateOf<BedtimeDialog?>(null) }
     Scaffold(
@@ -99,7 +105,7 @@ fun StatsContent(
                     )
                 }
 
-                else -> StatsCharts(state)
+                else -> StatsCharts(state, onShareStreak)
             }
             Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
                 Text(stringResource(R.string.stats_sleep_title), style = MaterialTheme.typography.titleMedium)
@@ -129,13 +135,14 @@ fun StatsContent(
 }
 
 @Composable
-private fun StatsCharts(state: StatsUiState) {
+private fun StatsCharts(state: StatsUiState, onShareStreak: () -> Unit) {
     val stats = state.stats
     Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl)) {
         Text(
             stringResource(R.string.stats_streak, state.streak.current, state.streak.best),
             style = MaterialTheme.typography.headlineSmall,
         )
+        TextButton(onClick = onShareStreak) { Text(stringResource(R.string.streak_share_open)) }
         val wake = stats.averageTimeToWakeMs?.let { formatDuration(it) } ?: stringResource(R.string.stats_no_data)
         BarChart(
             title = stringResource(R.string.stats_wake_time),

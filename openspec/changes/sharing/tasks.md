@@ -29,7 +29,7 @@
 
 ## 5. Tarjeta de racha
 
-- [ ] 5.1 Definir `StreakStatsSource` como envoltorio de `WakeHistoryRepository.observeStreak()` (`Streak(current, best)`, commit f20f4ce de feature/wake-stats; documentar dependencia); verificar con test unitario con fake
+- [x] 5.1 Definir `StreakStatsSource` como envoltorio de `WakeHistoryRepository.observeStreak()` (`Streak(current, best)`, commit f20f4ce de feature/wake-stats; documentar dependencia); verificar con test unitario con fake
 - [ ] 5.2 Implementar `StreakCardRenderer` (Bitmap 1080×1350, tema de la app, sin etiquetas ni horas); verificar con test instrumentado/Robolectric que genera un bitmap de las dimensiones esperadas
 - [ ] 5.3 Pantalla de vista previa de la tarjeta con estado "sin logros" y actualización reactiva; verificar con tests de UI Compose
 - [ ] 5.4 Compartir la tarjeta con `FileProvider` + `ACTION_SEND` y `FLAG_GRANT_READ_URI_PERMISSION`, limpiando `cache/shared/` antes; verificar manualmente en emulador que la imagen llega a otra app

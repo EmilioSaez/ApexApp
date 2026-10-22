@@ -9,7 +9,7 @@ import app.luxion.apexapp.domain.AlarmRepository
 import app.luxion.apexapp.sharing.AlarmExporter
 import app.luxion.apexapp.sharing.QrCodeMatrix
 import app.luxion.apexapp.sharing.SharedAlarmCodec
-import app.luxion.apexapp.sharing.SharedFiles
+import app.luxion.apexapp.sharing.SharedFileWriter
 import com.google.zxing.common.BitMatrix
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -30,7 +30,7 @@ class ShareAlarmViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     repository: AlarmRepository,
     private val exporter: AlarmExporter,
-    private val files: SharedFiles,
+    private val files: SharedFileWriter,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ShareUiState())
     val uiState: StateFlow<ShareUiState> = _uiState
