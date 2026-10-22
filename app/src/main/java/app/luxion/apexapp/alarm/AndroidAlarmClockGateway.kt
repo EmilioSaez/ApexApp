@@ -48,5 +48,8 @@ class AndroidAlarmClockGateway @Inject constructor(
     companion object {
         const val ACTION_FIRE = "app.luxion.apexapp.action.FIRE_ALARM"
         const val EXTRA_ALARM_ID = "alarmId"
+
+        /** Opcional: si llega, el disparo reutiliza esa sesión (re-disparo de un snooze). */
+        const val EXTRA_SESSION_ID = "sessionId"
     }
 }

@@ -3,12 +3,16 @@ package app.luxion.apexapp.di
 import android.content.Context
 import androidx.room.Room
 import app.luxion.apexapp.data.RoomAlarmRepository
+import app.luxion.apexapp.data.RoomFireStateRepository
 import app.luxion.apexapp.data.RoomSoundRepository
 import app.luxion.apexapp.data.local.AlarmDao
 import app.luxion.apexapp.data.local.ApexDatabase
+import app.luxion.apexapp.data.local.FireStateDao
 import app.luxion.apexapp.data.local.MIGRATION_1_2
+import app.luxion.apexapp.data.local.MIGRATION_2_3
 import app.luxion.apexapp.data.local.SoundDao
 import app.luxion.apexapp.domain.AlarmRepository
+import app.luxion.apexapp.domain.FireStateRepository
 import app.luxion.apexapp.domain.SoundRepository
 import dagger.Binds
 import dagger.Module
@@ -25,8 +29,11 @@ object DatabaseModule {
     @Singleton
     fun database(@ApplicationContext context: Context): ApexDatabase =
         Room.databaseBuilder(context, ApexDatabase::class.java, "apex.db")
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
             .build()
+
+    @Provides
+    fun fireStateDao(db: ApexDatabase): FireStateDao = db.fireStateDao()
 
     @Provides
     fun alarmDao(db: ApexDatabase): AlarmDao = db.alarmDao()
@@ -43,4 +50,7 @@ interface RepositoryModule {
 
     @Binds
     fun soundRepository(impl: RoomSoundRepository): SoundRepository
+
+    @Binds
+    fun fireStateRepository(impl: RoomFireStateRepository): FireStateRepository
 }

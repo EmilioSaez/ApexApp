@@ -2,6 +2,12 @@ package app.luxion.apexapp.ui.home
 
 import android.content.Intent
 import app.luxion.apexapp.alarm.AlarmClockScheduler
+import app.luxion.apexapp.alarm.AlarmFiringHandler
+import app.luxion.apexapp.alarm.AlarmNotifier
+import app.luxion.apexapp.alarm.FakeFireStateRepository
+import app.luxion.apexapp.alarm.FakeRingingLauncher
+import app.luxion.apexapp.alarm.NoOpWakeEventRecorder
+import app.luxion.apexapp.alarm.RingingRegistry
 import app.luxion.apexapp.alarm.AlarmController
 import app.luxion.apexapp.alarm.AlarmPermissions
 import app.luxion.apexapp.alarm.FakeAlarmRepository
@@ -41,11 +47,23 @@ class HomeViewModelTest {
     @After
     fun tearDown() = Dispatchers.resetMain()
 
-    private fun viewModel() = HomeViewModel(
-        repository,
-        AlarmController(repository, AlarmClockScheduler(gateway, Clock.systemDefaultZone())),
-        permissions,
-    )
+    private fun viewModel(): HomeViewModel {
+        val clock = Clock.systemDefaultZone()
+        val fireState = FakeFireStateRepository()
+        val scheduler = AlarmClockScheduler(gateway, clock, fireState)
+        val handler = AlarmFiringHandler(
+            repository, scheduler, RingingRegistry(), FakeRingingLauncher(),
+            object : AlarmNotifier {
+                override fun notify(alarm: Alarm) = Unit
+            },
+            fireState, clock,
+        )
+        return HomeViewModel(
+            repository,
+            AlarmController(repository, scheduler, fireState, handler, NoOpWakeEventRecorder(), clock),
+            permissions,
+        )
+    }
 
     @Test
     fun emptyRepository_emitsLoadedEmptyState() = runTest {
