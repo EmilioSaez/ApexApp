@@ -78,7 +78,7 @@ class AdaptiveSettingsRepositoryTest {
     }
 
     @Test
-    fun settingsSurviveReopeningTheDatabase() = runBlocking {
+    fun settingsSurviveReopeningTheDatabase() = runBlocking<Unit> {
         val context = ApplicationProvider.getApplicationContext<Context>()
         context.deleteDatabase("adaptive-reopen")
         var file = Room.databaseBuilder(context, ApexDatabase::class.java, "adaptive-reopen").build()
