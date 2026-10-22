@@ -3,6 +3,8 @@ package app.luxion.apexapp.alarm
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AlarmRepository
 import app.luxion.apexapp.domain.FireStateRepository
+import app.luxion.apexapp.domain.WakeEventRecorder
+import app.luxion.apexapp.domain.WakeEventType
 import java.time.Clock
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -38,6 +40,7 @@ class AlarmFiringHandler @Inject constructor(
     private val sessionIds: SessionIdGenerator,
     private val fireState: FireStateRepository,
     private val clock: Clock,
+    private val recorder: WakeEventRecorder,
 ) {
     /**
      * Devuelve la sesión iniciada, o `null` si no hay nada que sonar (alarma inexistente, inactiva
@@ -52,6 +55,7 @@ class AlarmFiringHandler @Inject constructor(
             else -> repository.get(alarmId)
         } ?: return null
 
+        val scheduledAt = fireState.get(alarm.id)?.scheduledAt
         val session = RingingSession(sessionId ?: sessionIds.next(), alarm)
         if (!registry.tryBegin(session)) return null
 
@@ -60,7 +64,17 @@ class AlarmFiringHandler @Inject constructor(
             registry.end(session.sessionId)
             notifier.notify(alarm, session.sessionId)
         }
+        // El registro nunca debe impedir ni retrasar el sonado ni la reprogramación.
         if (!isTest && sessionId == null) {
+            runCatching {
+                recorder.record(
+                    sessionId = session.sessionId,
+                    type = WakeEventType.RANG,
+                    alarmId = alarm.id,
+                    timestamp = clock.millis(),
+                    scheduledAt = scheduledAt ?: clock.millis(),
+                )
+            }
             fireState.markFired(alarm.id, clock.millis())
             if (alarm.repeatDays.isEmpty()) {
                 repository.save(alarm.copy(enabled = false))

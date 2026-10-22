@@ -12,6 +12,7 @@ import app.luxion.apexapp.ui.editor.AlarmEditorScreen
 import app.luxion.apexapp.ui.home.HomeScreen
 import app.luxion.apexapp.ui.reliability.ReliabilityScreen
 import app.luxion.apexapp.ui.settings.SettingsScreen
+import app.luxion.apexapp.ui.stats.StatsScreen
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -33,6 +34,9 @@ data object ChallengeTestRoute
 @Serializable
 data object AntiCheatStatusRoute
 
+@Serializable
+data object StatsRoute
+
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -44,6 +48,7 @@ fun AppNavigation() {
                 onOpenSettings = { navController.navigate(SettingsRoute) },
                 onOpenReliability = { navController.navigate(ReliabilityRoute) },
                 onOpenChallengeTest = { navController.navigate(ChallengeTestRoute) },
+                onOpenStats = { navController.navigate(StatsRoute) },
             )
         }
         composable<AlarmEditorRoute> {
@@ -52,6 +57,9 @@ fun AppNavigation() {
             ) {
                 AlarmEditorScreen(onBack = { navController.popBackStack() })
             }
+        }
+        composable<StatsRoute> {
+            StatsScreen(onBack = { navController.popBackStack() })
         }
         composable<SettingsRoute> {
             SettingsScreen(onBack = { navController.popBackStack() })

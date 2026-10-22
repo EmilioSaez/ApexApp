@@ -19,12 +19,10 @@ import app.luxion.apexapp.alarm.AndroidRingingLauncher
 import app.luxion.apexapp.alarm.DataStoreManufacturerGuideStore
 import app.luxion.apexapp.alarm.DeviceProbe
 import app.luxion.apexapp.alarm.ManufacturerGuideStore
-import app.luxion.apexapp.alarm.NoOpWakeEventRecorder
 import app.luxion.apexapp.alarm.RingScreenLauncher
 import app.luxion.apexapp.alarm.RingingController
 import app.luxion.apexapp.alarm.RingingLauncher
 import app.luxion.apexapp.alarm.RingingLifecycleListener
-import app.luxion.apexapp.domain.WakeEventRecorder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -69,10 +67,6 @@ interface AlarmModule {
 
     @Binds
     fun manufacturerGuideStore(impl: DataStoreManufacturerGuideStore): ManufacturerGuideStore
-
-    /** Sin implementación real hasta que wake-stats la aporte. */
-    @Binds
-    fun wakeEventRecorder(impl: NoOpWakeEventRecorder): WakeEventRecorder
 
     /** Observadores del ciclo de vida del sonado (anti-cheat, etc.); vacío por defecto. */
     @Multibinds
