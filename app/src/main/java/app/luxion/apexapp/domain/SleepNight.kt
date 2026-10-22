@@ -29,7 +29,7 @@ fun computeSleepNights(
     zone: ZoneId,
 ): List<SleepNight> =
     sessions.filter { it.status == WakeSessionStatus.COMPLETED }
-        .groupBy { LocalDate.ofInstant(Instant.ofEpochMilli(it.completedAt!!), zone) }
+        .groupBy { Instant.ofEpochMilli(it.completedAt!!).atZone(zone).toLocalDate() }
         .toSortedMap()
         .mapNotNull { (date, day) ->
             val wakeAt = day.minOf { it.completedAt!! }

@@ -49,7 +49,7 @@ data class Streak(val current: Int, val best: Int)
 fun computeStreak(sessions: List<WakeSession>, zone: ZoneId): Streak {
     val days: List<Boolean> = sessions
         .filter { it.status != WakeSessionStatus.PENDING }
-        .groupBy { LocalDate.ofInstant(Instant.ofEpochMilli(it.scheduledAt), zone) }
+        .groupBy { Instant.ofEpochMilli(it.scheduledAt).atZone(zone).toLocalDate() }
         .toSortedMap()
         .values
         .map { day -> day.all { it.isPunctual } }

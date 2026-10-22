@@ -14,8 +14,9 @@ import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.view.KeyEvent
-import android.view.WindowInsets
-import android.view.WindowInsetsController
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import app.luxion.apexapp.MainActivity
 import app.luxion.apexapp.alarm.AlarmReceiver
 import app.luxion.apexapp.alarm.AndroidAlarmClockGateway
@@ -159,14 +160,12 @@ class AndroidSnoozeScheduler @Inject constructor(
  */
 object LockdownWindow {
     fun apply(activity: Activity, lockdown: ActiveLockdown?) {
-        val controller = activity.window.insetsController
-        if (controller != null) {
-            if (lockdown?.protection?.immersive == true) {
-                controller.systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-                controller.hide(WindowInsets.Type.systemBars())
-            } else {
-                controller.show(WindowInsets.Type.systemBars())
-            }
+        val controller = WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+        if (lockdown?.protection?.immersive == true) {
+            controller.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            controller.hide(WindowInsetsCompat.Type.systemBars())
+        } else {
+            controller.show(WindowInsetsCompat.Type.systemBars())
         }
         if (lockdown?.protection?.lockTask == true) {
             runCatching { activity.startLockTask() }

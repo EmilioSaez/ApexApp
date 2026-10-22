@@ -50,7 +50,7 @@ fun buildStatsState(
     val dates = (range.days - 1 downTo 0).map { today.minusDays(it.toLong()) }
     val byDay = sessions
         .filter { it.status != WakeSessionStatus.PENDING }
-        .groupBy { LocalDate.ofInstant(Instant.ofEpochMilli(it.scheduledAt), zone) }
+        .groupBy { Instant.ofEpochMilli(it.scheduledAt).atZone(zone).toLocalDate() }
     val days = dates.map { date ->
         val day = byDay[date].orEmpty()
         val completed = day.filter { it.status == WakeSessionStatus.COMPLETED }
