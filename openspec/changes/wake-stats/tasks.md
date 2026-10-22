@@ -30,7 +30,7 @@
 ## 6. Integración
 
 - [ ] 6.1 Test instrumentado de extremo a extremo con eventos simulados (sonó → snooze → fallo → completado) que verifica métricas, racha y horas de sueño; ejecutar `./gradlew test connectedAndroidTest` (tras `shogun emulator start`) sin fallos
-- [ ] 6.2 Documentar en `README.md` el contrato `WakeEventRecorder` / `WakeHistoryRepository` para los demás changes y verificar que coincide con el código
+- [x] 6.2 Documentar en `README.md` el contrato `WakeEventRecorder` / `WakeHistoryRepository` para los demás changes y verificar que coincide con el código
 
 ## Workflow follow-up
 
