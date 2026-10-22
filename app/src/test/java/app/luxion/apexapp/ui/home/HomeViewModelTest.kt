@@ -7,6 +7,9 @@ import app.luxion.apexapp.alarm.AlarmNotifier
 import app.luxion.apexapp.alarm.FakeFireStateRepository
 import app.luxion.apexapp.alarm.FakeRingingLauncher
 import app.luxion.apexapp.alarm.NoOpWakeEventRecorder
+import app.luxion.apexapp.alarm.FakeDeviceProbe
+import app.luxion.apexapp.alarm.FakeGuideStore
+import app.luxion.apexapp.alarm.ReliabilityChecker
 import app.luxion.apexapp.alarm.RingingRegistry
 import app.luxion.apexapp.alarm.AlarmController
 import app.luxion.apexapp.alarm.AlarmPermissions
@@ -62,6 +65,7 @@ class HomeViewModelTest {
             repository,
             AlarmController(repository, scheduler, fireState, handler, NoOpWakeEventRecorder(), clock),
             permissions,
+            ReliabilityChecker(FakeDeviceProbe(), FakeGuideStore()),
         )
     }
 

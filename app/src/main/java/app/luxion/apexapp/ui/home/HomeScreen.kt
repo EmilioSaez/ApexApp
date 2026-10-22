@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.alarm.PermissionState
+import app.luxion.apexapp.alarm.ReliabilityState
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.ui.components.EmptyState
 import app.luxion.apexapp.ui.components.TimeDisplay
@@ -59,6 +60,7 @@ fun HomeScreen(
     onAddAlarm: () -> Unit,
     onEditAlarm: (Long) -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenReliability: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -83,6 +85,7 @@ fun HomeScreen(
         state = state,
         onAddAlarm = onAddAlarm,
         onOpenSettings = onOpenSettings,
+        onOpenReliability = onOpenReliability,
         onToggle = viewModel::setEnabled,
         onEditAlarm = onEditAlarm,
         onDeleteAlarm = viewModel::delete,
@@ -108,6 +111,7 @@ fun HomeContent(
     onEditAlarm: (Long) -> Unit = {},
     onDeleteAlarm: (Long) -> Unit = {},
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    onOpenReliability: () -> Unit = {},
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -129,6 +133,7 @@ fun HomeContent(
     ) { padding ->
         Column(Modifier.padding(padding)) {
             PermissionBanners(state.permissions, onRequestNotifications, onOpenExactAlarmSettings)
+            ReliabilityBanner(state.reliability, onOpenReliability)
             when {
                 state.isLoading -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
@@ -167,6 +172,16 @@ private fun PermissionBanners(
     if (!permissions.exactAlarmsGranted) {
         Banner(stringResource(R.string.permission_exact_missing), stringResource(R.string.permission_open_settings), onOpenExactAlarmSettings)
     }
+}
+
+@Composable
+private fun ReliabilityBanner(reliability: ReliabilityState, onOpen: () -> Unit) {
+    if (reliability.isReliable) return
+    Banner(
+        stringResource(if (reliability.hasCritical) R.string.home_reliability_critical else R.string.home_reliability_recommended),
+        stringResource(R.string.home_reliability_open),
+        onOpen,
+    )
 }
 
 @Composable

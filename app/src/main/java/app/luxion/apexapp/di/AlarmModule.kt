@@ -14,8 +14,12 @@ import app.luxion.apexapp.alarm.UuidSessionIdGenerator
 import app.luxion.apexapp.ui.ring.DefaultDismissGate
 import app.luxion.apexapp.ui.ring.DismissGate
 import app.luxion.apexapp.alarm.AndroidAlarmPermissions
+import app.luxion.apexapp.alarm.AndroidDeviceProbe
 import app.luxion.apexapp.alarm.AndroidRingScreenLauncher
 import app.luxion.apexapp.alarm.AndroidRingingLauncher
+import app.luxion.apexapp.alarm.DataStoreManufacturerGuideStore
+import app.luxion.apexapp.alarm.DeviceProbe
+import app.luxion.apexapp.alarm.ManufacturerGuideStore
 import app.luxion.apexapp.alarm.NoOpWakeEventRecorder
 import app.luxion.apexapp.alarm.RingScreenLauncher
 import app.luxion.apexapp.alarm.RingingController
@@ -65,6 +69,12 @@ interface AlarmModule {
 
     @Binds
     fun resolver(impl: RingingController): AlarmResolver
+
+    @Binds
+    fun deviceProbe(impl: AndroidDeviceProbe): DeviceProbe
+
+    @Binds
+    fun manufacturerGuideStore(impl: DataStoreManufacturerGuideStore): ManufacturerGuideStore
 
     /** Sin implementación real hasta que wake-stats la aporte. */
     @Binds

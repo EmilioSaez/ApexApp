@@ -26,23 +26,23 @@
 
 ## 4. Estado de fiabilidad
 
-- [ ] 4.1 Crear `ReliabilityChecker` y `ReliabilityState` con comprobaciones críticas y recomendadas (alarma exacta, notificaciones, canal no silenciado, pantalla completa, exclusión de batería)
-- [ ] 4.2 Comprobar el estado al abrir la app, en `onResume` y al activar una alarma, avisando de lo que falte sin bloquear
-- [ ] 4.3 Tests unitarios del cálculo de estado por versión de API
+- [x] 4.1 Crear `ReliabilityChecker` y `ReliabilityState` con comprobaciones críticas y recomendadas (alarma exacta, notificaciones, canal no silenciado, pantalla completa, exclusión de batería)
+- [x] 4.2 Comprobar el estado al abrir la app, en `onResume` y al activar una alarma, avisando de lo que falte sin bloquear
+- [x] 4.3 Tests unitarios del cálculo de estado por versión de API
 
 ## 5. UI de configuración y avisos
 
-- [ ] 5.1 Crear la pantalla de configuración de fiabilidad con una fila por comprobación, explicación y acción que abre el ajuste del sistema
-- [ ] 5.2 Añadir la ruta al grafo de navegación y el aviso persistente en `HomeScreen`
-- [ ] 5.3 Refrescar el estado al volver a la app tras conceder un permiso
-- [ ] 5.4 Seguir `design-taste-compose` y el tema existente; coordinar con design-system-stitch
+- [x] 5.1 Crear la pantalla de configuración de fiabilidad con una fila por comprobación, explicación y acción que abre el ajuste del sistema
+- [x] 5.2 Añadir la ruta al grafo de navegación y el aviso persistente en `HomeScreen`
+- [x] 5.3 Refrescar el estado al volver a la app tras conceder un permiso
+- [x] 5.4 Seguir `design-taste-compose` y el tema existente; coordinar con design-system-stitch
 
 ## 6. Guías por fabricante y prueba
 
-- [ ] 6.1 Crear la tabla de fabricantes (Xiaomi, Huawei, Oppo/Realme, Vivo, Samsung, OnePlus) con intents conocidos y textos de pasos, con respaldo a los ajustes de la aplicación
-- [ ] 6.2 Guardar la confirmación "ya lo hice" en preferencias y dejar de avisar
-- [ ] 6.3 Implementar la alarma de prueba por el camino real de disparo a pocos segundos
-- [ ] 6.4 Cadenas de texto en `strings.xml`
+- [x] 6.1 Crear la tabla de fabricantes (Xiaomi, Huawei, Oppo/Realme, Vivo, Samsung, OnePlus) con intents conocidos y textos de pasos, con respaldo a los ajustes de la aplicación
+- [x] 6.2 Guardar la confirmación "ya lo hice" en preferencias y dejar de avisar
+- [x] 6.3 Implementar la alarma de prueba por el camino real de disparo a pocos segundos
+- [x] 6.4 Cadenas de texto en `strings.xml`
 
 ## 7. Verificación
 

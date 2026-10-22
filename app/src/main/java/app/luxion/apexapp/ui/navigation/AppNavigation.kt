@@ -6,6 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import app.luxion.apexapp.ui.editor.AlarmEditorScreen
 import app.luxion.apexapp.ui.home.HomeScreen
+import app.luxion.apexapp.ui.reliability.ReliabilityScreen
 import app.luxion.apexapp.ui.settings.SettingsScreen
 import kotlinx.serialization.Serializable
 
@@ -19,6 +20,9 @@ data class AlarmEditorRoute(val alarmId: Long = 0L)
 @Serializable
 data object SettingsRoute
 
+@Serializable
+data object ReliabilityRoute
+
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -28,6 +32,7 @@ fun AppNavigation() {
                 onAddAlarm = { navController.navigate(AlarmEditorRoute()) },
                 onEditAlarm = { navController.navigate(AlarmEditorRoute(it)) },
                 onOpenSettings = { navController.navigate(SettingsRoute) },
+                onOpenReliability = { navController.navigate(ReliabilityRoute) },
             )
         }
         composable<AlarmEditorRoute> {
@@ -35,6 +40,9 @@ fun AppNavigation() {
         }
         composable<SettingsRoute> {
             SettingsScreen(onBack = { navController.popBackStack() })
+        }
+        composable<ReliabilityRoute> {
+            ReliabilityScreen(onBack = { navController.popBackStack() })
         }
     }
 }
