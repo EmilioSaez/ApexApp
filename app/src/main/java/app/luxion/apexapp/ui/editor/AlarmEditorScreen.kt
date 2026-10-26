@@ -119,13 +119,18 @@ fun AlarmEditorContent(
             verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            TimePicker(
-                timeState,
-                colors = TimePickerDefaults.colors(
-                    clockDialColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                ),
-            )
+            // El selector de hora de M3 usa displayLarge en una caja de 80 dp: con 88 sp recorta las cifras.
+            MaterialTheme(
+                typography = MaterialTheme.typography.copy(displayLarge = MaterialTheme.typography.displayMedium),
+            ) {
+                TimePicker(
+                    timeState,
+                    colors = TimePickerDefaults.colors(
+                        clockDialColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    ),
+                )
+            }
             OutlinedTextField(
                 value = state.label,
                 onValueChange = onLabelChange,
