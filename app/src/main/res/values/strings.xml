@@ -31,6 +31,7 @@
     <string name="home_delete">Borrar</string>
     <string name="home_deleted">Alarma borrada</string>
     <string name="home_undo">Deshacer</string>
+    <string name="ring_ringing">Alarma sonando</string>
     <string name="ring_dismiss">Apagar</string>
     <string name="back">Atrás</string>
 

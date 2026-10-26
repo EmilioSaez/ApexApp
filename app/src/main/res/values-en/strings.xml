@@ -30,6 +30,7 @@
     <string name="home_delete">Delete</string>
     <string name="home_deleted">Alarm deleted</string>
     <string name="home_undo">Undo</string>
+    <string name="ring_ringing">Alarm ringing</string>
     <string name="ring_dismiss">Dismiss</string>
     <string name="back">Back</string>
 
