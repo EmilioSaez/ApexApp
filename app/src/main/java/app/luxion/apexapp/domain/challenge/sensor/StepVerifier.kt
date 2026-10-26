@@ -10,19 +10,21 @@ data class StepState(val steps: Int, val target: Int) {
 /**
  * Cuenta pasos desde el inicio del reto. La primera lectura del contador acumulado es la línea base
  * (los pasos previos no cuentan). Un incremento solo se acredita si el acelerómetro mostró energía de
- * caminar en la ventana reciente y respeta una cadencia humana máxima.
+ * caminar en la ventana reciente. La cadencia humana máxima se aplica sobre el tiempo transcurrido desde la
+ * línea base, no entre lecturas: el contador real llega a saltos (pasos agrupados), y limitar cada salto por
+ * el hueco con la lectura anterior descartaba pasos legítimos.
  */
 class StepVerifier(
     private val target: Int,
-    private val windowNanos: Long = 2_000_000_000L,
+    private val windowNanos: Long = 3_000_000_000L,
     private val minWalkRms: Float = 0.8f,
     private val maxStepsPerSecond: Float = 4f,
 ) {
     private val energy = ArrayDeque<AccelSample>()
     private var baselineSet = false
     private var lastTotal = 0f
-    private var lastStepNanos = 0L
-    private var credited = 0
+    private var baselineNanos = 0L
+    private var verified = 0
 
     var state = StepState(0, target)
         private set
@@ -37,18 +39,17 @@ class StepVerifier(
         if (!baselineSet) {
             baselineSet = true
             lastTotal = total
-            lastStepNanos = tNanos
+            baselineNanos = tNanos
             return state
         }
         val delta = (total - lastTotal).toInt()
         lastTotal = total
         if (delta <= 0) return state
-        val elapsedSeconds = (tNanos - lastStepNanos).coerceAtLeast(1L) / 1e9f
-        lastStepNanos = tNanos
         if (walkingRms(tNanos) < minWalkRms) return state
-        val allowed = (maxStepsPerSecond * elapsedSeconds).toInt().coerceAtLeast(1)
-        credited += delta.coerceAtMost(allowed)
-        state = StepState(credited.coerceAtMost(target), target)
+        verified += delta
+        val elapsedSeconds = (tNanos - baselineNanos).coerceAtLeast(0L) / 1e9f
+        val plausible = (maxStepsPerSecond * elapsedSeconds).toInt()
+        state = StepState(verified.coerceAtMost(plausible).coerceAtMost(target), target)
         return state
     }
 

@@ -25,6 +25,9 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
 import app.luxion.apexapp.domain.challenge.sensor.MotionProgress
@@ -54,13 +57,18 @@ fun MotionChallengeContent(
         onDispose { view.keepScreenOn = false }
     }
 
-    LaunchedEffect(kind, target, sensors) {
-        MotionRunner(kind, target, sensors).progress().collect {
-            if (it.stalled) {
-                onUnavailable("sensor stopped reporting data")
-            } else {
-                progress = it
-                if (it.done) onVerified()
+    // Los sensores continuos no entregan datos con la app en segundo plano o la pantalla bloqueada: sin esta
+    // pausa el vigilante daba el sensor por muerto a los 10 s y sustituía el reto por la reserva.
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(kind, target, sensors, lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            MotionRunner(kind, target, sensors).progress().collect {
+                if (it.stalled) {
+                    onUnavailable("sensor stopped reporting data")
+                } else {
+                    progress = it
+                    if (it.done) onVerified()
+                }
             }
         }
     }

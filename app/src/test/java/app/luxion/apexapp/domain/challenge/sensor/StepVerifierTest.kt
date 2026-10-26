@@ -49,4 +49,26 @@ class StepVerifierTest {
         v.onStepCounter(1_000 * MS, 60f)
         assertEquals(4, v.state.steps)
     }
+
+    @Test
+    fun `pasos agrupados en lecturas seguidas no se pierden`() {
+        val v = StepVerifier(target = 100)
+        walk(v, 0, 6_000)
+        v.onStepCounter(0, 0f)
+        // El contador real retiene pasos y los entrega a saltos: 8 tras la latencia y 3 un instante después.
+        v.onStepCounter(4_000 * MS, 8f)
+        v.onStepCounter(4_100 * MS, 11f)
+        assertEquals(11, v.state.steps)
+    }
+
+    @Test
+    fun `un paso temprano se acredita cuando el tiempo lo hace plausible`() {
+        val v = StepVerifier(target = 100)
+        walk(v, 0, 6_000)
+        v.onStepCounter(0, 0f)
+        v.onStepCounter(100 * MS, 1f)
+        assertEquals(0, v.state.steps)
+        v.onStepCounter(2_000 * MS, 3f)
+        assertEquals(3, v.state.steps)
+    }
 }
