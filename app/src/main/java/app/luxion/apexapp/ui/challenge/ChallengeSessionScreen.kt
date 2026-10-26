@@ -1,7 +1,10 @@
 package app.luxion.apexapp.ui.challenge
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,6 +68,21 @@ fun ChallengeSessionScreen(
     }
 }
 
+/** Un segmento por reto: los resueltos y el actual, en acento; los pendientes, en un nivel de superficie. */
+@Composable
+private fun ProgressSegments(done: Int, total: Int) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+        repeat(total) { index ->
+            Box(
+                Modifier.weight(1f).height(ApexTheme.spacing.xs).background(
+                    if (index < done) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceContainerHigh,
+                    MaterialTheme.shapes.extraSmall,
+                ),
+            )
+        }
+    }
+}
+
 @Composable
 fun ChallengeSessionContent(
     state: SessionState,
@@ -100,16 +117,19 @@ fun ChallengeSessionContent(
                 modifier = Modifier.fillMaxWidth(),
             )
         } else {
-            Text(
-                stringResource(R.string.challenge_progress, state.solved + 1, state.total),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            LinearProgressIndicator(
-                progress = { state.solved.toFloat() / state.total },
-                modifier = Modifier.fillMaxWidth(),
-            )
-            rendererFor(current.type)?.Render(current, state.lastAnswerWrong, onAnswer, onUnavailable)
+            val renderer = rendererFor(current.type)
+            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Text(
+                    stringResource(R.string.challenge_progress, state.solved + 1, state.total),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                renderer?.let {
+                    Text(it.label(), style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+            ProgressSegments(done = state.solved + 1, total = state.total)
+            renderer?.Render(current, state.lastAnswerWrong, onAnswer, onUnavailable)
         }
     }
 }

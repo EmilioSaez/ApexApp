@@ -69,6 +69,7 @@ fun RingChallenges(
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
+            RingChallengeHeader(alarm)
             ChallengeSessionScreen(
                 config = config,
                 sessionId = sessionId,
@@ -98,6 +99,44 @@ private fun SnoozeButton(alarm: Alarm, onSnooze: () -> Unit, modifier: Modifier 
     }
 }
 
+/** Cabecera sobre la sesion de retos: estado, hora y etiqueta de la alarma que suena. */
+@Composable
+internal fun RingChallengeHeader(alarm: Alarm) {
+    Column(
+        Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen).padding(top = ApexTheme.spacing.lg),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        RingStatusRow(alarm)
+        TimeDisplay(alarm.hour, alarm.minute)
+        Text(
+            alarm.label ?: stringResource(R.string.alarm_default_title),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+/** "Alarma sonando" a la izquierda y el volumen a la derecha. */
+@Composable
+private fun RingStatusRow(alarm: Alarm) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(ApexTheme.spacing.md).background(MaterialTheme.colorScheme.primary, CircleShape))
+        Text(
+            stringResource(R.string.ring_ringing).uppercase(),
+            modifier = Modifier.weight(1f).padding(start = ApexTheme.spacing.md),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Icon(painterResource(R.drawable.ic_volume), contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            "${alarm.soundConfig.volume}%",
+            modifier = Modifier.padding(start = ApexTheme.spacing.sm),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
 @Composable
 fun RingContent(
     alarm: Alarm,
@@ -111,22 +150,7 @@ fun RingContent(
         Column(
             Modifier.fillMaxSize().padding(padding).padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.lg),
         ) {
-            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Box(Modifier.size(ApexTheme.spacing.md).background(MaterialTheme.colorScheme.primary, CircleShape))
-                Text(
-                    stringResource(R.string.ring_ringing).uppercase(),
-                    modifier = Modifier.weight(1f).padding(start = ApexTheme.spacing.md),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Icon(painterResource(R.drawable.ic_volume), contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(
-                    "${alarm.soundConfig.volume}%",
-                    modifier = Modifier.padding(start = ApexTheme.spacing.sm),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
+            RingStatusRow(alarm)
             Column(
                 Modifier.weight(1f).fillMaxWidth().padding(top = ApexTheme.spacing.xl),
                 horizontalAlignment = Alignment.CenterHorizontally,

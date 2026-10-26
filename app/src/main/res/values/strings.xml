@@ -100,6 +100,8 @@
     <string name="challenge_type_math">Matemáticas</string>
     <string name="challenge_progress">Reto %1$d de %2$d</string>
     <string name="challenge_answer_label">Respuesta</string>
+    <string name="challenge_solve_to_silence">Resuelve para silenciar</string>
+    <string name="challenge_backspace">Borrar</string>
     <string name="challenge_confirm">Confirmar</string>
     <string name="challenge_wrong">Respuesta incorrecta</string>
     <string name="challenge_passed">¡Retos superados!</string>

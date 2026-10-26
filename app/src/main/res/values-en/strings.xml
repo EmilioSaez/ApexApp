@@ -99,6 +99,8 @@
     <string name="challenge_type_math">Math</string>
     <string name="challenge_progress">Challenge %1$d of %2$d</string>
     <string name="challenge_answer_label">Answer</string>
+    <string name="challenge_solve_to_silence">Solve to silence</string>
+    <string name="challenge_backspace">Delete</string>
     <string name="challenge_confirm">Confirm</string>
     <string name="challenge_wrong">Wrong answer</string>
     <string name="challenge_passed">Challenges passed!</string>
