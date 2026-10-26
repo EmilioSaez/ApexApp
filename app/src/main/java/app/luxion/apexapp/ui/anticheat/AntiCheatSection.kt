@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.R
 import app.luxion.apexapp.anticheat.Capabilities
 import app.luxion.apexapp.domain.AntiCheatLevel
@@ -40,7 +41,7 @@ fun AntiCheatSection(
     capabilities: Capabilities = Capabilities(overlay = true, deviceOwner = true),
 ) {
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-        SectionHeader(stringResource(R.string.anticheat_section))
+        SectionHeader(stringResource(R.string.anticheat_section), horizontalPadding = 0.dp)
         FlowRow(horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
             AntiCheatLevel.entries.forEach { level ->
                 FilterChip(

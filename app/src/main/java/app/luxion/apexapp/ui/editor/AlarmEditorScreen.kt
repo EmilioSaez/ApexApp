@@ -2,45 +2,73 @@ package app.luxion.apexapp.ui.editor
 
 import android.content.res.Configuration
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TimePickerState
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.alarm.ScheduleResult
-import app.luxion.apexapp.ui.components.PrimaryAction
+import app.luxion.apexapp.domain.Alarm
+import app.luxion.apexapp.domain.nextOccurrence
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
+import java.time.Clock
 import java.time.DayOfWeek
+import java.time.Duration
+import java.time.ZonedDateTime
 import java.time.format.TextStyle
 import java.util.Locale
 
@@ -89,87 +117,208 @@ fun AlarmEditorContent(
     onShare: (() -> Unit)? = null,
     extraContent: @Composable ColumnScope.() -> Unit = {},
 ) {
+    if (state.isLoading) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { CircularProgressIndicator() }
+        return
+    }
+    // El selector se crea ya cargada la alarma: así arranca con su hora y no con la de por defecto.
+    val timeState = rememberTimePickerState(state.hour, state.minute, is24Hour = true)
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(stringResource(if (state.isNew) R.string.editor_title else R.string.editor_title_edit), style = MaterialTheme.typography.titleLarge)
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-                navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
-                actions = {
-                    if (!state.isNew && onShare != null) {
-                        TextButton(onClick = onShare) { Text(stringResource(R.string.share_open)) }
-                    }
-                },
-            )
-        },
-    ) { padding ->
-        if (state.isLoading) {
-            Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-            return@Scaffold
-        }
-        val timeState = rememberTimePickerState(state.hour, state.minute, is24Hour = true)
-        Column(
-            Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState())
-                .padding(horizontal = ApexTheme.spacing.screen),
-            verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            // El selector de hora de M3 usa displayLarge en una caja de 80 dp: con 88 sp recorta las cifras.
-            MaterialTheme(
-                typography = MaterialTheme.typography.copy(displayLarge = MaterialTheme.typography.displayMedium),
+            Box(
+                Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = ApexTheme.spacing.sm),
+                contentAlignment = Alignment.Center,
             ) {
-                TimePicker(
-                    timeState,
-                    colors = TimePickerDefaults.colors(
-                        clockDialColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    ),
-                )
-            }
-            OutlinedTextField(
-                value = state.label,
-                onValueChange = onLabelChange,
-                label = { Text(stringResource(R.string.editor_label)) },
-                singleLine = true,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            Column(Modifier.fillMaxWidth()) {
+                IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart).size(56.dp)) {
+                    Icon(painterResource(R.drawable.ic_close), contentDescription = stringResource(R.string.back))
+                }
                 Text(
-                    stringResource(R.string.editor_repeat),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(bottom = ApexTheme.spacing.sm),
+                    stringResource(if (state.isNew) R.string.editor_title else R.string.editor_title_edit),
+                    style = MaterialTheme.typography.titleLarge,
                 )
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-                    DayOfWeek.entries.forEach { day ->
-                        FilterChip(
-                            selected = day in state.repeatDays,
-                            onClick = { onToggleDay(day) },
-                            shape = MaterialTheme.shapes.small,
-                            label = { Text(day.getDisplayName(TextStyle.SHORT, Locale.getDefault())) },
-                        )
+                if (!state.isNew && onShare != null) {
+                    TextButton(onClick = onShare, modifier = Modifier.align(Alignment.CenterEnd)) {
+                        Text(stringResource(R.string.share_open))
                     }
                 }
             }
+        },
+        bottomBar = {
+            Column {
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+                Button(
+                    onClick = { onSave(timeState.hour, timeState.minute) },
+                    enabled = saveEnabled,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.lg)
+                        .defaultMinSize(minHeight = 56.dp),
+                    shape = MaterialTheme.shapes.small,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary,
+                    ),
+                ) {
+                    Icon(painterResource(R.drawable.ic_check), contentDescription = null)
+                    Spacer(Modifier.width(ApexTheme.spacing.sm))
+                    Text(stringResource(R.string.editor_save), style = MaterialTheme.typography.labelLarge)
+                }
+            }
+        },
+    ) { padding ->
+        Column(
+            Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState())
+                .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.sm),
+            verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
+        ) {
+            TimeCard(timeState, state.repeatDays)
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
+                EditorHeader(stringResource(R.string.editor_repeat))
+                DayToggles(state.repeatDays, onToggleDay)
+            }
+            Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
+                EditorHeader(stringResource(R.string.editor_params))
+                OutlinedTextField(
+                    value = state.label,
+                    onValueChange = onLabelChange,
+                    label = { Text(stringResource(R.string.editor_label)) },
+                    singleLine = true,
+                    shape = MaterialTheme.shapes.small,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
             extraContent()
-            PrimaryAction(
-                text = stringResource(R.string.editor_save),
-                onClick = { onSave(timeState.hour, timeState.minute) },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = saveEnabled,
-            )
         }
     }
 }
 
 @Composable
-private fun remainingLabel(duration: java.time.Duration): String {
+private fun EditorHeader(text: String) {
+    Text(
+        text.uppercase(),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+/** La hora manda: cifras grandes en una caja propia y, encima, cuánto falta para que suene. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TimeCard(timeState: TimePickerState, repeatDays: Set<DayOfWeek>) {
+    val clock = remember { Clock.systemDefaultZone() }
+    val remaining = remember(timeState.hour, timeState.minute, repeatDays) {
+        Alarm(hour = timeState.hour, minute = timeState.minute, repeatDays = repeatDays).nextOccurrence(clock)
+            ?.let { Duration.between(ZonedDateTime.now(clock), it) }
+    }
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+    ) {
+        Column(
+            Modifier.padding(vertical = ApexTheme.spacing.xl, horizontal = ApexTheme.spacing.lg),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
+        ) {
+            if (remaining != null) {
+                Surface(shape = MaterialTheme.shapes.small, color = MaterialTheme.colorScheme.surfaceContainerHigh) {
+                    Row(
+                        Modifier.padding(horizontal = ApexTheme.spacing.md, vertical = ApexTheme.spacing.sm),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
+                    ) {
+                        Icon(
+                            painterResource(R.drawable.ic_schedule),
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                        Text(
+                            stringResource(R.string.home_next_in, remainingLabel(remaining)),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                }
+            }
+            TimeDigits(timeState)
+        }
+    }
+}
+
+/** Cifras grandes de la hora; al tocarlas se abre el selector de M3 en un diálogo. */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TimeDigits(timeState: TimePickerState) {
+    var picking by rememberSaveable { mutableStateOf(false) }
+    Text(
+        "%02d:%02d".format(timeState.hour, timeState.minute),
+        modifier = Modifier.clickable(role = Role.Button) { picking = true },
+        style = MaterialTheme.typography.displayLarge,
+        color = MaterialTheme.colorScheme.onSurface,
+        maxLines = 1,
+    )
+    if (picking) {
+        AlertDialog(
+            onDismissRequest = { picking = false },
+            confirmButton = { TextButton(onClick = { picking = false }) { Text(stringResource(R.string.editor_time_done)) } },
+            text = {
+                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    TimePicker(
+                        timeState,
+                        colors = TimePickerDefaults.colors(
+                            clockDialColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                        ),
+                    )
+                }
+            },
+        )
+    }
+}
+
+/** Siete casillas de igual ancho: la elegida lleva borde y punto de acento. */
+@Composable
+private fun DayToggles(days: Set<DayOfWeek>, onToggle: (DayOfWeek) -> Unit) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+        DayOfWeek.entries.forEach { day ->
+            val on = day in days
+            Surface(
+                modifier = Modifier.weight(1f).defaultMinSize(minHeight = 56.dp).toggleable(
+                    value = on,
+                    role = Role.Checkbox,
+                    onValueChange = { onToggle(day) },
+                ),
+                shape = MaterialTheme.shapes.small,
+                color = if (on) MaterialTheme.colorScheme.surfaceContainerHigh else MaterialTheme.colorScheme.surfaceContainerLow,
+                border = BorderStroke(1.dp, if (on) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant),
+            ) {
+                Column(
+                    Modifier.padding(vertical = ApexTheme.spacing.md),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs),
+                ) {
+                    Text(
+                        day.getDisplayName(TextStyle.NARROW, Locale.getDefault()),
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = if (on) FontWeight.SemiBold else FontWeight.Normal),
+                        color = if (on) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                    Box(
+                        Modifier.size(4.dp).background(
+                            if (on) MaterialTheme.colorScheme.primary else Color.Transparent,
+                            CircleShape,
+                        ),
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+internal fun remainingLabel(duration: java.time.Duration): String {
     val t = duration.toRemainingTime()
     return when {
         t.days > 0 -> stringResource(R.string.editor_remaining_dhm, t.days, t.hours, t.minutes)

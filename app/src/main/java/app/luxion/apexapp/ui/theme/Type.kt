@@ -50,6 +50,15 @@ val Typography = Typography(
         letterSpacing = (-2).sp,
         fontFeatureSettings = TabularFigures,
     ),
+    // Hora de cada fila de la lista: segundo escalón de la hora, muy por debajo de displayMedium.
+    headlineLarge = TextStyle(
+        fontFamily = SoraFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 32.sp,
+        lineHeight = 36.sp,
+        letterSpacing = (-1).sp,
+        fontFeatureSettings = TabularFigures,
+    ),
     titleLarge = TextStyle(
         fontFamily = SoraFamily,
         fontWeight = FontWeight.Medium,
@@ -80,6 +89,14 @@ val Typography = Typography(
         fontWeight = FontWeight.Medium,
         fontSize = 14.sp,
         lineHeight = 20.sp,
+    ),
+    // Rótulo de sección en mayúsculas con tracking (el texto se pasa ya en mayúsculas).
+    labelMedium = TextStyle(
+        fontFamily = InterFamily,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 12.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 1.2.sp,
     ),
     labelSmall = TextStyle(
         fontFamily = InterFamily,

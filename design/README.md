@@ -22,6 +22,27 @@ oscuro primero, acento naranja señal, Sora (titulares/hora) + Inter (resto), ra
 
 Cada nombre existe como `.png` (780 px de ancho) y como `html/<nombre>.html`. Los ids de Stitch están en `DESIGN.md`.
 
+### La app frente a los diseños
+
+Capturas de la app real (oscuro y claro, 360 dp) en `design/screens/app/`. Alarma sonando, reto matemático,
+estadísticas, ajustes y compartir se renderizan con el contenido sin estado sobre datos de ejemplo; lista y editor
+son capturas del emulador con alarmas de prueba.
+
+| Pantalla | Oscuro | Claro |
+|---|---|---|
+| Lista de alarmas | ![](screens/app/lista-alarmas-oscuro.png) | ![](screens/app/lista-alarmas-claro.png) |
+| Editor | ![](screens/app/editor-oscuro.png) | ![](screens/app/editor-claro.png) |
+| Alarma sonando | ![](screens/app/alarma-sonando-oscuro.png) | ![](screens/app/alarma-sonando-claro.png) |
+| Reto matemático | ![](screens/app/reto-matematico-oscuro.png) | ![](screens/app/reto-matematico-claro.png) |
+| Estadísticas | ![](screens/app/estadisticas-oscuro.png) | ![](screens/app/estadisticas-claro.png) |
+| Ajustes | ![](screens/app/ajustes-oscuro.png) | ![](screens/app/ajustes-claro.png) |
+| Compartir | ![](screens/app/compartir-oscuro.png) | ![](screens/app/compartir-claro.png) |
+
+Diferencias asumidas respecto a Stitch: la hora usa peso normal (decisión del tema, no el negro de Stitch); no hay
+numeración "01 //" ni tipografía mono; el editor no muestra AM/PM ni papelera; estadísticas no tiene "sesiones
+recientes" ni resumen de sueño (no hay datos en el estado); en claro la tarjeta de próxima alarma y la de alarma
+sonando usan la misma composición que en oscuro.
+
 ### Limitaciones de la API de Stitch
 
 - `list_screens` devuelve vacío y `get_project` no trae `screenInstances`: un id solo se conoce si la llamada de

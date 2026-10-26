@@ -1,8 +1,16 @@
 package app.luxion.apexapp.ui.ring
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.painterResource
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -61,6 +69,7 @@ fun RingChallenges(
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
+            RingChallengeHeader(alarm)
             ChallengeSessionScreen(
                 config = config,
                 sessionId = sessionId,
@@ -90,6 +99,44 @@ private fun SnoozeButton(alarm: Alarm, onSnooze: () -> Unit, modifier: Modifier 
     }
 }
 
+/** Cabecera sobre la sesion de retos: estado, hora y etiqueta de la alarma que suena. */
+@Composable
+internal fun RingChallengeHeader(alarm: Alarm) {
+    Column(
+        Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen).padding(top = ApexTheme.spacing.lg),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        RingStatusRow(alarm)
+        TimeDisplay(alarm.hour, alarm.minute)
+        Text(
+            alarm.label ?: stringResource(R.string.alarm_default_title),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+/** "Alarma sonando" a la izquierda y el volumen a la derecha. */
+@Composable
+private fun RingStatusRow(alarm: Alarm) {
+    Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Box(Modifier.size(ApexTheme.spacing.md).background(MaterialTheme.colorScheme.primary, CircleShape))
+        Text(
+            stringResource(R.string.ring_ringing).uppercase(),
+            modifier = Modifier.weight(1f).padding(start = ApexTheme.spacing.md),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Icon(painterResource(R.drawable.ic_volume), contentDescription = null, tint = MaterialTheme.colorScheme.onSurfaceVariant)
+        Text(
+            "${alarm.soundConfig.volume}%",
+            modifier = Modifier.padding(start = ApexTheme.spacing.sm),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
 @Composable
 fun RingContent(
     alarm: Alarm,
@@ -99,24 +146,32 @@ fun RingContent(
     onSnooze: () -> Unit = {},
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
-        // La hora manda arriba, anclada a la izquierda; las acciones quedan al alcance del pulgar.
+        // La hora manda arriba y centrada; las acciones quedan al alcance del pulgar.
         Column(
-            Modifier.fillMaxSize().padding(padding).padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.xl),
+            Modifier.fillMaxSize().padding(padding).padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.lg),
         ) {
-            Column(Modifier.weight(1f), verticalArrangement = Arrangement.Center) {
+            RingStatusRow(alarm)
+            Column(
+                Modifier.weight(1f).fillMaxWidth().padding(top = ApexTheme.spacing.xl),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                TimeDisplay(alarm.hour, alarm.minute, large = true)
                 Text(
                     alarm.label ?: stringResource(R.string.alarm_default_title),
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                TimeDisplay(alarm.hour, alarm.minute, large = true)
             }
-            Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
+            Column(
+                Modifier.padding(bottom = ApexTheme.spacing.xxxl),
+                verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md),
+            ) {
                 if (canDismiss) {
                     PrimaryAction(
                         text = stringResource(R.string.ring_dismiss),
                         onClick = onDismiss,
                         modifier = Modifier.fillMaxWidth(),
+                        icon = painterResource(R.drawable.ic_check),
                     )
                 }
                 if (canSnooze) {
@@ -135,14 +190,14 @@ private fun RingPreview() = RingContent(
     canSnooze = true,
 )
 
-@Preview(name = "Claro", showBackground = true)
+@Preview(name = "Claro", showBackground = true, heightDp = 780)
 @Composable
 private fun RingLight() = ApexAppTheme(darkTheme = false) { RingPreview() }
 
-@Preview(name = "Oscuro", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(name = "Oscuro", showBackground = true, heightDp = 780, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun RingDark() = ApexAppTheme(darkTheme = true) { RingPreview() }
 
-@Preview(name = "Fuente 1.3", showBackground = true, fontScale = 1.3f)
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 780, fontScale = 1.3f)
 @Composable
 private fun RingLargeFont() = ApexAppTheme(darkTheme = false) { RingPreview() }

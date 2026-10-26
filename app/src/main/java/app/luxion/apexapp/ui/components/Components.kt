@@ -4,16 +4,28 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import app.luxion.apexapp.R
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.ui.theme.ApexTheme
 
@@ -24,6 +36,7 @@ fun PrimaryAction(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
+    icon: Painter? = null,
 ) {
     Button(
         onClick = onClick,
@@ -36,6 +49,10 @@ fun PrimaryAction(
             contentColor = MaterialTheme.colorScheme.onPrimary,
         ),
     ) {
+        if (icon != null) {
+            Icon(icon, contentDescription = null)
+            Spacer(Modifier.width(ApexTheme.spacing.sm))
+        }
         Text(text, style = MaterialTheme.typography.labelLarge)
     }
 }
@@ -56,16 +73,16 @@ fun TimeDisplay(
     )
 }
 
-/** Cabecera de sección: etiqueta sencilla, anclada a la izquierda. */
+/** Cabecera de sección: rótulo en mayúsculas con tracking, anclado a la izquierda y subordinado al contenido. */
 @Composable
-fun SectionHeader(text: String, modifier: Modifier = Modifier) {
+fun SectionHeader(text: String, modifier: Modifier = Modifier, horizontalPadding: Dp = ApexTheme.spacing.screen) {
     Text(
-        text = text,
+        text = text.uppercase(),
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.md),
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary,
+            .padding(horizontal = horizontalPadding, vertical = ApexTheme.spacing.md),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 }
 
@@ -86,5 +103,19 @@ fun EmptyState(message: String, modifier: Modifier = Modifier, hint: String? = n
                 textAlign = TextAlign.Center,
             )
         }
+    }
+}
+
+/** Barra superior de pantalla secundaria: flecha atras y titulo anclado a la izquierda, respetando la barra de estado. */
+@Composable
+fun ScreenTopBar(title: String, onBack: () -> Unit, modifier: Modifier = Modifier) {
+    Row(
+        modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = ApexTheme.spacing.sm),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        IconButton(onClick = onBack, modifier = Modifier.size(56.dp)) {
+            Icon(painterResource(R.drawable.ic_arrow_back), contentDescription = stringResource(R.string.back))
+        }
+        Text(title, style = MaterialTheme.typography.titleLarge)
     }
 }

@@ -6,6 +6,11 @@
     <string name="alarm_every_day">Every day</string>
     <string name="home_empty">No alarms yet</string>
     <string name="home_empty_hint">Create an alarm to get started.</string>
+    <string name="home_nav_alarms">Alarms</string>
+    <string name="home_next_in">Rings in %1$s</string>
+    <string name="home_scheduled">Scheduled alarms</string>
+    <string name="home_challenge_line">Challenge: %1$s</string>
+    <string name="home_settings">Settings</string>
     <string name="home_add_alarm">New alarm</string>
     <string name="permission_notifications_missing">Notifications are off: the alarm might not show.</string>
     <string name="permission_exact_missing">Exact alarm permission is missing: alarms won\'t ring on time.</string>
@@ -15,6 +20,8 @@
     <string name="editor_title_edit">Edit alarm</string>
     <string name="editor_label">Label</string>
     <string name="editor_repeat">Repeat</string>
+    <string name="editor_params">Settings</string>
+    <string name="editor_time_done">Done</string>
     <string name="editor_save">Save</string>
     <string name="editor_saved_in">Rings in %1$s</string>
     <string name="editor_remaining_dhm">%1$d d %2$d h %3$d min</string>
@@ -23,6 +30,7 @@
     <string name="home_delete">Delete</string>
     <string name="home_deleted">Alarm deleted</string>
     <string name="home_undo">Undo</string>
+    <string name="ring_ringing">Alarm ringing</string>
     <string name="ring_dismiss">Dismiss</string>
     <string name="back">Back</string>
 
@@ -91,6 +99,8 @@
     <string name="challenge_type_math">Math</string>
     <string name="challenge_progress">Challenge %1$d of %2$d</string>
     <string name="challenge_answer_label">Answer</string>
+    <string name="challenge_solve_to_silence">Solve to silence</string>
+    <string name="challenge_backspace">Delete</string>
     <string name="challenge_confirm">Confirm</string>
     <string name="challenge_wrong">Wrong answer</string>
     <string name="challenge_passed">Challenges passed!</string>
@@ -197,6 +207,9 @@
     <string name="anticheat_release">Give up device owner</string>
     <string name="stats_title">Statistics</string>
     <string name="stats_open">Statistics</string>
+    <string name="stats_kpi_days">days</string>
+    <string name="stats_kpi_wake">Avg. time</string>
+    <string name="stats_kpi_seconds">%1$d s</string>
     <string name="stats_empty">No statistics yet</string>
     <string name="stats_empty_hint">They will appear after your first alarm.</string>
     <string name="stats_range_days">%1$d days</string>

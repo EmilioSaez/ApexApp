@@ -6,6 +6,12 @@
     <string name="alarm_every_day">Todos los días</string>
     <string name="home_empty">No hay alarmas todavía</string>
     <string name="home_empty_hint">Crea una alarma para empezar.</string>
+    <string name="home_wordmark" translatable="false">APEX</string>
+    <string name="home_nav_alarms">Alarmas</string>
+    <string name="home_next_in">Suena en %1$s</string>
+    <string name="home_scheduled">Alarmas programadas</string>
+    <string name="home_challenge_line">Reto: %1$s</string>
+    <string name="home_settings">Ajustes</string>
     <string name="home_add_alarm">Nueva alarma</string>
     <string name="permission_notifications_missing">Las notificaciones están desactivadas: la alarma podría no mostrarse.</string>
     <string name="permission_exact_missing">Falta el permiso de alarmas exactas: las alarmas no sonarán a su hora.</string>
@@ -15,6 +21,8 @@
     <string name="editor_title_edit">Editar alarma</string>
     <string name="editor_label">Etiqueta</string>
     <string name="editor_repeat">Repetir</string>
+    <string name="editor_params">Parámetros</string>
+    <string name="editor_time_done">Listo</string>
     <string name="editor_save">Guardar</string>
     <string name="editor_saved_in">Sonará en %1$s</string>
     <string name="editor_remaining_dhm">%1$d d %2$d h %3$d min</string>
@@ -23,6 +31,7 @@
     <string name="home_delete">Borrar</string>
     <string name="home_deleted">Alarma borrada</string>
     <string name="home_undo">Deshacer</string>
+    <string name="ring_ringing">Alarma sonando</string>
     <string name="ring_dismiss">Apagar</string>
     <string name="back">Atrás</string>
 
@@ -91,6 +100,8 @@
     <string name="challenge_type_math">Matemáticas</string>
     <string name="challenge_progress">Reto %1$d de %2$d</string>
     <string name="challenge_answer_label">Respuesta</string>
+    <string name="challenge_solve_to_silence">Resuelve para silenciar</string>
+    <string name="challenge_backspace">Borrar</string>
     <string name="challenge_confirm">Confirmar</string>
     <string name="challenge_wrong">Respuesta incorrecta</string>
     <string name="challenge_passed">¡Retos superados!</string>
@@ -197,6 +208,9 @@
     <string name="anticheat_release">Renunciar a propietario del dispositivo</string>
     <string name="stats_title">Estadísticas</string>
     <string name="stats_open">Estadísticas</string>
+    <string name="stats_kpi_days">días</string>
+    <string name="stats_kpi_wake">Tiempo medio</string>
+    <string name="stats_kpi_seconds">%1$d s</string>
     <string name="stats_empty">Aún no hay estadísticas</string>
     <string name="stats_empty_hint">Aparecerán tras tu primera alarma.</string>
     <string name="stats_range_days">%1$d días</string>
