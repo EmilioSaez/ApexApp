@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.ChallengeMode
 import app.luxion.apexapp.domain.challenge.ChallengeType
+import app.luxion.apexapp.domain.challenge.SessionConfig
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 /**
@@ -99,7 +100,7 @@ fun ChallengeTestContent(
             verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
         ) {
             DifficultySelector(form.difficulty, onChange = onDifficulty)
-            CountStepper(form.count, onChange = onCount)
+            CountStepper(form.count, onChange = onCount, minCount = SessionConfig.minCount(form.types.size))
             ModeSelector(form.mode, onChange = onMode)
             TypeChips(availableTypes, form.types, typeLabel, onToggleType)
 

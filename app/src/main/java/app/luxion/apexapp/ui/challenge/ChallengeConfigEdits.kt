@@ -10,16 +10,26 @@ import app.luxion.apexapp.domain.challenge.SessionConfig
 
 fun ChallengeConfig.isEnabled(type: ChallengeType): Boolean = challenges.any { it.type == type.id }
 
-/** Habilita el tipo añadiéndolo al final de la cadena, o lo quita si ya estaba. */
+/** Mínimo de retos para los tipos elegidos: uno de cada tipo. */
+val ChallengeConfig.minCount: Int get() = SessionConfig.minCount(challenges.size)
+
+/** Nº de retos que se muestra: nunca menos que [minCount], también en alarmas ya guardadas. */
+val ChallengeConfig.displayCount: Int get() = SessionConfig.normalizeCount(count, challenges.size)
+
+/**
+ * Habilita el tipo añadiéndolo al final de la cadena, o lo quita si ya estaba. Al añadir tipos el número de
+ * retos sube solo si hace falta; al quitarlos no baja.
+ */
 fun ChallengeConfig.toggled(type: ChallengeType): ChallengeConfig =
     if (isEnabled(type)) {
         copy(challenges = challenges.filterNot { it.type == type.id })
     } else {
-        copy(challenges = challenges + ChallengeSpec(type.id))
+        val added = challenges + ChallengeSpec(type.id)
+        copy(challenges = added, count = SessionConfig.normalizeCount(count, added.size))
     }
 
 fun ChallengeConfig.withCount(count: Int): ChallengeConfig =
-    copy(count = count.coerceIn(SessionConfig.MIN_COUNT, SessionConfig.MAX_COUNT))
+    copy(count = SessionConfig.normalizeCount(count, challenges.size))
 
 fun ChallengeConfig.withDifficulty(level: Int): ChallengeConfig =
     copy(difficulty = level.coerceIn(SessionConfig.MIN_DIFFICULTY, SessionConfig.MAX_DIFFICULTY))

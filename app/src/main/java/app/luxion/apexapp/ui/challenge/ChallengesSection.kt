@@ -26,7 +26,7 @@ interface ChallengeParamsEditor {
     val type: ChallengeType
 
     @Composable
-    fun Content(params: String, onChange: (String) -> Unit)
+    fun Content(params: String, difficulty: Int, onChange: (String) -> Unit)
 
     /** Si es falso, la alarma no se puede guardar. */
     fun isValid(params: String): Boolean = true
@@ -66,12 +66,17 @@ class ChallengesSection @Inject constructor(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            CountStepper(config.count, onChange = { value -> update { it.withCount(value) } }, inset = 0.dp)
+            CountStepper(
+                config.displayCount,
+                onChange = { value -> update { it.withCount(value) } },
+                inset = 0.dp,
+                minCount = config.minCount,
+            )
             DifficultySelector(config.displayDifficulty, onChange = { value -> update { it.withDifficulty(value) } }, inset = 0.dp)
             ModeSelector(config.mode, onChange = { value -> update { it.withMode(value) } }, inset = 0.dp)
             config.challenges.forEach { spec ->
                 val type = ChallengeType(spec.type)
-                editorsByType[type]?.Content(spec.params) { params -> update { it.withParams(type, params) } }
+                editorsByType[type]?.Content(spec.params, config.displayDifficulty) { params -> update { it.withParams(type, params) } }
             }
         }
     }

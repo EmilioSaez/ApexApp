@@ -52,7 +52,7 @@ private class QrLikeEditor : ChallengeParamsEditor {
     override val type = ChallengeType("qr")
 
     @Composable
-    override fun Content(params: String, onChange: (String) -> Unit) = Unit
+    override fun Content(params: String, difficulty: Int, onChange: (String) -> Unit) = Unit
 
     /** Un reto de QR sin código registrado no es válido. */
     override fun isValid(params: String) = params.contains("code")

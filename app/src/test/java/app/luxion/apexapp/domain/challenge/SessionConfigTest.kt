@@ -51,4 +51,20 @@ class SessionConfigTest {
         assertEquals(1, config.count)
         assertEquals(ChallengeMode.CHAINED, config.mode)
     }
+
+    @Test
+    fun `minimum count is the number of chosen types capped at 10`() {
+        assertEquals(1, SessionConfig.minCount(0))
+        assertEquals(4, SessionConfig.minCount(4))
+        assertEquals(10, SessionConfig.minCount(12))
+    }
+
+    @Test
+    fun `saved alarm with fewer challenges than types is normalized`() {
+        val four = listOf("math", "shake", "steps", "standup").map { ChallengeSpec(it) }
+        val config = SessionConfig.from(ChallengeConfig(count = 2, challenges = four))
+        assertEquals(4, config.count)
+        assertEquals(10, SessionConfig.from(ChallengeConfig(count = 10, challenges = four)).count)
+        assertEquals(4, SessionConfig(3, 2, ChallengeMode.CHAINED, four).effectiveCount)
+    }
 }

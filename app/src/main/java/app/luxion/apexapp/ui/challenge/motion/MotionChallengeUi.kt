@@ -1,14 +1,13 @@
 package app.luxion.apexapp.ui.challenge.motion
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,12 +23,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
 import app.luxion.apexapp.domain.challenge.sensor.MotionProgress
 import app.luxion.apexapp.domain.challenge.sensor.MotionRunner
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 /**
@@ -54,13 +58,18 @@ fun MotionChallengeContent(
         onDispose { view.keepScreenOn = false }
     }
 
-    LaunchedEffect(kind, target, sensors) {
-        MotionRunner(kind, target, sensors).progress().collect {
-            if (it.stalled) {
-                onUnavailable("sensor stopped reporting data")
-            } else {
-                progress = it
-                if (it.done) onVerified()
+    // Los sensores continuos no entregan datos con la app en segundo plano o la pantalla bloqueada: sin esta
+    // pausa el vigilante daba el sensor por muerto a los 10 s y sustituía el reto por la reserva.
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    LaunchedEffect(kind, target, sensors, lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            MotionRunner(kind, target, sensors).progress().collect {
+                if (it.stalled) {
+                    onUnavailable("sensor stopped reporting data")
+                } else {
+                    progress = it
+                    if (it.done) onVerified()
+                }
             }
         }
     }
@@ -108,44 +117,31 @@ fun MotionChallengeBody(
     }
 }
 
-/**
- * Campo de configuración del objetivo. Muestra el valor y permite ajustarlo dentro de los límites del tipo;
- * al salir de rango se acota y se avisa.
- */
+/** Objetivo resultante de la dificultad elegida, solo informativo: no se edita. */
 @Composable
-fun MotionTargetField(
-    kind: MotionKind,
-    value: Int,
-    onValueChange: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    val step = if (kind == MotionKind.STAND_UP) 5 else 10
-    var clamped by remember(kind) { mutableStateOf(false) }
-    Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md),
-        ) {
-            OutlinedButton(onClick = {
-                // clamp() trata 0 como "sin definir" y lo cambia por el valor por defecto, así que se acota antes.
-                val next = kind.clamp(maxOf(value - step, kind.min))
-                clamped = value - step < kind.min
-                onValueChange(next)
-            }) { Text(stringResource(R.string.challenge_target_decrease)) }
-            Text(value.toString(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(horizontal = ApexTheme.spacing.sm))
-            OutlinedButton(onClick = {
-                val next = kind.clamp(value + step)
-                clamped = value + step > kind.max
-                onValueChange(next)
-            }) { Text(stringResource(R.string.challenge_target_increase)) }
-        }
-        if (clamped) {
-            Text(
-                stringResource(R.string.challenge_target_clamped, kind.min, kind.max),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
+fun MotionTargetInfo(text: String, modifier: Modifier = Modifier) {
+    Text(
+        text,
+        modifier = modifier,
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+    )
+}
+
+@Preview(name = "Claro", showBackground = true)
+@Composable
+private fun MotionTargetInfoLight() = ApexAppTheme(darkTheme = false) {
+    MotionTargetInfo(pluralStringResource(R.plurals.challenge_target_info_steps, 55, 55), Modifier.padding(ApexTheme.spacing.screen))
+}
+
+@Preview(name = "Oscuro", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun MotionTargetInfoDark() = ApexAppTheme(darkTheme = true) {
+    MotionTargetInfo(pluralStringResource(R.plurals.challenge_target_info_steps, 55, 55), Modifier.padding(ApexTheme.spacing.screen))
+}
+
+@Preview(name = "Fuente 1.3", showBackground = true, fontScale = 1.3f)
+@Composable
+private fun MotionTargetInfoLargeFont() = ApexAppTheme(darkTheme = false) {
+    MotionTargetInfo(pluralStringResource(R.plurals.challenge_target_info_steps, 55, 55), Modifier.padding(ApexTheme.spacing.screen))
 }
