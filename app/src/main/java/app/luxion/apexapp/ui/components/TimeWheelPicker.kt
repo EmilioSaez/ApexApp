@@ -106,55 +106,58 @@ fun TimeWheelPicker(
     val rowHeight = with(LocalDensity.current) { maxOf(style.lineHeight.toDp() + ApexTheme.spacing.sm, 48.dp) }
     val openEntry = { typing = true }
 
-    Box(modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Box(
-            Modifier.fillMaxWidth().height(rowHeight)
-                .background(MaterialTheme.colorScheme.surfaceContainerHigh, MaterialTheme.shapes.small),
-        )
-        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
-            Wheel(
-                tag = TimeWheelTags.Hours,
-                size = if (is24Hour) 24 else 12,
-                first = if (is24Hour) 0 else 1,
-                value = if (is24Hour) hour else hour12Of(hour),
-                onValueChange = { v -> onTimeChange(if (is24Hour) v else withHour12(hour, v), minute) },
-                label = stringResource(R.string.time_wheel_hours),
-                upLabel = stringResource(R.string.time_wheel_hours_up),
-                downLabel = stringResource(R.string.time_wheel_hours_down),
-                typeLabel = stringResource(R.string.time_wheel_type),
-                onType = openEntry,
-                style = style,
-                rowHeight = rowHeight,
+    Row(modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        // La banda de la fila central abarca solo las ruedas, no el selector AM/PM.
+        Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
+            Box(
+                Modifier.fillMaxWidth().height(rowHeight)
+                    .background(MaterialTheme.colorScheme.surfaceContainerHigh, MaterialTheme.shapes.small),
             )
-            Box(Modifier.height(rowHeight * VisibleRows).padding(horizontal = ApexTheme.spacing.xs)) {
-                Text(
-                    ":",
-                    Modifier.align(Alignment.Center).clearAndSetSemantics {},
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Wheel(
+                    tag = TimeWheelTags.Hours,
+                    size = if (is24Hour) 24 else 12,
+                    first = if (is24Hour) 0 else 1,
+                    value = if (is24Hour) hour else hour12Of(hour),
+                    onValueChange = { v -> onTimeChange(if (is24Hour) v else withHour12(hour, v), minute) },
+                    label = stringResource(R.string.time_wheel_hours),
+                    upLabel = stringResource(R.string.time_wheel_hours_up),
+                    downLabel = stringResource(R.string.time_wheel_hours_down),
+                    typeLabel = stringResource(R.string.time_wheel_type),
+                    onType = openEntry,
                     style = style,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    rowHeight = rowHeight,
+                )
+                Box(Modifier.height(rowHeight * VisibleRows).padding(horizontal = ApexTheme.spacing.xs)) {
+                    Text(
+                        ":",
+                        Modifier.align(Alignment.Center).clearAndSetSemantics {},
+                        style = style,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                Wheel(
+                    tag = TimeWheelTags.Minutes,
+                    size = 60,
+                    first = 0,
+                    value = minute,
+                    onValueChange = { v -> onTimeChange(hour, v) },
+                    label = stringResource(R.string.time_wheel_minutes),
+                    upLabel = stringResource(R.string.time_wheel_minutes_up),
+                    downLabel = stringResource(R.string.time_wheel_minutes_down),
+                    typeLabel = stringResource(R.string.time_wheel_type),
+                    onType = openEntry,
+                    style = style,
+                    rowHeight = rowHeight,
                 )
             }
-            Wheel(
-                tag = TimeWheelTags.Minutes,
-                size = 60,
-                first = 0,
-                value = minute,
-                onValueChange = { v -> onTimeChange(hour, v) },
-                label = stringResource(R.string.time_wheel_minutes),
-                upLabel = stringResource(R.string.time_wheel_minutes_up),
-                downLabel = stringResource(R.string.time_wheel_minutes_down),
-                typeLabel = stringResource(R.string.time_wheel_type),
-                onType = openEntry,
-                style = style,
-                rowHeight = rowHeight,
+        }
+        if (!is24Hour) {
+            PeriodSelector(
+                pm = isPm(hour),
+                onChange = { pm -> onTimeChange(withPeriod(hour, pm), minute) },
+                modifier = Modifier.padding(start = ApexTheme.spacing.md),
             )
-            if (!is24Hour) {
-                PeriodSelector(
-                    pm = isPm(hour),
-                    onChange = { pm -> onTimeChange(withPeriod(hour, pm), minute) },
-                    modifier = Modifier.padding(start = ApexTheme.spacing.md),
-                )
-            }
         }
     }
 

@@ -314,6 +314,6 @@
     <string name="time_entry_label">Time (for example 705)</string>
     <string name="time_entry_preview">Will be set to %1$s</string>
     <string name="time_entry_invalid">Invalid time</string>
-    <string name="time_entry_ok">OK</string>
+    <string name="time_entry_ok">Set</string>
     <string name="time_entry_cancel">Cancel</string>
 </resources>

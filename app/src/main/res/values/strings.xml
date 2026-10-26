@@ -315,6 +315,6 @@
     <string name="time_entry_label">Hora (por ejemplo 705)</string>
     <string name="time_entry_preview">Quedará a las %1$s</string>
     <string name="time_entry_invalid">Hora no válida</string>
-    <string name="time_entry_ok">Aceptar</string>
+    <string name="time_entry_ok">Fijar</string>
     <string name="time_entry_cancel">Cancelar</string>
 </resources>
