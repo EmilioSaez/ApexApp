@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Apex - Compartir alarma</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Sora:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-high": "#1b2029",
+            "primary-fixed": "#ffdbcb",
+            "tertiary": "#ffead7",
+            "on-secondary": "#251f1c",
+            "outline-variant": "#424854",
+            "error": "#ed7f64",
+            "error-dim": "#ba573f",
+            "on-background": "#e0e5f4",
+            "primary-dim": "#ffa273",
+            "background": "#0c0e12",
+            "on-primary-fixed-variant": "#9b3f00",
+            "on-error": "#450900",
+            "surface-container": "#161a21",
+            "primary-container": "#7a3000",
+            "tertiary-container": "#ffd9b0",
+            "on-primary-fixed": "#6e2b00",
+            "primary": "#ffb693",
+            "surface-variant": "#202631",
+            "inverse-surface": "#f9f9ff",
+            "surface-container-highest": "#202631",
+            "secondary-fixed": "#ede0db",
+            "on-secondary-fixed-variant": "#625a56",
+            "surface-bright": "#252c39",
+            "inverse-on-surface": "#53555a",
+            "secondary-dim": "#a69c98",
+            "error-container": "#7e2b17",
+            "on-secondary-fixed": "#453e3b",
+            "on-tertiary": "#6e5433",
+            "surface-tint": "#ffb693",
+            "on-tertiary-fixed-variant": "#6f5535",
+            "secondary-container": "#413a37",
+            "on-primary": "#6f2b00",
+            "tertiary-fixed": "#ffd9b0",
+            "on-primary-container": "#ffc3a7",
+            "primary-fixed-dim": "#ffc9b0",
+            "on-secondary-container": "#c9bdb8",
+            "on-tertiary-fixed": "#50391b",
+            "on-surface-variant": "#a5abb9",
+            "on-tertiary-container": "#654b2c",
+            "surface-dim": "#0c0e12",
+            "tertiary-dim": "#f0cba3",
+            "surface-container-low": "#101319",
+            "on-error-container": "#ff9b82",
+            "secondary-fixed-dim": "#ded2cd",
+            "inverse-primary": "#a04304",
+            "outline": "#6f7682",
+            "surface-container-lowest": "#000000",
+            "secondary": "#a69c98",
+            "surface": "#0c0e12",
+            "tertiary-fixed-dim": "#f0cba3",
+            "on-surface": "#e0e5f4"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "fontFamily": {
+            "headline": ["Sora"],
+            "display": ["Sora"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen flex flex-col justify-between selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-14 bg-surface dark:bg-surface">
+<div class="flex items-center gap-3">
+<button class="p-2 text-on-surface hover:bg-surface-variant/40 transition-colors rounded active:scale-95 duration-100 flex items-center justify-center min-h-[48px] min-w-[48px]" onclick="history.back()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline text-lg font-bold tracking-tight text-on-surface dark:text-on-surface">Compartir alarma</h1>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-variant/40 transition-colors rounded active:scale-95 duration-100 flex items-center justify-center min-h-[48px] min-w-[48px]">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col px-4 pt-20 pb-24 max-w-md mx-auto w-full justify-center">
+<!-- Alarms Summary Header -->
+<div class="mb-8 flex flex-col items-center text-center"><div class="font-display text-6xl font-bold tracking-normal text-primary leading-[1.0] mb-2 tabular-nums">07:30</div><div class="font-body text-sm font-medium text-on-surface-variant">L M X J V · Despertar con reto</div></div>
+<!-- QR Code Container -->
+<div class="bg-surface-container p-6 rounded-[4px] flex flex-col gap-2 mb-6 border border-outline-variant/30"><div class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Vista previa del mensaje</div><p class="text-sm text-on-surface">Te comparto esta alarma de 07:30 (L M X J V) con desafío matemático para que empecemos el día con energía. ¡Ábrela en Apex para importarla!</p></div>
+<!-- Actions Section -->
+<div class="flex flex-col gap-3 mb-6"><button class="w-full h-12 bg-primary text-on-primary font-headline font-semibold text-sm rounded-[4px] flex items-center justify-center gap-2 hover:opacity-90 active:scale-95 transition-all min-h-[48px]">Enviar alarma</button><button class="w-full h-12 bg-surface-container-high text-on-surface font-headline font-medium text-sm rounded-[4px] flex items-center justify-center gap-2 hover:bg-surface-variant active:scale-95 transition-all min-h-[48px]">Copiar enlace</button></div>
+<!-- Helper Text -->
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex items-center justify-around px-4 h-16 bg-surface-container dark:bg-surface-container">
+<a class="flex flex-col items-center justify-center gap-1 text-on-surface-variant dark:text-on-surface-variant p-1 hover:text-on-surface dark:hover:text-on-surface transition-colors active:scale-95 duration-100 min-h-[48px] min-w-[48px]" href="#">
+<span class="material-symbols-outlined">alarm</span>
+<span class="font-body text-xs font-medium">Alarmas</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-primary dark:text-primary rounded-lg p-1 hover:text-on-surface dark:hover:text-on-surface transition-colors active:scale-95 duration-100 min-h-[48px] min-w-[48px]" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="font-body text-xs font-medium">Retos</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-on-surface-variant dark:text-on-surface-variant p-1 hover:text-on-surface dark:hover:text-on-surface transition-colors active:scale-95 duration-100 min-h-[48px] min-w-[48px]" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body text-xs font-medium">Historial</span>
+</a>
+</nav>
+</body></html>

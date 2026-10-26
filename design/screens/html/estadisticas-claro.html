@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Apex - Estadísticas</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "error": "#B3261E",
+            "tertiary-dim": "#6e5535",
+            "tertiary": "#ffd9b0",
+            "surface-container-lowest": "#ffffff",
+            "on-error": "#ffffff",
+            "primary-dim": "#B93E00",
+            "on-surface": "#111315",
+            "outline-variant": "#C4C7C5",
+            "surface-variant": "#E1E3E1",
+            "surface-container": "#F0F2F1",
+            "error-container": "#F9DEDC",
+            "outline": "#747775",
+            "primary": "#B93E00",
+            "on-primary-fixed-variant": "#ffffff",
+            "background": "#F8F9FA",
+            "on-tertiary": "#251a08",
+            "inverse-primary": "#ffb693",
+            "on-secondary-fixed": "#1d1b1a",
+            "inverse-on-surface": "#EFF1F3",
+            "surface-tint": "#B93E00",
+            "secondary-dim": "#5c5552",
+            "secondary": "#746F6D",
+            "success": "#1B7F4B",
+            "surface": "#F8F9FA",
+            "on-background": "#111315"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "1rem"
+          },
+          fontFamily: {
+            headline: ["Sora"],
+            display: ["Sora"],
+            body: ["Inter"],
+            label: ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body min-h-screen pb-24 pt-14 antialiased selection:bg-primary selection:text-white">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-14 bg-surface border-b border-outline-variant/20">
+<div class="flex items-center gap-3">
+<button aria-label="Alarma" class="w-10 h-10 flex items-center justify-center rounded hover:bg-surface-variant/40 transition-colors text-on-surface active:scale-95 duration-100">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">alarm</span>
+</button>
+<span class="font-headline text-xl font-black uppercase tracking-wider text-primary">Apex</span>
+</div>
+<div>
+<button aria-label="Ajustes" class="w-10 h-10 flex items-center justify-center rounded hover:bg-surface-variant/40 transition-colors text-on-surface active:scale-95 duration-100">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-md mx-auto px-4 pt-6 flex flex-col gap-6">
+<!-- Primary Key Metric -->
+<section class="flex flex-col items-center text-center py-8 bg-surface-container rounded border border-outline-variant/20">
+<h1 class="font-headline text-6xl font-extrabold tracking-tight text-primary leading-none mb-3">92 %</h1>
+<p class="font-body text-sm font-medium text-on-surface-variant tracking-wide uppercase">Despertares logrados en 30 días</p>
+</section>
+<!-- Clean KPI Rows -->
+<section class="flex flex-col gap-2">
+<!-- KPI Row 1: Streak -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded border border-outline-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-success" style="font-variation-settings: 'FILL' 1;">psychology</span>
+<span class="font-body text-base font-medium text-on-surface">Racha</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-headline text-lg font-bold text-success">12 días</span>
+</div>
+</div>
+<!-- KPI Row 2: Resolved Challenges -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded border border-outline-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">psychology</span>
+<span class="font-body text-base font-medium text-on-surface">Retos resueltos</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-headline text-lg font-bold text-on-surface">41</span>
+</div>
+</div>
+<!-- KPI Row 3: Average Time -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded border border-outline-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">history</span>
+<span class="font-body text-base font-medium text-on-surface">Tiempo medio</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-headline text-lg font-bold text-on-surface">38 s</span>
+</div>
+</div>
+<!-- KPI Row 4: Failed Alarms -->
+<div class="flex items-center justify-between p-4 bg-surface-container rounded border border-outline-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">alarm</span>
+<span class="font-body text-base font-medium text-on-surface">Fallos registrados</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-headline text-lg font-bold text-error">3</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex items-center justify-around px-4 h-16 bg-surface-container border-t border-outline-variant/20">
+<a class="flex flex-col items-center justify-center gap-1 text-on-surface-variant p-1 hover:text-on-surface transition-colors active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">alarm</span>
+<span class="font-body text-xs font-medium">Alarmas</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-on-surface-variant p-1 hover:text-on-surface transition-colors active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body text-xs font-medium">Retos</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-primary rounded-lg p-1 hover:text-on-surface transition-colors active:scale-95 duration-100" href="#" style="font-variation-settings: 'FILL' 1;">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">history</span>
+<span class="font-body text-xs font-medium">Historial</span>
+</a>
+</nav>
+</body></html>
