@@ -18,7 +18,7 @@
     <string name="permission_open_settings">Open settings</string>
     <string name="editor_title">New alarm</string>
     <string name="editor_title_edit">Edit alarm</string>
-    <string name="editor_label">Label</string>
+    <string name="editor_label">Name</string>
     <string name="editor_repeat">Repeat</string>
     <string name="editor_params">Settings</string>
     <string name="editor_time_done">Done</string>
