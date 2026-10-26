@@ -56,6 +56,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.BedtimeSource
 import app.luxion.apexapp.ui.components.EmptyState
+import app.luxion.apexapp.ui.components.ScreenTopBar
 import app.luxion.apexapp.domain.Streak
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
@@ -95,15 +96,7 @@ fun StatsContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            Row(
-                Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = ApexTheme.spacing.sm),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                IconButton(onClick = onBack, modifier = Modifier.size(56.dp)) {
-                    Icon(painterResource(R.drawable.ic_arrow_back), contentDescription = stringResource(R.string.back))
-                }
-                Text(stringResource(R.string.stats_title), style = MaterialTheme.typography.titleLarge)
-            }
+            ScreenTopBar(stringResource(R.string.stats_title), onBack)
         },
     ) { padding ->
         Column(

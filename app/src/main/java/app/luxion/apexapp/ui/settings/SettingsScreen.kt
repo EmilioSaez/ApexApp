@@ -1,22 +1,26 @@
 package app.luxion.apexapp.ui.settings
 
 import android.content.res.Configuration
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.RadioButton
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.dp
+import app.luxion.apexapp.ui.components.ScreenTopBar
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -44,7 +48,6 @@ fun SettingsScreen(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewMo
 }
 
 /** Otros cambios añaden sus secciones dentro de la columna con [SectionHeader] + contenido. */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsContent(
     themeMode: ThemeMode,
@@ -56,11 +59,7 @@ fun SettingsContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.settings_title), style = MaterialTheme.typography.titleLarge) },
-                navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            )
+            ScreenTopBar(stringResource(R.string.settings_title), onBack)
         },
     ) { padding ->
         Column(Modifier.padding(padding).verticalScroll(rememberScrollState())) {
@@ -74,6 +73,7 @@ fun SettingsContent(
                 selected = themeMode,
                 onSelect = onThemeMode,
             )
+            Spacer(Modifier.height(ApexTheme.spacing.lg))
             SectionHeader(stringResource(R.string.settings_section_language))
             Choice(
                 options = listOf(
@@ -88,17 +88,21 @@ fun SettingsContent(
     }
 }
 
+/** Opciones como filas con radio, separadas por una linea fina: lista, no botones segmentados. */
 @Composable
 private fun <T> Choice(options: List<Pair<T, String>>, selected: T, onSelect: (T) -> Unit) {
-    SingleChoiceSegmentedButtonRow(
-        Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen),
-    ) {
-        options.forEachIndexed { index, (value, label) ->
-            SegmentedButton(
-                selected = value == selected,
-                onClick = { onSelect(value) },
-                shape = SegmentedButtonDefaults.itemShape(index, options.size, MaterialTheme.shapes.small),
-            ) { Text(label, style = MaterialTheme.typography.labelLarge) }
+    Column(Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen)) {
+        HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        options.forEach { (value, label) ->
+            Row(
+                Modifier.fillMaxWidth().defaultMinSize(minHeight = 56.dp)
+                    .selectable(selected = value == selected, role = Role.RadioButton, onClick = { onSelect(value) }),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(label, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+                RadioButton(selected = value == selected, onClick = null)
+            }
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
         }
     }
 }
