@@ -300,4 +300,20 @@
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
     </plurals>
+    <string name="time_wheel_hours">Hours</string>
+    <string name="time_wheel_minutes">Minutes</string>
+    <string name="time_wheel_hours_up">Increase hours</string>
+    <string name="time_wheel_hours_down">Decrease hours</string>
+    <string name="time_wheel_minutes_up">Increase minutes</string>
+    <string name="time_wheel_minutes_down">Decrease minutes</string>
+    <string name="time_wheel_type">Type the time</string>
+    <string name="time_wheel_hint">Tap the time to type it</string>
+    <string name="time_period">AM or PM</string>
+    <string name="time_am">AM</string>
+    <string name="time_pm">PM</string>
+    <string name="time_entry_label">Time (for example 705)</string>
+    <string name="time_entry_preview">Will be set to %1$s</string>
+    <string name="time_entry_invalid">Invalid time</string>
+    <string name="time_entry_ok">OK</string>
+    <string name="time_entry_cancel">Cancel</string>
 </resources>

@@ -36,10 +36,9 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -55,6 +54,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.BedtimeSource
+import app.luxion.apexapp.ui.components.TimeWheelPicker
 import app.luxion.apexapp.ui.components.EmptyState
 import app.luxion.apexapp.ui.components.ScreenTopBar
 import app.luxion.apexapp.domain.Streak
@@ -290,19 +290,24 @@ private fun formatDuration(ms: Long, hours: Boolean = false): String {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun BedtimePickerDialog(initial: LocalTime, onDismiss: () -> Unit, onConfirm: (LocalTime) -> Unit) {
-    val picker = rememberTimePickerState(initial.hour, initial.minute, is24Hour = true)
+    var hour by rememberSaveable { mutableIntStateOf(initial.hour) }
+    var minute by rememberSaveable { mutableIntStateOf(initial.minute) }
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(onClick = { onConfirm(LocalTime.of(picker.hour, picker.minute)) }) {
+            TextButton(onClick = { onConfirm(LocalTime.of(hour, minute)) }) {
                 Text(stringResource(R.string.stats_dialog_ok))
             }
         },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.stats_dialog_cancel)) } },
-        text = { TimePicker(state = picker) },
+        text = {
+            TimeWheelPicker(
+                hour, minute, { h, m -> hour = h; minute = m },
+                style = MaterialTheme.typography.headlineLarge,
+            )
+        },
     )
 }
 
