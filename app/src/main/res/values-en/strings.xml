@@ -110,10 +110,19 @@
         <item quantity="other">Get up and walk for %d seconds</item>
     </plurals>
     <string name="challenge_motion_progress">Progress: %d %%</string>
+    <plurals name="challenge_target_info_shakes">
+        <item quantity="one">Target at this difficulty: %d shake</item>
+        <item quantity="other">Target at this difficulty: %d shakes</item>
+    </plurals>
+    <plurals name="challenge_target_info_steps">
+        <item quantity="one">Target at this difficulty: %d step</item>
+        <item quantity="other">Target at this difficulty: %d steps</item>
+    </plurals>
+    <plurals name="challenge_target_info_seconds">
+        <item quantity="one">Target at this difficulty: %d second</item>
+        <item quantity="other">Target at this difficulty: %d seconds</item>
+    </plurals>
     <string name="challenge_motion_rejected">That movement does not look real. Try again.</string>
-    <string name="challenge_target_decrease">−</string>
-    <string name="challenge_target_increase">+</string>
-    <string name="challenge_target_clamped">Adjusted to the allowed range (%1$d–%2$d).</string>
     <string name="scanner_permission_rationale">We need the camera to read the code. The image never leaves your phone.</string>
     <string name="scanner_permission_blocked">Camera permission is denied. Enable it in the app settings to use this challenge.</string>
     <string name="challenge_qr_prompt">Scan your code</string>
@@ -135,9 +144,6 @@
     <string name="challenge_type_steps">Steps</string>
     <string name="challenge_type_standup">Stand up</string>
     <string name="challenge_type_qr">QR code</string>
-    <string name="challenge_target_unit_shakes">Number of shakes</string>
-    <string name="challenge_target_unit_steps">Number of steps</string>
-    <string name="challenge_target_unit_seconds">Seconds walking</string>
 
     <string name="sound_default">Default tone</string>
     <string name="sound_not_audio">That file is not audio or cannot be read.</string>

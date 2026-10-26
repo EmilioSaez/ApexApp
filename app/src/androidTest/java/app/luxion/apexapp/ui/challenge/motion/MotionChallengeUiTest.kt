@@ -1,15 +1,12 @@
 package app.luxion.apexapp.ui.challenge.motion
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.test.performClick
 import androidx.test.platform.app.InstrumentationRegistry
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
 import app.luxion.apexapp.domain.challenge.sensor.MotionProgress
 import app.luxion.apexapp.ui.theme.ApexAppTheme
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 
@@ -21,30 +18,11 @@ class MotionChallengeUiTest {
         InstrumentationRegistry.getInstrumentation().targetContext.getString(id, *args)
 
     @Test
-    fun targetField_clampsAtMaximumAndWarns() {
-        val value = mutableStateOf(MotionKind.SHAKE.max)
+    fun targetInfo_showsTheTargetWithoutControls() {
         compose.setContent {
-            ApexAppTheme {
-                MotionTargetField(MotionKind.SHAKE, value.value, onValueChange = { value.value = it })
-            }
+            ApexAppTheme { MotionTargetInfo("Objetivo con esta dificultad: 55 pasos") }
         }
-        compose.onNodeWithText(str(R.string.challenge_target_increase)).performClick()
-        assertEquals(MotionKind.SHAKE.max, value.value)
-        compose.onNodeWithText(
-            str(R.string.challenge_target_clamped, MotionKind.SHAKE.min, MotionKind.SHAKE.max),
-        ).assertExists()
-    }
-
-    @Test
-    fun targetField_clampsAtMinimum() {
-        val value = mutableStateOf(MotionKind.STEPS.min)
-        compose.setContent {
-            ApexAppTheme {
-                MotionTargetField(MotionKind.STEPS, value.value, onValueChange = { value.value = it })
-            }
-        }
-        compose.onNodeWithText(str(R.string.challenge_target_decrease)).performClick()
-        assertEquals(MotionKind.STEPS.min, value.value)
+        compose.onNodeWithText("Objetivo con esta dificultad: 55 pasos").assertExists()
     }
 
     @Test

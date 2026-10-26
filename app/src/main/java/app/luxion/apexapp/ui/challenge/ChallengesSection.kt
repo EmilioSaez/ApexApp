@@ -26,7 +26,7 @@ interface ChallengeParamsEditor {
     val type: ChallengeType
 
     @Composable
-    fun Content(params: String, onChange: (String) -> Unit)
+    fun Content(params: String, difficulty: Int, onChange: (String) -> Unit)
 
     /** Si es falso, la alarma no se puede guardar. */
     fun isValid(params: String): Boolean = true
@@ -76,7 +76,7 @@ class ChallengesSection @Inject constructor(
             ModeSelector(config.mode, onChange = { value -> update { it.withMode(value) } }, inset = 0.dp)
             config.challenges.forEach { spec ->
                 val type = ChallengeType(spec.type)
-                editorsByType[type]?.Content(spec.params) { params -> update { it.withParams(type, params) } }
+                editorsByType[type]?.Content(spec.params, config.displayDifficulty) { params -> update { it.withParams(type, params) } }
             }
         }
     }

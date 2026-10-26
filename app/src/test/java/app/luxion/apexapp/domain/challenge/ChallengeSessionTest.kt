@@ -209,4 +209,34 @@ class ChallengeSessionTest {
         }
         assertEquals(setOf("a", "b"), order.toSet())
     }
+
+    @Test
+    fun `three types with count 1 show all three in both modes`() {
+        val specs = listOf(ChallengeSpec("a"), ChallengeSpec("b"), ChallengeSpec("math"))
+        ChallengeMode.entries.forEach { mode ->
+            val s = session(specs, count = 1, mode = mode)
+            val seen = mutableListOf<String>()
+            while (!s.state.value.passed) {
+                seen += s.state.value.current!!.type.id
+                s.solveCurrent()
+            }
+            assertEquals(mode.name, setOf("a", "b", "math"), seen.toSet())
+            assertEquals(3, seen.size)
+        }
+    }
+
+    @Test
+    fun `a larger count still includes every type`() {
+        val specs = listOf(ChallengeSpec("a"), ChallengeSpec("b"), ChallengeSpec("math"))
+        ChallengeMode.entries.forEach { mode ->
+            val s = session(specs, count = 7, mode = mode)
+            val seen = mutableListOf<String>()
+            while (!s.state.value.passed) {
+                seen += s.state.value.current!!.type.id
+                s.solveCurrent()
+            }
+            assertEquals(7, seen.size)
+            assertEquals(setOf("a", "b", "math"), seen.toSet())
+        }
+    }
 }
