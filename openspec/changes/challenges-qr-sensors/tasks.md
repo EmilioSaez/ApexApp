@@ -18,8 +18,8 @@
 - [x] 3.1 Crear adaptadores de `SensorManager` que emitan muestras con marca de tiempo y manejen sensor ausente; verificar con test instrumentado o fake en JVM
 - [x] 3.2 Implementar los retos agitar, pasos y levantarse contra la interfaz del motor, con progreso y reserva por sensor sin datos; verificar con tests de la lógica del reto
 - [x] 3.3 Implementar la UI de configuración (objetivo con límites) y de ejecución de cada reto, siguiendo `design-taste-compose`; verificar con tests Compose de rango y de ajuste a límites
-- [ ] 3.4 Pedir `ACTIVITY_RECOGNITION` al configurar el reto de pasos y ocultar el reto si no hay sensor; verificar manualmente en emulador sin y con permiso
-  - Verificado en emulador (sin contador de pasos): al elegir «Steps» aparece «This device has no step counter.» y Save queda deshabilitado. Sin verificar: el flujo con sensor, que pide ACTIVITY_RECOGNITION (el emulador no tiene contador de pasos).
+- [x] 3.4 Pedir `ACTIVITY_RECOGNITION` al configurar el reto de pasos y ocultar el reto si no hay sensor; verificar manualmente en emulador sin y con permiso
+  - Verificado en emulador (sin contador de pasos): al elegir «Steps» aparece «This device has no step counter.» y Save queda deshabilitado. Verificado en móvil real (Pixel 7 Pro, confirmado por el usuario): con contador de pasos pide ACTIVITY_RECOGNITION, se concede y los pasos reales cuentan.
 
 ## 4. Reto QR
 
