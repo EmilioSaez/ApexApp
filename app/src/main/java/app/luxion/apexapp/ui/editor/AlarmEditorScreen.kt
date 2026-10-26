@@ -1,10 +1,10 @@
 package app.luxion.apexapp.ui.editor
 
 import android.content.res.Configuration
+import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,7 +25,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -35,15 +34,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TimePickerDefaults
-import androidx.compose.material3.TimePickerState
-import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -63,6 +57,7 @@ import app.luxion.apexapp.R
 import app.luxion.apexapp.alarm.ScheduleResult
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.nextOccurrence
+import app.luxion.apexapp.ui.components.TimeWheelPicker
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 import java.time.Clock
@@ -105,7 +100,6 @@ fun AlarmEditorScreen(onBack: () -> Unit, onShare: (Long) -> Unit = {}, viewMode
  * Contenido sin estado del editor. `extraContent` es el hueco bajo los días de repetición donde
  * otros cambios (p. ej. anti-trampa: nivel y snooze) añaden sus controles.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AlarmEditorContent(
     state: EditorUiState,
@@ -114,6 +108,7 @@ fun AlarmEditorContent(
     onLabelChange: (String) -> Unit,
     onToggleDay: (DayOfWeek) -> Unit,
     saveEnabled: Boolean = true,
+    is24Hour: Boolean = DateFormat.is24HourFormat(LocalContext.current),
     onShare: (() -> Unit)? = null,
     extraContent: @Composable ColumnScope.() -> Unit = {},
 ) {
@@ -122,7 +117,8 @@ fun AlarmEditorContent(
         return
     }
     // El selector se crea ya cargada la alarma: así arranca con su hora y no con la de por defecto.
-    val timeState = rememberTimePickerState(state.hour, state.minute, is24Hour = true)
+    var hour by rememberSaveable { mutableIntStateOf(state.hour) }
+    var minute by rememberSaveable { mutableIntStateOf(state.minute) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -148,7 +144,7 @@ fun AlarmEditorContent(
             Column {
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 Button(
-                    onClick = { onSave(timeState.hour, timeState.minute) },
+                    onClick = { onSave(hour, minute) },
                     enabled = saveEnabled,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -172,7 +168,7 @@ fun AlarmEditorContent(
                 .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.sm),
             verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
         ) {
-            TimeCard(timeState, state.repeatDays)
+            TimeCard(hour, minute, { h, m -> hour = h; minute = m }, state.repeatDays, is24Hour)
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
                 EditorHeader(stringResource(R.string.editor_repeat))
                 DayToggles(state.repeatDays, onToggleDay)
@@ -202,13 +198,12 @@ private fun EditorHeader(text: String) {
     )
 }
 
-/** La hora manda: cifras grandes en una caja propia y, encima, cuánto falta para que suene. */
-@OptIn(ExperimentalMaterial3Api::class)
+/** La hora manda: las ruedas en una caja propia y, encima, cuánto falta para que suene. */
 @Composable
-private fun TimeCard(timeState: TimePickerState, repeatDays: Set<DayOfWeek>) {
+private fun TimeCard(hour: Int, minute: Int, onTimeChange: (Int, Int) -> Unit, repeatDays: Set<DayOfWeek>, is24Hour: Boolean) {
     val clock = remember { Clock.systemDefaultZone() }
-    val remaining = remember(timeState.hour, timeState.minute, repeatDays) {
-        Alarm(hour = timeState.hour, minute = timeState.minute, repeatDays = repeatDays).nextOccurrence(clock)
+    val remaining = remember(hour, minute, repeatDays) {
+        Alarm(hour = hour, minute = minute, repeatDays = repeatDays).nextOccurrence(clock)
             ?.let { Duration.between(ZonedDateTime.now(clock), it) }
     }
     Surface(
@@ -243,39 +238,13 @@ private fun TimeCard(timeState: TimePickerState, repeatDays: Set<DayOfWeek>) {
                     }
                 }
             }
-            TimeDigits(timeState)
+            TimeWheelPicker(hour, minute, onTimeChange, is24Hour = is24Hour)
+            Text(
+                stringResource(R.string.time_wheel_hint),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
-    }
-}
-
-/** Cifras grandes de la hora; al tocarlas se abre el selector de M3 en un diálogo. */
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun TimeDigits(timeState: TimePickerState) {
-    var picking by rememberSaveable { mutableStateOf(false) }
-    Text(
-        "%02d:%02d".format(timeState.hour, timeState.minute),
-        modifier = Modifier.clickable(role = Role.Button) { picking = true },
-        style = MaterialTheme.typography.displayLarge,
-        color = MaterialTheme.colorScheme.onSurface,
-        maxLines = 1,
-    )
-    if (picking) {
-        AlertDialog(
-            onDismissRequest = { picking = false },
-            confirmButton = { TextButton(onClick = { picking = false }) { Text(stringResource(R.string.editor_time_done)) } },
-            text = {
-                Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                    TimePicker(
-                        timeState,
-                        colors = TimePickerDefaults.colors(
-                            clockDialColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        ),
-                    )
-                }
-            },
-        )
     }
 }
 
@@ -335,6 +304,7 @@ private fun EditorPreview() = AlarmEditorContent(
     onLabelChange = {},
     onToggleDay = {},
     onShare = {},
+    is24Hour = true,
 )
 
 @Preview(name = "Claro", showBackground = true, heightDp = 900)

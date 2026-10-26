@@ -301,4 +301,20 @@
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>
     </plurals>
+    <string name="time_wheel_hours">Horas</string>
+    <string name="time_wheel_minutes">Minutos</string>
+    <string name="time_wheel_hours_up">Aumentar horas</string>
+    <string name="time_wheel_hours_down">Disminuir horas</string>
+    <string name="time_wheel_minutes_up">Aumentar minutos</string>
+    <string name="time_wheel_minutes_down">Disminuir minutos</string>
+    <string name="time_wheel_type">Teclear la hora</string>
+    <string name="time_wheel_hint">Toca la hora para teclearla</string>
+    <string name="time_period">AM o PM</string>
+    <string name="time_am">AM</string>
+    <string name="time_pm">PM</string>
+    <string name="time_entry_label">Hora (por ejemplo 705)</string>
+    <string name="time_entry_preview">Quedará a las %1$s</string>
+    <string name="time_entry_invalid">Hora no válida</string>
+    <string name="time_entry_ok">Fijar</string>
+    <string name="time_entry_cancel">Cancelar</string>
 </resources>

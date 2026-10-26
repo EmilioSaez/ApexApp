@@ -4,15 +4,19 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.test.performScrollTo
 import androidx.test.platform.app.InstrumentationRegistry
 import app.luxion.apexapp.R
+import app.luxion.apexapp.ui.components.TimeWheelTags
 import app.luxion.apexapp.domain.Streak
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import java.time.LocalDate
 import java.time.LocalTime
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
 
@@ -68,5 +72,18 @@ class StatsContentTest {
         compose.onNodeWithText(str(R.string.stats_set_bedtime)).performScrollTo().performClick()
         compose.onNodeWithText(str(R.string.stats_dialog_ok)).performClick()
         assertEquals(LocalTime.of(23, 0), saved)
+    }
+
+    @Test
+    fun bedtimeDialog_confirmsTypedTime() {
+        var saved: LocalTime? = null
+        show(StatsUiState(isLoading = false), onSetLastNightBedtime = { saved = it })
+        compose.onNodeWithText(str(R.string.stats_set_bedtime)).performScrollTo().performClick()
+        compose.onNodeWithTag(TimeWheelTags.Hours).performClick()
+        compose.onNodeWithTag(TimeWheelTags.EntryField).performTextReplacement("1015")
+        compose.onNodeWithText(str(R.string.time_entry_ok)).performClick()
+        compose.onNodeWithText(str(R.string.stats_dialog_ok)).performClick()
+        // 10:15 en 24 h; en 12 h conserva el periodo de la hora inicial (23:00 es PM) y da 22:15.
+        assertTrue(saved in setOf(LocalTime.of(10, 15), LocalTime.of(22, 15)))
     }
 }

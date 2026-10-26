@@ -43,6 +43,17 @@ numeración "01 //" ni tipografía mono; el editor no muestra AM/PM ni papelera;
 recientes" ni resumen de sueño (no hay datos en el estado); en claro la tarjeta de próxima alarma y la de alarma
 sonando usan la misma composición que en oscuro.
 
+### Selector de hora (ruedas)
+
+El selector de M3 con dial circular se sustituyó por `TimeWheelPicker` (`ui/components`): dos ruedas verticales con snap,
+fila central resaltada en acento y vecinas atenuadas, AM/PM en 12 h y entrada numérica al tocar la hora central.
+Capturas de la app (editor con el selector, 12 h del emulador): `screens/app/editor-selector-hora-claro.png` y
+`screens/app/editor-selector-hora-oscuro.png`.
+
+Stitch: se intentó generar la pantalla (oscuro y claro, `editor-selector-hora*`) con el design system Apex y las dos
+generaciones acabaron en timeout sin devolver id; `get_project` no lista pantallas, así que no hay PNG/HTML de Stitch
+de este selector. El diseño se resolvió directamente en Compose siguiendo `DESIGN.md`.
+
 ### Limitaciones de la API de Stitch
 
 - `list_screens` devuelve vacío y `get_project` no trae `screenInstances`: un id solo se conoce si la llamada de
