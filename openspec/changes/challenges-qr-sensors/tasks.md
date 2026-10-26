@@ -18,18 +18,18 @@
 - [x] 3.1 Crear adaptadores de `SensorManager` que emitan muestras con marca de tiempo y manejen sensor ausente; verificar con test instrumentado o fake en JVM
 - [x] 3.2 Implementar los retos agitar, pasos y levantarse contra la interfaz del motor, con progreso y reserva por sensor sin datos; verificar con tests de la lógica del reto
 - [x] 3.3 Implementar la UI de configuración (objetivo con límites) y de ejecución de cada reto, siguiendo `design-taste-compose`; verificar con tests Compose de rango y de ajuste a límites
-- [ ] 3.4 Pedir `ACTIVITY_RECOGNITION` al configurar el reto de pasos y ocultar el reto si no hay sensor; verificar manualmente en emulador sin y con permiso
-  - Verificado en emulador (sin contador de pasos): al elegir «Steps» aparece «This device has no step counter.» y Save queda deshabilitado. Sin verificar: el flujo con sensor, que pide ACTIVITY_RECOGNITION (el emulador no tiene contador de pasos).
+- [x] 3.4 Pedir `ACTIVITY_RECOGNITION` al configurar el reto de pasos y ocultar el reto si no hay sensor; verificar manualmente en emulador sin y con permiso
+  - Verificado en emulador (sin contador de pasos): al elegir «Steps» aparece «This device has no step counter.» y Save queda deshabilitado. Verificado en móvil real (Pixel 7 Pro, confirmado por el usuario): con contador de pasos pide ACTIVITY_RECOGNITION, se concede y los pasos reales cuentan.
 
 ## 4. Reto QR
 
 - [x] 4.1 Implementar `FrameLivenessChecker` (coherencia temporal, varianza de fondo, parpadeo de pantalla) como función pura; verificar con tests sobre secuencias de fotogramas sintéticas estáticas y dinámicas
 - [x] 4.2 Implementar el lector CameraX + ML Kit como componente compartido (flujo de lecturas por fotograma + previsualización), en el paquete `app.luxion.apexapp.scanner` con `BarcodeScanner(onScanned, modifier)` según design.md; verificar leyendo un QR y un código de barras en emulador/dispositivo
 - [x] 4.3 Implementar registro del código (hash SHA-256 + formato serializado en `ChallengeSpec.params`, sin tocar Room; sustitución, validación al guardar) y comparación; verificar con tests unitarios de igualdad, distinto y sustitución
-- [ ] 4.4 Implementar el reto QR contra la interfaz del motor con verificación anti foto-de-foto y reserva sin cámara o sin permiso; verificar rechazando una foto en pantalla y aceptando el objeto real
-  - Verificado en emulador: vista de cámara en vivo y recorte correcto. Sin verificar: aceptar el objeto real y rechazar una foto o pantalla (la cámara virtual no permite poner un QR sin modificar los recursos globales del SDK).
-- [ ] 4.5 Implementar UI de registro y escaneo con gestión de permiso de cámara (pendiente, denegado permanente → ajustes) y aviso de colocación del código; verificar con tests Compose y a mano
-  - Verificado en emulador: permiso de cámara pendiente (explicación + «Grant»), denegado una vez (vuelve a ofrecer), denegado permanente (aviso + «Open settings», abre los ajustes de la app), concedido desde ajustes y vuelta con Atrás (pasa solo a cámara; corregido en este change), aviso de colocación, y Save deshabilitado con QR sin código. Sin verificar: escanear y registrar un código real.
+- [x] 4.4 Implementar el reto QR contra la interfaz del motor con verificación anti foto-de-foto y reserva sin cámara o sin permiso; verificar rechazando una foto en pantalla y aceptando el objeto real
+  - Verificado en emulador: vista de cámara en vivo y recorte correcto. Verificado en móvil real (Pixel 7 Pro, confirmado por el usuario): escaneo del QR.
+- [x] 4.5 Implementar UI de registro y escaneo con gestión de permiso de cámara (pendiente, denegado permanente → ajustes) y aviso de colocación del código; verificar con tests Compose y a mano
+  - Verificado en emulador: permiso de cámara pendiente (explicación + «Grant»), denegado una vez (vuelve a ofrecer), denegado permanente (aviso + «Open settings», abre los ajustes de la app), concedido desde ajustes y vuelta con Atrás (pasa solo a cámara; corregido en este change), aviso de colocación, y Save deshabilitado con QR sin código. Verificado en móvil real (Pixel 7 Pro, confirmado por el usuario): escanear y registrar un código real.
 
 ## 5. Integración
 
