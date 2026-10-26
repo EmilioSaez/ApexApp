@@ -186,4 +186,27 @@ class ChallengeSessionTest {
         val s = session(listOf(ChallengeSpec("a")), count = 1, difficulty = 2)
         assertEquals(2, s.state.value.current!!.level)
     }
+
+    @Test
+    fun `count lower than the chosen types is raised to one of each`() {
+        val s = session(listOf(ChallengeSpec("a"), ChallengeSpec("b")), count = 1)
+        assertEquals(2, s.state.value.total)
+        val order = mutableListOf<String>()
+        while (!s.state.value.passed) {
+            order += s.state.value.current!!.type.id
+            s.solveCurrent()
+        }
+        assertEquals(listOf("a", "b"), order)
+    }
+
+    @Test
+    fun `random mode does one of each type before repeating`() {
+        val s = session(listOf(ChallengeSpec("a"), ChallengeSpec("b")), count = 2, mode = ChallengeMode.RANDOM)
+        val order = mutableListOf<String>()
+        while (!s.state.value.passed) {
+            order += s.state.value.current!!.type.id
+            s.solveCurrent()
+        }
+        assertEquals(setOf("a", "b"), order.toSet())
+    }
 }

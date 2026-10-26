@@ -66,7 +66,12 @@ class ChallengesSection @Inject constructor(
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
-            CountStepper(config.count, onChange = { value -> update { it.withCount(value) } }, inset = 0.dp)
+            CountStepper(
+                config.displayCount,
+                onChange = { value -> update { it.withCount(value) } },
+                inset = 0.dp,
+                minCount = config.minCount,
+            )
             DifficultySelector(config.displayDifficulty, onChange = { value -> update { it.withDifficulty(value) } }, inset = 0.dp)
             ModeSelector(config.mode, onChange = { value -> update { it.withMode(value) } }, inset = 0.dp)
             config.challenges.forEach { spec ->

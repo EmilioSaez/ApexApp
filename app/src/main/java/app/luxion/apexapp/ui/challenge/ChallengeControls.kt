@@ -41,14 +41,19 @@ fun DifficultySelector(level: Int, onChange: (Int) -> Unit, inset: Dp = ApexThem
 }
 
 @Composable
-fun CountStepper(count: Int, onChange: (Int) -> Unit, inset: Dp = ApexTheme.spacing.screen) {
+fun CountStepper(
+    count: Int,
+    onChange: (Int) -> Unit,
+    inset: Dp = ApexTheme.spacing.screen,
+    minCount: Int = SessionConfig.MIN_COUNT,
+) {
     ControlHeader(stringResource(R.string.challenge_test_count), inset)
     Row(
         Modifier.padding(horizontal = inset),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
     ) {
-        OutlinedIconButton(onClick = { onChange(count - 1) }, enabled = count > SessionConfig.MIN_COUNT) { Text("-") }
+        OutlinedIconButton(onClick = { onChange(count - 1) }, enabled = count > minCount) { Text("-") }
         Text(count.toString(), style = MaterialTheme.typography.titleLarge)
         OutlinedIconButton(onClick = { onChange(count + 1) }, enabled = count < SessionConfig.MAX_COUNT) { Text("+") }
     }

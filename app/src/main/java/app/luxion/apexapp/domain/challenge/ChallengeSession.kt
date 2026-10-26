@@ -33,15 +33,20 @@ class ChallengeSession(
     private val pool: List<ChallengeSpec> = config.challenges.filter { ChallengeType(it.type) in registry }
     private val mathSpec = ChallengeSpec(ChallengeType.MATH.id)
 
+    private val total = config.effectiveCount
+
+    /** En modo aleatorio sale primero uno de cada tipo, en orden aleatorio, y después cualquiera. */
+    private val firstRound = ArrayDeque(pool.distinctBy { it.type }.shuffled(random))
+
     private var index = 0
     private var failures = 0
     private var currentSpec: ChallengeSpec = mathSpec
 
-    private val _state = MutableStateFlow(SessionState(0, config.count, null, false))
+    private val _state = MutableStateFlow(SessionState(0, total, null, false))
     val state: StateFlow<SessionState> = _state.asStateFlow()
 
     init {
-        emit { ChallengeEvent.SessionStarted(sessionId, alarmId, it, config.count, config.difficulty) }
+        emit { ChallengeEvent.SessionStarted(sessionId, alarmId, it, total, config.difficulty) }
         startChallenge()
     }
 
@@ -51,9 +56,9 @@ class ChallengeSession(
         if (current.check(answer)) {
             emit { ChallengeEvent.ChallengeSolved(sessionId, alarmId, it, current.type, current.level, index) }
             index++
-            if (index >= config.count) {
-                emit { ChallengeEvent.SessionFinished(sessionId, alarmId, it, config.count) }
-                _state.value = SessionState(index, config.count, null, passed = true)
+            if (index >= total) {
+                emit { ChallengeEvent.SessionFinished(sessionId, alarmId, it, total) }
+                _state.value = SessionState(index, total, null, passed = true)
             } else {
                 startChallenge()
             }
@@ -82,12 +87,13 @@ class ChallengeSession(
         currentSpec = spec
         val instance = generate(spec)
         emit { ChallengeEvent.ChallengeStarted(sessionId, alarmId, it, instance.type, instance.level, index) }
-        _state.value = SessionState(index, config.count, instance, passed = false)
+        _state.value = SessionState(index, total, instance, passed = false)
     }
 
     private fun select(): ChallengeSpec = when {
         pool.isEmpty() -> mathSpec
         config.mode == ChallengeMode.CHAINED -> pool[index % pool.size]
+        firstRound.isNotEmpty() -> firstRound.removeFirst()
         else -> pool[random.nextInt(pool.size)]
     }
 

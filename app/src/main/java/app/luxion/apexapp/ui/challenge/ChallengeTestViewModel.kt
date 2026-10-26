@@ -47,13 +47,15 @@ class ChallengeTestViewModel @Inject constructor(
     }
 
     fun setCount(count: Int) = _form.update {
-        it.copy(count = count.coerceIn(SessionConfig.MIN_COUNT, SessionConfig.MAX_COUNT))
+        it.copy(count = SessionConfig.normalizeCount(count, it.types.size))
     }
 
     fun setMode(mode: ChallengeMode) = _form.update { it.copy(mode = mode) }
 
+    /** Al añadir tipos el número de retos sube solo si hace falta; al quitarlos no baja. */
     fun toggleType(type: ChallengeType) = _form.update {
-        it.copy(types = if (type in it.types) it.types - type else it.types + type)
+        val types = if (type in it.types) it.types - type else it.types + type
+        it.copy(types = types, count = SessionConfig.normalizeCount(it.count, types.size))
     }
 
     /** Sin tipos marcados la sesión usa matemáticas por defecto, como en una alarma sin tipos. */
@@ -61,7 +63,7 @@ class ChallengeTestViewModel @Inject constructor(
         val form = _form.value
         val session = SessionConfig(
             difficulty = form.difficulty,
-            count = form.count,
+            count = SessionConfig.normalizeCount(form.count, form.types.size),
             mode = form.mode,
             challenges = availableTypes.filter { it in form.types }.map { ChallengeSpec(it.id) },
         )
