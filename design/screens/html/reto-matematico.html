@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Apex · Alarma Activa</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Sora & Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline": "#6f7682",
+            "on-primary-container": "#ffc3a7",
+            "error": "#ed7f64",
+            "on-surface-variant": "#a5abb9",
+            "surface-container-lowest": "#000000",
+            "inverse-surface": "#f9f9ff",
+            "secondary-container": "#413a37",
+            "error-dim": "#ba573f",
+            "secondary": "#a69c98",
+            "tertiary-fixed": "#ffd9b0",
+            "primary-container": "#7a3000",
+            "surface-container-highest": "#202631",
+            "surface-container": "#161a21",
+            "on-background": "#e0e5f4",
+            "on-primary-fixed": "#6e2b00",
+            "on-secondary-fixed-variant": "#625a56",
+            "surface": "#0c0e12",
+            "surface-container-high": "#1b2029",
+            "on-primary-fixed-variant": "#9b3f00",
+            "surface-container-low": "#101319",
+            "on-tertiary": "#6e5433",
+            "primary-dim": "#ffa273",
+            "tertiary": "#ffead7",
+            "on-tertiary-container": "#654b2c",
+            "secondary-fixed-dim": "#ded2cd",
+            "primary": "#ffb693",
+            "on-error-container": "#ff9b82",
+            "on-error": "#450900",
+            "on-primary": "#6f2b00",
+            "secondary-fixed": "#ede0db",
+            "on-surface": "#e0e5f4",
+            "background": "#0c0e12",
+            "surface-variant": "#202631",
+            "surface-bright": "#252c39",
+            "outline-variant": "#424854",
+            "inverse-on-surface": "#53555a",
+            "on-tertiary-fixed-variant": "#6f5535",
+            "tertiary-dim": "#f0cba3",
+            "on-secondary-container": "#c9bdb8",
+            "tertiary-fixed-dim": "#f0cba3",
+            "surface-tint": "#ffb693",
+            "primary-fixed-dim": "#ffc9b0",
+            "primary-fixed": "#ffdbcb",
+            "error-container": "#7e2b17",
+            "secondary-dim": "#a69c98",
+            "on-tertiary-fixed": "#50391b",
+            "on-secondary": "#251f1c",
+            "inverse-primary": "#a04304",
+            "tertiary-container": "#ffd9b0",
+            "on-secondary-fixed": "#453e3b",
+            "surface-dim": "#0c0e12"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "fontFamily": {
+            "headline": ["Sora", "sans-serif"],
+            "display": ["Sora", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.35; }
+    }
+    .animate-pulse-subtle {
+      animation: pulse-subtle 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+    @keyframes blink {
+      0%, 49% { opacity: 1; }
+      50%, 100% { opacity: 0; }
+    }
+    .animate-cursor {
+      animation: blink 1s infinite;
+    }
+    /* Touch optimization */
+    button {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen flex flex-col justify-between selection:bg-primary-container selection:text-on-primary select-none overflow-x-hidden">
+<!-- Interfaz de Alarma Inevitable: Sin navegación estándar (Bloqueada por reto activo) -->
+<!-- 1. Cabecera Superior: Indicador sutil de audio -->
+<header class="w-full pt-4 pb-2 px-6 flex items-center justify-between z-10 shrink-0">
+<div class="flex items-center gap-2.5">
+<div class="relative flex items-center justify-center w-2.5 h-2.5">
+<span class="absolute inline-flex h-full w-full rounded-full bg-primary animate-pulse-subtle opacity-75"></span>
+<span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-primary"></span>
+</div>
+<span class="text-xs font-label uppercase tracking-wider text-on-surface-variant font-medium">Alarma sonando</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="volume_up">volume_up</span>
+<span class="text-xs font-label font-medium tabular-nums">100%</span>
+</div>
+</header>
+<!-- 2. Bloque Horario y Contextual -->
+<section class="w-full px-6 pt-1 pb-4 text-center shrink-0">
+<h1 class="font-display font-extrabold text-6xl tracking-tight text-on-surface tabular-nums leading-none">
+      06:45
+    </h1>
+<p class="font-label text-xs text-on-surface-variant tracking-normal mt-2.5 font-medium">
+      Despertar laboral · Martes
+    </p>
+</section>
+<!-- 3. Sección Central del Reto (El Protagonista) -->
+<main class="w-full px-6 flex-1 flex flex-col justify-center max-w-md mx-auto">
+<!-- Indicador de progreso por pasos -->
+<div class="w-full mb-6">
+<div class="flex items-center justify-between text-xs font-label mb-2">
+<span class="text-on-surface font-medium">Reto 1 de 3</span>
+<span class="text-on-surface-variant font-medium">Matemáticas</span>
+</div>
+<div class="grid grid-cols-3 gap-1.5 w-full h-1">
+<!-- Paso 1 (Activo / En curso): Acento Naranja -->
+<div class="h-full bg-primary rounded-lg"></div>
+<!-- Paso 2 (Pendiente): Tono Neutro Frio -->
+<div class="h-full bg-surface-container-highest rounded-lg"></div>
+<!-- Paso 3 (Pendiente): Tono Neutro Frio -->
+<div class="h-full bg-surface-container-highest rounded-lg"></div>
+</div>
+</div>
+<!-- Tarjeta del Problema -->
+<div class="bg-surface-container border border-outline-variant/30 rounded-lg p-5 flex flex-col items-center justify-center">
+<span class="text-xs font-label uppercase tracking-widest text-on-surface-variant font-medium mb-3">
+        Resuelve para silenciar
+      </span>
+<!-- Operación Principal -->
+<div class="py-2">
+<div class="font-display font-bold text-4xl text-on-surface tabular-nums tracking-wide flex items-center justify-center gap-3">
+<span>47</span>
+<span class="text-outline font-normal">+</span>
+<span>38</span>
+<span class="text-outline font-normal">=</span>
+</div>
+</div>
+<!-- Casilla de Respuesta -->
+<div class="mt-4 w-full max-w-[200px] h-12 bg-surface-container-low border border-outline-variant/40 rounded-lg flex items-center justify-center px-4 relative">
+<div class="flex items-center justify-center">
+<span class="font-display font-bold text-2xl tabular-nums text-primary tracking-widest min-h-[32px] flex items-center" id="user-input">
+<!-- Valor inicial de demostración -->
+            85
+          </span>
+<span class="w-0.5 h-6 bg-primary ml-1 animate-cursor inline-block" id="cursor"></span>
+</div>
+</div>
+</div>
+<!-- Indicador de bloqueo informativo -->
+<p class="text-center text-[11px] font-label text-outline mt-3">
+      La alarma continuará hasta completar todos los pasos.
+    </p>
+</main>
+<!-- 4. Teclado Numérico Ergonómico Táctil (Bottom Half) -->
+<footer class="w-full max-w-md mx-auto px-5 pb-6 pt-2 shrink-0">
+<div class="grid grid-cols-3 gap-2">
+<!-- Fila 1 -->
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('1')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">1</span>
+</button>
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('2')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">2</span>
+</button>
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('3')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">3</span>
+</button>
+<!-- Fila 2 -->
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('4')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">4</span>
+</button>
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('5')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">5</span>
+</button>
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('6')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">6</span>
+</button>
+<!-- Fila 3 -->
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('7')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">7</span>
+</button>
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('8')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">8</span>
+</button>
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('9')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">9</span>
+</button>
+<!-- Fila 4: Borrar, Cero, Enviar -->
+<button aria-label="Borrar dígito" class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors text-on-surface-variant" onclick="deleteDigit()" type="button">
+<span class="material-symbols-outlined text-2xl" data-icon="backspace">backspace</span>
+</button>
+<button class="h-14 bg-surface-container hover:bg-surface-container-high active:bg-surface-container-highest border border-outline-variant/20 rounded-lg flex items-center justify-center transition-colors" onclick="appendDigit('0')" type="button">
+<span class="font-display text-2xl font-semibold text-on-surface tabular-nums">0</span>
+</button>
+<button aria-label="Confirmar solución" class="h-14 col-span-3 bg-primary text-on-primary hover:opacity-95 active:scale-[0.98] rounded-lg flex items-center justify-center transition-all duration-100 font-headline font-bold px-4 gap-2" onclick="submitAnswer()" type="button"><span class="font-headline font-bold text-sm tracking-wide">Comprobar respuesta</span><span class="material-symbols-outlined text-xl" data-icon="check">check</span></button>
+</div>
+</footer>
+<!-- Lógica ligera para interacción del teclado -->
+<script>
+    let currentInput = "85";
+    const inputElement = document.getElementById("user-input");
+
+    function updateDisplay() {
+      inputElement.textContent = currentInput;
+    }
+
+    function appendDigit(digit) {
+      if (currentInput.length < 4) {
+        currentInput += digit;
+        updateDisplay();
+      }
+    }
+
+    function deleteDigit() {
+      if (currentInput.length > 0) {
+        currentInput = currentInput.slice(0, -1);
+        updateDisplay();
+      }
+    }
+
+    function submitAnswer() {
+      // 47 + 38 = 85
+      if (currentInput === "85") {
+        inputElement.classList.remove("text-primary");
+        inputElement.classList.add("text-[#5BD68A]");
+        setTimeout(() => {
+          // Feedback de éxito sutil antes de avanzar al siguiente reto
+          inputElement.classList.remove("text-[#5BD68A]");
+          inputElement.classList.add("text-primary");
+        }, 600);
+      } else {
+        inputElement.classList.remove("text-primary");
+        inputElement.classList.add("text-[#FF6B6B]");
+        setTimeout(() => {
+          inputElement.classList.remove("text-[#FF6B6B]");
+          inputElement.classList.add("text-primary");
+          currentInput = "";
+          updateDisplay();
+        }, 400);
+      }
+    }
+  </script>
+</body></html>
