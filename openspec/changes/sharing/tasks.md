@@ -18,7 +18,7 @@
 - [x] 3.1 Generar enlace `apexapp://alarm?d=…` y compartirlo con `ACTION_SEND`; verificar con test unitario del enlace y manualmente en emulador que aparece la share sheet
 - [x] 3.2 Añadir ZXing core al catálogo para generar el QR y no añadir CameraX ni ML Kit (los aporta `challenges-qr-sensors`); verificar que el proyecto compila
 - [x] 3.3 Generar y mostrar el QR de la alarma con tope de tamaño y fallback a archivo si no cabe; verificar con test unitario del tope y prueba de lectura del QR generado
-- [ ] 3.4 Exportar archivo `.apexalarm` con `FileProvider` (`file_paths.xml` limitado a `cache/shared/`); verificar manualmente que otra app lo recibe y que no accede a otros archivos
+- [x] 3.4 Exportar archivo `.apexalarm` con `FileProvider` (`file_paths.xml` limitado a `cache/shared/`); verificar manualmente que otra app lo recibe y que no accede a otros archivos
 - [x] 3.5 Añadir acción "Compartir" en `AlarmEditorScreen`/`HomeScreen` con selector enlace/QR/archivo; verificar con test de UI Compose
 
 ## 4. Recepción e importación en la UI
@@ -32,7 +32,7 @@
 - [x] 5.1 Definir `StreakStatsSource` como envoltorio de `WakeHistoryRepository.observeStreak()` (`Streak(current, best)`, commit f20f4ce de feature/wake-stats; documentar dependencia); verificar con test unitario con fake
 - [x] 5.2 Implementar `StreakCardRenderer` (Bitmap 1080×1350, tema de la app, sin etiquetas ni horas); verificar con test instrumentado/Robolectric que genera un bitmap de las dimensiones esperadas
 - [x] 5.3 Pantalla de vista previa de la tarjeta con estado "sin logros" y actualización reactiva; verificar con tests de UI Compose
-- [ ] 5.4 Compartir la tarjeta con `FileProvider` + `ACTION_SEND` y `FLAG_GRANT_READ_URI_PERMISSION`, limpiando `cache/shared/` antes; verificar manualmente en emulador que la imagen llega a otra app
+- [x] 5.4 Compartir la tarjeta con `FileProvider` + `ACTION_SEND` y `FLAG_GRANT_READ_URI_PERMISSION`, limpiando `cache/shared/` antes; verificar manualmente en emulador que la imagen llega a otra app
 
 ## 6. Cierre
 
