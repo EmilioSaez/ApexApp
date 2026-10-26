@@ -10,6 +10,11 @@ import app.luxion.apexapp.anticheat.SnoozeCounts
 import app.luxion.apexapp.anticheat.SnoozeScheduler
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatLevel
+import app.luxion.apexapp.domain.ChallengeConfig
+import app.luxion.apexapp.domain.ChallengeSpec
+import app.luxion.apexapp.domain.challenge.PassedAlarms
+import app.luxion.apexapp.domain.challenge.SessionConfig
+import app.luxion.apexapp.ui.challenge.ChallengeDismissGate
 import app.luxion.apexapp.domain.AntiCheatPolicy
 import app.luxion.apexapp.domain.SnoozePolicy
 import app.luxion.apexapp.domain.WakeEventRecorder
@@ -25,6 +30,7 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -151,5 +157,63 @@ class RingViewModelTest {
         assertEquals(listOf(id), cancelled)
         assertEquals(listOf("s-1"), snoozeCalls.map { it.second })
         assertTrue(vm.uiState.value.finished)
+    }
+
+    private val withChallenges = ChallengeConfig(count = 1, challenges = listOf(ChallengeSpec("math")))
+    private val passedAlarms = PassedAlarms()
+
+    private fun realGateViewModel(id: Long) = viewModel(id, gate = ChallengeDismissGate(passedAlarms))
+
+    @Test
+    fun alarmWithChallenges_cannotBeDismissedWithoutPassingThem() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0, challenges = withChallenges))
+        val vm = realGateViewModel(id)
+        val state = vm.uiState.first { it.alarm != null }
+        assertFalse(state.canDismiss)
+        assertEquals(SessionConfig.from(withChallenges), state.challenges)
+        vm.dismiss()
+        assertTrue(cancelled.isEmpty())
+        assertTrue(resolved.isEmpty())
+        assertFalse(vm.uiState.value.finished)
+    }
+
+    @Test
+    fun alarmWithChallenges_dismissesOncePassed() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0, challenges = withChallenges))
+        val vm = realGateViewModel(id)
+        vm.uiState.first { it.alarm != null }
+        passedAlarms.markPassed(id)
+        vm.dismiss()
+        assertEquals(listOf("s-1"), resolved)
+        assertTrue(vm.uiState.value.finished)
+    }
+
+    @Test
+    fun alarmWithoutChallenges_dismissesImmediatelyWithRealGate() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0))
+        val vm = realGateViewModel(id)
+        val state = vm.uiState.first { it.alarm != null }
+        assertTrue(state.canDismiss)
+        assertNull(state.challenges)
+        vm.dismiss()
+        assertTrue(vm.uiState.value.finished)
+    }
+
+    @Test
+    fun alarmWithChallenges_keepsSnoozeAvailable() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0, challenges = withChallenges, antiCheat = snoozable))
+        val vm = realGateViewModel(id)
+        assertTrue(vm.uiState.first { it.alarm != null }.canSnooze)
+        vm.snooze()
+        assertEquals(listOf("s-1"), snoozeCalls.map { it.second })
+    }
+
+    @Test
+    fun reopenedAfterProcessDeath_isNotPassed() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0, challenges = withChallenges))
+        // PassedAlarms es memoria de proceso: tras morir llega vacío y la pantalla vuelve a pedir los retos.
+        val state = viewModel(id, gate = ChallengeDismissGate(PassedAlarms())).uiState.first { it.alarm != null }
+        assertFalse(state.canDismiss)
+        assertTrue(state.challenges != null)
     }
 }
