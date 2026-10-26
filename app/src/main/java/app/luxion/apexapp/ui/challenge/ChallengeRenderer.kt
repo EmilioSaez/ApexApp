@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -22,6 +21,7 @@ import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.challenge.ChallengeAnswer
 import app.luxion.apexapp.domain.challenge.ChallengeInstance
 import app.luxion.apexapp.domain.challenge.ChallengeType
+import app.luxion.apexapp.ui.components.PrimaryAction
 import app.luxion.apexapp.ui.theme.ApexTheme
 import javax.inject.Inject
 
@@ -77,6 +77,7 @@ class MathRenderer @Inject constructor() : ChallengeRenderer {
                 modifier = Modifier.fillMaxWidth(),
                 label = { Text(stringResource(R.string.challenge_answer_label)) },
                 singleLine = true,
+                shape = MaterialTheme.shapes.small,
                 isError = wrong,
                 supportingText = if (wrong) {
                     { Text(stringResource(R.string.challenge_wrong)) }
@@ -86,11 +87,11 @@ class MathRenderer @Inject constructor() : ChallengeRenderer {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { submit() }),
             )
-            Button(
+            PrimaryAction(
+                text = stringResource(R.string.challenge_confirm),
                 onClick = { submit() },
                 modifier = Modifier.fillMaxWidth(),
-                shape = MaterialTheme.shapes.small,
-            ) { Text(stringResource(R.string.challenge_confirm)) }
+            )
         }
     }
 }
