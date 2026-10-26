@@ -12,26 +12,33 @@ data class MotionSample(val linear: AccelSample, val vertical: Float) {
 }
 
 /**
- * Detecta quieto → incorporarse → caminar de forma sostenida. Cambiar la orientación del móvil sin
- * desplazarse no genera la marcha exigida, así que no supera el reto.
+ * Detecta quieto → incorporarse → caminar. Cambiar la orientación del móvil sin desplazarse no genera la
+ * marcha exigida, así que no supera el reto. La marcha se acumula: una parada breve ([maxPauseNanos]) al
+ * girar una esquina o abrir una puerta no la reinicia, porque exigir [minWalkNanos] ininterrumpidos
+ * descartaba marchas reales con el móvil en la mano.
  */
 class StandUpDetector(
     private val minRestNanos: Long = 2_000_000_000L,
     private val minWalkNanos: Long = 5_000_000_000L,
     private val restRms: Float = 0.6f,
-    private val riseVertical: Float = 1.5f,
-    private val walkRms: Float = 1.0f,
+    private val riseVertical: Float = 1.0f,
+    private val walkRms: Float = 0.8f,
     private val windowNanos: Long = 1_000_000_000L,
+    private val maxPauseNanos: Long = 2_000_000_000L,
 ) {
     private val window = ArrayDeque<MotionSample>()
     private var restSince: Long? = null
-    private var walkSince: Long? = null
+    private var walkedNanos = 0L
+    private var pausedNanos = 0L
+    private var lastNanos = 0L
 
     var phase = StandUpPhase.WAITING_REST
         private set
 
     fun onSample(sample: MotionSample): StandUpPhase {
         if (phase == StandUpPhase.DONE) return phase
+        val previous = lastNanos
+        lastNanos = sample.tNanos
         window.addLast(sample)
         while (window.isNotEmpty() && sample.tNanos - window.first().tNanos > windowNanos) window.removeFirst()
         val rms = rms()
@@ -47,18 +54,25 @@ class StandUpDetector(
             StandUpPhase.WAITING_RISE -> {
                 if (abs(sample.vertical) >= riseVertical) {
                     phase = StandUpPhase.WALKING
-                    walkSince = null
+                    walkedNanos = 0L
+                    pausedNanos = 0L
                 }
             }
             StandUpPhase.WALKING -> {
+                // Un hueco largo sin muestras no regala tiempo de marcha.
+                val dt = (sample.tNanos - previous).coerceIn(0L, windowNanos)
                 if (rms >= walkRms) {
-                    val since = walkSince ?: sample.tNanos.also { walkSince = it }
-                    if (sample.tNanos - since >= minWalkNanos) phase = StandUpPhase.DONE
+                    pausedNanos = 0L
+                    walkedNanos += dt
+                    if (walkedNanos >= minWalkNanos) phase = StandUpPhase.DONE
                 } else {
-                    walkSince = null
-                    if (rms <= restRms) {
-                        phase = StandUpPhase.WAITING_REST
-                        restSince = null
+                    pausedNanos += dt
+                    if (pausedNanos > maxPauseNanos) {
+                        walkedNanos = 0L
+                        if (rms <= restRms) {
+                            phase = StandUpPhase.WAITING_REST
+                            restSince = null
+                        }
                     }
                 }
             }

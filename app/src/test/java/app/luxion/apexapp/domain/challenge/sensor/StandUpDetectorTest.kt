@@ -34,4 +34,35 @@ class StandUpDetectorTest {
         motion(noisySamples(0, 10_000, level = 2.5f, noise = 1.5f)).forEach { d.onSample(it) }
         assertEquals(StandUpPhase.WAITING_REST, d.phase)
     }
+
+    @Test
+    fun `una parada breve durante la marcha no la reinicia`() {
+        val d = StandUpDetector()
+        motion(noisySamples(0, 3_000, level = 0.1f, noise = 0.05f)).forEach { d.onSample(it) }
+        d.onSample(MotionSample(spike(3_020, 2.5f), vertical = 2.5f))
+        motion(noisySamples(3_040, 3_000, level = 2.5f, noise = 1.5f)).forEach { d.onSample(it) }
+        // Una esquina o una puerta: 1,5 s casi parado.
+        motion(noisySamples(6_040, 1_500, level = 0.1f, noise = 0.05f)).forEach { d.onSample(it) }
+        assertEquals(StandUpPhase.WALKING, d.phase)
+        motion(noisySamples(7_540, 4_000, level = 2.5f, noise = 1.5f)).forEach { d.onSample(it) }
+        assertEquals(StandUpPhase.DONE, d.phase)
+    }
+
+    @Test
+    fun `una parada larga reinicia la marcha`() {
+        val d = StandUpDetector()
+        motion(noisySamples(0, 3_000, level = 0.1f, noise = 0.05f)).forEach { d.onSample(it) }
+        d.onSample(MotionSample(spike(3_020, 2.5f), vertical = 2.5f))
+        motion(noisySamples(3_040, 3_000, level = 2.5f, noise = 1.5f)).forEach { d.onSample(it) }
+        motion(noisySamples(6_040, 4_000, level = 0.1f, noise = 0.05f)).forEach { d.onSample(it) }
+        assertEquals(StandUpPhase.WAITING_REST, d.phase)
+    }
+
+    @Test
+    fun `incorporarse con un impulso vertical moderado cuenta`() {
+        val d = StandUpDetector()
+        motion(noisySamples(0, 3_000, level = 0.1f, noise = 0.05f)).forEach { d.onSample(it) }
+        d.onSample(MotionSample(spike(3_020, 1.2f), vertical = 1.2f))
+        assertEquals(StandUpPhase.WALKING, d.phase)
+    }
 }

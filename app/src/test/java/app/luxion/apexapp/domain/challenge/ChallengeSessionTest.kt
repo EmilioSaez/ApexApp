@@ -186,4 +186,57 @@ class ChallengeSessionTest {
         val s = session(listOf(ChallengeSpec("a")), count = 1, difficulty = 2)
         assertEquals(2, s.state.value.current!!.level)
     }
+
+    @Test
+    fun `count lower than the chosen types is raised to one of each`() {
+        val s = session(listOf(ChallengeSpec("a"), ChallengeSpec("b")), count = 1)
+        assertEquals(2, s.state.value.total)
+        val order = mutableListOf<String>()
+        while (!s.state.value.passed) {
+            order += s.state.value.current!!.type.id
+            s.solveCurrent()
+        }
+        assertEquals(listOf("a", "b"), order)
+    }
+
+    @Test
+    fun `random mode does one of each type before repeating`() {
+        val s = session(listOf(ChallengeSpec("a"), ChallengeSpec("b")), count = 2, mode = ChallengeMode.RANDOM)
+        val order = mutableListOf<String>()
+        while (!s.state.value.passed) {
+            order += s.state.value.current!!.type.id
+            s.solveCurrent()
+        }
+        assertEquals(setOf("a", "b"), order.toSet())
+    }
+
+    @Test
+    fun `three types with count 1 show all three in both modes`() {
+        val specs = listOf(ChallengeSpec("a"), ChallengeSpec("b"), ChallengeSpec("math"))
+        ChallengeMode.entries.forEach { mode ->
+            val s = session(specs, count = 1, mode = mode)
+            val seen = mutableListOf<String>()
+            while (!s.state.value.passed) {
+                seen += s.state.value.current!!.type.id
+                s.solveCurrent()
+            }
+            assertEquals(mode.name, setOf("a", "b", "math"), seen.toSet())
+            assertEquals(3, seen.size)
+        }
+    }
+
+    @Test
+    fun `a larger count still includes every type`() {
+        val specs = listOf(ChallengeSpec("a"), ChallengeSpec("b"), ChallengeSpec("math"))
+        ChallengeMode.entries.forEach { mode ->
+            val s = session(specs, count = 7, mode = mode)
+            val seen = mutableListOf<String>()
+            while (!s.state.value.passed) {
+                seen += s.state.value.current!!.type.id
+                s.solveCurrent()
+            }
+            assertEquals(7, seen.size)
+            assertEquals(setOf("a", "b", "math"), seen.toSet())
+        }
+    }
 }

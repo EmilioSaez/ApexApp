@@ -39,7 +39,8 @@ abstract class MotionChallenge(
     }
 
     override fun generate(level: Int, params: String, random: Random): ChallengeInstance {
-        val target = kind.targetFrom(params)
+        // Los params no se usan: el objetivo sale solo del nivel (también el adaptativo).
+        val target = kind.targetFor(level)
         return MotionInstance(type, level, "${kind.typeId}:$target", target)
     }
 }

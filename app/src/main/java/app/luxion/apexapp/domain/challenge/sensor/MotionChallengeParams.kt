@@ -1,34 +1,33 @@
 package app.luxion.apexapp.domain.challenge.sensor
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
+import app.luxion.apexapp.domain.challenge.SessionConfig
 
-/** Parámetros de un reto de movimiento, tal como viajan en `ChallengeSpec.params`. */
-@Serializable
-data class MotionParams(val target: Int = 0)
-
-/** Límites y valor por defecto del objetivo de cada reto de movimiento. */
-enum class MotionKind(val typeId: String, val min: Int, val max: Int, val default: Int) {
-    SHAKE("shake", min = 10, max = 100, default = 20),
-    STEPS("steps", min = 10, max = 200, default = 30),
+/** Límites absolutos del objetivo de cada reto de movimiento; la tabla [MotionTargets] debe caber en ellos. */
+enum class MotionKind(val typeId: String, val min: Int, val max: Int) {
+    SHAKE("shake", min = 10, max = 100),
+    STEPS("steps", min = 10, max = 200),
 
     /** El objetivo es la duración mínima de la marcha, en segundos. */
-    STAND_UP("standup", min = 5, max = 60, default = 10),
+    STAND_UP("standup", min = 5, max = 60),
     ;
 
-    /** Ajusta [raw] al rango permitido; 0 (sin definir) equivale al valor por defecto. */
-    fun clamp(raw: Int): Int = if (raw == 0) default else raw.coerceIn(min, max)
+    /**
+     * Objetivo para el nivel de dificultad [level] (1..5, se acota). Es el único origen del objetivo: los
+     * `params` guardados en alarmas antiguas (`{"target":N}`) se ignoran.
+     */
+    fun targetFor(level: Int): Int = MotionTargets.BY_LEVEL.getValue(this)[
+        level.coerceIn(SessionConfig.MIN_DIFFICULTY, SessionConfig.MAX_DIFFICULTY) - SessionConfig.MIN_DIFFICULTY,
+    ]
+}
 
-    /** Lee el objetivo de [params]; un JSON vacío o inválido da el valor por defecto. */
-    fun targetFrom(params: String): Int {
-        val parsed = runCatching { json.decodeFromString<MotionParams>(params.ifBlank { "{}" }) }.getOrNull()
-        return clamp(parsed?.target ?: 0)
-    }
-
-    fun paramsFor(target: Int): String = json.encodeToString(MotionParams(clamp(target)))
-
-    private companion object {
-        val json = Json { ignoreUnknownKeys = true }
-    }
+/**
+ * Objetivo por nivel de dificultad (índice 0 = nivel 1) de cada reto de movimiento. Tabla única: ajustar
+ * aquí al calibrar. Sacudidas 10→60, pasos 15→120, segundos de marcha 5→40.
+ */
+object MotionTargets {
+    val BY_LEVEL: Map<MotionKind, List<Int>> = mapOf(
+        MotionKind.SHAKE to listOf(10, 20, 30, 45, 60),
+        MotionKind.STEPS to listOf(15, 30, 55, 85, 120),
+        MotionKind.STAND_UP to listOf(5, 10, 20, 30, 40),
+    )
 }

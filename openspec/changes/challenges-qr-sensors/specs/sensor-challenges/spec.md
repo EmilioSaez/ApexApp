@@ -62,13 +62,21 @@ El sistema SHALL rechazar la señal de los sensores cuando presente patrones sin
 - **WHEN** un sensor necesario no emite datos durante el reto
 - **THEN** el reto no avanza y se aplica el mecanismo de reserva del motor de retos tras el tiempo de espera
 
-### Requirement: Configuración de intensidad
-El sistema SHALL permitir configurar por alarma el objetivo del reto (número de sacudidas, de pasos o duración de la marcha) dentro de límites mínimos y máximos definidos.
+### Requirement: Intensidad según la dificultad
+El sistema SHALL derivar el objetivo del reto (número de sacudidas, de pasos o segundos de marcha) del nivel de dificultad (1..5) que decide el proveedor de dificultad, mediante una tabla única, y NO SHALL permitir al usuario elegirlo. Sacudidas 10→60 (10, 20, 30, 45, 60), pasos 15→120 (15, 30, 55, 85, 120) y segundos de marcha 5→40 (5, 10, 20, 30, 40). Los parámetros `target` de alarmas ya guardadas se ignoran.
 
-#### Scenario: Valor dentro de límites
-- **WHEN** el usuario fija un objetivo dentro del rango permitido
-- **THEN** el objetivo se guarda con la alarma
+#### Scenario: Objetivo según nivel
+- **WHEN** se genera un reto de agitar, pasos o levantarse con un nivel dado
+- **THEN** su objetivo es el valor de la tabla para ese nivel
 
-#### Scenario: Valor fuera de límites
-- **WHEN** el usuario fija un objetivo fuera del rango permitido
-- **THEN** la app lo ajusta al límite más cercano y se lo indica
+#### Scenario: Dificultad adaptativa
+- **WHEN** el proveedor de dificultad sube el nivel por encima del configurado
+- **THEN** el objetivo del reto de movimiento sube con él
+
+#### Scenario: Alarma guardada con objetivo propio
+- **WHEN** una alarma guardada trae `params` con `target`
+- **THEN** el valor se ignora y gana el nivel de dificultad
+
+#### Scenario: Valor informativo en el editor
+- **WHEN** el usuario edita la alarma con un reto de movimiento habilitado
+- **THEN** el editor muestra el objetivo resultante de la dificultad actual, sin control para cambiarlo

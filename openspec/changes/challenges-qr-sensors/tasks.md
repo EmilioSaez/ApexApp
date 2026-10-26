@@ -17,7 +17,7 @@
 
 - [x] 3.1 Crear adaptadores de `SensorManager` que emitan muestras con marca de tiempo y manejen sensor ausente; verificar con test instrumentado o fake en JVM
 - [x] 3.2 Implementar los retos agitar, pasos y levantarse contra la interfaz del motor, con progreso y reserva por sensor sin datos; verificar con tests de la lógica del reto
-- [x] 3.3 Implementar la UI de configuración (objetivo con límites) y de ejecución de cada reto, siguiendo `design-taste-compose`; verificar con tests Compose de rango y de ajuste a límites
+- [x] 3.3 Implementar la UI de configuración (objetivo informativo derivado de la dificultad; ya no se elige) y de ejecución de cada reto, siguiendo `design-taste-compose`; verificar con tests de la tabla de dificultad y de su aplicación a cada reto
 - [x] 3.4 Pedir `ACTIVITY_RECOGNITION` al configurar el reto de pasos y ocultar el reto si no hay sensor; verificar manualmente en emulador sin y con permiso
   - Verificado en emulador (sin contador de pasos): al elegir «Steps» aparece «This device has no step counter.» y Save queda deshabilitado. Verificado en móvil real (Pixel 7 Pro, confirmado por el usuario): con contador de pasos pide ACTIVITY_RECOGNITION, se concede y los pasos reales cuentan.
 
@@ -44,9 +44,10 @@
 
 Pruebas que exigen un móvil físico (el emulador no tiene contador de pasos ni permite escanear un QR real sin tocar recursos compartidos del SDK):
 
-- **Calibrar umbrales (5.3):** sacudidas (`ShakeDetector.DEFAULT_THRESHOLD` = 12 m/s², refractario 200 ms, inactividad 2 s), ventana de escaneo (`FrameLivenessChecker`: 1,5 s y 15 fotogramas) y límites de objetivo (`MotionKind`: sacudidas 10–100, pasos 10–200, segundos 5–60). Dejar los valores ajustados en esas constantes y comprobar que los tests siguen en verde.
+- **Calibrar umbrales (5.3):** sacudidas (`ShakeDetector.DEFAULT_THRESHOLD` = 12 m/s², refractario 200 ms, inactividad 2 s), ventana de escaneo (`FrameLivenessChecker`: 1,5 s y 15 fotogramas) y la tabla de objetivos por nivel (`MotionTargets.BY_LEVEL`, dentro de los límites de `MotionKind`: sacudidas 10–100, pasos 10–200, segundos 5–60). Dejar los valores ajustados en esas constantes y comprobar que los tests siguen en verde.
 - **Reto QR:** registrar un código real (QR y de barras), escanear el objeto real y comprobar que se acepta; apuntar a una foto impresa y a otra pantalla y comprobar que se rechaza («Parece una foto» / «Parece una pantalla»).
 - **Reto de pasos:** conceder «actividad física» al configurarlo y comprobar que solo cuentan pasos reales caminando, no sacudir el móvil.
 - **Reto de levantarse:** tumbado y quieto durante 2 s, incorporarse y caminar el tiempo configurado; comprobar que girar el móvil sin moverse no lo supera.
 - **Alarma real de extremo a extremo:** con cada reto, dejar sonar la alarma, superar el reto y comprobar que se apaga; con la cámara o el permiso revocados, comprobar que el motor aplica la reserva.
 - **Limitación conocida del detector de sensores falsos:** solo descarta señales con amplitud y periodo casi idénticos (variación < 2 %). Una señal inyectada con un poco de jitter (como un script de `adb emu sensor`) lo supera. Valorar endurecer `SensorPlausibility.MIN_VARIATION` al calibrar con sacudidas humanas reales.
+- **Revisión tras la prueba en móvil real (levantarse y pasos fallaban):** `StepVerifier` limitaba cada lectura del contador por el hueco con la anterior y descartaba pasos agrupados; `StandUpDetector` exigía marcha ininterrumpida y una parada de 1 s reiniciaba todo; `MotionChallengeContent` seguía recogiendo con la app en segundo plano y el vigilante de 10 s sustituía el reto por la reserva. Corregido y cubierto con tests; falta confirmar en el Pixel (caminar con el móvil en la mano y con la pantalla apagándose).
