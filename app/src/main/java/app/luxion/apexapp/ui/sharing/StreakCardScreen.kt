@@ -115,7 +115,7 @@ private fun CardPreview(streak: Streak, onShare: (Bitmap) -> Unit, modifier: Mod
         Image(
             bitmap = card.asImageBitmap(),
             contentDescription = stringResource(R.string.streak_card_description, streak.current, streak.best),
-            modifier = Modifier.widthIn(max = 360.dp).fillMaxWidth(),
+            modifier = Modifier.widthIn(max = ApexTheme.spacing.xxxl * 8).fillMaxWidth(),
         )
         PrimaryAction(
             text = stringResource(R.string.streak_share_action),
