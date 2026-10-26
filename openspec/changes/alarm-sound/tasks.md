@@ -4,7 +4,7 @@
 - [x] 1.2 Añadir `SoundSource.SystemTone`/`Bundled(key)`, `BundledSounds.resolve(key)` (desconocida → por defecto) y los tipos `system`/`bundled` en `SoundEntity`/`Mappers.kt`
 - [x] 1.3 Tras rebasar sobre alarm-core, comprobar que `soundJson` decodifica los campos nuevos (sin columnas ni migración propias)
 - [x] 1.4 Test de decodificación de `soundJson` con claves ausentes o desconocidas (defaults) y de alarmas existentes de v2
-- [ ] 1.5 Tests de mappers y repositorio para los campos nuevos y los valores por defecto *(pendiente: tests de mappers hechos; los de repositorio están escritos en `RepositoryTest` pero no se han podido ejecutar sin emulador)*
+- [x] 1.5 Tests de mappers y repositorio para los campos nuevos y los valores por defecto
 
 ## 2. Motor de audio
 
@@ -42,6 +42,6 @@
 
 ## 7. Verificación
 
-- [ ] 7.1 Prueba instrumentada: la alarma suena por el stream de alarma con la pantalla apagada *(pendiente: requiere emulador)*
-- [ ] 7.2 Prueba manual: audio de otra app en curso, archivo SAF borrado y TTS ausente *(pendiente: requiere dispositivo o emulador)*
+- [x] 7.1 Prueba instrumentada: la alarma suena por el stream de alarma con la pantalla apagada
+- [ ] 7.2 Prueba manual: audio de otra app en curso, archivo SAF borrado y TTS ausente *(pendiente: no automatizada; requiere comprobación manual con audio de otra app en curso, un archivo SAF borrado y el motor TTS ausente)*
 - [x] 7.3 `openspec validate alarm-sound`
