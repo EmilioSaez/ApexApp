@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.StringRes
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +19,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,9 +29,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
+import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
 import app.luxion.apexapp.scanner.BarcodeScanner
@@ -42,6 +46,7 @@ import app.luxion.apexapp.ui.components.PrimaryAction
 import app.luxion.apexapp.ui.components.SectionHeader
 import app.luxion.apexapp.ui.components.TimeDisplay
 import app.luxion.apexapp.ui.home.daysSummary
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 @Composable
@@ -96,6 +101,7 @@ fun ImportContent(
             TopAppBar(
                 title = { Text(stringResource(R.string.import_title), style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
         },
     ) { padding ->
@@ -261,3 +267,48 @@ private fun ImportError?.messageRes() = when (this) {
     ImportError.INVALID -> R.string.import_error_invalid
     null -> R.string.import_error_file
 }
+
+@Composable
+private fun ImportPreviewScreen(state: ImportUiState) = ImportContent(
+    state = state,
+    scanning = false,
+    onBack = {},
+    onScan = {},
+    onStopScan = {},
+    onScanned = {},
+    onPickFile = {},
+    onAccept = {},
+    onDiscard = {},
+)
+
+private val PreviewImport = ImportUiState.Preview(
+    ImportPreview(
+        alarm = Alarm(hour = 6, minute = 30, repeatDays = java.time.DayOfWeek.entries.take(5).toSet(), label = "Gimnasio"),
+        soundKey = null,
+        notes = setOf(ImportNote.QR_CHALLENGE_OMITTED),
+    ),
+)
+
+@Preview(name = "Claro", showBackground = true)
+@Composable
+private fun ImportEntryLight() = ApexAppTheme(darkTheme = false) { ImportPreviewScreen(ImportUiState.Entry) }
+
+@Preview(name = "Oscuro", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ImportEntryDark() = ApexAppTheme(darkTheme = true) { ImportPreviewScreen(ImportUiState.Entry) }
+
+@Preview(name = "Fuente 1.3", showBackground = true, fontScale = 1.3f)
+@Composable
+private fun ImportEntryLargeFont() = ApexAppTheme(darkTheme = false) { ImportPreviewScreen(ImportUiState.Entry) }
+
+@Preview(name = "Claro", showBackground = true, heightDp = 900)
+@Composable
+private fun ImportConfirmLight() = ApexAppTheme(darkTheme = false) { ImportPreviewScreen(PreviewImport) }
+
+@Preview(name = "Oscuro", showBackground = true, heightDp = 900, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ImportConfirmDark() = ApexAppTheme(darkTheme = true) { ImportPreviewScreen(PreviewImport) }
+
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 900, fontScale = 1.3f)
+@Composable
+private fun ImportConfirmLargeFont() = ApexAppTheme(darkTheme = false) { ImportPreviewScreen(PreviewImport) }

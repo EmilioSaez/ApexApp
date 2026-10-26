@@ -34,7 +34,7 @@ fun DifficultySelector(level: Int, onChange: (Int) -> Unit, inset: Dp = ApexThem
             SegmentedButton(
                 selected = value == level,
                 onClick = { onChange(value) },
-                shape = SegmentedButtonDefaults.itemShape(index, SessionConfig.MAX_DIFFICULTY),
+                shape = SegmentedButtonDefaults.itemShape(index, SessionConfig.MAX_DIFFICULTY, MaterialTheme.shapes.small),
             ) { Text(value.toString()) }
         }
     }
@@ -65,7 +65,7 @@ fun ModeSelector(mode: ChallengeMode, onChange: (ChallengeMode) -> Unit, inset: 
             SegmentedButton(
                 selected = value == mode,
                 onClick = { onChange(value) },
-                shape = SegmentedButtonDefaults.itemShape(index, 2),
+                shape = SegmentedButtonDefaults.itemShape(index, 2, MaterialTheme.shapes.small),
             ) { Text(label) }
         }
     }
@@ -86,7 +86,12 @@ fun TypeChips(
         horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
     ) {
         available.forEach { type ->
-            FilterChip(selected = type in selected, onClick = { onToggle(type) }, label = { Text(label(type)) })
+            FilterChip(
+                selected = type in selected,
+                onClick = { onToggle(type) },
+                shape = MaterialTheme.shapes.small,
+                label = { Text(label(type)) },
+            )
         }
     }
 }

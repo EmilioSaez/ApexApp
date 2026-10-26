@@ -1,5 +1,6 @@
 package app.luxion.apexapp.ui.sharing
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,16 +26,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
+import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.sharing.ShareIntents
 import app.luxion.apexapp.sharing.SharedAlarmCodec
 import app.luxion.apexapp.ui.components.EmptyState
 import app.luxion.apexapp.ui.components.PrimaryAction
 import app.luxion.apexapp.ui.components.TimeDisplay
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.qrcode.QRCodeWriter
+import java.time.DayOfWeek
 import kotlinx.coroutines.launch
 
 @Composable
@@ -73,6 +80,7 @@ fun ShareAlarmContent(
             TopAppBar(
                 title = { Text(stringResource(R.string.share_title), style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
         },
     ) { padding ->
@@ -104,7 +112,7 @@ fun ShareAlarmContent(
                 val qr = state.qr
                 if (qr != null) {
                     Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-                        QrCode(qr, Modifier.widthIn(max = 280.dp).fillMaxWidth())
+                        QrCode(qr, Modifier.widthIn(max = ApexTheme.spacing.xxxl * 6).fillMaxWidth())
                         Text(
                             stringResource(R.string.share_qr_caption),
                             style = MaterialTheme.typography.bodyMedium,
@@ -128,9 +136,36 @@ fun ShareAlarmContent(
                         onClick = onShareFile,
                         modifier = Modifier.fillMaxWidth(),
                         shape = MaterialTheme.shapes.small,
-                    ) { Text(stringResource(R.string.share_file_action)) }
+                    ) { Text(stringResource(R.string.share_file_action), style = MaterialTheme.typography.labelLarge) }
                 }
             }
         }
     }
 }
+
+private val PreviewLink = "https://apexapp.example/a/preview"
+
+@Composable
+private fun SharePreview() = ShareAlarmContent(
+    state = ShareUiState(
+        isLoading = false,
+        alarm = Alarm(id = 1, hour = 6, minute = 30, repeatDays = DayOfWeek.entries.take(5).toSet(), label = "Gimnasio"),
+        link = PreviewLink,
+        qr = QRCodeWriter().encode(PreviewLink, BarcodeFormat.QR_CODE, 0, 0),
+    ),
+    onBack = {},
+    onShareLink = {},
+    onShareFile = {},
+)
+
+@Preview(name = "Claro", showBackground = true, heightDp = 900)
+@Composable
+private fun ShareLight() = ApexAppTheme(darkTheme = false) { SharePreview() }
+
+@Preview(name = "Oscuro", showBackground = true, heightDp = 900, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ShareDark() = ApexAppTheme(darkTheme = true) { SharePreview() }
+
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 900, fontScale = 1.3f)
+@Composable
+private fun ShareLargeFont() = ApexAppTheme(darkTheme = false) { SharePreview() }

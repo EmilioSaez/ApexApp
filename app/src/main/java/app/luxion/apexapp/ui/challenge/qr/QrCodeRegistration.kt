@@ -51,13 +51,13 @@ fun QrCodeRegistration(
             },
         )
         if (scanning) {
-            CameraPermissionGate(modifier = Modifier.fillMaxWidth().height(280.dp)) {
+            CameraPermissionGate(modifier = Modifier.fillMaxWidth().height(ApexTheme.spacing.xxxl * 6)) {
                 BarcodeScanner(
                     onScanned = { result ->
                         onParamsChange(QrParams.paramsFor(result.value, result.format))
                         scanning = false
                     },
-                    modifier = Modifier.fillMaxWidth().height(280.dp),
+                    modifier = Modifier.fillMaxWidth().height(ApexTheme.spacing.xxxl * 6),
                     onError = { scanning = false },
                 )
             }
