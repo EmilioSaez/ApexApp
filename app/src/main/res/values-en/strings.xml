@@ -106,7 +106,9 @@
     <string name="challenge_passed">Challenges passed!</string>
     <string name="challenge_done">Done</string>
     <string name="challenge_editor_section">Challenges</string>
-    <string name="challenge_editor_none">No challenges: the alarm can be dismissed right away.</string>
+    <string name="challenge_editor_none">Dismissed with one tap.</string>
+    <string name="challenge_editor_mode_normal">Normal</string>
+    <string name="challenge_editor_mode_challenges">With challenges</string>
     <plurals name="challenge_shake_prompt">
         <item quantity="one">Shake your phone %d time</item>
         <item quantity="other">Shake your phone %d times</item>

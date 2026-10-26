@@ -76,6 +76,23 @@ fun ModeSelector(mode: ChallengeMode, onChange: (ChallengeMode) -> Unit, inset: 
     }
 }
 
+/** «Normal» (sin retos) / «Con retos». Es la primera decisión de la sección: de ella depende el resto de controles. */
+@Composable
+fun ChallengeKindSelector(withChallenges: Boolean, onChange: (Boolean) -> Unit) {
+    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+        listOf(
+            false to stringResource(R.string.challenge_editor_mode_normal),
+            true to stringResource(R.string.challenge_editor_mode_challenges),
+        ).forEachIndexed { index, (value, label) ->
+            SegmentedButton(
+                selected = value == withChallenges,
+                onClick = { onChange(value) },
+                shape = SegmentedButtonDefaults.itemShape(index, 2, MaterialTheme.shapes.small),
+            ) { Text(label) }
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TypeChips(

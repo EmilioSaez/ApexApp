@@ -119,3 +119,7 @@ Añade tu sección dentro de la columna de `SettingsContent` con `SectionHeader`
 - Prefijo de clave por área: `alarm_`, `challenge_`, `stats_`, `share_`, `settings_`…
 - Lint `MissingTranslation` y `HardcodedText` son error.
 - Los tests de UI obtienen los textos de recursos (`targetContext.getString`), no literales.
+
+## Alarma normal / con retos
+
+La sección «Retos» del editor abre con un selector «Normal» / «Con retos» (`SegmentedButton`). Normal = sin tipos de reto: se ocultan el resto de controles y se muestra «Se apaga con un toque.». El modo se deduce de los datos (sin tipos = Normal); al pasar a «Con retos» se preselecciona el reto matemático, y si se quita el último tipo se vuelve a Normal, así que no existe «Con retos» vacío y no hace falta validación extra. Capturas: `screens/app/editor-normal-claro.png`, `editor-normal-oscuro.png`, `editor-con-retos-claro.png` y `editor-con-retos-oscuro.png`.

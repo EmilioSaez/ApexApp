@@ -4,6 +4,8 @@ import app.luxion.apexapp.domain.ChallengeConfig
 import app.luxion.apexapp.domain.ChallengeSpec
 import app.luxion.apexapp.domain.challenge.ChallengeType
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ChallengeConfigEditsTest {
@@ -36,5 +38,29 @@ class ChallengeConfigEditsTest {
     fun `saved count lower than types displays the minimum`() {
         val saved = base.copy(count = 1, challenges = listOf("math", "shake", "steps").map { ChallengeSpec(it) })
         assertEquals(3, saved.displayCount)
+    }
+
+    @Test
+    fun `a config without types is normal, with types it is not`() {
+        assertTrue(ChallengeConfig().isNormal)
+        assertFalse(base.isNormal)
+        assertTrue(base.toggled(ChallengeType.MATH).isNormal)
+    }
+
+    @Test
+    fun `switching to normal clears every type`() {
+        val many = base.toggled(ChallengeType("qr"))
+        assertTrue(many.asNormal().isNormal)
+    }
+
+    @Test
+    fun `switching from normal to challenges preselects math, and keeps existing types`() {
+        assertEquals(listOf("math"), ChallengeConfig().withChallenges().challenges.map { it.type })
+        assertEquals(base, base.withChallenges())
+    }
+
+    @Test
+    fun `preselecting math keeps the count at its minimum`() {
+        assertEquals(1, ChallengeConfig(count = 1).withChallenges().count)
     }
 }
