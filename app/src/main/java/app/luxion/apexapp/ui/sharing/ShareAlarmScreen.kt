@@ -1,6 +1,15 @@
 package app.luxion.apexapp.ui.sharing
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.ui.unit.dp
+import app.luxion.apexapp.ui.components.ScreenTopBar
+import java.time.format.TextStyle
+import java.util.Locale
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,14 +20,9 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
@@ -35,7 +39,6 @@ import app.luxion.apexapp.sharing.ShareIntents
 import app.luxion.apexapp.sharing.SharedAlarmCodec
 import app.luxion.apexapp.ui.components.EmptyState
 import app.luxion.apexapp.ui.components.PrimaryAction
-import app.luxion.apexapp.ui.components.TimeDisplay
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 import com.google.zxing.BarcodeFormat
@@ -66,7 +69,6 @@ fun ShareAlarmScreen(onBack: () -> Unit, viewModel: ShareAlarmViewModel = hiltVi
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShareAlarmContent(
     state: ShareUiState,
@@ -77,11 +79,7 @@ fun ShareAlarmContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.share_title), style = MaterialTheme.typography.titleLarge) },
-                navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            )
+            ScreenTopBar(stringResource(R.string.share_title), onBack)
         },
     ) { padding ->
         val alarm = state.alarm
@@ -99,32 +97,47 @@ fun ShareAlarmContent(
                     .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.lg),
                 verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl),
             ) {
-                Column {
-                    TimeDisplay(alarm.hour, alarm.minute)
-                    alarm.label?.let {
-                        Text(
-                            it,
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                // Un unico momento centrado: la hora, con sus dias y etiqueta debajo.
+                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        "%02d:%02d".format(alarm.hour, alarm.minute),
+                        style = MaterialTheme.typography.displayLarge,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    val details = listOfNotNull(
+                        alarm.repeatDays.takeIf { it.isNotEmpty() }?.let { days ->
+                            DayOfWeek.entries.filter { it in days }
+                                .joinToString(" ") { it.getDisplayName(TextStyle.NARROW, Locale.getDefault()) }
+                        },
+                        alarm.label?.takeIf { it.isNotBlank() },
+                    ).joinToString(" · ")
+                    if (details.isNotEmpty()) {
+                        Text(details, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
                     }
                 }
                 val qr = state.qr
-                if (qr != null) {
-                    Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-                        QrCode(qr, Modifier.widthIn(max = ApexTheme.spacing.xxxl * 6).fillMaxWidth())
-                        Text(
-                            stringResource(R.string.share_qr_caption),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                Surface(
+                    Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.small,
+                    color = MaterialTheme.colorScheme.surfaceContainerLow,
+                    border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+                ) {
+                    Column(Modifier.padding(ApexTheme.spacing.xl), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
+                        if (qr != null) {
+                            QrCode(qr, Modifier.widthIn(max = ApexTheme.spacing.xxxl * 6).fillMaxWidth().align(Alignment.CenterHorizontally))
+                            Text(
+                                stringResource(R.string.share_qr_caption),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        } else {
+                            Text(
+                                stringResource(R.string.share_qr_too_large),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                        }
                     }
-                } else {
-                    Text(
-                        stringResource(R.string.share_qr_too_large),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
                 }
                 Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
                     PrimaryAction(
@@ -132,10 +145,15 @@ fun ShareAlarmContent(
                         onClick = onShareLink,
                         modifier = Modifier.fillMaxWidth(),
                     )
-                    OutlinedButton(
+                    // Accion secundaria: caja de nivel superior, sin borde ni relleno de acento.
+                    Button(
                         onClick = onShareFile,
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().defaultMinSize(minHeight = 56.dp),
                         shape = MaterialTheme.shapes.small,
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                            contentColor = MaterialTheme.colorScheme.onSurface,
+                        ),
                     ) { Text(stringResource(R.string.share_file_action), style = MaterialTheme.typography.labelLarge) }
                 }
             }
