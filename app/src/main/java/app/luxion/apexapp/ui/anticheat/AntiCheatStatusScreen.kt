@@ -2,6 +2,7 @@ package app.luxion.apexapp.ui.anticheat
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,11 +18,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
@@ -31,6 +34,7 @@ import app.luxion.apexapp.R
 import app.luxion.apexapp.anticheat.AndroidCapabilityChecker
 import app.luxion.apexapp.anticheat.Capabilities
 import app.luxion.apexapp.ui.components.SectionHeader
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -89,8 +93,9 @@ fun AntiCheatStatusContent(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.anticheat_status_title)) },
+                title = { Text(stringResource(R.string.anticheat_status_title), style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
         },
     ) { padding ->
@@ -143,7 +148,7 @@ private fun CapabilityRow(
             Text(
                 stringResource(if (granted) R.string.anticheat_granted else R.string.anticheat_not_granted),
                 style = MaterialTheme.typography.labelLarge,
-                color = if (granted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
+                color = if (granted) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.error,
             )
         }
         Text(
@@ -152,10 +157,22 @@ private fun CapabilityRow(
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         if (!granted && onGrant != null) {
-            OutlinedButton(onClick = onGrant) { Text(stringResource(R.string.anticheat_grant)) }
+            OutlinedButton(onClick = onGrant, shape = MaterialTheme.shapes.small) { Text(stringResource(R.string.anticheat_grant), style = MaterialTheme.typography.labelLarge) }
         }
         if (granted && onRelease != null) {
-            OutlinedButton(onClick = onRelease) { Text(stringResource(R.string.anticheat_release)) }
+            OutlinedButton(onClick = onRelease, shape = MaterialTheme.shapes.small) { Text(stringResource(R.string.anticheat_release), style = MaterialTheme.typography.labelLarge) }
         }
     }
 }
+
+@Preview(name = "Claro", showBackground = true, heightDp = 800)
+@Composable
+private fun AntiCheatStatusLight() = ApexAppTheme(darkTheme = false) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false, deviceOwner = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }
+
+@Preview(name = "Oscuro", showBackground = true, heightDp = 800, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun AntiCheatStatusDark() = ApexAppTheme(darkTheme = true) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false, deviceOwner = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }
+
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 800, fontScale = 1.3f)
+@Composable
+private fun AntiCheatStatusLargeFont() = ApexAppTheme(darkTheme = false) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false, deviceOwner = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }
