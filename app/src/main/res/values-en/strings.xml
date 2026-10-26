@@ -20,6 +20,8 @@
     <string name="editor_title_edit">Edit alarm</string>
     <string name="editor_label">Label</string>
     <string name="editor_repeat">Repeat</string>
+    <string name="editor_params">Settings</string>
+    <string name="editor_time_done">Done</string>
     <string name="editor_save">Save</string>
     <string name="editor_saved_in">Rings in %1$s</string>
     <string name="editor_remaining_dhm">%1$d d %2$d h %3$d min</string>

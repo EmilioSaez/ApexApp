@@ -34,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.SoundConfig
@@ -112,7 +113,7 @@ private fun SoundSettingsContent(
     }
 
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(spacing.md)) {
-        SectionHeader(stringResource(R.string.sound_section))
+        SectionHeader(stringResource(R.string.sound_section), horizontalPadding = 0.dp)
 
         Text(
             soundName ?: stringResource(R.string.sound_default),

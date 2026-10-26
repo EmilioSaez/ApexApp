@@ -21,6 +21,8 @@
     <string name="editor_title_edit">Editar alarma</string>
     <string name="editor_label">Etiqueta</string>
     <string name="editor_repeat">Repetir</string>
+    <string name="editor_params">Parámetros</string>
+    <string name="editor_time_done">Listo</string>
     <string name="editor_save">Guardar</string>
     <string name="editor_saved_in">Sonará en %1$s</string>
     <string name="editor_remaining_dhm">%1$d d %2$d h %3$d min</string>

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.ui.theme.ApexTheme
 
@@ -56,16 +57,16 @@ fun TimeDisplay(
     )
 }
 
-/** Cabecera de sección: etiqueta sencilla, anclada a la izquierda. */
+/** Cabecera de sección: rótulo en mayúsculas con tracking, anclado a la izquierda y subordinado al contenido. */
 @Composable
-fun SectionHeader(text: String, modifier: Modifier = Modifier) {
+fun SectionHeader(text: String, modifier: Modifier = Modifier, horizontalPadding: Dp = ApexTheme.spacing.screen) {
     Text(
-        text = text,
+        text = text.uppercase(),
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.md),
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary,
+            .padding(horizontal = horizontalPadding, vertical = ApexTheme.spacing.md),
+        style = MaterialTheme.typography.labelMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
     )
 }
 
