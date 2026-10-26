@@ -1,6 +1,24 @@
 package app.luxion.apexapp.ui.stats
 
 import android.content.res.Configuration
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.unit.dp
+import java.time.format.TextStyle
+import java.util.Locale
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,15 +31,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -80,11 +95,15 @@ fun StatsContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.stats_title), style = MaterialTheme.typography.titleLarge) },
-                navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
-            )
+            Row(
+                Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = ApexTheme.spacing.sm),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                IconButton(onClick = onBack, modifier = Modifier.size(56.dp)) {
+                    Icon(painterResource(R.drawable.ic_arrow_back), contentDescription = stringResource(R.string.back))
+                }
+                Text(stringResource(R.string.stats_title), style = MaterialTheme.typography.titleLarge)
+            }
         },
     ) { padding ->
         Column(
@@ -95,14 +114,7 @@ fun StatsContent(
             verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl),
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-                StatsRange.entries.forEach { r ->
-                    FilterChip(
-                        selected = r == state.range,
-                        onClick = { onSelectRange(r) },
-                        shape = MaterialTheme.shapes.small,
-                        label = { Text(stringResource(R.string.stats_range_days, r.days)) },
-                    )
-                }
+                StatsRange.entries.forEach { r -> RangeTab(r.days, r == state.range) { onSelectRange(r) } }
             }
             when {
                 state.isLoading -> Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
@@ -118,7 +130,13 @@ fun StatsContent(
 
                 else -> StatsCharts(state, onShareStreak)
             }
-            Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+            Surface(
+                Modifier.fillMaxWidth(),
+                shape = MaterialTheme.shapes.small,
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+            ) {
+            Column(Modifier.padding(ApexTheme.spacing.lg), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
                 Text(stringResource(R.string.stats_sleep_title), style = MaterialTheme.typography.titleMedium)
                 OutlinedButton(
                     onClick = { dialog = BedtimeDialog.LAST_NIGHT },
@@ -137,6 +155,7 @@ fun StatsContent(
                             ?: stringResource(R.string.stats_set_usual_bedtime),
                     )
                 }
+            }
             }
         }
     }
@@ -157,29 +176,41 @@ fun StatsContent(
 private fun StatsCharts(state: StatsUiState, onShareStreak: () -> Unit) {
     val stats = state.stats
     Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl)) {
-        // Dato clave primero: la racha como cifra grande, no como frase.
+        // Dato clave primero: tres cifras (racha, puntualidad, tiempo medio) como tipografia en cajas planas.
         val streakDescription = stringResource(R.string.stats_streak, state.streak.current, state.streak.best)
+        val punctualKpi = stats.punctualRate?.let { "${(it * 100).toInt()}%" }
+        val wakeKpi = stats.averageTimeToWakeMs?.let { ms ->
+            if (ms < 60_000L) stringResource(R.string.stats_kpi_seconds, ms / 1000) else formatDuration(ms)
+        }
         Row(
-            Modifier.fillMaxWidth().semantics(mergeDescendants = true) { contentDescription = streakDescription },
-            horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xxl),
+            Modifier.fillMaxWidth().height(IntrinsicSize.Max).semantics(mergeDescendants = true) { contentDescription = streakDescription },
+            horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
         ) {
-            StreakFigure(state.streak.current, stringResource(R.string.streak_card_current), MaterialTheme.colorScheme.primary)
-            StreakFigure(state.streak.best, stringResource(R.string.streak_card_best), MaterialTheme.colorScheme.onSurface)
+            Kpi(
+                stringResource(R.string.streak_card_current), state.streak.current.toString(), MaterialTheme.colorScheme.primary,
+                Modifier.weight(1f).fillMaxHeight(), unit = stringResource(R.string.stats_kpi_days),
+            )
+            Kpi(stringResource(R.string.stats_punctuality), punctualKpi, MaterialTheme.colorScheme.tertiary, Modifier.weight(1f).fillMaxHeight())
+            Kpi(stringResource(R.string.stats_kpi_wake), wakeKpi, MaterialTheme.colorScheme.onSurface, Modifier.weight(1f).fillMaxHeight())
         }
         TextButton(onClick = onShareStreak) { Text(stringResource(R.string.streak_share_open)) }
         val wake = stats.averageTimeToWakeMs?.let { formatDuration(it) } ?: stringResource(R.string.stats_no_data)
+        val dayLabels = state.days.map { it.date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
         BarChart(
             title = stringResource(R.string.stats_wake_time),
+            labels = dayLabels,
             bars = state.days.map { Bar(it.timeToWakeMs?.toFloat()) },
             description = stringResource(R.string.stats_wake_time_avg, wake),
         )
         BarChart(
             title = stringResource(R.string.stats_snoozes),
+            labels = dayLabels,
             bars = state.days.map { Bar(it.snoozes.toFloat()) },
             description = pluralStringResource(R.plurals.stats_total, stats.totalSnoozes, stats.totalSnoozes),
         )
         BarChart(
             title = stringResource(R.string.stats_fails),
+            labels = dayLabels,
             bars = state.days.map { Bar(it.fails.toFloat()) },
             description = pluralStringResource(R.plurals.stats_total, stats.totalFails, stats.totalFails),
             barColor = MaterialTheme.colorScheme.error,
@@ -187,6 +218,7 @@ private fun StatsCharts(state: StatsUiState, onShareStreak: () -> Unit) {
         val punctual = stats.punctualRate?.let { "${(it * 100).toInt()} %" } ?: stringResource(R.string.stats_no_data)
         BarChart(
             title = stringResource(R.string.stats_punctuality),
+            labels = dayLabels,
             bars = state.days.map { Bar(it.punctualRate?.toFloat()) },
             description = stringResource(R.string.stats_punctuality_value, punctual),
             barColor = MaterialTheme.colorScheme.tertiary,
@@ -196,6 +228,7 @@ private fun StatsCharts(state: StatsUiState, onShareStreak: () -> Unit) {
         val avgSleep = state.averageSleepMs?.let { formatDuration(it, hours = true) } ?: stringResource(R.string.stats_no_data)
         BarChart(
             title = stringResource(R.string.stats_sleep),
+            labels = dayLabels,
             bars = state.days.map { day ->
                 sleepByDate[day.date]?.let { Bar(it.sleepMs.toFloat(), if (it.source == BedtimeSource.ESTIMATED) estimated else null) }
                     ?: Bar(null)
@@ -211,11 +244,46 @@ private fun StatsCharts(state: StatsUiState, onShareStreak: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun StreakFigure(value: Int, label: String, color: Color) {
-    Column {
-        Text(value.toString(), style = MaterialTheme.typography.displayMedium, color = color)
-        Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+private fun Kpi(label: String, value: String?, color: Color, modifier: Modifier = Modifier, unit: String? = null) {
+    Surface(
+        modifier,
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+    ) {
+        Column(Modifier.padding(ApexTheme.spacing.sm), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
+            Text(label.uppercase(), style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            FlowRow(verticalArrangement = Arrangement.Bottom, horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
+                Text(
+                    value ?: stringResource(R.string.stats_no_data),
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = if (value == null) MaterialTheme.colorScheme.onSurfaceVariant else color,
+                )
+                if (unit != null) {
+                    Text(unit, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            }
+        }
+    }
+}
+
+/** Pestana de rango: la elegida lleva caja de nivel superior y texto en acento. */
+@Composable
+private fun RangeTab(days: Int, selected: Boolean, onClick: () -> Unit) {
+    Surface(
+        modifier = Modifier.defaultMinSize(minHeight = 48.dp).selectable(selected = selected, role = Role.Tab, onClick = onClick),
+        shape = MaterialTheme.shapes.small,
+        color = if (selected) MaterialTheme.colorScheme.surfaceContainerHigh else Color.Transparent,
+    ) {
+        Box(Modifier.padding(horizontal = ApexTheme.spacing.lg), contentAlignment = Alignment.Center) {
+            Text(
+                stringResource(R.string.stats_range_days, days),
+                style = MaterialTheme.typography.labelLarge,
+                color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 

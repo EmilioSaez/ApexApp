@@ -200,6 +200,9 @@
     <string name="anticheat_release">Renunciar a propietario del dispositivo</string>
     <string name="stats_title">Estadísticas</string>
     <string name="stats_open">Estadísticas</string>
+    <string name="stats_kpi_days">días</string>
+    <string name="stats_kpi_wake">Tiempo medio</string>
+    <string name="stats_kpi_seconds">%1$d s</string>
     <string name="stats_empty">Aún no hay estadísticas</string>
     <string name="stats_empty_hint">Aparecerán tras tu primera alarma.</string>
     <string name="stats_range_days">%1$d días</string>

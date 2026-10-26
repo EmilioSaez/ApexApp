@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -120,7 +121,7 @@ class StatsFlowTest {
         compose.onNodeWithText(str(R.string.stats_open)).performClick()
         compose.onNodeWithText(str(R.string.stats_empty)).assertExists()
 
-        compose.onNodeWithText(str(R.string.back)).performClick()
+        compose.onNodeWithContentDescription(str(R.string.back)).performClick()
         compose.onNodeWithText(str(R.string.stats_empty)).assertDoesNotExist()
         compose.onNodeWithText(str(R.string.stats_open)).assertExists()
     }

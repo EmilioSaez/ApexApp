@@ -199,6 +199,9 @@
     <string name="anticheat_release">Give up device owner</string>
     <string name="stats_title">Statistics</string>
     <string name="stats_open">Statistics</string>
+    <string name="stats_kpi_days">days</string>
+    <string name="stats_kpi_wake">Avg. time</string>
+    <string name="stats_kpi_seconds">%1$d s</string>
     <string name="stats_empty">No statistics yet</string>
     <string name="stats_empty_hint">They will appear after your first alarm.</string>
     <string name="stats_range_days">%1$d days</string>
