@@ -10,7 +10,7 @@ import app.luxion.apexapp.alarm.AndroidAlarmClockGateway
 import app.luxion.apexapp.alarm.AndroidAlarmNotifier
 import app.luxion.apexapp.alarm.SessionIdGenerator
 import app.luxion.apexapp.alarm.UuidSessionIdGenerator
-import app.luxion.apexapp.ui.ring.DefaultDismissGate
+import app.luxion.apexapp.ui.challenge.ChallengeDismissGate
 import app.luxion.apexapp.ui.ring.DismissGate
 import app.luxion.apexapp.alarm.AndroidAlarmPermissions
 import app.luxion.apexapp.alarm.AndroidDeviceProbe
@@ -47,7 +47,7 @@ interface AlarmModule {
     fun sessionIds(impl: UuidSessionIdGenerator): SessionIdGenerator
 
     @Binds
-    fun dismissGate(impl: DefaultDismissGate): DismissGate
+    fun dismissGate(impl: ChallengeDismissGate): DismissGate
 
     @Binds
     fun notifier(impl: AndroidAlarmNotifier): AlarmNotifier

@@ -9,6 +9,7 @@ import app.luxion.apexapp.alarm.RingingSession
 import app.luxion.apexapp.anticheat.SnoozeController
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AlarmRepository
+import app.luxion.apexapp.domain.challenge.SessionConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,8 @@ data class RingUiState(
     val sessionId: String? = null,
     val canDismiss: Boolean = false,
     val canSnooze: Boolean = false,
+    /** Sesión de retos que hay que superar antes de poder apagar; `null` si se puede apagar ya. */
+    val challenges: SessionConfig? = null,
     val finished: Boolean = false,
 )
 
@@ -47,7 +50,13 @@ class RingViewModel @Inject constructor(
                 if (alarm == null) {
                     it.copy(finished = true)
                 } else {
-                    it.copy(alarm = alarm, canDismiss = gate.canDismiss(alarm), canSnooze = canSnooze(alarm))
+                    val canDismiss = gate.canDismiss(alarm)
+                    it.copy(
+                        alarm = alarm,
+                        canDismiss = canDismiss,
+                        canSnooze = canSnooze(alarm),
+                        challenges = if (canDismiss) null else challengesOf(alarm),
+                    )
                 }
             }
         }
@@ -61,6 +70,9 @@ class RingViewModel @Inject constructor(
         sessionId?.let(resolver::resolve)
         _uiState.update { it.copy(finished = true) }
     }
+
+    private fun challengesOf(alarm: Alarm): SessionConfig? =
+        alarm.challenges.takeIf { it.challenges.isNotEmpty() }?.let(SessionConfig::from)
 
     private fun canSnooze(alarm: Alarm): Boolean =
         sessionId != null && snoozeController.canSnooze(RingingSession(sessionId, alarm))

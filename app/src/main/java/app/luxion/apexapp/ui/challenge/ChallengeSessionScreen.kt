@@ -35,7 +35,7 @@ import app.luxion.apexapp.ui.theme.ApexTheme
 
 /**
  * Ejecuta una sesión de retos. Es reutilizable: la pantalla de prueba la usa ahora y el flujo real de
- * alarma la alojará después, pasando el [sessionId] que crea AlarmFiringHandler. [onFinished] se
+ * alarma la aloja RingScreen, pasando el [sessionId] que crea AlarmFiringHandler. [onFinished] se
  * llama al pulsar el botón de la pantalla de sesión superada.
  */
 @Composable

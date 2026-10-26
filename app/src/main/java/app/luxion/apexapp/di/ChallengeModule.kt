@@ -31,6 +31,7 @@ import app.luxion.apexapp.domain.challenge.sensor.StandUpChallenge
 import app.luxion.apexapp.domain.challenge.sensor.StepsChallenge
 import app.luxion.apexapp.platform.AndroidDeviceCapabilities
 import app.luxion.apexapp.platform.AndroidMotionSensors
+import app.luxion.apexapp.domain.challenge.PassedAlarmsReset
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -67,6 +68,11 @@ interface ChallengeModule {
     /** Oyentes del fin de sesión: `@Binds @IntoSet SessionFinishedListener`. */
     @Multibinds
     fun sessionFinishedListeners(): Set<SessionFinishedListener>
+
+    /** Cada sonado empieza y termina sin la alarma marcada como superada. */
+    @Binds
+    @IntoSet
+    fun passedAlarmsReset(impl: PassedAlarmsReset): RingingLifecycleListener
 
     @Binds
     @IntoSet
