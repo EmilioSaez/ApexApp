@@ -32,15 +32,17 @@ outline `#6f7682`, outline_variant `#424854`, primary `#ffb693`, primary_contain
 
 ## Pantallas de referencia
 
-Capturas en `design/screens/*.png` y HTML en `design/screens/html/*.html` (solo tema oscuro).
+Capturas en `design/screens/*.png` y HTML en `design/screens/html/*.html`. Las versiones en claro llevan el sufijo `-claro`.
 
-| Pantalla | Archivo | Id Stitch |
-|---|---|---|
-| Lista de alarmas | lista-alarmas | c1d90860c8b54da78178d6629f136955 |
-| Editar alarma | editor | 9175576ae0454293a65d74ed78caa505 |
-| Alarma sonando | alarma-sonando | 959a782682d04f118a55b5859ccade8a |
-| Estadísticas | estadisticas | f0cb0f8a71994c3989349a213375bce2 |
-| Ajustes | ajustes | 01110cd4dab4462a8f4076cf83340d1a |
+| Pantalla | Archivo | Id Stitch (oscuro) | Id Stitch (claro) |
+|---|---|---|---|
+| Lista de alarmas | lista-alarmas | c1d90860c8b54da78178d6629f136955 | 1c03c20eb27344b68e9543629bc4b06b |
+| Editar alarma | editor | 9175576ae0454293a65d74ed78caa505 | 905bb3c6c1f34dda9afa6fc941f3d356 |
+| Alarma sonando | alarma-sonando | 959a782682d04f118a55b5859ccade8a | e39744b40d234b7da4d1559d1a968b6a |
+| Reto matemático | reto-matematico | 57bbfaebd2c846e1b168c8b9c3b99c79 | cc8fad1cf5f34a6886b434496f30a577 |
+| Estadísticas | estadisticas | f0cb0f8a71994c3989349a213375bce2 | 75906a895be244368ee2fcb760ef332b |
+| Ajustes | ajustes | 01110cd4dab4462a8f4076cf83340d1a | 127c7fd7fcf44bb3abad46dc36ec48ae |
+| Compartir | compartir | 25f10474d34e401a81bf8da098f02bd3 | cb6be50ef9b1419f96d1ec9d10a7f2cc |
 
 Son guía de composición, no especificación pixel a pixel: p. ej. la barra inferior (Alarmas / Retos / Historial)
 que propone Stitch en la lista no forma parte de ningún change.

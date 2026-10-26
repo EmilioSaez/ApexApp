@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Apex - Alarmas</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#F8F9FA",
+            "background": "#F8F9FA",
+            "on-surface": "#111827",
+            "on-surface-variant": "#4B5563",
+            "surface-container": "#FFFFFF",
+            "surface-container-high": "#F3F4F6",
+            "surface-container-highest": "#E5E7EB",
+            "primary": "#B93E00",
+            "on-primary": "#FFFFFF",
+            "primary-container": "#FFEDE5",
+            "on-primary-container": "#8A2E00",
+            "outline": "#D1D5DB",
+            "outline-variant": "#E5E7EB"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.25rem",
+            xl: "0.25rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Sora", "sans-serif"],
+            display: ["Sora", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body antialiased min-h-screen flex flex-col justify-between selection:bg-primary selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-14 bg-surface border-b border-outline-variant/20">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">alarm</span>
+<h1 class="font-headline text-xl font-black uppercase tracking-wider text-primary">APEX</h1>
+</div>
+<button aria-label="Ajustes" class="w-10 h-10 flex items-center justify-center text-on-surface hover:bg-surface-container-high rounded transition-colors">
+<span class="material-symbols-outlined text-xl">settings</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-md mx-auto pt-20 pb-28 px-4 flex flex-col gap-6">
+<!-- Next Alarm Card -->
+<section class="bg-surface-container border border-outline-variant/40 rounded p-5 flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<span class="font-body text-xs font-semibold tracking-wider uppercase text-on-surface-variant">Próxima alarma</span>
+<span class="font-body text-xs font-medium text-primary bg-primary-container px-2 py-0.5 rounded">Activa</span>
+</div>
+<div class="flex flex-col">
+<span class="font-headline text-5xl font-bold tracking-tight text-on-surface leading-none">07:30</span>
+<span class="font-body text-sm text-on-surface-variant mt-2">Suena en 8 h 12 min</span>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-outline-variant/20">
+<span class="font-body text-xs text-on-surface-variant">Reto matemático requerido</span>
+<span class="material-symbols-outlined text-sm text-on-surface-variant">psychology</span>
+</div>
+</section>
+<!-- Alarms List Section -->
+<section class="flex flex-col gap-3">
+<h2 class="font-headline text-sm font-bold uppercase tracking-wider text-on-surface-variant px-1">Alarmas programadas</h2>
+<div class="flex flex-col gap-2">
+<!-- Alarm Row 1 -->
+<div class="bg-surface-container border border-outline-variant/40 rounded p-4 flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-baseline gap-3">
+<span class="font-headline text-2xl font-bold tracking-tight text-on-surface">06:45</span>
+<span class="font-body text-sm font-medium text-on-surface">Trabajo</span>
+</div>
+<span class="font-body text-xs text-on-surface-variant tracking-wide">L M X J V</span>
+</div>
+<!-- Active Toggle -->
+<button aria-label="Desactivar alarma 06:45" class="w-12 h-6 bg-primary rounded-full relative flex items-center px-0.5 transition-colors">
+<div class="w-5 h-5 bg-white rounded-full ml-auto"></div>
+</button>
+</div>
+<!-- Alarm Row 2 -->
+<div class="bg-surface-container border border-outline-variant/40 rounded p-4 flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-baseline gap-3">
+<span class="font-headline text-2xl font-bold tracking-tight text-on-surface">07:30</span>
+<span class="font-body text-sm font-medium text-on-surface">Entrenamiento</span>
+</div>
+<span class="font-body text-xs text-on-surface-variant tracking-wide">L M X J V</span>
+</div>
+<!-- Active Toggle -->
+<button aria-label="Desactivar alarma 07:30" class="w-12 h-6 bg-primary rounded-full relative flex items-center px-0.5 transition-colors">
+<div class="w-5 h-5 bg-white rounded-full ml-auto"></div>
+</button>
+</div>
+<!-- Alarm Row 3 -->
+<div class="bg-surface-container border border-outline-variant/40 rounded p-4 flex items-center justify-between">
+<div class="flex flex-col gap-1">
+<div class="flex items-baseline gap-3">
+<span class="font-headline text-2xl font-bold tracking-tight text-on-surface-variant">09:00</span>
+<span class="font-body text-sm font-medium text-on-surface-variant">Fin de semana</span>
+</div>
+<span class="font-body text-xs text-on-surface-variant tracking-wide">S D</span>
+</div>
+<!-- Inactive Toggle -->
+<button aria-label="Activar alarma 09:00" class="w-12 h-6 bg-outline-variant rounded-full relative flex items-center px-0.5 transition-colors">
+<div class="w-5 h-5 bg-white rounded-full mr-auto"></div>
+</button>
+</div>
+</div>
+</section>
+<!-- Primary Action Button -->
+<div class="pt-2">
+<button class="w-full h-12 bg-primary text-on-primary font-headline font-bold text-sm uppercase tracking-wider rounded flex items-center justify-center gap-2 hover:opacity-95 transition-opacity">
+<span class="material-symbols-outlined text-lg">add</span>
+        NUEVA ALARMA
+      </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex items-center justify-around px-4 h-16 bg-surface-container border-t border-outline-variant/20">
+<button class="flex flex-col items-center justify-center gap-1 text-primary p-1 rounded transition-colors">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">alarm</span>
+<span class="font-body text-xs font-medium">Alarmas</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant p-1 rounded transition-colors hover:text-on-surface">
+<span class="material-symbols-outlined text-xl">psychology</span>
+<span class="font-body text-xs font-medium">Retos</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-1 text-on-surface-variant p-1 rounded transition-colors hover:text-on-surface">
+<span class="material-symbols-outlined text-xl">history</span>
+<span class="font-body text-xs font-medium">Historial</span>
+</button>
+</nav>
+</body></html>

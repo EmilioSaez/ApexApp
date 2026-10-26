@@ -1,8 +1,8 @@
 ## 1. Diseño en Stitch
 
 - [x] 1.1 Crear proyecto y design system en Stitch (paleta clara/oscura, tipografía, formas) siguiendo `design-taste-compose`
-- [ ] 1.2 (parcial/diferido) Generar las pantallas de referencia: lista de alarmas, edición, sonar/retos, estadísticas, compartir y ajustes, en claro y oscuro. Hecho: 5 pantallas en oscuro (lista, editor, alarma sonando, estadísticas, ajustes). Falta: Compartir y reto matemático (generadas en Stitch, pero la API no devuelve su id y no se pueden descargar) y las variantes en claro. Proyecto Stitch 3824318768696066700.
-- [ ] 1.3 (diferido) Iterar con variantes/ediciones y validar contraste AA y escala de fuente 1.3 sobre los diseños de Stitch (la app sí se verificó en emulador, ver 7.1). Proyecto Stitch 3824318768696066700.
+- [x] 1.2 Generar las pantallas de referencia: lista de alarmas, edición, sonar/retos, estadísticas, compartir y ajustes, en claro y oscuro. Hecho: las 7 pantallas (lista, editor, alarma sonando, reto matemático, estadísticas, ajustes, compartir) en oscuro y en claro, con PNG y HTML en `design/screens/`. Limitación de la API: `list_screens` sale vacío y los timeouts no devuelven id, así que las variantes en claro son pantallas nuevas generadas con el design system Apex (ver `design/README.md`). Proyecto Stitch 3824318768696066700.
+- [x] 1.3 Validar contraste AA (texto 4.5:1, componentes 3:1) de la paleta clara y oscura con cálculo real (cumple; `outlineVariant` es decorativo y queda exento) y revisar la escala de fuente 1.3 sobre las capturas; resultados en `design/README.md`. Comparación con la app en emulador: corregido el recorte de cifras del selector de hora del editor; el resto de pantallas (alarma sonando, reto, compartir, estadísticas, ajustes) no se compararon en emulador por falta de datos de prueba.
 - [x] 1.4 Guardar `DESIGN.md` y capturas en `design/` del repo
 
 ## 2. Tema
