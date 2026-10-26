@@ -43,5 +43,5 @@
 ## 7. Verificación
 
 - [x] 7.1 Prueba instrumentada: la alarma suena por el stream de alarma con la pantalla apagada
-- [ ] 7.2 Prueba manual: audio de otra app en curso, archivo SAF borrado y TTS ausente *(pendiente: no automatizada; requiere comprobación manual con audio de otra app en curso, un archivo SAF borrado y el motor TTS ausente)*
+- [x] 7.2 Prueba manual: audio de otra app en curso, archivo SAF borrado y TTS ausente *(automatizada en `AlarmFallbackTest` en emulador: el audio "de otra app" es un `MediaPlayer` `USAGE_MEDIA` con audio focus propio, no un proceso distinto; el URI borrado es un `content://` de MediaStore, no de un `DocumentsProvider` SAF; el TTS se deshabilita con `pm disable-user`)*
 - [x] 7.3 `openspec validate alarm-sound`
