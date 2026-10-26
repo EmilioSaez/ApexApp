@@ -3,11 +3,14 @@ package app.luxion.apexapp.ui.challenge
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import android.content.res.Configuration
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
@@ -15,6 +18,8 @@ import app.luxion.apexapp.domain.ChallengeConfig
 import app.luxion.apexapp.domain.challenge.ChallengeRegistry
 import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.ui.editor.EditorSection
+import app.luxion.apexapp.domain.challenge.MathChallenge
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 import javax.inject.Inject
 
@@ -52,6 +57,15 @@ class ChallengesSection @Inject constructor(
                 stringResource(R.string.challenge_editor_section),
                 style = MaterialTheme.typography.titleMedium,
             )
+            ChallengeKindSelector(withChallenges = !config.isNormal, onChange = { on -> update { if (on) it.withChallenges() else it.asNormal() } })
+            if (config.isNormal) {
+                Text(
+                    stringResource(R.string.challenge_editor_none),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                return@Column
+            }
             TypeChips(
                 available = registry.types.sortedBy { it.id },
                 selected = config.challenges.map { ChallengeType(it.type) }.toSet(),
@@ -59,13 +73,6 @@ class ChallengesSection @Inject constructor(
                 onToggle = { type -> update { it.toggled(type) } },
                 inset = 0.dp,
             )
-            if (config.challenges.isEmpty()) {
-                Text(
-                    stringResource(R.string.challenge_editor_none),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-            }
             CountStepper(
                 config.displayCount,
                 onChange = { value -> update { it.withCount(value) } },
@@ -90,3 +97,30 @@ class ChallengesSection @Inject constructor(
         const val ORDER = 100
     }
 }
+
+@Composable
+private fun SectionPreview(withChallenges: Boolean, dark: Boolean) = ApexAppTheme(darkTheme = dark) {
+    val section = ChallengesSection(ChallengeRegistry(listOf(MathChallenge())), setOf(MathRenderer()), emptySet())
+    val draft = Alarm(hour = 7, minute = 0).let { if (withChallenges) it.copy(challenges = it.challenges.withChallenges()) else it }
+    androidx.compose.material3.Surface { Column(Modifier.padding(ApexTheme.spacing.screen)) { section.Content(draft) {} } }
+}
+
+@Preview(name = "Normal claro", showBackground = true)
+@Composable
+private fun NormalLight() = SectionPreview(withChallenges = false, dark = false)
+
+@Preview(name = "Normal oscuro", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun NormalDark() = SectionPreview(withChallenges = false, dark = true)
+
+@Preview(name = "Con retos claro", showBackground = true, heightDp = 600)
+@Composable
+private fun ChallengesLight() = SectionPreview(withChallenges = true, dark = false)
+
+@Preview(name = "Con retos oscuro", showBackground = true, heightDp = 600, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ChallengesDark() = SectionPreview(withChallenges = true, dark = true)
+
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 600, fontScale = 1.3f)
+@Composable
+private fun ChallengesLargeFont() = SectionPreview(withChallenges = true, dark = false)
