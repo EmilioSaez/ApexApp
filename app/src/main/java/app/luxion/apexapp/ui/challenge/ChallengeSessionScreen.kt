@@ -1,5 +1,6 @@
 package app.luxion.apexapp.ui.challenge
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,15 +18,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.challenge.ChallengeAnswer
+import app.luxion.apexapp.domain.challenge.ChallengeInstance
 import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.SessionConfig
 import app.luxion.apexapp.domain.challenge.SessionState
 import app.luxion.apexapp.ui.adaptive.AdaptiveLevelNotice
 import app.luxion.apexapp.ui.adaptive.AdaptiveNoticeViewModel
+import app.luxion.apexapp.ui.components.PrimaryAction
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 /**
@@ -83,11 +87,18 @@ fun ChallengeSessionContent(
         val current = state.current
         if (state.passed || current == null) {
             Box(Modifier.fillMaxWidth().padding(vertical = ApexTheme.spacing.xxl), contentAlignment = Alignment.Center) {
-                Text(stringResource(R.string.challenge_passed), style = MaterialTheme.typography.headlineMedium)
+                // Éxito en el color semántico, no en el acento.
+                Text(
+                    stringResource(R.string.challenge_passed),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.tertiary,
+                )
             }
-            Button(onClick = onFinished, modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.small) {
-                Text(stringResource(R.string.challenge_done))
-            }
+            PrimaryAction(
+                text = stringResource(R.string.challenge_done),
+                onClick = onFinished,
+                modifier = Modifier.fillMaxWidth(),
+            )
         } else {
             Text(
                 stringResource(R.string.challenge_progress, state.solved + 1, state.total),
@@ -102,3 +113,43 @@ fun ChallengeSessionContent(
         }
     }
 }
+
+private val PreviewInstance = object : ChallengeInstance {
+    override val type = ChallengeType.MATH
+    override val level = 3
+    override val prompt = "47 + 38"
+    override fun check(answer: ChallengeAnswer) = false
+}
+
+@Composable
+private fun SessionPreview(state: SessionState) = ChallengeSessionContent(
+    state = state,
+    rendererFor = { MathRenderer() },
+    onAnswer = {},
+    onUnavailable = {},
+    onFinished = {},
+)
+
+@Preview(name = "Claro", showBackground = true, heightDp = 700)
+@Composable
+private fun ChallengeActiveLight() = ApexAppTheme(darkTheme = false) { SessionPreview(SessionState(solved = 1, total = 3, current = PreviewInstance, passed = false, lastAnswerWrong = true)) }
+
+@Preview(name = "Oscuro", showBackground = true, heightDp = 700, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ChallengeActiveDark() = ApexAppTheme(darkTheme = true) { SessionPreview(SessionState(solved = 1, total = 3, current = PreviewInstance, passed = false, lastAnswerWrong = true)) }
+
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 700, fontScale = 1.3f)
+@Composable
+private fun ChallengeActiveLargeFont() = ApexAppTheme(darkTheme = false) { SessionPreview(SessionState(solved = 1, total = 3, current = PreviewInstance, passed = false, lastAnswerWrong = true)) }
+
+@Preview(name = "Claro", showBackground = true)
+@Composable
+private fun ChallengePassedLight() = ApexAppTheme(darkTheme = false) { SessionPreview(SessionState(solved = 3, total = 3, current = null, passed = true)) }
+
+@Preview(name = "Oscuro", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun ChallengePassedDark() = ApexAppTheme(darkTheme = true) { SessionPreview(SessionState(solved = 3, total = 3, current = null, passed = true)) }
+
+@Preview(name = "Fuente 1.3", showBackground = true, fontScale = 1.3f)
+@Composable
+private fun ChallengePassedLargeFont() = ApexAppTheme(darkTheme = false) { SessionPreview(SessionState(solved = 3, total = 3, current = null, passed = true)) }

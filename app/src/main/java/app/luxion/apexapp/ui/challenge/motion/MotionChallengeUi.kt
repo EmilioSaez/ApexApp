@@ -133,7 +133,7 @@ fun MotionTargetField(
                 clamped = value - step < kind.min
                 onValueChange(next)
             }) { Text(stringResource(R.string.challenge_target_decrease)) }
-            Text(value.toString(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(horizontal = 8.dp))
+            Text(value.toString(), style = MaterialTheme.typography.titleLarge, modifier = Modifier.padding(horizontal = ApexTheme.spacing.sm))
             OutlinedButton(onClick = {
                 val next = kind.clamp(value + step)
                 clamped = value + step > kind.max

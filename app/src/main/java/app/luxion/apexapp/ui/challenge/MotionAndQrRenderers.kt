@@ -116,7 +116,7 @@ class QrRenderer @Inject constructor() : ChallengeRenderer {
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
             )
-            CameraPermissionGate(modifier = Modifier.fillMaxWidth().height(320.dp)) {
+            CameraPermissionGate(modifier = Modifier.fillMaxWidth().height(ApexTheme.spacing.xxxl * 7)) {
                 BarcodeScanner(
                     onScanned = {},
                     onFrame = { frame ->
@@ -130,7 +130,7 @@ class QrRenderer @Inject constructor() : ChallengeRenderer {
                         }
                     },
                     onError = { onUnavailable("camera error: ${it.message}") },
-                    modifier = Modifier.fillMaxWidth().height(320.dp),
+                    modifier = Modifier.fillMaxWidth().height(ApexTheme.spacing.xxxl * 7),
                 )
             }
             val message = when {

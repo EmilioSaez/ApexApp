@@ -8,6 +8,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,11 +17,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -31,14 +29,17 @@ import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Surface
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -50,7 +51,9 @@ import app.luxion.apexapp.alarm.ReliabilityState
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.ui.components.EmptyState
 import app.luxion.apexapp.ui.components.TimeDisplay
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
+import android.content.res.Configuration
 import java.time.DayOfWeek
 import java.time.format.TextStyle
 import java.util.Locale
@@ -105,7 +108,6 @@ fun HomeScreen(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeContent(
     state: HomeUiState,
@@ -125,16 +127,6 @@ fun HomeContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge) },
-                actions = {
-                    TextButton(onClick = onOpenChallengeTest) { Text(stringResource(R.string.challenge_test_action)) }
-                    TextButton(onClick = onOpenStats) { Text(stringResource(R.string.stats_open)) }
-                    TextButton(onClick = onOpenSettings) { Text(stringResource(R.string.settings_title)) }
-                },
-            )
-        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 onClick = onAddAlarm,
@@ -145,6 +137,7 @@ fun HomeContent(
         },
     ) { padding ->
         Column(Modifier.padding(padding)) {
+            HomeHeader(onOpenChallengeTest, onOpenStats, onOpenSettings)
             PermissionBanners(state.permissions, onRequestNotifications, onOpenExactAlarmSettings)
             ReliabilityBanner(state.reliability, onOpenReliability)
             when {
@@ -163,9 +156,12 @@ fun HomeContent(
                 }
 
                 else -> LazyColumn(
+                    // Margen inferior para que el botón flotante no tape la última fila.
                     contentPadding = PaddingValues(
-                        horizontal = ApexTheme.spacing.screen,
-                        vertical = ApexTheme.spacing.lg,
+                        start = ApexTheme.spacing.screen,
+                        top = ApexTheme.spacing.lg,
+                        end = ApexTheme.spacing.screen,
+                        bottom = ApexTheme.spacing.xxxl * 2,
                     ),
                     verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl),
                 ) {
@@ -201,15 +197,40 @@ private fun ReliabilityBanner(reliability: ReliabilityState, onOpen: () -> Unit)
     )
 }
 
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun HomeHeader(onOpenChallengeTest: () -> Unit, onOpenStats: () -> Unit, onOpenSettings: () -> Unit) {
+    Column(Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.lg)) {
+        Text(stringResource(R.string.app_name), style = MaterialTheme.typography.titleLarge)
+        // Navegación secundaria: enlaces discretos que saltan de línea con fuente grande.
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+            HeaderLink(stringResource(R.string.challenge_test_action), onOpenChallengeTest)
+            HeaderLink(stringResource(R.string.stats_open), onOpenStats)
+            HeaderLink(stringResource(R.string.settings_title), onOpenSettings)
+        }
+    }
+}
+
+@Composable
+private fun HeaderLink(text: String, onClick: () -> Unit) {
+    TextButton(onClick = onClick, colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant)) {
+        Text(text, style = MaterialTheme.typography.labelLarge)
+    }
+}
+
 @Composable
 private fun Banner(message: String, action: String, onAction: () -> Unit) {
-    Card(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.errorContainer),
+    Surface(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.xs),
+        shape = MaterialTheme.shapes.small,
+        color = MaterialTheme.colorScheme.errorContainer,
+        contentColor = MaterialTheme.colorScheme.onErrorContainer,
     ) {
-        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            Text(message, color = MaterialTheme.colorScheme.onErrorContainer)
-            Button(onClick = onAction, shape = MaterialTheme.shapes.small) { Text(action) }
+        Column(Modifier.padding(ApexTheme.spacing.lg), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
+            Text(message, style = MaterialTheme.typography.bodyMedium)
+            TextButton(onClick = onAction, colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onErrorContainer)) {
+                Text(action, style = MaterialTheme.typography.labelLarge)
+            }
         }
     }
 }
@@ -221,13 +242,13 @@ private fun AlarmRow(
     onEdit: (Long) -> Unit,
     onDelete: (Long) -> Unit,
 ) {
-    // Fila sin tarjeta: la hora manda y el resto queda subordinado.
+    // Fila sin tarjeta: la hora manda y el resto queda subordinado. Apagada, se atenúa.
     Row(
         Modifier.fillMaxWidth().clickable { onEdit(alarm.id) },
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
     ) {
-        Column(Modifier.weight(1f)) {
+        Column(Modifier.weight(1f).alpha(if (alarm.enabled) 1f else DisabledAlpha)) {
             TimeDisplay(alarm.hour, alarm.minute)
             Text(
                 listOfNotNull(alarm.label, daysSummary(alarm.repeatDays)).joinToString(" · "),
@@ -235,10 +256,17 @@ private fun AlarmRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
-        TextButton(onClick = { onDelete(alarm.id) }) { Text(stringResource(R.string.home_delete)) }
-        Switch(checked = alarm.enabled, onCheckedChange = { onToggle(alarm.id, it) })
+        Column(horizontalAlignment = Alignment.End) {
+            Switch(checked = alarm.enabled, onCheckedChange = { onToggle(alarm.id, it) })
+            TextButton(
+                onClick = { onDelete(alarm.id) },
+                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onSurfaceVariant),
+            ) { Text(stringResource(R.string.home_delete), style = MaterialTheme.typography.labelLarge) }
+        }
     }
 }
+
+private const val DisabledAlpha = 0.5f
 
 @Composable
 internal fun daysSummary(days: Set<DayOfWeek>): String = when {
@@ -247,3 +275,30 @@ internal fun daysSummary(days: Set<DayOfWeek>): String = when {
     else -> DayOfWeek.entries.filter { it in days }
         .joinToString(" ") { it.getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
 }
+
+private val PreviewAlarms = listOf(
+    Alarm(id = 1, hour = 6, minute = 30, repeatDays = DayOfWeek.entries.take(5).toSet(), label = "Gimnasio"),
+    Alarm(id = 2, hour = 8, minute = 0, repeatDays = DayOfWeek.entries.toSet(), enabled = false),
+    Alarm(id = 3, hour = 23, minute = 15),
+)
+
+@Composable
+private fun HomePreview() = HomeContent(
+    state = HomeUiState(isLoading = false, alarms = PreviewAlarms),
+    onAddAlarm = {},
+    onToggle = { _, _ -> },
+    onRequestNotifications = {},
+    onOpenExactAlarmSettings = {},
+)
+
+@Preview(name = "Claro", showBackground = true)
+@Composable
+private fun HomeLight() = ApexAppTheme(darkTheme = false) { HomePreview() }
+
+@Preview(name = "Oscuro", showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun HomeDark() = ApexAppTheme(darkTheme = true) { HomePreview() }
+
+@Preview(name = "Fuente 1.3", showBackground = true, fontScale = 1.3f)
+@Composable
+private fun HomeLargeFont() = ApexAppTheme(darkTheme = false) { HomePreview() }

@@ -1,5 +1,6 @@
 package app.luxion.apexapp.ui.adaptive
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,12 +17,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.adaptive.AdaptiveSettings
 import app.luxion.apexapp.domain.adaptive.ChangeReason
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 /** Sección del editor de alarmas con su propio estado. */
@@ -68,7 +71,7 @@ fun AdaptiveDifficultyContent(
         if (!state.available) {
             Text(
                 stringResource(R.string.adaptive_save_first),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             return@Column
@@ -124,3 +127,15 @@ fun AdaptiveLevelNotice(notice: AdaptiveNotice, modifier: Modifier = Modifier) {
         )
     }
 }
+
+@Preview(name = "Claro", showBackground = true, heightDp = 500)
+@Composable
+private fun AdaptiveLight() = ApexAppTheme(darkTheme = false) { Surface { AdaptiveDifficultyContent(AdaptiveUiState(available = true, enabled = true, min = 2, max = 5, current = 4, reason = ChangeReason.SNOOZES, hits = 2), onEnabled = {}, onRange = { _, _ -> }, onReset = {}, modifier = Modifier.padding(ApexTheme.spacing.screen)) } }
+
+@Preview(name = "Oscuro", showBackground = true, heightDp = 500, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun AdaptiveDark() = ApexAppTheme(darkTheme = true) { Surface { AdaptiveDifficultyContent(AdaptiveUiState(available = true, enabled = true, min = 2, max = 5, current = 4, reason = ChangeReason.SNOOZES, hits = 2), onEnabled = {}, onRange = { _, _ -> }, onReset = {}, modifier = Modifier.padding(ApexTheme.spacing.screen)) } }
+
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 500, fontScale = 1.3f)
+@Composable
+private fun AdaptiveLargeFont() = ApexAppTheme(darkTheme = false) { Surface { AdaptiveDifficultyContent(AdaptiveUiState(available = true, enabled = true, min = 2, max = 5, current = 4, reason = ChangeReason.SNOOZES, hits = 2), onEnabled = {}, onRange = { _, _ -> }, onReset = {}, modifier = Modifier.padding(ApexTheme.spacing.screen)) } }

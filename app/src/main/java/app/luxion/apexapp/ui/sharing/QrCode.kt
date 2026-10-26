@@ -4,13 +4,13 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
+import app.luxion.apexapp.ui.theme.ApexTheme
 import com.google.zxing.common.BitMatrix
 
 /**
@@ -21,8 +21,8 @@ import com.google.zxing.common.BitMatrix
 fun QrCode(matrix: BitMatrix, modifier: Modifier = Modifier) {
     Canvas(
         modifier
-            .background(Color.White, RoundedCornerShape(8.dp))
-            .padding(12.dp)
+            .background(Color.White, MaterialTheme.shapes.small)
+            .padding(ApexTheme.spacing.md)
             .aspectRatio(1f),
     ) {
         val cell = size.width / matrix.width

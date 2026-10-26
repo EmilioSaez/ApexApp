@@ -1,5 +1,6 @@
 package app.luxion.apexapp.ui.stats
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -28,6 +30,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,7 +41,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.BedtimeSource
 import app.luxion.apexapp.ui.components.EmptyState
+import app.luxion.apexapp.domain.Streak
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
+import java.time.LocalDate
 import java.time.LocalTime
 
 @Composable
@@ -74,6 +83,7 @@ fun StatsContent(
             TopAppBar(
                 title = { Text(stringResource(R.string.stats_title), style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
             )
         },
     ) { padding ->
@@ -89,6 +99,7 @@ fun StatsContent(
                     FilterChip(
                         selected = r == state.range,
                         onClick = { onSelectRange(r) },
+                        shape = MaterialTheme.shapes.small,
                         label = { Text(stringResource(R.string.stats_range_days, r.days)) },
                     )
                 }
@@ -109,10 +120,18 @@ fun StatsContent(
             }
             Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
                 Text(stringResource(R.string.stats_sleep_title), style = MaterialTheme.typography.titleMedium)
-                OutlinedButton(onClick = { dialog = BedtimeDialog.LAST_NIGHT }, modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(
+                    onClick = { dialog = BedtimeDialog.LAST_NIGHT },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.small,
+                ) {
                     Text(stringResource(R.string.stats_set_bedtime))
                 }
-                OutlinedButton(onClick = { dialog = BedtimeDialog.USUAL }, modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(
+                    onClick = { dialog = BedtimeDialog.USUAL },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = MaterialTheme.shapes.small,
+                ) {
                     Text(
                         state.usualBedtime?.let { stringResource(R.string.stats_usual_bedtime_value, it.toString()) }
                             ?: stringResource(R.string.stats_set_usual_bedtime),
@@ -138,10 +157,15 @@ fun StatsContent(
 private fun StatsCharts(state: StatsUiState, onShareStreak: () -> Unit) {
     val stats = state.stats
     Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xl)) {
-        Text(
-            stringResource(R.string.stats_streak, state.streak.current, state.streak.best),
-            style = MaterialTheme.typography.headlineSmall,
-        )
+        // Dato clave primero: la racha como cifra grande, no como frase.
+        val streakDescription = stringResource(R.string.stats_streak, state.streak.current, state.streak.best)
+        Row(
+            Modifier.fillMaxWidth().semantics(mergeDescendants = true) { contentDescription = streakDescription },
+            horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xxl),
+        ) {
+            StreakFigure(state.streak.current, stringResource(R.string.streak_card_current), MaterialTheme.colorScheme.primary)
+            StreakFigure(state.streak.best, stringResource(R.string.streak_card_best), MaterialTheme.colorScheme.onSurface)
+        }
         TextButton(onClick = onShareStreak) { Text(stringResource(R.string.streak_share_open)) }
         val wake = stats.averageTimeToWakeMs?.let { formatDuration(it) } ?: stringResource(R.string.stats_no_data)
         BarChart(
@@ -181,9 +205,17 @@ private fun StatsCharts(state: StatsUiState, onShareStreak: () -> Unit) {
         )
         Text(
             stringResource(R.string.stats_sleep_legend),
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
+    }
+}
+
+@Composable
+private fun StreakFigure(value: Int, label: String, color: Color) {
+    Column {
+        Text(value.toString(), style = MaterialTheme.typography.displayMedium, color = color)
+        Text(label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
 
@@ -212,3 +244,33 @@ private fun BedtimePickerDialog(initial: LocalTime, onDismiss: () -> Unit, onCon
         text = { TimePicker(state = picker) },
     )
 }
+
+private val PreviewState = StatsUiState(
+    isLoading = false,
+    hasData = true,
+    streak = Streak(5, 12),
+    days = (0 until 7).map {
+        DayPoint(
+            date = LocalDate.of(2026, 10, 19).plusDays(it.toLong()),
+            timeToWakeMs = (60_000L + it * 45_000L).takeIf { _ -> it != 3 },
+            snoozes = it % 3,
+            fails = if (it == 4) 2 else 0,
+            punctualRate = if (it == 3) null else 1.0 - it * 0.1,
+        )
+    },
+)
+
+@Composable
+private fun StatsPreview() = StatsContent(PreviewState, onBack = {}, onSelectRange = {}, onSetLastNightBedtime = {}, onSetUsualBedtime = {})
+
+@Preview(name = "Claro", showBackground = true, heightDp = 1400)
+@Composable
+private fun StatsLight() = ApexAppTheme(darkTheme = false) { StatsPreview() }
+
+@Preview(name = "Oscuro", showBackground = true, heightDp = 1400, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun StatsDark() = ApexAppTheme(darkTheme = true) { StatsPreview() }
+
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 1600, fontScale = 1.3f)
+@Composable
+private fun StatsLargeFont() = ApexAppTheme(darkTheme = false) { StatsPreview() }
