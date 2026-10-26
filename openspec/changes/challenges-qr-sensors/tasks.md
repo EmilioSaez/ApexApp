@@ -33,11 +33,12 @@
 
 ## 5. Integración
 
-- [ ] 5.1 Registrar los cuatro tipos de reto en el módulo Hilt del motor y exponerlos en la configuración de alarma; verificar que aparecen y se guardan por alarma
-  - Hecho: registro Hilt de `Challenge`, `ChallengeRenderer` y `ChallengeParamsEditor` por tipo (QR bloquea guardar sin código; pasos exige contador de pasos). Falta verificar en dispositivo que aparecen en la sección «Retos» y se guardan por alarma.
-  - Verificado en emulador: los cuatro tipos aparecen en la sección «Challenges»; Shake con objetivo 40 se guarda y se recupera al reabrir la alarma. Sin verificar: guardar y recuperar un código QR (requiere escanear) y los demás tipos configurados.
+- [x] 5.1 Registrar los cuatro tipos de reto en el módulo Hilt del motor y exponerlos en la configuración de alarma; verificar que aparecen y se guardan por alarma
+  - Hecho: registro Hilt de `Challenge`, `ChallengeRenderer` y `ChallengeParamsEditor` por tipo (QR bloquea guardar sin código; pasos exige contador de pasos).
+  - Verificado en emulador: los cuatro tipos aparecen en la sección «Challenges»; Shake con objetivo 40 se guarda y se recupera al reabrir la alarma.
+  - Verificado por el usuario en el móvil real (Pixel 7 Pro): los tipos aparecen y se guardan por alarma, incluido el QR.
 - [ ] 5.2 Prueba de extremo a extremo en emulador/dispositivo: alarma con cada reto, disparo, superación y casos de trampa; verificar con `./gradlew test connectedDebugAndroidTest` y checklist manual
-  - Verificado en la pantalla de pruebas de retos (no con alarma real disparada): Shake se supera con sacudidas simuladas (`adb emu sensor`). Sin verificar: disparo real de la alarma con cada reto, QR, Pasos y Levantarse.
+  - Verificado en la pantalla de pruebas de retos (no con alarma real disparada): Shake se supera con sacudidas simuladas (`adb emu sensor`). El usuario confirma en el móvil el disparo real con retos y el mínimo de retos por tipos elegidos. Sin verificar en dispositivo: Pasos y Levantarse tras el arreglo de sensores (pendiente de probar).
 - [ ] 5.3 Calibrar umbrales (sacudidas, ventana de escaneo, límites de pasos) en dispositivo real y fijarlos en constantes únicas; verificar que los tests siguen en verde
 
 ## Manual para el usuario
