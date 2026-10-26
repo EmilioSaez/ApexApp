@@ -19,7 +19,7 @@
     <string name="permission_open_settings">Abrir ajustes</string>
     <string name="editor_title">Nueva alarma</string>
     <string name="editor_title_edit">Editar alarma</string>
-    <string name="editor_label">Etiqueta</string>
+    <string name="editor_label">Nombre</string>
     <string name="editor_repeat">Repetir</string>
     <string name="editor_params">Parámetros</string>
     <string name="editor_time_done">Listo</string>
