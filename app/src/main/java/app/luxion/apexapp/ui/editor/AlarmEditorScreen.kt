@@ -1,5 +1,6 @@
 package app.luxion.apexapp.ui.editor
 
+import android.content.res.Configuration
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TimePicker
+import androidx.compose.material3.TimePickerDefaults
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
@@ -29,11 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.alarm.ScheduleResult
 import app.luxion.apexapp.ui.components.PrimaryAction
+import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 import java.time.DayOfWeek
 import java.time.format.TextStyle
@@ -89,8 +94,9 @@ fun AlarmEditorContent(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(stringResource(if (state.isNew) R.string.editor_title else R.string.editor_title_edit))
+                    Text(stringResource(if (state.isNew) R.string.editor_title else R.string.editor_title_edit), style = MaterialTheme.typography.titleLarge)
                 },
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.background),
                 navigationIcon = { TextButton(onClick = onBack) { Text(stringResource(R.string.back)) } },
                 actions = {
                     if (!state.isNew && onShare != null) {
@@ -113,12 +119,19 @@ fun AlarmEditorContent(
             verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            TimePicker(timeState)
+            TimePicker(
+                timeState,
+                colors = TimePickerDefaults.colors(
+                    clockDialColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    timeSelectorUnselectedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                ),
+            )
             OutlinedTextField(
                 value = state.label,
                 onValueChange = onLabelChange,
                 label = { Text(stringResource(R.string.editor_label)) },
                 singleLine = true,
+                shape = MaterialTheme.shapes.small,
                 modifier = Modifier.fillMaxWidth(),
             )
             Column(Modifier.fillMaxWidth()) {
@@ -133,6 +146,7 @@ fun AlarmEditorContent(
                         FilterChip(
                             selected = day in state.repeatDays,
                             onClick = { onToggleDay(day) },
+                            shape = MaterialTheme.shapes.small,
                             label = { Text(day.getDisplayName(TextStyle.SHORT, Locale.getDefault())) },
                         )
                     }
@@ -158,3 +172,25 @@ private fun remainingLabel(duration: java.time.Duration): String {
         else -> stringResource(R.string.editor_remaining_m, t.minutes)
     }
 }
+
+@Composable
+private fun EditorPreview() = AlarmEditorContent(
+    state = EditorUiState(isLoading = false, isNew = false, hour = 6, minute = 30, repeatDays = DayOfWeek.entries.take(5).toSet(), label = "Gimnasio"),
+    onSave = { _, _ -> },
+    onBack = {},
+    onLabelChange = {},
+    onToggleDay = {},
+    onShare = {},
+)
+
+@Preview(name = "Claro", showBackground = true, heightDp = 900)
+@Composable
+private fun EditorLight() = ApexAppTheme(darkTheme = false) { EditorPreview() }
+
+@Preview(name = "Oscuro", showBackground = true, heightDp = 900, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+private fun EditorDark() = ApexAppTheme(darkTheme = true) { EditorPreview() }
+
+@Preview(name = "Fuente 1.3", showBackground = true, heightDp = 900, fontScale = 1.3f)
+@Composable
+private fun EditorLargeFont() = ApexAppTheme(darkTheme = false) { EditorPreview() }
