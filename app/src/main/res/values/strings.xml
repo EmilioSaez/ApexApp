@@ -6,6 +6,12 @@
     <string name="alarm_every_day">Todos los días</string>
     <string name="home_empty">No hay alarmas todavía</string>
     <string name="home_empty_hint">Crea una alarma para empezar.</string>
+    <string name="home_wordmark" translatable="false">APEX</string>
+    <string name="home_nav_alarms">Alarmas</string>
+    <string name="home_next_in">Suena en %1$s</string>
+    <string name="home_scheduled">Alarmas programadas</string>
+    <string name="home_challenge_line">Reto: %1$s</string>
+    <string name="home_settings">Ajustes</string>
     <string name="home_add_alarm">Nueva alarma</string>
     <string name="permission_notifications_missing">Las notificaciones están desactivadas: la alarma podría no mostrarse.</string>
     <string name="permission_exact_missing">Falta el permiso de alarmas exactas: las alarmas no sonarán a su hora.</string>

@@ -4,7 +4,12 @@ import androidx.compose.ui.test.isToggleable
 import androidx.test.platform.app.InstrumentationRegistry
 import app.luxion.apexapp.R
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.assertCountEquals
+import androidx.compose.ui.test.onAllNodesWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.swipeLeft
+import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.performClick
 import app.luxion.apexapp.alarm.PermissionState
 import app.luxion.apexapp.domain.Alarm
@@ -36,8 +41,10 @@ class HomeContentTest {
     @Test
     fun withAlarms_showsList() {
         show(HomeUiState(isLoading = false, alarms = listOf(Alarm(id = 1, hour = 7, minute = 5, label = "Gym"))))
-        compose.onNodeWithText("07:05").assertExists()
-        compose.onNodeWithText("Gym · " + str(R.string.alarm_once)).assertExists()
+        // La hora sale en la tarjeta de la próxima alarma y en su fila.
+        compose.onAllNodesWithText("07:05").assertCountEquals(2)
+        compose.onAllNodesWithText("Gym").assertCountEquals(2)
+        compose.onNodeWithText(str(R.string.alarm_once)).assertExists()
         compose.onNodeWithText(str(R.string.home_empty)).assertDoesNotExist()
     }
 
@@ -71,9 +78,9 @@ class HomeContentTest {
                 )
             }
         }
-        compose.onNodeWithText("07:05").performClick()
+        compose.onNodeWithTag(AlarmRowTag + 9).performClick()
         assertEquals(9L, edited)
-        compose.onNodeWithText(str(R.string.home_delete)).performClick()
+        compose.onNodeWithTag(AlarmRowTag + 9).performTouchInput { swipeLeft() }
         assertEquals(9L, deleted)
     }
 

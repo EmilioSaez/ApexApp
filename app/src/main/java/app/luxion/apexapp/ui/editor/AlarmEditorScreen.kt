@@ -169,7 +169,7 @@ fun AlarmEditorContent(
 }
 
 @Composable
-private fun remainingLabel(duration: java.time.Duration): String {
+internal fun remainingLabel(duration: java.time.Duration): String {
     val t = duration.toRemainingTime()
     return when {
         t.days > 0 -> stringResource(R.string.editor_remaining_dhm, t.days, t.hours, t.minutes)

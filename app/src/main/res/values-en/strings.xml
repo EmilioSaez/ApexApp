@@ -6,6 +6,11 @@
     <string name="alarm_every_day">Every day</string>
     <string name="home_empty">No alarms yet</string>
     <string name="home_empty_hint">Create an alarm to get started.</string>
+    <string name="home_nav_alarms">Alarms</string>
+    <string name="home_next_in">Rings in %1$s</string>
+    <string name="home_scheduled">Scheduled alarms</string>
+    <string name="home_challenge_line">Challenge: %1$s</string>
+    <string name="home_settings">Settings</string>
     <string name="home_add_alarm">New alarm</string>
     <string name="permission_notifications_missing">Notifications are off: the alarm might not show.</string>
     <string name="permission_exact_missing">Exact alarm permission is missing: alarms won\'t ring on time.</string>
