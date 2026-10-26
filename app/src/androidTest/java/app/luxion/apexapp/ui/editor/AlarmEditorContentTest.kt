@@ -3,9 +3,12 @@ package app.luxion.apexapp.ui.editor
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextReplacement
 import androidx.test.platform.app.InstrumentationRegistry
 import app.luxion.apexapp.R
+import app.luxion.apexapp.ui.components.TimeWheelTags
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import org.junit.Assert.assertEquals
 import org.junit.Rule
@@ -30,6 +33,7 @@ class AlarmEditorContentTest {
                     onBack = onBack,
                     onLabelChange = {},
                     onToggleDay = {},
+                    is24Hour = true,
                 )
             }
         }
@@ -57,5 +61,16 @@ class AlarmEditorContentTest {
     fun editing_showsEditTitle() {
         show(EditorUiState(isLoading = false, isNew = false))
         compose.onNodeWithText(str(R.string.editor_title_edit)).assertExists()
+    }
+
+    @Test
+    fun typedTime_isSaved() {
+        var saved: Pair<Int, Int>? = null
+        show(onSave = { h, m -> saved = h to m })
+        compose.onNodeWithTag(TimeWheelTags.Hours).performClick()
+        compose.onNodeWithTag(TimeWheelTags.EntryField).performTextReplacement("2359")
+        compose.onNodeWithText(str(R.string.time_entry_ok)).performClick()
+        compose.onNodeWithText(str(R.string.editor_save)).performClick()
+        assertEquals(23 to 59, saved)
     }
 }

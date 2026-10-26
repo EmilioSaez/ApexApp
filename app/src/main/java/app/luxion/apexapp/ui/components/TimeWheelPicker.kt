@@ -229,7 +229,6 @@ private fun Wheel(
     Box(
         Modifier
             .testTag(tag)
-            .widthIn(min = 72.dp)
             .height(rowHeight * VisibleRows)
             .semantics {
                 contentDescription = label
@@ -254,14 +253,14 @@ private fun Wheel(
         LazyColumn(
             state = state,
             flingBehavior = rememberSnapFlingBehavior(state, SnapPosition.Center),
-            modifier = Modifier.fillMaxWidth().clearAndSetSemantics {},
+            modifier = Modifier.clearAndSetSemantics {},
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             items(size * Repeats) { index ->
                 val isCentre = index == centre
                 val emphasis by animateFloatAsState(if (isCentre) 1f else 0f, label = "wheelRow")
                 Box(
-                    Modifier.fillMaxWidth().height(rowHeight).clickable(
+                    Modifier.widthIn(min = 72.dp).height(rowHeight).padding(horizontal = ApexTheme.spacing.xs).clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
                     ) { if (isCentre) onType() else scope.launch { state.animateScrollToItem(index - VisibleRows / 2) } },
