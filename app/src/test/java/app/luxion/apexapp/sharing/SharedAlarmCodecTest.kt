@@ -31,7 +31,7 @@ class SharedAlarmCodecTest {
             count = 2,
         ),
         soundConfig = SoundConfig(volume = 70, ttsEnabled = true, ttsText = "Arriba"),
-        antiCheat = AntiCheatPolicy(AntiCheatLevel.STRICT, SnoozePolicy(allowed = true, minutes = 10, maxCount = 2)),
+        antiCheat = AntiCheatPolicy(AntiCheatLevel.STANDARD, SnoozePolicy(allowed = true, minutes = 10, maxCount = 2)),
     )
 
     private fun deflate(text: String): ByteArray {

@@ -9,7 +9,6 @@ editor (nivel y snooze) y se aplican mientras la alarma suena.
 | --- | --- |
 | `OFF` | Sin restricciones: la alarma se descarta como siempre. |
 | `STANDARD` | Pantalla de sonar en modo inmersivo, Atrás bloqueado, volumen de alarma forzado al máximo y recuperación de la pantalla si se pulsa Home (necesita permiso de superposición). |
-| `STRICT` | Lo de `STANDARD` y, si la app es propietaria del dispositivo, lock task: Home, Recientes, panel de notificaciones y menú de apagado dejan de responder. Sin propietario funciona como `STANDARD` y la pantalla de estado lo indica. |
 
 Una alarma sin política guardada se comporta como `OFF`. Las alarmas nuevas se crean en `STANDARD`.
 
@@ -19,7 +18,7 @@ Una alarma sin política guardada se comporta como `OFF`. Las alarmas nuevas se 
   Se concede desde la pantalla de estado (Ajustes del sistema).
 - **Administrador de dispositivo**: impide desinstalar la app directamente mientras esté activo.
   Se activa desde la pantalla de estado. Para desinstalar, desactívalo antes en Ajustes > Seguridad.
-- **Propietario del dispositivo**: necesario para el lock task de `STRICT`. Solo se concede por ADB.
+- **Propietario del dispositivo**: solo se concede por ADB.
 
 La pantalla de estado (editor de alarma > Ver estado de permisos) muestra cada capacidad y sus límites.
 Estos permisos no son aptos para Google Play; la app se distribuye por APK directo.
@@ -37,7 +36,6 @@ cuentas del dispositivo y repite.
 
 ## Salir si algo falla (rescate)
 
-El lock task se libera siempre al terminar el sonado (resuelta, snooze o tiempo máximo de 10 minutos).
 Si el dispositivo se queda atrapado:
 
 ```
@@ -63,13 +61,13 @@ Se emite `SUSPICIOUS` a `wake-stats` (y `adaptive-difficulty` las excluye del aj
 - se interrumpe por muerte del proceso o reinicio;
 - termina por tiempo máximo sin resolverse.
 
-Un `STRICT` degradado a `STANDARD` por falta de propietario **no** cuenta como sospechoso. Los motivos se
+Los motivos se
 calculan pero no se persisten hasta que `wake-stats` ofrezca un campo para ellos.
 
 ## Límites que no se pueden superar
 
 - Apagado forzado por hardware, modo seguro, recuperación, ADB y retirar la batería.
-- Sin propietario del dispositivo, Home y Recientes no se pueden bloquear; solo se recupera la pantalla.
+- Home y Recientes no se pueden bloquear; solo se recupera la pantalla.
 - El volumen forzado no controla salidas externas con volumen propio (algunos auriculares Bluetooth).
 - Android 12+ restringe los toques sobre overlays; por eso no se usa el overlay como pantalla de bloqueo.
 - Android 14+ puede revocar el permiso de pantalla completa; entonces queda la notificación del sonado.
@@ -77,7 +75,7 @@ calculan pero no se persisten hasta que `wake-stats` ofrezca un campo para ellos
 ## Pruebas manuales en emulador
 
 Ejecutadas en emuladores API 36 (debug). Las alarmas se crean con `DebugAlarmReceiver`:
-`--es level OFF|STANDARD|STRICT --ei snoozeMinutes N --ei snoozeMax M`; `--ez removeAdmin true` desactiva el
+`--es level OFF|STANDARD --ei snoozeMinutes N --ei snoozeMax M`; `--ez removeAdmin true` desactiva el
 administrador de dispositivo (limpieza). El volumen de alarma de partida se baja con `adb shell cmd audio set-volume 4 3`.
 
 Verificadas:
@@ -92,8 +90,6 @@ Verificadas:
 | Volumen | Con volumen de partida 3: sube a 7 al empezar, las teclas de bajar no lo mueven y vuelve a 3 al terminar. |
 | Snooze | Libera el lockdown, re-dispara al minuto con la misma sesión y respeta `maxCount`. |
 | Matar el proceso durante el sonado | El sonado se detiene (nada lo reanuda); la marca de sesión viva se consume al arrancar la app (`SUSPICIOUS`). |
-| `STRICT` sin propietario | Se comporta como `STANDARD` (sin lock task). |
-| `STRICT` con propietario (`dpm set-device-owner`) | Lock task `LOCKED`: Home, Recientes, panel y encendido no responden; se libera al resolver, al posponer y por tiempo máximo (10 min); el volumen se restaura. |
 | `alarm-sound` | Con el lockdown activo el `MediaPlayer` suena en `USAGE_ALARM` con el stream al máximo (7/7). |
 | Administrador de dispositivo | Con el administrador activo, `pm uninstall` falla con `DELETE_FAILED_DEVICE_POLICY_MANAGER`. |
 | Botón «Renunciar a propietario» | En el emulador con propietario real (`dpm`), deja `dpm list-owners` vacío y la pantalla de estado pasa a «Pendiente». |
@@ -107,5 +103,5 @@ Hallazgos:
   (`setUserControlDisabledPackages`); no está implementado.
 - `adb shell dpm remove-active-admin` falla con esta app; usa el botón de la pantalla de estado.
 
-Pendiente para el usuario: probar el lock task y el botón de renuncia en un dispositivo físico, y activar el
+Pendiente para el usuario: probar el botón de renuncia en un dispositivo físico, y activar el
 administrador con el diálogo real del sistema.

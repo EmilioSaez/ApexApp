@@ -38,7 +38,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import app.luxion.apexapp.R
-import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.challenge.ChallengeAnswer
 import app.luxion.apexapp.domain.challenge.ChallengeInstance
 import app.luxion.apexapp.domain.challenge.ChallengeType
@@ -75,7 +74,6 @@ class HoldReleaseRenderer @Inject constructor() : ChallengeRenderer {
 private fun HoldReleaseContent(instance: HoldReleaseInstance, onVerified: () -> Unit) {
     val game = remember(instance) { instance.newGame() }
     val plausibility = rememberTouchPlausibility()
-    val guard = LocalTouchGuard.current
     // La máquina de rondas no es estado de Compose: este contador fuerza la recomposición tras cada cambio.
     var version by remember(game) { mutableIntStateOf(0) }
     var lastFailure by remember(game) { mutableStateOf<RoundOutcome?>(null) }
@@ -83,9 +81,6 @@ private fun HoldReleaseContent(instance: HoldReleaseInstance, onVerified: () -> 
     fun handle(outcome: RoundOutcome?) {
         if (outcome == null) return
         lastFailure = outcome.takeIf { it != RoundOutcome.HIT }
-        if (outcome == RoundOutcome.HIT && guard.level == AntiCheatLevel.STRICT && game.reactionsTooRegular()) {
-            guard.onSyntheticInput()
-        }
         version++
         if (game.done) onVerified()
     }

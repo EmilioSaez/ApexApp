@@ -74,7 +74,7 @@ El sistema SHALL generar posiciones y tiempos de espera de cada ronda con el gen
 - **THEN** los círculos aparecen en posiciones nuevas
 
 ### Requirement: Plausibilidad de toques según el nivel anti-trampas
-El sistema SHALL aplicar a los toques del reto el nivel anti-trampas efectivo de la alarma, sin definir niveles propios: con `OFF` no valida los toques; con `STANDARD` descarta los toques que no proceden de la pantalla táctil, los recibidos con la ventana tapada por otra superficie y los sucesivos separados menos del mínimo humano; con `STRICT` aplica además la regla de regularidad sintética descrita en el diseño. Un toque descartado SHALL NOT contar como acierto.
+El sistema SHALL aplicar a los toques del reto el nivel anti-trampas efectivo de la alarma, sin definir niveles propios: con `OFF` no valida los toques; con `STANDARD` descarta los toques que no proceden de la pantalla táctil, los recibidos con la ventana tapada por otra superficie y los sucesivos separados menos del mínimo humano. Un toque descartado SHALL NOT contar como acierto.
 
 #### Scenario: OFF no valida
 - **WHEN** la alarma tiene nivel `OFF` y se reciben toques muy rápidos
@@ -83,10 +83,6 @@ El sistema SHALL aplicar a los toques del reto el nivel anti-trampas efectivo de
 #### Scenario: Toque con ventana tapada
 - **WHEN** el nivel es `STANDARD` y un toque llega con la ventana parcialmente tapada
 - **THEN** el toque se descarta y no cuenta como acierto
-
-#### Scenario: Regularidad sintética en STRICT
-- **WHEN** el nivel es `STRICT` y los toques tienen intervalos y desplazamientos prácticamente idénticos
-- **THEN** se descartan y la sesión se marca como sospechosa
 
 ### Requirement: Accesibilidad y textos
 El sistema SHALL presentar el reto con texto en español e inglés, mostrar el progreso de rondas y describir los círculos a los servicios de accesibilidad.

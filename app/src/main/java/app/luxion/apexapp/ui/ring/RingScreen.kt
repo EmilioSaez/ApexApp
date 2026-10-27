@@ -41,7 +41,6 @@ import app.luxion.apexapp.ui.theme.ApexTheme
 fun RingScreen(
     onFinished: () -> Unit,
     antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
-    onSyntheticInput: () -> Unit = {},
     viewModel: RingViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -60,7 +59,6 @@ fun RingScreen(
             canSnooze = state.canSnooze,
             onSnooze = viewModel::snooze,
             antiCheat = antiCheat,
-            onSyntheticInput = onSyntheticInput,
         )
     }
 }
@@ -75,7 +73,6 @@ fun RingChallenges(
     canSnooze: Boolean,
     onSnooze: () -> Unit,
     antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
-    onSyntheticInput: () -> Unit = {},
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
@@ -87,8 +84,7 @@ fun RingChallenges(
                 modifier = Modifier.weight(1f),
                 alarmId = alarm.id,
                 antiCheat = antiCheat,
-                onSyntheticInput = onSyntheticInput,
-            )
+                )
             if (canSnooze) {
                 SnoozeButton(
                     alarm,

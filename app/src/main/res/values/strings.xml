@@ -219,15 +219,12 @@
     <string name="anticheat_section">Anti-trampas</string>
     <string name="anticheat_level_off">Desactivado</string>
     <string name="anticheat_level_standard">Estándar</string>
-    <string name="anticheat_level_strict">Estricto</string>
     <string name="anticheat_level_hint_off">La alarma se puede descartar sin restricciones.</string>
     <string name="anticheat_level_hint_standard">Pantalla completa, sin salir con Atrás o Home y volumen al máximo.</string>
-    <string name="anticheat_level_hint_strict">Como estándar, y con propietario del dispositivo bloquea Home, Recientes y el menú de apagado.</string>
     <string name="anticheat_snooze_allowed">Permitir posponer</string>
     <string name="anticheat_snooze_minutes">Minutos: %1$d</string>
     <string name="anticheat_snooze_max">Máximo de veces: %1$d</string>
     <string name="anticheat_missing_overlay">Falta el permiso de superposición: sin él no se puede recuperar la pantalla al pulsar Home.</string>
-    <string name="anticheat_missing_owner">Sin propietario del dispositivo, el nivel estricto funciona como estándar.</string>
     <string name="anticheat_open_status">Ver estado de permisos</string>
     <string name="anticheat_status_title">Estado anti-trampas</string>
     <string name="anticheat_cap_overlay">Superposición</string>

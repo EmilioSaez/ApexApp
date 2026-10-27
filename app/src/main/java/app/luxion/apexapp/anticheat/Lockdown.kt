@@ -12,14 +12,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/** Lockdown activo: lo observa la pantalla de sonar para aplicar inmersivo, Atrás y lock task. */
+/** Lockdown activo: lo observa la pantalla de sonar para aplicar inmersivo y Atrás. */
 data class ActiveLockdown(val sessionId: String, val alarmId: Long, val protection: Protection)
-
-/** Alta/baja de la lista blanca de lock task; solo tiene efecto con device owner. */
-interface LockTaskPolicy {
-    fun allow()
-    fun clear()
-}
 
 /** Sesión de sonado viva, persistida para detectar muerte del proceso o reinicio. */
 interface ActiveSessionStore {
@@ -36,7 +30,6 @@ class LockdownController(
     private val capabilities: CapabilityChecker,
     private val volume: VolumeLock,
     private val tracker: SessionIntegrityTracker,
-    private val lockTaskPolicy: LockTaskPolicy,
     private val activeSession: ActiveSessionStore,
     private val snoozeCounts: SnoozeCounts,
     private val recorder: WakeEventRecorder,
@@ -53,7 +46,6 @@ class LockdownController(
         activeSession.put(session.sessionId, session.alarm.id)
         if (!protection.active) return
         if (protection.volumeLock) volume.engage(session.sessionId)
-        if (protection.lockTask) lockTaskPolicy.allow()
         _active.value = ActiveLockdown(session.sessionId, session.alarm.id, protection)
         // Con el dispositivo en uso el full-screen intent solo muestra un aviso; con el permiso de
         // superposición la app puede abrir la pantalla de sonar directamente desde segundo plano.
@@ -72,9 +64,6 @@ class LockdownController(
     /** La pantalla de sonar salió del primer plano durante el lockdown. */
     fun exitAttempt(sessionId: String) = tracker.exitAttempt(sessionId)
 
-    /** Un juego táctil descartó un toque sintético durante el sonado. */
-    fun syntheticInput(sessionId: String) = tracker.syntheticInput(sessionId)
-
     fun volumeKeyPressed() = volume.keyPressed()
 
     /** Llamar al arrancar la app: una sesión viva sin sonado es una interrupción (proceso muerto o reinicio). */
@@ -87,7 +76,6 @@ class LockdownController(
     private fun release(sessionId: String) {
         if (_active.value?.sessionId != sessionId) return
         volume.release()
-        lockTaskPolicy.clear()
         _active.value = null
     }
 

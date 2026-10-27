@@ -8,10 +8,8 @@ import app.luxion.apexapp.anticheat.ActiveSessionStore
 import app.luxion.apexapp.anticheat.AlarmVolumeGateway
 import app.luxion.apexapp.anticheat.AndroidAlarmVolumeGateway
 import app.luxion.apexapp.anticheat.AndroidCapabilityChecker
-import app.luxion.apexapp.anticheat.AndroidLockTaskPolicy
 import app.luxion.apexapp.anticheat.AndroidSnoozeScheduler
 import app.luxion.apexapp.anticheat.CapabilityChecker
-import app.luxion.apexapp.anticheat.LockTaskPolicy
 import app.luxion.apexapp.anticheat.LockdownController
 import app.luxion.apexapp.anticheat.PrefsActiveSessionStore
 import app.luxion.apexapp.anticheat.PrefsSnoozeCounts
@@ -41,7 +39,6 @@ import kotlinx.coroutines.SupervisorJob
 interface AntiCheatBindings {
     @Binds fun capabilities(impl: AndroidCapabilityChecker): CapabilityChecker
     @Binds fun volumeGateway(impl: AndroidAlarmVolumeGateway): AlarmVolumeGateway
-    @Binds fun lockTaskPolicy(impl: AndroidLockTaskPolicy): LockTaskPolicy
     @Binds fun activeSessions(impl: PrefsActiveSessionStore): ActiveSessionStore
     @Binds fun snoozeCounts(impl: PrefsSnoozeCounts): SnoozeCounts
     @Binds fun snoozeScheduler(impl: AndroidSnoozeScheduler): SnoozeScheduler
@@ -73,7 +70,6 @@ object AntiCheatProviders {
         capabilities: CapabilityChecker,
         volume: VolumeLock,
         tracker: SessionIntegrityTracker,
-        lockTaskPolicy: LockTaskPolicy,
         activeSessions: ActiveSessionStore,
         snoozeCounts: SnoozeCounts,
         recorder: WakeEventRecorder,
@@ -81,7 +77,7 @@ object AntiCheatProviders {
         @ApplicationContext context: Context,
         screenLauncher: RingScreenLauncher,
     ) = LockdownController(
-        capabilities, volume, tracker, lockTaskPolicy, activeSessions, snoozeCounts, recorder, clock,
+        capabilities, volume, tracker, activeSessions, snoozeCounts, recorder, clock,
         CoroutineScope(SupervisorJob() + Dispatchers.IO),
         showRingScreen = { context.startActivity(screenLauncher.intentFor(it)) },
     )

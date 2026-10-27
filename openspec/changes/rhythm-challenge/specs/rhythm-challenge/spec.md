@@ -74,17 +74,13 @@ El sistema SHALL generar los patrones de notas de forma aleatoria en cada sesió
 - **THEN** los patrones de notas son distintos
 
 ### Requirement: Anti-trampas de la alarma
-El reto SHALL NOT definir un nivel anti-trampas propio: se ejecuta bajo el nivel efectivo de la alarma. El sistema SHALL pasar cada toque por carril al validador de plausibilidad de toques de ese nivel, que descarta como no humano un ritmo de toques sintético (por ejemplo, demasiado regular o sin variación de posición). Un toque descartado SHALL NOT acertar notas. En `STRICT`, detectar toques sintéticos SHALL marcar la sesión como sospechosa con el motivo de entrada sintética. Las salidas de pantalla se cuentan según `session-integrity`.
+El reto SHALL NOT definir un nivel anti-trampas propio: se ejecuta bajo el nivel efectivo de la alarma. El sistema SHALL pasar cada toque por carril al validador de plausibilidad de toques de ese nivel, que descarta los toques no táctiles, con la ventana tapada o más rápidos que un humano. Un toque descartado SHALL NOT acertar notas. Las salidas de pantalla se cuentan según `session-integrity`.
 
 #### Scenario: Toques humanos
 - **WHEN** el usuario toca los carriles con la irregularidad natural de una persona
 - **THEN** los toques se aceptan y se evalúan contra las notas
 
-#### Scenario: Ritmo sintético en STRICT
-- **WHEN** el validador detecta toques sintéticos en una alarma `STRICT`
-- **THEN** esos toques no acertan notas y la sesión se marca como sospechosa por entrada sintética
-
-#### Scenario: Ritmo sintético en OFF
+#### Scenario: Plausibilidad en OFF
 - **WHEN** el nivel efectivo de la alarma es `OFF`
 - **THEN** el reto no descarta toques por plausibilidad
 

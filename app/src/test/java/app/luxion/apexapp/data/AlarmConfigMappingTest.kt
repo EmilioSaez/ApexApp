@@ -35,7 +35,7 @@ class AlarmConfigMappingTest {
             minute = 30,
             challenges = ChallengeConfig(4, listOf(ChallengeSpec("math", """{"ops":3}"""), ChallengeSpec("qr"))),
             soundConfig = SoundConfig(volume = 80, vibrate = false, ttsEnabled = true, ttsText = "Arriba", speakTime = true),
-            antiCheat = AntiCheatPolicy(AntiCheatLevel.STRICT, SnoozePolicy(allowed = true, minutes = 10, maxCount = 1)),
+            antiCheat = AntiCheatPolicy(AntiCheatLevel.STANDARD, SnoozePolicy(allowed = true, minutes = 10, maxCount = 1)),
         )
         assertEquals(alarm, alarm.toEntity().toDomain())
     }
