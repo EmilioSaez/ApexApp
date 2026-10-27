@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Ajustes - ApexApp</title>
+<!-- Tailwind CSS Configuration (Forced Light Mode override despite config default) -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "background": "#ffffff",
+            "surface": "#ffffff",
+            "surface-container": "#f8f9fa",
+            "surface-container-high": "#f1f3f5",
+            "surface-container-low": "#fdfdfe",
+            "on-background": "#111318",
+            "on-surface": "#111318",
+            "on-surface-variant": "#43474e",
+            "outline": "#74777f",
+            "outline-variant": "#c4c6d0",
+            "primary": "#b93e00",
+            "on-primary": "#ffffff",
+            "primary-container": "#ffdbcb",
+            "on-primary-container": "#361000",
+            "error": "#ba1a1a",
+            "on-error": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "1rem"
+          },
+          "fontFamily": {
+            "headline": ["Sora", "sans-serif"],
+            "display": ["Sora", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Sora:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen pb-24">
+<!-- TopAppBar (Task-Focused / Back Action -> Suppress main shell, use header with return) -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-14 bg-surface border-b border-outline-variant/20">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="flex items-center justify-center w-10 h-10 rounded text-on-surface hover:bg-surface-container active:scale-95 transition-colors" onclick="history.back()">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline text-lg font-bold tracking-tight text-on-surface">Ajustes</h1>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-xl mx-auto px-4 pt-20 space-y-8">
+<!-- Sección Tema -->
+<section class="space-y-1">
+<h2 class="font-headline text-xs font-semibold tracking-wider uppercase text-on-surface-variant px-3 pb-2">Tema</h2>
+<div class="divide-y divide-outline-variant/10 bg-surface">
+<!-- Option: Sistema -->
+<button class="w-full flex items-center justify-between px-4 py-4 text-left hover:bg-surface-container active:scale-[0.99] transition-colors rounded">
+<span class="font-body text-base text-on-surface font-medium">Sistema</span>
+<div class="w-5 h-5 rounded border border-outline flex items-center justify-center"></div>
+</button>
+<!-- Option: Claro (Selected) -->
+<button class="w-full flex items-center justify-between px-4 py-4 text-left bg-surface-container/50 hover:bg-surface-container active:scale-[0.99] transition-colors rounded">
+<span class="font-body text-base text-on-surface font-semibold">Claro</span>
+<div class="w-5 h-5 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-sm font-bold" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</button>
+<!-- Option: Oscuro -->
+<button class="w-full flex items-center justify-between px-4 py-4 text-left hover:bg-surface-container active:scale-[0.99] transition-colors rounded">
+<span class="font-body text-base text-on-surface font-medium">Oscuro</span>
+<div class="w-5 h-5 rounded border border-outline flex items-center justify-center"></div>
+</button>
+</div>
+</section>
+<!-- Sección Idioma -->
+<section class="space-y-1">
+<h2 class="font-headline text-xs font-semibold tracking-wider uppercase text-on-surface-variant px-3 pb-2">Idioma</h2>
+<div class="divide-y divide-outline-variant/10 bg-surface">
+<!-- Option: Sistema -->
+<button class="w-full flex items-center justify-between px-4 py-4 text-left hover:bg-surface-container active:scale-[0.99] transition-colors rounded">
+<span class="font-body text-base text-on-surface font-medium">Sistema</span>
+<div class="w-5 h-5 rounded border border-outline flex items-center justify-center"></div>
+</button>
+<!-- Option: Español (Selected) -->
+<button class="w-full flex items-center justify-between px-4 py-4 text-left bg-surface-container/50 hover:bg-surface-container active:scale-[0.99] transition-colors rounded">
+<span class="font-body text-base text-on-surface font-semibold">Español</span>
+<div class="w-5 h-5 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-sm font-bold" style="font-variation-settings: 'FILL' 1;">check</span>
+</div>
+</button>
+<!-- Option: English -->
+<button class="w-full flex items-center justify-between px-4 py-4 text-left hover:bg-surface-container active:scale-[0.99] transition-colors rounded">
+<span class="font-body text-base text-on-surface font-medium">English</span>
+<div class="w-5 h-5 rounded border border-outline flex items-center justify-center"></div>
+</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Standard Bottom Nav Bar as per shared components) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex items-center justify-around px-4 h-16 bg-surface-container border-t border-outline-variant/20">
+<a class="flex flex-col items-center justify-center gap-1 text-on-surface-variant p-1 hover:text-on-surface transition-colors active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">alarm</span>
+<span class="font-body text-xs font-medium">Alarmas</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-on-surface-variant p-1 hover:text-on-surface transition-colors active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">psychology</span>
+<span class="font-body text-xs font-medium">Retos</span>
+</a>
+<a class="flex flex-col items-center justify-center gap-1 text-on-surface-variant p-1 hover:text-on-surface transition-colors active:scale-95 duration-100" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-body text-xs font-medium">Historial</span>
+</a>
+</nav>
+</body></html>

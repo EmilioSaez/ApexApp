@@ -1,47 +1,48 @@
 package app.luxion.apexapp
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.luxion.apexapp.sharing.ImportIntents
+import app.luxion.apexapp.sharing.PendingImport
+import app.luxion.apexapp.ui.MainViewModel
+import app.luxion.apexapp.ui.navigation.AppNavigation
 import app.luxion.apexapp.ui.theme.ApexAppTheme
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
-class MainActivity : ComponentActivity() {
+// AppCompatActivity: necesario para el idioma por app (AppCompatDelegate) por debajo de Android 13.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+    private val viewModel: MainViewModel by viewModels()
+
+    @Inject lateinit var pendingImport: PendingImport
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        if (savedInstanceState == null) offerImport(intent)
         setContent {
-            ApexAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+            val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
+            val importRequested by viewModel.importRequested.collectAsStateWithLifecycle()
+            ApexAppTheme(darkTheme = themeMode.isDark(isSystemInDarkTheme())) {
+                AppNavigation(importRequested)
             }
         }
     }
-}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        offerImport(intent)
+    }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ApexAppTheme {
-        Greeting("Android")
+    private fun offerImport(intent: Intent?) {
+        ImportIntents.inputOf(intent, contentResolver)?.let(pendingImport::offer)
     }
 }

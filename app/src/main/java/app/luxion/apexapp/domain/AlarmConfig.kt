@@ -1,0 +1,74 @@
+package app.luxion.apexapp.domain
+
+import kotlinx.serialization.Serializable
+
+/**
+ * Campos de extensión de [Alarm]. Se guardan como JSON (una columna por clase): los changes que los
+ * poseen añaden propiedades con valor por defecto sin migrar el esquema.
+ */
+
+/** Retos para apagar la alarma. `difficulty == 0` significa "sin definir"; la interpreta challenge-engine. */
+@Serializable
+data class ChallengeConfig(
+    val difficulty: Int = 0,
+    val challenges: List<ChallengeSpec> = emptyList(),
+    /** Número de retos de la sesión (1..10). */
+    val count: Int = 1,
+    val mode: ChallengeMode = ChallengeMode.CHAINED,
+)
+
+/** CHAINED recorre `challenges` en orden y repite el ciclo; RANDOM elige al azar entre ellos. */
+@Serializable
+enum class ChallengeMode { CHAINED, RANDOM }
+
+/** Un reto de la cadena: `params` es JSON opaco, propio de cada `type`. */
+@Serializable
+data class ChallengeSpec(
+    val type: String,
+    val params: String = "{}",
+)
+
+@Serializable
+data class SoundConfig(
+    val volume: Int = 100,
+    val vibrate: Boolean = true,
+    val ttsEnabled: Boolean = false,
+    val ttsText: String? = null,
+    val rampSeconds: Int = 30,
+    val vibrationPattern: String = "steady",
+    val speakTime: Boolean = false,
+    val speakRepeatSeconds: Int = 0,
+) {
+    init {
+        require(volume in 0..100) { "volume must be in 0..100" }
+        require(rampSeconds in 0..MAX_RAMP_SECONDS) { "rampSeconds must be in 0..$MAX_RAMP_SECONDS" }
+        require(speakRepeatSeconds == 0 || speakRepeatSeconds >= MIN_SPEAK_REPEAT_SECONDS) {
+            "speakRepeatSeconds must be 0 or >= $MIN_SPEAK_REPEAT_SECONDS"
+        }
+        require((ttsText?.length ?: 0) <= MAX_TTS_TEXT_LENGTH) { "ttsText too long" }
+        require(VibrationPatterns.isValid(vibrationPattern)) { "invalid vibrationPattern" }
+    }
+
+    companion object {
+        const val MAX_RAMP_SECONDS = 120
+        const val MIN_SPEAK_REPEAT_SECONDS = 15
+        const val MAX_TTS_TEXT_LENGTH = 140
+    }
+}
+
+@Serializable
+enum class AntiCheatLevel { OFF, STANDARD, STRICT }
+
+@Serializable
+data class SnoozePolicy(
+    val allowed: Boolean = false,
+    val minutes: Int = 5,
+    val maxCount: Int = 3,
+)
+
+/** Ausente o vacío equivale a [AntiCheatLevel.OFF] y sin snooze. */
+@Serializable
+data class AntiCheatPolicy(
+    val level: AntiCheatLevel = AntiCheatLevel.OFF,
+    val snooze: SnoozePolicy = SnoozePolicy(),
+)

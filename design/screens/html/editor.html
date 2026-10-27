@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Apex - Editar alarma</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CDN with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-high": "#1b2029",
+            "on-tertiary-container": "#654b2c",
+            "secondary-dim": "#a69c98",
+            "on-error": "#450900",
+            "tertiary-fixed": "#ffd9b0",
+            "secondary-container": "#413a37",
+            "on-primary-fixed-variant": "#9b3f00",
+            "on-surface": "#e0e5f4",
+            "surface-container": "#161a21",
+            "on-error-container": "#ff9b82",
+            "surface": "#0c0e12",
+            "tertiary": "#ffead7",
+            "surface-container-highest": "#202631",
+            "on-background": "#e0e5f4",
+            "on-tertiary-fixed": "#50391b",
+            "on-primary": "#6f2b00",
+            "surface-dim": "#0c0e12",
+            "on-tertiary-fixed-variant": "#6f5535",
+            "primary-dim": "#ffa273",
+            "error": "#ed7f64",
+            "primary": "#ffb693",
+            "primary-container": "#7a3000",
+            "outline-variant": "#424854",
+            "inverse-on-surface": "#53555a",
+            "on-secondary-fixed": "#453e3b",
+            "secondary-fixed-dim": "#ded2cd",
+            "background": "#0c0e12",
+            "on-secondary-container": "#c9bdb8",
+            "tertiary-container": "#ffd9b0",
+            "secondary": "#a69c98",
+            "on-tertiary": "#6e5433",
+            "surface-tint": "#ffb693",
+            "on-secondary": "#251f1c",
+            "primary-fixed": "#ffdbcb",
+            "surface-bright": "#252c39",
+            "secondary-fixed": "#ede0db",
+            "tertiary-fixed-dim": "#f0cba3",
+            "on-primary-container": "#ffc3a7",
+            "primary-fixed-dim": "#ffc9b0",
+            "on-primary-fixed": "#6e2b00",
+            "inverse-primary": "#a04304",
+            "error-dim": "#ba573f",
+            "inverse-surface": "#f9f9ff",
+            "surface-variant": "#202631",
+            "on-surface-variant": "#a5abb9",
+            "surface-container-low": "#101319",
+            "outline": "#6f7682",
+            "error-container": "#7e2b17",
+            "tertiary-dim": "#f0cba3",
+            "surface-container-lowest": "#000000",
+            "on-secondary-fixed-variant": "#625a56"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {},
+          "fontFamily": {
+            "headline": [
+              "Sora"
+            ],
+            "display": [
+              "Sora"
+            ],
+            "body": [
+              "Inter"
+            ],
+            "label": [
+              "Inter"
+            ]
+          },
+          "fontSize": {}
+        },
+      },
+    }
+  </script>
+<style>
+    /* Tabular figures for strict numerical alignment */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    /* Minimalist raw scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0c0e12;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #202631;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body antialiased min-h-screen flex flex-col justify-between selection:bg-primary-container selection:text-on-primary-container">
+<!-- TOP APP BAR (Modal / Task Screen: Discreto y sobrio) -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-14 bg-surface">
+<!-- Botón Cancelar/Cerrar (Área táctil >= 48dp) -->
+<button aria-label="Cancelar y volver" class="w-12 h-12 flex items-center justify-center text-on-surface-variant hover:text-on-surface active:scale-95 transition-colors rounded" type="button">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<!-- Título Sobrio -->
+<h1 class="font-headline text-base font-bold tracking-tight text-on-surface">
+      Editar alarma
+    </h1>
+<!-- Botón Eliminar Alarma -->
+<button aria-label="Eliminar alarma" class="w-12 h-12 flex items-center justify-center text-on-surface-variant hover:text-error active:scale-95 transition-colors rounded" type="button">
+<span class="material-symbols-outlined text-xl">delete</span>
+</button>
+</header>
+<!-- CONTENEDOR PRINCIPAL SCROLLABLE (Con espaciado para Header y Footer fijos) -->
+<main class="w-full max-w-md mx-auto pt-16 pb-28 px-4 flex flex-col gap-6">
+<!-- SECCIÓN DISPLAY HORA GIGANTE -->
+<section class="flex flex-col items-center justify-center py-6 bg-surface-container-low rounded-lg border border-outline-variant/20">
+<!-- Indicador tiempo restante sobrio -->
+<div class="flex items-center gap-1.5 mb-2 px-2.5 py-1 bg-surface-container rounded text-xs font-label text-on-surface-variant">
+<span class="material-symbols-outlined text-sm text-primary">schedule</span>
+<span class="tabular-nums">Suena en 7 h 32 min</span>
+</div>
+<!-- Selector Hora Gigante (Display Sora) -->
+<div class="flex items-baseline justify-center gap-1 my-1">
+<div class="relative group cursor-pointer">
+<span class="font-display text-7xl font-extrabold tracking-tighter tabular-nums leading-none text-on-surface hover:text-primary transition-colors">06</span>
+</div>
+<span class="font-display text-6xl font-light text-outline tabular-nums leading-none">:</span>
+<div class="relative group cursor-pointer">
+<span class="font-display text-7xl font-extrabold tracking-tighter tabular-nums leading-none text-on-surface hover:text-primary transition-colors">45</span>
+</div>
+</div>
+<!-- Conmutador Formato 24h / AM-PM sobrio -->
+<div class="mt-4 flex items-center gap-1 bg-surface-container-highest p-1 rounded">
+<button class="px-3 py-1 text-xs font-label font-semibold rounded bg-surface text-primary transition-all" type="button">24H</button>
+<button class="px-3 py-1 text-xs font-label font-medium rounded text-on-surface-variant hover:text-on-surface transition-all" type="button">AM</button>
+<button class="px-3 py-1 text-xs font-label font-medium rounded text-on-surface-variant hover:text-on-surface transition-all" type="button">PM</button>
+</div>
+</section>
+<!-- SELECTOR DÍAS DE LA SEMANA -->
+<section class="flex flex-col gap-2">
+<span class="text-xs font-label font-semibold text-on-surface-variant uppercase tracking-wider">Repetición</span>
+<div class="grid grid-cols-7 gap-1.5">
+<!-- Lunes (Activo) -->
+<button class="h-12 flex flex-col items-center justify-center rounded-lg bg-surface-container-highest border border-primary/40 text-primary font-headline font-bold text-sm transition-all active:scale-95" type="button">
+<span>L</span>
+<span class="w-1 h-1 rounded-full bg-primary mt-0.5"></span>
+</button>
+<!-- Martes (Activo) -->
+<button class="h-12 flex flex-col items-center justify-center rounded-lg bg-surface-container-highest border border-primary/40 text-primary font-headline font-bold text-sm transition-all active:scale-95" type="button">
+<span>M</span>
+<span class="w-1 h-1 rounded-full bg-primary mt-0.5"></span>
+</button>
+<!-- Miércoles (Activo) -->
+<button class="h-12 flex flex-col items-center justify-center rounded-lg bg-surface-container-highest border border-primary/40 text-primary font-headline font-bold text-sm transition-all active:scale-95" type="button">
+<span>X</span>
+<span class="w-1 h-1 rounded-full bg-primary mt-0.5"></span>
+</button>
+<!-- Jueves (Activo) -->
+<button class="h-12 flex flex-col items-center justify-center rounded-lg bg-surface-container-highest border border-primary/40 text-primary font-headline font-bold text-sm transition-all active:scale-95" type="button">
+<span>J</span>
+<span class="w-1 h-1 rounded-full bg-primary mt-0.5"></span>
+</button>
+<!-- Viernes (Activo) -->
+<button class="h-12 flex flex-col items-center justify-center rounded-lg bg-surface-container-highest border border-primary/40 text-primary font-headline font-bold text-sm transition-all active:scale-95" type="button">
+<span>V</span>
+<span class="w-1 h-1 rounded-full bg-primary mt-0.5"></span>
+</button>
+<!-- Sábado (Inactivo) -->
+<button class="h-12 flex flex-col items-center justify-center rounded-lg bg-surface-container-low border border-transparent text-outline font-headline font-medium text-sm hover:text-on-surface hover:bg-surface-container transition-all active:scale-95" type="button">
+<span>S</span>
+<span class="w-1 h-1 rounded-full bg-transparent mt-0.5"></span>
+</button>
+<!-- Domingo (Inactivo) -->
+<button class="h-12 flex flex-col items-center justify-center rounded-lg bg-surface-container-low border border-transparent text-outline font-headline font-medium text-sm hover:text-on-surface hover:bg-surface-container transition-all active:scale-95" type="button">
+<span>D</span>
+<span class="w-1 h-1 rounded-full bg-transparent mt-0.5"></span>
+</button>
+</div>
+</section>
+<!-- AJUSTES DE PARÁMETROS: ETIQUETA Y SONIDO (Filas sobrias separadas por espacio) -->
+<section class="flex flex-col gap-2">
+<span class="text-xs font-label font-semibold text-on-surface-variant uppercase tracking-wider">Parámetros</span>
+<!-- Campo de texto Etiqueta -->
+<div class="flex items-center justify-between px-3.5 py-3 bg-surface-container-low rounded-lg border border-outline-variant/20 focus-within:border-primary transition-colors">
+<label class="text-xs font-label text-on-surface-variant uppercase tracking-wider min-w-[70px]" for="label-input">Nombre</label>
+<input class="w-full bg-transparent border-0 text-right text-sm font-body font-medium text-on-surface focus:ring-0 p-0 placeholder-outline" id="label-input" placeholder="Añadir etiqueta" type="text" value="Despertar laboral"/>
+</div>
+<!-- Selector Tono de Alarma -->
+<div class="flex items-center justify-between px-3.5 py-3 bg-surface-container-low rounded-lg border border-outline-variant/20 hover:border-outline-variant cursor-pointer transition-colors">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-lg text-outline">notifications_active</span>
+<span class="text-sm font-body text-on-surface">Tono</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="text-xs font-label text-on-surface font-medium">Radar urgente</span>
+<span class="material-symbols-outlined text-base">chevron_right</span>
+</div>
+</div>
+<!-- Control Volumen y Vibración -->
+<div class="flex flex-col gap-3 p-3.5 bg-surface-container-low rounded-lg border border-outline-variant/20">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-lg text-outline">volume_up</span>
+<span class="text-sm font-body text-on-surface">Volumen estricto</span>
+</div>
+<span class="text-xs font-headline font-bold text-primary tabular-nums">100%</span>
+</div>
+<div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden flex items-center">
+<div class="bg-primary h-full w-full rounded-full"></div>
+</div>
+<!-- Conmutador Vibración Intensa -->
+<div class="flex items-center justify-between pt-2 border-t border-outline-variant/10">
+<span class="text-xs font-body text-on-surface-variant">Vibración continua</span>
+<button aria-checked="true" class="w-10 h-5 bg-primary-container rounded-full relative flex items-center px-0.5" role="switch" type="button">
+<span class="w-4 h-4 bg-primary rounded-full transition-transform translate-x-5"></span>
+</button>
+</div>
+</div>
+</section>
+<!-- SELECTOR DE RETO DE DESPERTAR (Elemento central y diferenciador de Apex) -->
+<section class="flex flex-col gap-2"><div class="flex items-center justify-between">
+<span class="text-xs font-label font-semibold text-on-surface-variant uppercase tracking-wider">Reto obligatorio</span>
+<span class="text-xs font-label text-primary font-medium">Imposible posponer</span>
+</div>
+<div class="flex flex-col gap-1.5">
+<div class="group flex items-center justify-between p-3.5 bg-surface-container-low rounded-lg border border-outline-variant/20 hover:bg-surface-container transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined text-lg">calculate</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-headline font-semibold text-on-surface">Problemas matemáticos</span>
+<span class="text-xs font-body text-on-surface-variant">3 operaciones de nivel medio</span>
+</div>
+</div>
+<div class="w-5 h-5 rounded-full border border-outline flex items-center justify-center"></div>
+</div>
+<div class="flex items-center justify-between p-3.5 bg-surface-container rounded-lg border border-primary/60 transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined text-lg">qr_code_scanner</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-2">
+<span class="text-sm font-headline font-bold text-on-surface">Escanear código QR</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-label font-bold uppercase tracking-wider bg-primary/20 text-primary">Activo</span>
+</div>
+<span class="text-xs font-body text-on-surface-variant">Ubicado en baño o cocina</span>
+</div>
+</div>
+<div class="w-5 h-5 rounded-full bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-sm font-black">check</span>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3.5 bg-surface-container-low rounded-lg border border-outline-variant/20 hover:bg-surface-container transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined text-lg">vibration</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-headline font-semibold text-on-surface">Sacudir el teléfono</span>
+<span class="text-xs font-body text-on-surface-variant">50 sacudidas enérgicas</span>
+</div>
+</div>
+<div class="w-5 h-5 rounded-full border border-outline flex items-center justify-center"></div>
+</div>
+<div class="group flex items-center justify-between p-3.5 bg-surface-container-low rounded-lg border border-outline-variant/20 hover:bg-surface-container transition-all cursor-pointer">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant group-hover:text-on-surface">
+<span class="material-symbols-outlined text-lg">directions_walk</span>
+</div>
+<div class="flex flex-col">
+<span class="text-sm font-headline font-semibold text-on-surface">Pasos mínimos</span>
+<span class="text-xs font-body text-on-surface-variant">30 pasos comprobados por podómetro</span>
+</div>
+</div>
+<div class="w-5 h-5 rounded-full border border-outline flex items-center justify-center"></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-2 mt-2">
+<div class="flex items-center justify-between px-3.5 py-2.5 bg-surface-container-low rounded-lg border border-outline-variant/20">
+<span class="text-xs font-label text-on-surface-variant">Cantidad</span>
+<span class="text-xs font-bold text-primary">3 retos</span>
+</div>
+<div class="flex items-center justify-between px-3.5 py-2.5 bg-surface-container-low rounded-lg border border-outline-variant/20">
+<span class="text-xs font-label text-on-surface-variant">Dificultad</span>
+<span class="text-xs font-bold text-primary">Nivel 3/5</span>
+</div>
+</div></section>
+</main>
+<!-- BARRA DE ACCIÓN FIJA INFERIOR (Sin borders innecesarios, anclado al fondo) -->
+<footer class="fixed bottom-0 left-0 w-full z-40 bg-surface/95 backdrop-blur-sm p-4">
+<div class="max-w-md mx-auto">
+<!-- Botón Principal "Guardar alarma" con acento naranja (#FF8A4C o primary/primary-container) -->
+<button class="w-full h-12 flex items-center justify-center gap-2 bg-primary hover:bg-primary-dim text-on-primary font-headline font-bold text-sm tracking-wide rounded-lg active:scale-[0.98] transition-all" type="button">
+<span class="material-symbols-outlined text-lg font-bold">check</span>
+<span>Guardar alarma</span>
+</button>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,152 @@
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Apex - Compartir alarma</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Sora:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#ded2cd",
+            "surface-container-highest": "#202631",
+            "on-tertiary-fixed-variant": "#6f5535",
+            "tertiary-container": "#ffd9b0",
+            "surface-container-low": "#101319",
+            "background": "#0c0e12",
+            "surface-dim": "#0c0e12",
+            "surface-container-high": "#1b2029",
+            "tertiary-dim": "#f0cba3",
+            "on-secondary": "#251f1c",
+            "on-surface": "#e0e5f4",
+            "primary-container": "#7a3000",
+            "tertiary": "#ffead7",
+            "inverse-on-surface": "#53555a",
+            "surface-container-lowest": "#000000",
+            "inverse-primary": "#a04304",
+            "on-error": "#450900",
+            "inverse-surface": "#f9f9ff",
+            "on-background": "#e0e5f4",
+            "secondary-fixed": "#ede0db",
+            "primary": "#ffb693",
+            "on-secondary-fixed": "#453e3b",
+            "primary-fixed-dim": "#ffc9b0",
+            "on-primary-container": "#ffc3a7",
+            "on-primary": "#6f2b00",
+            "on-tertiary": "#6e5433",
+            "surface-variant": "#202631",
+            "surface-bright": "#252c39",
+            "on-secondary-fixed-variant": "#625a56",
+            "on-tertiary-container": "#654b2c",
+            "secondary-dim": "#a69c98",
+            "secondary": "#a69c98",
+            "on-tertiary-fixed": "#50391b",
+            "tertiary-fixed": "#ffd9b0",
+            "on-primary-fixed": "#6e2b00",
+            "surface": "#0c0e12",
+            "primary-dim": "#ffa273",
+            "on-surface-variant": "#a5abb9",
+            "error": "#ed7f64",
+            "surface-container": "#161a21",
+            "primary-fixed": "#ffdbcb",
+            "on-error-container": "#ff9b82",
+            "surface-tint": "#ffb693",
+            "error-container": "#7e2b17",
+            "on-primary-fixed-variant": "#9b3f00",
+            "tertiary-fixed-dim": "#f0cba3",
+            "outline-variant": "#424854",
+            "on-secondary-container": "#c9bdb8",
+            "secondary-container": "#413a37",
+            "outline": "#6f7682",
+            "error-dim": "#ba573f"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "fontFamily": {
+            "headline": ["Sora"],
+            "display": ["Sora"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body antialiased selection:bg-primary-container selection:text-on-primary-container min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 h-14 bg-surface border-b border-outline-variant/20">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="flex items-center justify-center w-10 h-10 rounded text-on-surface hover:bg-surface-variant/40 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+</button>
+<h1 class="font-headline text-lg font-bold tracking-tight text-on-surface">Compartir alarma</h1>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Configuración" class="flex items-center justify-center w-10 h-10 rounded text-on-surface hover:bg-surface-variant/40 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-xl">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 flex flex-col justify-between pt-20 pb-8 px-4 max-w-md mx-auto w-full">
+<div class="flex flex-col gap-6">
+<!-- Alarm Display Card -->
+<section class="bg-surface-container rounded p-6 flex flex-col gap-6">
+<div class="flex flex-col items-center justify-center py-4">
+<span class="font-headline text-6xl font-extrabold tracking-tighter leading-none text-on-surface">07:30</span>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-body text-xs font-semibold text-on-surface-variant uppercase tracking-wider">Días activos</span>
+<div class="grid grid-cols-7 gap-2">
+<div class="flex items-center justify-center h-10 rounded bg-surface-bright text-on-surface font-headline font-bold text-sm">L</div>
+<div class="flex items-center justify-center h-10 rounded bg-surface-bright text-on-surface font-headline font-bold text-sm">M</div>
+<div class="flex items-center justify-center h-10 rounded bg-surface-bright text-on-surface font-headline font-bold text-sm">X</div>
+<div class="flex items-center justify-center h-10 rounded bg-surface-bright text-on-surface font-headline font-bold text-sm">J</div>
+<div class="flex items-center justify-center h-10 rounded bg-surface-bright text-on-surface font-headline font-bold text-sm">V</div>
+<div class="flex items-center justify-center h-10 rounded bg-surface-container-low text-outline font-headline font-medium text-sm">S</div>
+<div class="flex items-center justify-center h-10 rounded bg-surface-container-low text-outline font-headline font-medium text-sm">D</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2 border-t border-outline-variant/20">
+<span class="font-body text-sm font-medium text-on-surface-variant">Modo de reto</span>
+<span class="font-headline text-sm font-bold text-on-surface">Despertar con reto</span>
+</div>
+</section>
+<!-- Message Preview Block -->
+<section class="bg-surface-container-high rounded p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-body text-xs font-medium text-on-surface-variant">Vista previa del mensaje</span>
+<span class="material-symbols-outlined text-base text-outline">visibility</span>
+</div>
+<div class="p-3 bg-surface-container rounded text-sm font-body text-on-surface leading-relaxed">
+          Te he retado a despertar conmigo a las 07:30 con Apex. ¿Te Atreves?
+        </div>
+</section>
+</div>
+<!-- Actions Section -->
+<div class="flex flex-col gap-3 pt-6">
+<button aria-label="Enviar alarma" class="w-full h-12 bg-[#B93E00] text-white font-headline font-bold text-sm rounded flex items-center justify-center active:scale-95 transition-transform">
+        Enviar alarma
+      </button>
+<button aria-label="Copiar enlace" class="w-full h-12 bg-transparent text-on-surface font-headline font-medium text-sm rounded flex items-center justify-center hover:bg-surface-variant/30 active:scale-95 transition-all">
+        Copiar enlace
+      </button>
+</div>
+</main>
+</body></html>
