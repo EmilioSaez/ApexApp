@@ -73,6 +73,14 @@ class ChallengesSection @Inject constructor(
                 onToggle = { type -> update { it.toggled(type) } },
                 inset = 0.dp,
             )
+            if (config.needsType) {
+                Text(
+                    stringResource(R.string.challenge_editor_pick_type),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+                return@Column
+            }
             CountStepper(
                 config.displayCount,
                 onChange = { value -> update { it.withCount(value) } },
@@ -88,7 +96,7 @@ class ChallengesSection @Inject constructor(
         }
     }
 
-    override fun isValid(draft: Alarm): Boolean = draft.challenges.challenges.all { spec ->
+    override fun isValid(draft: Alarm): Boolean = !draft.challenges.needsType && draft.challenges.challenges.all { spec ->
         editorsByType[ChallengeType(spec.type)]?.isValid(spec.params) ?: true
     }
 
@@ -101,7 +109,7 @@ class ChallengesSection @Inject constructor(
 @Composable
 private fun SectionPreview(withChallenges: Boolean, dark: Boolean) = ApexAppTheme(darkTheme = dark) {
     val section = ChallengesSection(ChallengeRegistry(listOf(MathChallenge())), setOf(MathRenderer()), emptySet())
-    val draft = Alarm(hour = 7, minute = 0).let { if (withChallenges) it.copy(challenges = it.challenges.withChallenges()) else it }
+    val draft = Alarm(hour = 7, minute = 0).let { if (withChallenges) it.copy(challenges = it.challenges.withChallenges().toggled(ChallengeType.MATH)) else it }
     androidx.compose.material3.Surface { Column(Modifier.padding(ApexTheme.spacing.screen)) { section.Content(draft) {} } }
 }
 
