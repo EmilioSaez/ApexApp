@@ -27,6 +27,14 @@ class RhythmChallengeTest {
     }
 
     @Test
+    fun `la dificultad acelera las notas sin cambiar las rondas`() {
+        val easy = challenge.generate(1, "", Random(1)) as RhythmInstance
+        val hard = challenge.generate(5, "", Random(1)) as RhythmInstance
+        assertEquals(easy.rounds, hard.rounds)
+        assertTrue(hard.pace.bpm > easy.pace.bpm)
+    }
+
+    @Test
     fun `cada sesion lleva una semilla distinta`() {
         val a = challenge.generate(3, "", Random(1)) as RhythmInstance
         val b = challenge.generate(3, "", Random(2)) as RhythmInstance

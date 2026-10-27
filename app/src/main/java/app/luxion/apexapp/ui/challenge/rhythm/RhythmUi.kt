@@ -102,13 +102,13 @@ private fun RhythmGame(instance: RhythmInstance, onCleared: () -> Unit) {
     var roundNumber by remember(instance) { mutableIntStateOf(1) }
     var attempt by remember(instance) { mutableIntStateOf(0) }
     var restartedRound by remember(instance) { mutableIntStateOf(0) }
-    val round = remember(instance, roundNumber, attempt) { RhythmRound(RhythmPattern.generate(random)) }
+    val round = remember(instance, roundNumber, attempt) { RhythmRound(RhythmPattern.generate(random, instance.pace)) }
     var startMs by remember(round) { mutableLongStateOf(0L) }
     // Se lee al dibujar: cada fotograma y cada toque lo actualizan y provocan la recomposición.
     var elapsed by remember(round) { mutableLongStateOf(0L) }
     var widthPx by remember { mutableIntStateOf(0) }
 
-    val music = remember { RhythmMusic() }
+    val music = remember(instance) { RhythmMusic(instance.pace) }
     DisposableEffect(music) { onDispose { music.release() } }
 
     LaunchedEffect(round) {
@@ -189,7 +189,7 @@ private fun RhythmGame(instance: RhythmInstance, onCleared: () -> Unit) {
             drawLine(lineColor, Offset(0f, hitY), Offset(size.width, hitY), 4f)
             round.notes.forEachIndexed { i, note ->
                 if (round.isResolved(i)) return@forEachIndexed
-                val progress = 1f - (note.timeMs - elapsed).toFloat() / RhythmTuning.FALL_MS
+                val progress = 1f - (note.timeMs - elapsed).toFloat() / instance.pace.fallMs
                 if (progress < 0f) return@forEachIndexed
                 drawRoundRect(
                     noteColor,

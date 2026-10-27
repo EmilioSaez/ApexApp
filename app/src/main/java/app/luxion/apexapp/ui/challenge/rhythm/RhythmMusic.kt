@@ -3,7 +3,7 @@ package app.luxion.apexapp.ui.challenge.rhythm
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
-import app.luxion.apexapp.domain.challenge.rhythm.RhythmTuning
+import app.luxion.apexapp.domain.challenge.rhythm.RhythmPace
 import kotlin.math.PI
 import kotlin.math.exp
 import kotlin.math.sin
@@ -11,10 +11,10 @@ import kotlin.random.Random
 
 /**
  * Música de fondo del reto de ritmo, sintetizada en código (sin recursos de audio ni licencias):
- * un compás de 4 pulsos a [RhythmTuning.BPM] con bombo en cada pulso, hi-hat a contratiempo y bajo en los
+ * un compás de 4 pulsos a [RhythmPace.bpm] con bombo en cada pulso, hi-hat a contratiempo y bajo en los
  * pulsos 1 y 3, que es donde caen las notas. Se repite en bucle.
  */
-class RhythmMusic {
+class RhythmMusic(private val pace: RhythmPace) {
     private val track: AudioTrack? = runCatching { buildTrack() }.getOrNull()
 
     /** Arranca el compás desde el principio; llamar justo al empezar la ronda para que el pulso coincida con las notas. */
@@ -59,7 +59,7 @@ class RhythmMusic {
     }
 
     private fun renderBar(): ShortArray {
-        val beatSamples = (SAMPLE_RATE * RhythmTuning.BEAT_MS / 1000).toInt()
+        val beatSamples = (SAMPLE_RATE * pace.beatMs / 1000).toInt()
         val mix = FloatArray(beatSamples * BEATS_PER_BAR)
         val noise = Random(1)
         for (beat in 0 until BEATS_PER_BAR) {

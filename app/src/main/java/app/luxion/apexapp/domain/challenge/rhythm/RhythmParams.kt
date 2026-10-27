@@ -3,26 +3,40 @@ package app.luxion.apexapp.domain.challenge.rhythm
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlin.math.roundToInt
 
-/** Constantes de una ronda; ajustarlas aquí al calibrar. Una ronda dura unos 6,5 s. */
+/** Constantes de una ronda; ajustarlas aquí al calibrar. */
 object RhythmTuning {
     const val LANES = 3
-    const val NOTES_PER_ROUND = 6
-
-    /** Tempo de la música de fondo; las notas caen sobre sus pulsos. */
-    const val BPM = 120
-    const val BEAT_MS = 60_000L / BPM
-
-    /** Una nota cada dos pulsos (negras 1 y 3 de cada compás). */
-    const val NOTE_SPACING_MS = 2 * BEAT_MS
-
-    /** Tiempo que tarda una nota en caer hasta la línea de impacto (tres pulsos); también el margen antes de la primera. */
-    const val FALL_MS = 3 * BEAT_MS
 
     /** Una nota se acierta si el toque cae a menos de esto de su instante de impacto. */
     const val HIT_WINDOW_MS = 250L
     const val MAX_FAILURES = 3
     const val MAX_SAME_LANE_IN_A_ROW = 3
+
+    /** Duración objetivo de una ronda (~7,5 s): igual en todos los niveles, lo que cambia es la velocidad. */
+    const val ROUND_MS = 7_500L
+
+    private val BPM_BY_LEVEL = intArrayOf(90, 105, 120, 150, 180)
+
+    /** Ritmo del nivel de dificultad [level] (1..5, se acota); el nivel 3 equivale al ritmo previo (120 BPM, 6 notas). */
+    fun pace(level: Int): RhythmPace = RhythmPace(BPM_BY_LEVEL[level.coerceIn(1, BPM_BY_LEVEL.size) - 1])
+}
+
+/**
+ * Velocidad de una ronda. Las notas caen sobre los pulsos de la música: una cada dos pulsos y tres pulsos de caída.
+ * A más [bpm], más rápido caen y más notas caben en [RhythmTuning.ROUND_MS].
+ */
+data class RhythmPace(val bpm: Int) {
+    val beatMs: Long = 60_000L / bpm
+
+    /** Una nota cada dos pulsos (negras 1 y 3 de cada compás). */
+    val noteSpacingMs: Long = 2 * beatMs
+
+    /** Tiempo que tarda una nota en caer hasta la línea de impacto; también el margen antes de la primera. */
+    val fallMs: Long = 3 * beatMs
+
+    val notesPerRound: Int = ((RhythmTuning.ROUND_MS - fallMs).toDouble() / noteSpacingMs).roundToInt()
 }
 
 @Serializable

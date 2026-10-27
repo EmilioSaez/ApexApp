@@ -6,9 +6,9 @@ import kotlin.random.Random
 data class RhythmNote(val lane: Int, val timeMs: Long)
 
 object RhythmPattern {
-    fun generate(random: Random): List<RhythmNote> {
-        val lanes = ArrayList<Int>(RhythmTuning.NOTES_PER_ROUND)
-        repeat(RhythmTuning.NOTES_PER_ROUND) {
+    fun generate(random: Random, pace: RhythmPace): List<RhythmNote> {
+        val lanes = ArrayList<Int>(pace.notesPerRound)
+        repeat(pace.notesPerRound) {
             var lane = random.nextInt(RhythmTuning.LANES)
             val run = lanes.takeLastWhile { it == lane }.size
             if (run >= RhythmTuning.MAX_SAME_LANE_IN_A_ROW) {
@@ -18,7 +18,7 @@ object RhythmPattern {
             lanes += lane
         }
         return lanes.mapIndexed { i, lane ->
-            RhythmNote(lane, RhythmTuning.FALL_MS + i * RhythmTuning.NOTE_SPACING_MS)
+            RhythmNote(lane, pace.fallMs + i * pace.noteSpacingMs)
         }
     }
 }

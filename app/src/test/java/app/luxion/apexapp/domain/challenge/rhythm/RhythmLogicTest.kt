@@ -24,25 +24,50 @@ class RhythmLogicTest {
         assertEquals(RhythmParams.MAX_ROUNDS, RhythmParams.rounds(RhythmParams.paramsFor(50)))
     }
 
+    private val pace = RhythmTuning.pace(3)
+
     @Test
     fun `el patron tiene las notas y carriles esperados y espaciado regular`() {
-        val pattern = RhythmPattern.generate(Random(1))
-        assertEquals(RhythmTuning.NOTES_PER_ROUND, pattern.size)
+        val pattern = RhythmPattern.generate(Random(1), pace)
+        assertEquals(6, pattern.size)
         assertTrue(pattern.all { it.lane in 0 until RhythmTuning.LANES })
-        assertEquals(RhythmTuning.FALL_MS, pattern.first().timeMs)
-        assertTrue(pattern.zipWithNext().all { (a, b) -> b.timeMs - a.timeMs == RhythmTuning.NOTE_SPACING_MS })
+        assertEquals(pace.fallMs, pattern.first().timeMs)
+        assertTrue(pattern.zipWithNext().all { (a, b) -> b.timeMs - a.timeMs == pace.noteSpacingMs })
     }
 
     @Test
     fun `las notas caen sobre pulsos de la musica`() {
-        assertEquals(500L, RhythmTuning.BEAT_MS)
-        assertTrue(RhythmPattern.generate(Random(1)).all { it.timeMs % RhythmTuning.BEAT_MS == 0L })
+        assertEquals(500L, pace.beatMs)
+        RhythmTuning.let { (1..5).map(it::pace) }.forEach { p ->
+            assertTrue(RhythmPattern.generate(Random(1), p).all { it.timeMs % p.beatMs == 0L })
+        }
+    }
+
+    @Test
+    fun `mas dificultad es mas rapido`() {
+        val paces = (1..5).map(RhythmTuning::pace)
+        assertTrue(paces.zipWithNext().all { (a, b) -> b.bpm > a.bpm && b.fallMs < a.fallMs })
+    }
+
+    @Test
+    fun `la duracion de la ronda es la misma en todos los niveles`() {
+        (1..5).forEach { level ->
+            val p = RhythmTuning.pace(level)
+            val end = RhythmPattern.generate(Random(1), p).last().timeMs + p.noteSpacingMs
+            assertTrue("nivel $level: $end", kotlin.math.abs(end - RhythmTuning.ROUND_MS) <= p.noteSpacingMs / 2)
+        }
+    }
+
+    @Test
+    fun `el nivel se acota a 1 a 5`() {
+        assertEquals(RhythmTuning.pace(1), RhythmTuning.pace(-4))
+        assertEquals(RhythmTuning.pace(5), RhythmTuning.pace(99))
     }
 
     @Test
     fun `el patron no repite un carril mas de lo permitido`() {
         repeat(200) { seed ->
-            val lanes = RhythmPattern.generate(Random(seed)).map { it.lane }
+            val lanes = RhythmPattern.generate(Random(seed), pace).map { it.lane }
             var run = 1
             var maxRun = 1
             for (i in 1 until lanes.size) {
@@ -55,7 +80,7 @@ class RhythmLogicTest {
 
     @Test
     fun `semillas distintas dan patrones distintos`() {
-        assertNotEquals(RhythmPattern.generate(Random(1)), RhythmPattern.generate(Random(2)))
+        assertNotEquals(RhythmPattern.generate(Random(1), pace), RhythmPattern.generate(Random(2), pace))
     }
 
     @Test
