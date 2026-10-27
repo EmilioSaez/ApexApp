@@ -149,6 +149,19 @@
     <string name="challenge_type_shake">Agitar</string>
     <string name="challenge_type_steps">Pasos</string>
     <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_type_holdrelease">Mantener y soltar</string>
+    <string name="challenge_holdrelease_round">Ronda %1$d de %2$d</string>
+    <string name="challenge_holdrelease_hold">Mantén pulsado</string>
+    <string name="challenge_holdrelease_wait">Espera…</string>
+    <string name="challenge_holdrelease_release">¡Suelta!</string>
+    <string name="challenge_holdrelease_early">Soltaste antes de tiempo. Se añade una ronda.</string>
+    <string name="challenge_holdrelease_late">Soltaste tarde. Se añade una ronda.</string>
+    <string name="challenge_holdrelease_cancelled">Se interrumpió la pulsación.</string>
+    <string name="challenge_holdrelease_estimate">Duración orientativa: unos %d s</string>
+    <plurals name="challenge_holdrelease_rounds">
+        <item quantity="one">%d ronda</item>
+        <item quantity="other">%d rondas</item>
+    </plurals>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
         <item quantity="one">Pasa %d tubería sin chocar</item>

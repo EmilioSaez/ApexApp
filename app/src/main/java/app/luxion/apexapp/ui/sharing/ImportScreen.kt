@@ -243,7 +243,7 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
     "math" -> R.string.challenge_type_math
     MotionKind.SHAKE.typeId -> R.string.challenge_type_shake
     MotionKind.STEPS.typeId -> R.string.challenge_type_steps
-    TapTargetsChallenge.TYPE.id -> R.string.challenge_type_tap_targets
+    "holdrelease" -> R.string.challenge_type_holdrelease
     FlappyChallenge.TYPE.id -> R.string.challenge_type_flappy
     "memory" -> R.string.challenge_type_memory
     else -> null

@@ -29,8 +29,11 @@ import app.luxion.apexapp.ui.challenge.FlappyRenderer
 import app.luxion.apexapp.ui.challenge.QrRenderer
 import app.luxion.apexapp.ui.challenge.ShakeRenderer
 import app.luxion.apexapp.ui.challenge.StepsRenderer
+import app.luxion.apexapp.domain.challenge.holdrelease.HoldReleaseChallenge
 import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
+import app.luxion.apexapp.ui.challenge.HoldReleaseParamsEditor
+import app.luxion.apexapp.ui.challenge.HoldReleaseRenderer
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
@@ -145,15 +148,15 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
-    fun tapTargets(impl: TapTargetsChallenge): Challenge
+    fun holdRelease(impl: HoldReleaseChallenge): Challenge
 
     @Binds
     @IntoSet
-    fun tapTargetsRenderer(impl: TapTargetsRenderer): ChallengeRenderer
+    fun holdReleaseRenderer(impl: HoldReleaseRenderer): ChallengeRenderer
 
     @Binds
     @IntoSet
-    fun tapTargetsEditor(impl: TapTargetsParamsEditor): ChallengeParamsEditor
+    fun holdReleaseEditor(impl: HoldReleaseParamsEditor): ChallengeParamsEditor
 
     @Binds
     fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities
