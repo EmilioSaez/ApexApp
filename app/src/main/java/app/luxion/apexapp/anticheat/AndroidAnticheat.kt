@@ -73,25 +73,6 @@ class AndroidAlarmVolumeGateway @Inject constructor(
 }
 
 @Singleton
-class AndroidLockTaskPolicy @Inject constructor(
-    @ApplicationContext private val context: Context,
-) : LockTaskPolicy {
-    private val dpm = context.getSystemService(DevicePolicyManager::class.java)
-    private val admin = ComponentName(context, ApexDeviceAdminReceiver::class.java)
-
-    override fun allow() {
-        if (!dpm.isDeviceOwnerApp(context.packageName)) return
-        dpm.setLockTaskPackages(admin, arrayOf(context.packageName))
-        dpm.setLockTaskFeatures(admin, DevicePolicyManager.LOCK_TASK_FEATURE_NONE)
-    }
-
-    override fun clear() {
-        if (!dpm.isDeviceOwnerApp(context.packageName)) return
-        dpm.setLockTaskPackages(admin, emptyArray())
-    }
-}
-
-@Singleton
 class PrefsActiveSessionStore @Inject constructor(
     @ApplicationContext context: Context,
 ) : ActiveSessionStore {
@@ -155,7 +136,7 @@ class AndroidSnoozeScheduler @Inject constructor(
 }
 
 /**
- * Ayudante que cualquier pantalla de sonar usa para aplicar el lockdown: inmersivo, lock task y
+ * Ayudante que cualquier pantalla de sonar usa para aplicar el lockdown: inmersivo y
  * consumo de las teclas de volumen. La pantalla observa LockdownController.active.
  */
 object LockdownWindow {
@@ -166,11 +147,6 @@ object LockdownWindow {
             controller.hide(WindowInsetsCompat.Type.systemBars())
         } else {
             controller.show(WindowInsetsCompat.Type.systemBars())
-        }
-        if (lockdown?.protection?.lockTask == true) {
-            runCatching { activity.startLockTask() }
-        } else {
-            runCatching { activity.stopLockTask() }
         }
     }
 

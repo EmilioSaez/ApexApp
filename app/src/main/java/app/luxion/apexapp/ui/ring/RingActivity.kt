@@ -53,7 +53,6 @@ class RingActivity : ComponentActivity() {
                 RingScreen(
                     onFinished = ::finish,
                     antiCheat = active?.takeIf { it.sessionId == sessionId }?.protection?.effective ?: AntiCheatLevel.OFF,
-                    onSyntheticInput = { sessionId?.let(lockdownController::syntheticInput) },
                 )
             }
         }

@@ -51,7 +51,6 @@ fun ChallengeSessionScreen(
     alarmId: Long? = null,
     /** Nivel anti-trampas efectivo que aplican los juegos táctiles a sus toques. */
     antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
-    onSyntheticInput: () -> Unit = {},
     // Una sesión por sessionId: al empezar otra se crea un ViewModel nuevo.
     viewModel: ChallengeSessionViewModel = hiltViewModel(key = sessionId),
 ) {
@@ -61,7 +60,7 @@ fun ChallengeSessionScreen(
     LaunchedEffect(alarmId) { noticeViewModel.load(alarmId) }
     val notice by noticeViewModel.notice.collectAsStateWithLifecycle()
     state?.let {
-        CompositionLocalProvider(LocalTouchGuard provides TouchGuard(antiCheat, onSyntheticInput)) {
+        CompositionLocalProvider(LocalTouchGuard provides TouchGuard(antiCheat)) {
             ChallengeSessionContent(
                 state = it,
                 rendererFor = viewModel::rendererFor,

@@ -253,7 +253,6 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
 private fun AntiCheatLevel.labelRes() = when (this) {
     AntiCheatLevel.OFF -> R.string.anticheat_level_off
     AntiCheatLevel.STANDARD -> R.string.anticheat_level_standard
-    AntiCheatLevel.STRICT -> R.string.anticheat_level_strict
 }
 
 @StringRes

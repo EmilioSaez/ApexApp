@@ -93,7 +93,7 @@ El sistema SHALL NOT definir un nivel anti-trampas propio para este reto, SHALL 
 - **THEN** la ronda en curso se da por fallada
 
 ### Requirement: Validación de pulsaciones según el nivel anti-trampas
-El sistema SHALL validar cada pulsación y suelta del reto con el validador táctil compartido según el nivel anti-trampas de la alarma, descartando las pulsaciones con la ventana superpuesta, de origen no táctil real o con tiempos de reacción sintéticamente idénticos, y SHALL marcar la sesión como sospechosa por entrada sintética en el nivel `STRICT`.
+El sistema SHALL validar cada pulsación y suelta del reto con el validador táctil compartido según el nivel anti-trampas de la alarma, descartando las pulsaciones con la ventana superpuesta, de origen no táctil real o más rápidas que un humano.
 
 #### Scenario: Pulsación con ventana superpuesta
 - **WHEN** el toque llega con la ventana del reto cubierta por otra superposición
@@ -103,15 +103,7 @@ El sistema SHALL validar cada pulsación y suelta del reto con el validador tác
 - **WHEN** el evento de pulsación no procede de la pantalla táctil real
 - **THEN** la pulsación se descarta
 
-#### Scenario: Reacciones idénticas
-- **WHEN** varias rondas acertadas seguidas tienen el mismo tiempo de reacción al milisegundo
-- **THEN** el validador las considera entrada sintética
-
-#### Scenario: Entrada sintética en STRICT
-- **WHEN** se detecta entrada sintética con nivel efectivo `STRICT`
-- **THEN** la sesión se marca como sospechosa por entrada sintética
-
-#### Scenario: Entrada sintética en nivel OFF
+#### Scenario: Nivel OFF
 - **WHEN** el nivel efectivo es `OFF`
 - **THEN** no se descarta ninguna pulsación por plausibilidad
 

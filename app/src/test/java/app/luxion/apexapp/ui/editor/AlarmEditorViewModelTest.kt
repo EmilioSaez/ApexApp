@@ -67,7 +67,7 @@ class AlarmEditorViewModelTest {
     @Test
     fun editExisting_changesTimeAndKeepsOtherFields() = runTest {
         val original = Alarm(
-            hour = 7, minute = 0, label = "Old", antiCheat = AntiCheatPolicy(level = AntiCheatLevel.STRICT),
+            hour = 7, minute = 0, label = "Old", antiCheat = AntiCheatPolicy(level = AntiCheatLevel.STANDARD),
         )
         val id = repository.save(original)
         val vm = viewModel(id)
@@ -78,7 +78,7 @@ class AlarmEditorViewModelTest {
         val stored = repository.get(id)!!
         assertEquals(8, stored.hour)
         assertEquals(15, stored.minute)
-        assertEquals(AntiCheatLevel.STRICT, stored.antiCheat.level)
+        assertEquals(AntiCheatLevel.STANDARD, stored.antiCheat.level)
         assertEquals(1, repository.observeAll().first().size)
     }
 

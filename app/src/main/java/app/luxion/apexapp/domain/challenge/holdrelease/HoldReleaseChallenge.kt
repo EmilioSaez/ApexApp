@@ -16,7 +16,7 @@ class HoldReleaseInstance(
     override val type: ChallengeType = HoldReleaseChallenge.TYPE
     override val prompt: String = "${type.id}:$rounds"
 
-    fun newGame(): HoldReleaseGame = HoldReleaseGame(rounds, HoldReleaseTiming.windowFor(level), random)
+    fun newGame(): HoldReleaseGame = HoldReleaseGame(rounds, HoldReleaseTuning.forLevel(level), random)
 
     override fun check(answer: ChallengeAnswer): Boolean =
         answer is ChallengeAnswer.GameVerified && answer.type == type
