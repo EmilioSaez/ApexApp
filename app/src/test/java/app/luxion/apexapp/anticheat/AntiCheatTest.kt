@@ -132,7 +132,7 @@ class AntiCheatPolicyJsonTest {
 }
 
 class AntiCheatResolverTest {
-    private val all = Capabilities(overlay = true, deviceAdmin = true, deviceOwner = true)
+    private val all = Capabilities(overlay = true, deviceAdmin = true)
 
     @Test
     fun off_appliesNothing() {
@@ -294,7 +294,7 @@ class SnoozeControllerTest {
 
 class LockdownControllerTest {
     private val clock = Clock.fixed(Instant.ofEpochMilli(5), ZoneOffset.UTC)
-    private val caps = FakeCapabilities(Capabilities(overlay = true, deviceOwner = true))
+    private val caps = FakeCapabilities(Capabilities(overlay = true))
     private val volume = FakeVolume()
     private val tracker = SessionIntegrityTracker()
     private val active = FakeActive()

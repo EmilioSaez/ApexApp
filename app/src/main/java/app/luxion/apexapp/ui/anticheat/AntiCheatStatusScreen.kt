@@ -52,11 +52,6 @@ class AntiCheatStatusViewModel @Inject constructor(
         _capabilities.value = checker.current()
     }
 
-    fun releaseDeviceOwner() {
-        checker.clearDeviceOwner()
-        refresh()
-    }
-
     fun overlayIntent(): Intent = checker.overlaySettingsIntent()
     fun adminIntent(): Intent = checker.deviceAdminIntent()
 }
@@ -72,7 +67,6 @@ fun AntiCheatStatusScreen(onBack: () -> Unit, viewModel: AntiCheatStatusViewMode
         onBack = onBack,
         onGrantOverlay = { context.launch(viewModel.overlayIntent()) },
         onGrantAdmin = { context.launch(viewModel.adminIntent()) },
-        onReleaseOwner = viewModel::releaseDeviceOwner,
     )
 }
 
@@ -87,7 +81,6 @@ fun AntiCheatStatusContent(
     onBack: () -> Unit,
     onGrantOverlay: () -> Unit,
     onGrantAdmin: () -> Unit,
-    onReleaseOwner: () -> Unit = {},
 ) {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -116,14 +109,6 @@ fun AntiCheatStatusContent(
                 granted = capabilities.deviceAdmin,
                 onGrant = onGrantAdmin,
             )
-            // El propietario del dispositivo solo se concede por ADB: no hay botón.
-            CapabilityRow(
-                title = R.string.anticheat_cap_owner,
-                description = R.string.anticheat_cap_owner_desc,
-                granted = capabilities.deviceOwner,
-                onGrant = null,
-                onRelease = onReleaseOwner,
-            )
             SectionHeader(stringResource(R.string.anticheat_limits_title))
             Text(
                 stringResource(R.string.anticheat_limits_body),
@@ -139,8 +124,7 @@ private fun CapabilityRow(
     title: Int,
     description: Int,
     granted: Boolean,
-    onGrant: (() -> Unit)?,
-    onRelease: (() -> Unit)? = null,
+    onGrant: () -> Unit,
 ) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -156,23 +140,20 @@ private fun CapabilityRow(
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
-        if (!granted && onGrant != null) {
+        if (!granted) {
             OutlinedButton(onClick = onGrant, shape = MaterialTheme.shapes.small) { Text(stringResource(R.string.anticheat_grant), style = MaterialTheme.typography.labelLarge) }
-        }
-        if (granted && onRelease != null) {
-            OutlinedButton(onClick = onRelease, shape = MaterialTheme.shapes.small) { Text(stringResource(R.string.anticheat_release), style = MaterialTheme.typography.labelLarge) }
         }
     }
 }
 
 @Preview(name = "Claro", showBackground = true, heightDp = 800)
 @Composable
-private fun AntiCheatStatusLight() = ApexAppTheme(darkTheme = false) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false, deviceOwner = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }
+private fun AntiCheatStatusLight() = ApexAppTheme(darkTheme = false) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }
 
 @Preview(name = "Oscuro", showBackground = true, heightDp = 800, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun AntiCheatStatusDark() = ApexAppTheme(darkTheme = true) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false, deviceOwner = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }
+private fun AntiCheatStatusDark() = ApexAppTheme(darkTheme = true) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }
 
 @Preview(name = "Fuente 1.3", showBackground = true, heightDp = 800, fontScale = 1.3f)
 @Composable
-private fun AntiCheatStatusLargeFont() = ApexAppTheme(darkTheme = false) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false, deviceOwner = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }
+private fun AntiCheatStatusLargeFont() = ApexAppTheme(darkTheme = false) { AntiCheatStatusContent(Capabilities(overlay = true, deviceAdmin = false), onBack = {}, onGrantOverlay = {}, onGrantAdmin = {}) }

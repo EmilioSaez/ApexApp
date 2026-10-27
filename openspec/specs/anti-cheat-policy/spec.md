@@ -46,7 +46,7 @@ El sistema SHALL avisar en el editor, mientras el nivel de la alarma sea `STANDA
 - **THEN** el editor indica el permiso que falta y ofrece abrir la pantalla de estado
 
 ### Requirement: Pantalla de estado de capacidades
-El sistema SHALL ofrecer una pantalla que lista cada capacidad delicada (superposición, administrador de dispositivo, propietario del dispositivo), para qué se usa, si está concedida y cómo concederla, y SHALL mostrar también el estado de pantalla completa y notificaciones que ya gestiona la fiabilidad de la alarma.
+El sistema SHALL ofrecer una pantalla que lista cada capacidad delicada (superposición y administrador de dispositivo), para qué se usa, si está concedida y cómo concederla, y SHALL mostrar también el estado de pantalla completa y notificaciones que ya gestiona la fiabilidad de la alarma.
 
 #### Scenario: Consultar estado
 - **WHEN** el usuario abre la pantalla de estado

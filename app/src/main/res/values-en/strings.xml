@@ -230,14 +230,11 @@
     <string name="anticheat_cap_overlay_desc">Lets the alarm screen return to the foreground if Home is pressed.</string>
     <string name="anticheat_cap_admin">Device administrator</string>
     <string name="anticheat_cap_admin_desc">Prevents uninstalling the app directly while active.</string>
-    <string name="anticheat_cap_owner">Device owner</string>
-    <string name="anticheat_cap_owner_desc">Required to block Home, Recents and power off. Set up through ADB: see docs/anti-cheat.md.</string>
     <string name="anticheat_granted">Granted</string>
     <string name="anticheat_not_granted">Pending</string>
     <string name="anticheat_grant">Grant</string>
     <string name="anticheat_limits_title">Limits</string>
     <string name="anticheat_limits_body">Forced hardware power-off, safe mode, recovery, ADB and removing the battery cannot be prevented. Forced volume does not control external outputs with their own volume, such as some Bluetooth headphones.</string>
-    <string name="anticheat_release">Give up device owner</string>
     <string name="stats_title">Statistics</string>
     <string name="stats_open">Statistics</string>
     <string name="stats_kpi_days">days</string>

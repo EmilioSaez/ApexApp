@@ -18,21 +18,9 @@ Una alarma sin política guardada se comporta como `OFF`. Las alarmas nuevas se 
   Se concede desde la pantalla de estado (Ajustes del sistema).
 - **Administrador de dispositivo**: impide desinstalar la app directamente mientras esté activo.
   Se activa desde la pantalla de estado. Para desinstalar, desactívalo antes en Ajustes > Seguridad.
-- **Propietario del dispositivo**: solo se concede por ADB.
 
 La pantalla de estado (editor de alarma > Ver estado de permisos) muestra cada capacidad y sus límites.
 Estos permisos no son aptos para Google Play; la app se distribuye por APK directo.
-
-## Provisionar el propietario del dispositivo
-
-Requisitos: dispositivo recién restablecido o **sin cuentas** (Google, de fabricante, etc.) y depuración USB.
-
-```
-adb shell dpm set-device-owner app.luxion.apexapp/.anticheat.ApexDeviceAdminReceiver
-```
-
-Si falla con `Not allowed to set the device owner because there are already some accounts`, elimina las
-cuentas del dispositivo y repite.
 
 ## Salir si algo falla (rescate)
 
@@ -42,9 +30,8 @@ Si el dispositivo se queda atrapado:
 adb shell am force-stop app.luxion.apexapp
 ```
 
-Para dejar de ser propietario del dispositivo, usa el botón **Renunciar a propietario del dispositivo** de la
-pantalla de estado. Nota: `adb shell dpm remove-active-admin` **no** funciona con esta app (no es `testOnly`)
-y lanza una `SecurityException`; sin el botón solo queda restablecer de fábrica.
+Nota: `adb shell dpm remove-active-admin` **no** funciona con esta app (no es `testOnly`) y lanza una
+`SecurityException`; desactiva el administrador en Ajustes > Seguridad.
 
 ## Snooze
 
@@ -92,16 +79,13 @@ Verificadas:
 | Matar el proceso durante el sonado | El sonado se detiene (nada lo reanuda); la marca de sesión viva se consume al arrancar la app (`SUSPICIOUS`). |
 | `alarm-sound` | Con el lockdown activo el `MediaPlayer` suena en `USAGE_ALARM` con el stream al máximo (7/7). |
 | Administrador de dispositivo | Con el administrador activo, `pm uninstall` falla con `DELETE_FAILED_DEVICE_POLICY_MANAGER`. |
-| Botón «Renunciar a propietario» | En el emulador con propietario real (`dpm`), deja `dpm list-owners` vacío y la pantalla de estado pasa a «Pendiente». |
 
 Hallazgos:
 
 - Con el dispositivo en uso, el full-screen intent solo muestra un aviso; por eso, con superposición, el lockdown abre
   la pantalla de sonar directamente. Sin superposición el lockdown solo se aplica cuando el usuario abre la pantalla.
 - Matar el proceso (por ejemplo, Forzar detención en Ajustes) silencia la alarma: el servicio no se reanuda. Mitigarlo
-  exige que `alarm-reliability` reanude el sonado o, con propietario del dispositivo, impedir la detención forzada
-  (`setUserControlDisabledPackages`); no está implementado.
-- `adb shell dpm remove-active-admin` falla con esta app; usa el botón de la pantalla de estado.
+  exige que `alarm-reliability` reanude el sonado; no está implementado.
+- `adb shell dpm remove-active-admin` falla con esta app; desactiva el administrador en Ajustes > Seguridad.
 
-Pendiente para el usuario: probar el botón de renuncia en un dispositivo físico, y activar el
-administrador con el diálogo real del sistema.
+Pendiente para el usuario: activar el administrador con el diálogo real del sistema.

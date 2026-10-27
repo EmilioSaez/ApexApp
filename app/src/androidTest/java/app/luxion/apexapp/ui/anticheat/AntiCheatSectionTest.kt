@@ -26,7 +26,7 @@ class AntiCheatSectionTest {
 
     private fun show(
         initial: AntiCheatPolicy = AntiCheatPolicy(),
-        capabilities: Capabilities = Capabilities(overlay = true, deviceOwner = true),
+        capabilities: Capabilities = Capabilities(overlay = true),
         onOpenStatus: () -> Unit = {},
     ): () -> AntiCheatPolicy {
         var policy by mutableStateOf(initial)
