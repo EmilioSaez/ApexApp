@@ -8,7 +8,7 @@ enum class RoundOutcome { HIT, EARLY, LATE, CANCELLED }
 
 /**
  * Máquina de rondas de «Mantener y soltar». Los tiempos son milisegundos de un reloj monotónico que pone el
- * llamador. Un fallo repite la ronda con otro instante de señal y suma una ronda extra (hasta [HoldReleaseLevel.maxExtra]); el
+ * llamador. Un fallo repite la ronda con otro instante de señal y suma una ronda extra (hasta [MAX_EXTRA]); el
  * tercer fallo seguido reinicia solo la ronda en curso, sin ronda extra y conservando las superadas.
  */
 class HoldReleaseGame(
@@ -33,7 +33,7 @@ class HoldReleaseGame(
     fun press(t: Long) {
         if (phase != HoldPhase.IDLE) return
         pressedAt = t
-        signalAt = t + random.nextLong(tuning.minHoldMs, tuning.maxHoldMs + 1)
+        signalAt = t + random.nextLong(MIN_HOLD_MS, MAX_HOLD_MS + 1)
         phase = HoldPhase.HOLDING
     }
 
@@ -66,12 +66,15 @@ class HoldReleaseGame(
 
     private fun fail(outcome: RoundOutcome): RoundOutcome {
         streak++
-        if (streak >= RESTART_AFTER) streak = 0 else if (extraRounds < tuning.maxExtra) extraRounds++
+        if (streak >= RESTART_AFTER) streak = 0 else if (extraRounds < MAX_EXTRA) extraRounds++
         phase = HoldPhase.IDLE
         return outcome
     }
 
     companion object {
         const val RESTART_AFTER = 3
+        const val MIN_HOLD_MS = 1_500L
+        const val MAX_HOLD_MS = 4_000L
+        const val MAX_EXTRA = 3
     }
 }
