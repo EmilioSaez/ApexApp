@@ -7,7 +7,7 @@ Define el reto de foto a un objeto: el usuario registra un objeto de su entorno 
 ## ADDED Requirements
 
 ### Requirement: Registro del objeto
-El sistema SHALL permitir al usuario elegir, desde una vista previa de cámara, una de las etiquetas que el reconocedor detecta en ese momento, y SHALL guardar solo esa etiqueta como objeto de la alarma.
+El sistema SHALL permitir al usuario elegir, desde una vista previa de cámara, una de las etiquetas que el reconocedor detecta en ese momento, y SHALL guardar solo esa etiqueta como objeto de la alarma. El usuario SHALL poder registrar varios objetos y quitarlos.
 
 #### Scenario: Elegir etiqueta
 - **WHEN** el usuario apunta la cámara a un objeto y selecciona una de las etiquetas detectadas
@@ -30,7 +30,11 @@ El sistema SHALL superar el reto cuando la etiqueta registrada se detecte con un
 
 #### Scenario: Varios retos de foto
 - **WHEN** la sesión incluye N retos de foto
-- **THEN** el usuario debe superar N verificaciones, una foto en vivo por reto, del objeto registrado
+- **THEN** el usuario debe superar N verificaciones, una foto en vivo por reto
+
+#### Scenario: Objetos distintos
+- **WHEN** la sesión incluye varios retos de foto y hay varios objetos registrados
+- **THEN** cada reto pide un objeto distinto de los ya superados en la sesión, y solo se repite uno cuando se agotan los registrados
 
 #### Scenario: Objeto fuera de encuadre
 - **WHEN** el objeto sale del encuadre antes de completar la ventana

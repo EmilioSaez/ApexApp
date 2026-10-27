@@ -38,6 +38,13 @@ interface Challenge {
 
     /** [level] va de 1 a 5; [params] es el JSON opaco de `ChallengeSpec.params` de este tipo. */
     fun generate(level: Int, params: String, random: Random): ChallengeInstance
+
+    /**
+     * Igual que [generate], pero con las instancias ya superadas en la sesión ([solved]) para que un tipo con
+     * varias opciones (p. ej. varios objetos) no repita la misma en retos consecutivos.
+     */
+    fun generate(level: Int, params: String, random: Random, solved: List<ChallengeInstance>): ChallengeInstance =
+        generate(level, params, random)
 }
 
 interface ChallengeInstance {

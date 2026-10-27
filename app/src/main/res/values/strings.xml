@@ -164,9 +164,10 @@
     <string name="challenge_object_rejected_static">Parece una foto. Enfoca el objeto real.</string>
     <string name="object_register_required">Elige el objeto de esta alarma.</string>
     <string name="object_register_scanning">Apunta la cámara al objeto y elige una etiqueta.</string>
-    <string name="object_register_done">Objeto registrado: %1$s.</string>
+    <string name="object_register_done">Objetos de la alarma (toca uno para quitarlo). Si salen varios retos de foto, se piden objetos distintos.</string>
     <string name="object_register_action">Registrar objeto</string>
-    <string name="object_register_replace">Cambiar objeto</string>
+    <string name="object_register_add">Añadir otro objeto</string>
+    <string name="object_register_remove">Quitar %1$s</string>
     <string name="object_register_cancel">Cancelar</string>
     <string name="object_register_none_detected">Aún no se reconoce nada. Acércate o mejora la luz.</string>
     <string name="object_register_generic_hint">Si la etiqueta es muy genérica (p. ej. habitación), elige otra más específica.</string>

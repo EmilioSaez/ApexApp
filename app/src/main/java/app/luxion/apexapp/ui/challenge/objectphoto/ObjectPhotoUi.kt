@@ -19,6 +19,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import app.luxion.apexapp.R
@@ -140,8 +142,9 @@ class ObjectPhotoParamsEditor @Inject constructor() : ChallengeParamsEditor {
 }
 
 /**
- * Vista previa de cámara con las etiquetas que se reconocen ahora mismo; al elegir una se invoca
- * [onParamsChange] con los params que sustituyen al objeto anterior. Solo se guarda la etiqueta.
+ * Lista de objetos de la alarma y vista previa de cámara con las etiquetas que se reconocen ahora mismo; al
+ * elegir una se añade a la lista vía [onParamsChange]. Solo se guardan etiquetas. Con varios retos de foto en
+ * una sesión se piden objetos distintos, así que conviene registrar más de uno.
  */
 @OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
 @Composable
@@ -154,16 +157,31 @@ private fun ObjectRegistration(currentParams: String, onParamsChange: (String) -
         Text(
             text = when {
                 scanning -> stringResource(R.string.object_register_scanning)
-                registered != null -> stringResource(R.string.object_register_done, registered.text)
+                registered.isNotEmpty() -> stringResource(R.string.object_register_done)
                 else -> stringResource(R.string.object_register_required)
             },
             style = MaterialTheme.typography.bodyLarge,
-            color = if (registered == null && !scanning) {
+            color = if (registered.isEmpty() && !scanning) {
                 MaterialTheme.colorScheme.error
             } else {
                 MaterialTheme.colorScheme.onSurface
             },
         )
+        if (registered.isNotEmpty()) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
+                verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
+            ) {
+                registered.forEach { obj ->
+                    val remove = stringResource(R.string.object_register_remove, obj.text)
+                    AssistChip(
+                        onClick = { onParamsChange(ObjectPhotoParams.removed(currentParams, obj.index)) },
+                        label = { Text("${obj.text}  ✕") },
+                        modifier = Modifier.semantics { contentDescription = remove },
+                    )
+                }
+            }
+        }
         if (scanning) {
             CameraPermissionGate(modifier = Modifier.fillMaxWidth().height(ApexTheme.spacing.xxxl * 6)) {
                 ObjectLabelScanner(
@@ -174,7 +192,8 @@ private fun ObjectRegistration(currentParams: String, onParamsChange: (String) -
                     onError = { scanning = false },
                 )
             }
-            if (detected.isEmpty()) {
+            val offered = detected.filter { label -> registered.none { it.index == label.index } }
+            if (offered.isEmpty()) {
                 Text(
                     stringResource(R.string.object_register_none_detected),
                     style = MaterialTheme.typography.bodySmall,
@@ -185,10 +204,10 @@ private fun ObjectRegistration(currentParams: String, onParamsChange: (String) -
                     horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
                     verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
                 ) {
-                    detected.forEach { label ->
+                    offered.forEach { label ->
                         AssistChip(
                             onClick = {
-                                onParamsChange(ObjectPhotoParams.paramsFor(RegisteredObject(label.index, label.text)))
+                                onParamsChange(ObjectPhotoParams.added(currentParams, RegisteredObject(label.index, label.text)))
                                 scanning = false
                             },
                             label = { Text(label.text) },
@@ -214,7 +233,7 @@ private fun ObjectRegistration(currentParams: String, onParamsChange: (String) -
             ) {
                 Text(
                     stringResource(
-                        if (registered == null) R.string.object_register_action else R.string.object_register_replace,
+                        if (registered.isEmpty()) R.string.object_register_action else R.string.object_register_add,
                     ),
                 )
             }

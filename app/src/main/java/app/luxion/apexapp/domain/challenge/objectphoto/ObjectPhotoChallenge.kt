@@ -17,20 +17,35 @@ import kotlinx.serialization.json.Json
 @Serializable
 data class RegisteredObject(val index: Int, val text: String)
 
-/** Lectura y escritura de `ChallengeSpec.params` del reto de foto a un objeto. Solo se guarda la etiqueta. */
+@Serializable
+private data class ObjectList(val objects: List<RegisteredObject> = emptyList())
+
+/**
+ * Lectura y escritura de `ChallengeSpec.params` del reto de foto a un objeto: la lista de objetos entre los
+ * que se elige uno por reto. Solo se guardan etiquetas.
+ */
 object ObjectPhotoParams {
     private val json = Json { ignoreUnknownKeys = true }
 
-    fun paramsFor(obj: RegisteredObject): String = json.encodeToString(obj)
+    fun paramsFor(objects: List<RegisteredObject>): String = json.encodeToString(ObjectList(objects.distinctBy { it.index }))
 
-    /** El objeto registrado, o null si [params] está vacío o no es válido. */
-    fun parse(params: String): RegisteredObject? =
-        runCatching { json.decodeFromString<RegisteredObject>(params.ifBlank { return null }) }
+    /** Los objetos registrados (sin repetir ni inválidos); vacío si [params] está vacío o no es válido. */
+    fun parse(params: String): List<RegisteredObject> =
+        runCatching { json.decodeFromString<ObjectList>(params.ifBlank { return emptyList() }) }
             .getOrNull()
-            ?.takeIf { it.text.isNotBlank() && it.index >= 0 }
+            ?.objects
+            ?.filter { it.text.isNotBlank() && it.index >= 0 }
+            ?.distinctBy { it.index }
+            .orEmpty()
 
-    /** Verdadero si la alarma ya tiene un objeto; sin él no puede guardarse con este reto. */
-    fun isRegistered(params: String): Boolean = parse(params) != null
+    /** [params] con [obj] añadido; si ya estaba, no cambia. */
+    fun added(params: String, obj: RegisteredObject): String = paramsFor(parse(params) + obj)
+
+    /** [params] sin el objeto de índice [index]. */
+    fun removed(params: String, index: Int): String = paramsFor(parse(params).filterNot { it.index == index })
+
+    /** Verdadero si la alarma ya tiene algún objeto; sin él no puede guardarse con este reto. */
+    fun isRegistered(params: String): Boolean = parse(params).isNotEmpty()
 }
 
 /** Etiqueta detectada en un fotograma, con su [confidence] entre 0 y 1. */
@@ -83,7 +98,20 @@ class ObjectPhotoChallenge @Inject constructor(
     }
 
     override fun generate(level: Int, params: String, random: Random): ChallengeInstance =
-        ObjectPhotoInstance(level, ObjectPhotoParams.parse(params))
+        generate(level, params, random, emptyList())
+
+    /** Elige un objeto que no se haya pedido ya en la sesión; solo repite cuando se agotan los registrados. */
+    override fun generate(
+        level: Int,
+        params: String,
+        random: Random,
+        solved: List<ChallengeInstance>,
+    ): ChallengeInstance {
+        val objects = ObjectPhotoParams.parse(params)
+        val used = solved.mapNotNull { (it as? ObjectPhotoInstance)?.expected?.index }.toSet()
+        val candidates = objects.filter { it.index !in used }.ifEmpty { objects }
+        return ObjectPhotoInstance(level, candidates.randomOrNull(random))
+    }
 
     companion object {
         val TYPE = ChallengeType("object")

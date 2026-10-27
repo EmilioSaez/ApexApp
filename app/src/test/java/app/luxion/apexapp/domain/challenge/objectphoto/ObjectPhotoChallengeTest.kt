@@ -1,6 +1,13 @@
 package app.luxion.apexapp.domain.challenge.objectphoto
 
+import app.luxion.apexapp.domain.ChallengeMode
+import app.luxion.apexapp.domain.ChallengeSpec
 import app.luxion.apexapp.domain.challenge.Availability
+import app.luxion.apexapp.domain.challenge.ChallengeEventSink
+import app.luxion.apexapp.domain.challenge.ChallengeRegistry
+import app.luxion.apexapp.domain.challenge.ChallengeSession
+import app.luxion.apexapp.domain.challenge.FixedDifficultyProvider
+import app.luxion.apexapp.domain.challenge.SessionConfig
 import app.luxion.apexapp.domain.challenge.ChallengeAnswer
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.qr.FrameLivenessChecker
@@ -25,23 +32,80 @@ class ObjectPhotoChallengeTest {
     }
 
     private val tap = RegisteredObject(index = 42, text = "Tap")
-    private val params = ObjectPhotoParams.paramsFor(tap)
+    private val mug = RegisteredObject(index = 7, text = "Mug")
+    private val plant = RegisteredObject(index = 9, text = "Plant")
+    private val params = ObjectPhotoParams.paramsFor(listOf(tap))
     private val frameNanos = 33_000_000L
 
     private fun instance(params: String) = ObjectPhotoChallenge(Caps()).generate(3, params, Random(1))
 
     @Test
-    fun `los params guardan solo la etiqueta`() {
-        assertEquals(tap, ObjectPhotoParams.parse(params))
+    fun `los params guardan solo etiquetas`() {
+        assertEquals(listOf(tap), ObjectPhotoParams.parse(params))
         assertTrue(ObjectPhotoParams.isRegistered(params))
     }
 
     @Test
+    fun `anadir y quitar objetos sin repetir`() {
+        val two = ObjectPhotoParams.added(ObjectPhotoParams.added(params, mug), mug)
+        assertEquals(listOf(tap, mug), ObjectPhotoParams.parse(two))
+        assertEquals(listOf(mug), ObjectPhotoParams.parse(ObjectPhotoParams.removed(two, tap.index)))
+        assertFalse(ObjectPhotoParams.isRegistered(ObjectPhotoParams.removed(params, tap.index)))
+    }
+
+    @Test
+    fun `con varios objetos no se repite uno ya superado`() {
+        val all = ObjectPhotoParams.paramsFor(listOf(tap, mug, plant))
+        val challenge = ObjectPhotoChallenge(Caps())
+        repeat(20) { seed ->
+            val random = Random(seed)
+            val solved = mutableListOf<app.luxion.apexapp.domain.challenge.ChallengeInstance>()
+            repeat(3) {
+                val next = challenge.generate(3, all, random, solved) as ObjectPhotoInstance
+                assertTrue(solved.none { (it as ObjectPhotoInstance).expected == next.expected })
+                solved += next
+            }
+        }
+    }
+
+    @Test
+    fun `una sesion con dos retos de foto pide objetos distintos`() {
+        val all = ObjectPhotoParams.paramsFor(listOf(tap, mug))
+        repeat(20) { seed ->
+            val session = ChallengeSession(
+                sessionId = "s",
+                alarmId = null,
+                config = SessionConfig(3, 2, ChallengeMode.CHAINED, listOf(ChallengeSpec(ObjectPhotoChallenge.TYPE.id, all))),
+                registry = ChallengeRegistry(listOf(ObjectPhotoChallenge(Caps()))),
+                difficultyProvider = FixedDifficultyProvider(),
+                eventSink = ChallengeEventSink {},
+                random = Random(seed),
+            )
+            val asked = mutableListOf<Int>()
+            repeat(2) {
+                val expected = (session.state.value.current as ObjectPhotoInstance).expected!!
+                asked += expected.index
+                session.submit(ChallengeAnswer.ObjectVerified(expected.index))
+            }
+            assertTrue(session.state.value.passed)
+            assertEquals(2, asked.toSet().size)
+        }
+    }
+
+    @Test
+    fun `si se agotan los objetos se repite`() {
+        val challenge = ObjectPhotoChallenge(Caps())
+        val first = challenge.generate(3, params, Random(1)) as ObjectPhotoInstance
+        val second = challenge.generate(3, params, Random(1), listOf(first)) as ObjectPhotoInstance
+        assertEquals(tap, second.expected)
+    }
+
+    @Test
     fun `params vacios o invalidos no cuentan como registrados`() {
-        assertNull(ObjectPhotoParams.parse(""))
-        assertNull(ObjectPhotoParams.parse("{}"))
-        assertNull(ObjectPhotoParams.parse("no es json"))
-        assertFalse(ObjectPhotoParams.isRegistered("""{"index":-1,"text":"x"}"""))
+        assertTrue(ObjectPhotoParams.parse("").isEmpty())
+        assertTrue(ObjectPhotoParams.parse("{}").isEmpty())
+        assertTrue(ObjectPhotoParams.parse("no es json").isEmpty())
+        assertFalse(ObjectPhotoParams.isRegistered("""{"objects":[{"index":-1,"text":"x"}]}"""))
     }
 
     @Test
