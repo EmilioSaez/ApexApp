@@ -25,9 +25,6 @@ sealed interface ChallengeAnswer {
 
     /** Casillas tocadas por el usuario, en orden, en el reto de memoria. */
     data class Pattern(val type: ChallengeType, val taps: List<Int>) : ChallengeAnswer
-
-    /** El reto de foto a un objeto verificó en vivo la etiqueta [labelIndex] (índice de ML Kit). */
-    data class ObjectVerified(val labelIndex: Int) : ChallengeAnswer
 }
 
 sealed interface Availability {
