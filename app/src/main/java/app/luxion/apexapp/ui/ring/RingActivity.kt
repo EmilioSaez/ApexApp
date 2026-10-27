@@ -9,14 +9,17 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
 import app.luxion.apexapp.alarm.RingScreenLauncher
 import app.luxion.apexapp.alarm.RingingRegistry
 import app.luxion.apexapp.anticheat.ActiveLockdown
 import app.luxion.apexapp.anticheat.LockdownController
 import app.luxion.apexapp.anticheat.LockdownWindow
+import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -46,7 +49,12 @@ class RingActivity : ComponentActivity() {
         onBackPressedDispatcher.addCallback(this, backGuard)
         setContent {
             ApexAppTheme(darkTheme = isSystemInDarkTheme()) {
-                RingScreen(onFinished = ::finish)
+                val active by lockdownController.active.collectAsStateWithLifecycle()
+                RingScreen(
+                    onFinished = ::finish,
+                    antiCheat = active?.takeIf { it.sessionId == sessionId }?.protection?.effective ?: AntiCheatLevel.OFF,
+                    onSyntheticInput = { sessionId?.let(lockdownController::syntheticInput) },
+                )
             }
         }
         lifecycleScope.launch {
