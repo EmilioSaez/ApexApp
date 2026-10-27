@@ -68,14 +68,6 @@ class StepsParamsEditor @Inject constructor(capabilities: DeviceCapabilities) :
         unit = { pluralStringResource(R.plurals.challenge_target_info_steps, it, it) },
     )
 
-class StandUpParamsEditor @Inject constructor(capabilities: DeviceCapabilities) :
-    ChallengeParamsEditor by MotionParamsEditor(
-        MotionKind.STAND_UP,
-        capabilities,
-        title = { stringResource(R.string.challenge_type_standup) },
-        unit = { pluralStringResource(R.plurals.challenge_target_info_seconds, it, it) },
-    )
-
 /** Registro del código del reto QR; no deja guardar la alarma mientras no haya uno. */
 class QrParamsEditor @Inject constructor() : ChallengeParamsEditor {
     override val type: ChallengeType = QrChallenge.TYPE
