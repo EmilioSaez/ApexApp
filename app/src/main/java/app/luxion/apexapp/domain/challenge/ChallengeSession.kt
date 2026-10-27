@@ -65,7 +65,10 @@ class ChallengeSession(
         } else {
             emit { ChallengeEvent.ChallengeFailed(sessionId, alarmId, it, current.type, current.level, index) }
             failures++
-            _state.value = _state.value.copy(current = generate(currentSpec), lastAnswerWrong = true)
+            _state.value = _state.value.copy(
+                current = if (current.keepOnFailure) current else generate(currentSpec),
+                lastAnswerWrong = true,
+            )
         }
     }
 
