@@ -87,7 +87,6 @@ fun MotionChallengeBody(
     val title = when (kind) {
         MotionKind.SHAKE -> pluralStringResource(R.plurals.challenge_shake_prompt, target, target)
         MotionKind.STEPS -> pluralStringResource(R.plurals.challenge_steps_prompt, target, target)
-        MotionKind.STAND_UP -> pluralStringResource(R.plurals.challenge_standup_prompt, target, target)
     }
     val description = stringResource(R.string.challenge_motion_progress, (progress.fraction * 100).toInt())
     Column(

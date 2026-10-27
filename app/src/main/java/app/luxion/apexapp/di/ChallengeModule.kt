@@ -15,22 +15,25 @@ import app.luxion.apexapp.ui.challenge.ChallengeRenderer
 import app.luxion.apexapp.ui.challenge.ChallengesSection
 import app.luxion.apexapp.ui.challenge.MathRenderer
 import app.luxion.apexapp.ui.challenge.FlappyParamsEditor
+import app.luxion.apexapp.ui.challenge.MemoryParamsEditor
+import app.luxion.apexapp.ui.challenge.MemoryRenderer
+import app.luxion.apexapp.domain.challenge.memory.MemoryChallenge
 import app.luxion.apexapp.ui.challenge.QrParamsEditor
 import app.luxion.apexapp.ui.challenge.ShakeParamsEditor
-import app.luxion.apexapp.ui.challenge.StandUpParamsEditor
 import app.luxion.apexapp.ui.challenge.StepsParamsEditor
 import app.luxion.apexapp.ui.editor.EditorSection
 import app.luxion.apexapp.ui.challenge.FlappyRenderer
 import app.luxion.apexapp.ui.challenge.QrRenderer
 import app.luxion.apexapp.ui.challenge.ShakeRenderer
-import app.luxion.apexapp.ui.challenge.StandUpRenderer
 import app.luxion.apexapp.ui.challenge.StepsRenderer
 import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
+import app.luxion.apexapp.domain.challenge.objectphoto.ObjectPhotoChallenge
+import app.luxion.apexapp.ui.challenge.objectphoto.ObjectPhotoParamsEditor
+import app.luxion.apexapp.ui.challenge.objectphoto.ObjectPhotoRenderer
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
-import app.luxion.apexapp.domain.challenge.sensor.StandUpChallenge
 import app.luxion.apexapp.domain.challenge.sensor.StepsChallenge
 import app.luxion.apexapp.platform.AndroidDeviceCapabilities
 import app.luxion.apexapp.platform.AndroidMotionSensors
@@ -87,11 +90,11 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
-    fun standUp(impl: StandUpChallenge): Challenge
+    fun qr(impl: QrChallenge): Challenge
 
     @Binds
     @IntoSet
-    fun qr(impl: QrChallenge): Challenge
+    fun objectPhoto(impl: ObjectPhotoChallenge): Challenge
 
     @Binds
     @IntoSet
@@ -107,11 +110,11 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
-    fun standUpRenderer(impl: StandUpRenderer): ChallengeRenderer
+    fun qrRenderer(impl: QrRenderer): ChallengeRenderer
 
     @Binds
     @IntoSet
-    fun qrRenderer(impl: QrRenderer): ChallengeRenderer
+    fun objectPhotoRenderer(impl: ObjectPhotoRenderer): ChallengeRenderer
 
     @Binds
     @IntoSet
@@ -127,11 +130,23 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
-    fun standUpEditor(impl: StandUpParamsEditor): ChallengeParamsEditor
+    fun qrEditor(impl: QrParamsEditor): ChallengeParamsEditor
 
     @Binds
     @IntoSet
-    fun qrEditor(impl: QrParamsEditor): ChallengeParamsEditor
+    fun objectPhotoEditor(impl: ObjectPhotoParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun memory(impl: MemoryChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun memoryRenderer(impl: MemoryRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun memoryEditor(impl: MemoryParamsEditor): ChallengeParamsEditor
 
     @Binds
     @IntoSet

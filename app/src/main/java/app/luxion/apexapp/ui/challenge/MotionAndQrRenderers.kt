@@ -50,7 +50,6 @@ private class MotionRenderer(
         when (kind) {
             MotionKind.SHAKE -> R.string.challenge_type_shake
             MotionKind.STEPS -> R.string.challenge_type_steps
-            MotionKind.STAND_UP -> R.string.challenge_type_standup
         },
     )
 
@@ -77,9 +76,6 @@ class ShakeRenderer @Inject constructor(sensors: MotionSensors) :
 
 class StepsRenderer @Inject constructor(sensors: MotionSensors) :
     ChallengeRenderer by MotionRenderer(MotionKind.STEPS, sensors)
-
-class StandUpRenderer @Inject constructor(sensors: MotionSensors) :
-    ChallengeRenderer by MotionRenderer(MotionKind.STAND_UP, sensors)
 
 /**
  * Reto QR: escanea con la cámara y solo entrega [ChallengeAnswer.ScanVerified] cuando la lectura pasa la

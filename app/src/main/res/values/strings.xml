@@ -118,10 +118,6 @@
         <item quantity="one">Da %d paso</item>
         <item quantity="other">Da %d pasos</item>
     </plurals>
-    <plurals name="challenge_standup_prompt">
-        <item quantity="one">Levántate y camina %d segundo</item>
-        <item quantity="other">Levántate y camina %d segundos</item>
-    </plurals>
     <string name="challenge_motion_progress">Progreso: %d %%</string>
     <plurals name="challenge_target_info_shakes">
         <item quantity="one">Objetivo con esta dificultad: %d sacudida</item>
@@ -130,10 +126,6 @@
     <plurals name="challenge_target_info_steps">
         <item quantity="one">Objetivo con esta dificultad: %d paso</item>
         <item quantity="other">Objetivo con esta dificultad: %d pasos</item>
-    </plurals>
-    <plurals name="challenge_target_info_seconds">
-        <item quantity="one">Objetivo con esta dificultad: %d segundo</item>
-        <item quantity="other">Objetivo con esta dificultad: %d segundos</item>
     </plurals>
     <string name="challenge_motion_rejected">Ese movimiento no parece real. Inténtalo de nuevo.</string>
     <string name="scanner_permission_rationale">Necesitamos la cámara para leer el código. La imagen no sale del móvil.</string>
@@ -155,7 +147,6 @@
     <string name="steps_permission_rationale">Para contar tus pasos necesitamos el permiso de actividad física.</string>
     <string name="challenge_type_shake">Agitar</string>
     <string name="challenge_type_steps">Pasos</string>
-    <string name="challenge_type_standup">Levantarse</string>
     <string name="challenge_type_qr">Código QR</string>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
@@ -169,6 +160,32 @@
     <string name="challenge_flappy_score">Puntos: %1$d / %2$d</string>
     <string name="challenge_flappy_tap_to_start">Toca para empezar y vuelve a tocar para saltar.</string>
     <string name="challenge_flappy_crashed">Has chocado. Toca para empezar de nuevo desde cero.</string>
+    <string name="challenge_object_prompt">Enfoca tu objeto: %1$s</string>
+    <string name="challenge_object_hold">Mantén el objeto en el encuadre…</string>
+    <string name="challenge_object_wrong">Ese no es el objeto registrado.</string>
+    <string name="challenge_object_rejected_screen">Parece una pantalla. Enfoca el objeto real.</string>
+    <string name="challenge_object_rejected_static">Parece una foto. Enfoca el objeto real.</string>
+    <string name="object_register_required">Elige el objeto de esta alarma.</string>
+    <string name="object_register_scanning">Apunta la cámara al objeto y elige una etiqueta.</string>
+    <string name="object_register_done">Objetos de la alarma (toca uno para quitarlo). Si salen varios retos de foto, se piden objetos distintos.</string>
+    <string name="object_register_action">Registrar objeto</string>
+    <string name="object_register_add">Añadir otro objeto</string>
+    <string name="object_register_remove">Quitar %1$s</string>
+    <string name="object_register_cancel">Cancelar</string>
+    <string name="object_register_none_detected">Aún no se reconoce nada. Acércate o mejora la luz.</string>
+    <string name="object_register_generic_hint">Si la etiqueta es muy genérica (p. ej. habitación), elige otra más específica.</string>
+    <string name="object_register_placement_hint">Elige un objeto lejos de la cama, para tener que levantarte.</string>
+    <string name="challenge_type_object">Foto a un objeto</string>
+    <string name="challenge_type_memory">Memoria</string>
+    <string name="challenge_memory_watch">Memoriza la secuencia</string>
+    <string name="challenge_memory_repeat">Repite la secuencia</string>
+    <string name="challenge_memory_wrong">Secuencia incorrecta. Mira de nuevo.</string>
+    <string name="challenge_memory_cell">Casilla %d</string>
+    <string name="challenge_memory_cell_lit">Casilla %d, iluminada</string>
+    <plurals name="challenge_target_info_memory">
+        <item quantity="one">Secuencia con esta dificultad: %d casilla</item>
+        <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
+    </plurals>
 
     <string name="sound_default">Tono por defecto</string>
     <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>

@@ -50,6 +50,3 @@ class ShakeChallenge @Inject constructor(capabilities: DeviceCapabilities) :
 
 class StepsChallenge @Inject constructor(capabilities: DeviceCapabilities) :
     MotionChallenge(MotionKind.STEPS, capabilities)
-
-class StandUpChallenge @Inject constructor(capabilities: DeviceCapabilities) :
-    MotionChallenge(MotionKind.STAND_UP, capabilities)

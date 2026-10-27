@@ -117,10 +117,6 @@
         <item quantity="one">Take %d step</item>
         <item quantity="other">Take %d steps</item>
     </plurals>
-    <plurals name="challenge_standup_prompt">
-        <item quantity="one">Get up and walk for %d second</item>
-        <item quantity="other">Get up and walk for %d seconds</item>
-    </plurals>
     <string name="challenge_motion_progress">Progress: %d %%</string>
     <plurals name="challenge_target_info_shakes">
         <item quantity="one">Target at this difficulty: %d shake</item>
@@ -129,10 +125,6 @@
     <plurals name="challenge_target_info_steps">
         <item quantity="one">Target at this difficulty: %d step</item>
         <item quantity="other">Target at this difficulty: %d steps</item>
-    </plurals>
-    <plurals name="challenge_target_info_seconds">
-        <item quantity="one">Target at this difficulty: %d second</item>
-        <item quantity="other">Target at this difficulty: %d seconds</item>
     </plurals>
     <string name="challenge_motion_rejected">That movement does not look real. Try again.</string>
     <string name="scanner_permission_rationale">We need the camera to read the code. The image never leaves your phone.</string>
@@ -154,7 +146,6 @@
     <string name="steps_permission_rationale">To count your steps we need the physical activity permission.</string>
     <string name="challenge_type_shake">Shake</string>
     <string name="challenge_type_steps">Steps</string>
-    <string name="challenge_type_standup">Stand up</string>
     <string name="challenge_type_qr">QR code</string>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
@@ -168,6 +159,32 @@
     <string name="challenge_flappy_score">Score: %1$d / %2$d</string>
     <string name="challenge_flappy_tap_to_start">Tap to start, then tap again to jump.</string>
     <string name="challenge_flappy_crashed">You crashed. Tap to start over from zero.</string>
+    <string name="challenge_object_prompt">Point at your object: %1$s</string>
+    <string name="challenge_object_hold">Keep the object in view…</string>
+    <string name="challenge_object_wrong">That is not the registered object.</string>
+    <string name="challenge_object_rejected_screen">That looks like a screen. Point at the real object.</string>
+    <string name="challenge_object_rejected_static">That looks like a photo. Point at the real object.</string>
+    <string name="object_register_required">Choose the object for this alarm.</string>
+    <string name="object_register_scanning">Point the camera at the object and pick a label.</string>
+    <string name="object_register_done">Alarm objects (tap one to remove it). If several photo challenges come up, different objects are asked.</string>
+    <string name="object_register_action">Register object</string>
+    <string name="object_register_add">Add another object</string>
+    <string name="object_register_remove">Remove %1$s</string>
+    <string name="object_register_cancel">Cancel</string>
+    <string name="object_register_none_detected">Nothing recognised yet. Move closer or add light.</string>
+    <string name="object_register_generic_hint">If the label is very generic (e.g. room), pick a more specific one.</string>
+    <string name="object_register_placement_hint">Pick an object away from your bed so you have to get up.</string>
+    <string name="challenge_type_object">Photo of an object</string>
+    <string name="challenge_type_memory">Memory</string>
+    <string name="challenge_memory_watch">Memorize the sequence</string>
+    <string name="challenge_memory_repeat">Repeat the sequence</string>
+    <string name="challenge_memory_wrong">Wrong sequence. Watch again.</string>
+    <string name="challenge_memory_cell">Cell %d</string>
+    <string name="challenge_memory_cell_lit">Cell %d, lit</string>
+    <plurals name="challenge_target_info_memory">
+        <item quantity="one">Sequence at this difficulty: %d cell</item>
+        <item quantity="other">Sequence at this difficulty: %d cells</item>
+    </plurals>
 
     <string name="sound_default">Default tone</string>
     <string name="sound_not_audio">That file is not audio or cannot be read.</string>

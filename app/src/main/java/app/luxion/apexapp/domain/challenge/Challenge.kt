@@ -22,6 +22,12 @@ sealed interface ChallengeAnswer {
 
     /** El reto QR verificó en vivo un código; [codeHash] es el SHA-256 en hexadecimal de su valor. */
     data class ScanVerified(val codeHash: String) : ChallengeAnswer
+
+    /** Casillas tocadas por el usuario, en orden, en el reto de memoria. */
+    data class Pattern(val type: ChallengeType, val taps: List<Int>) : ChallengeAnswer
+
+    /** El reto de foto a un objeto verificó en vivo la etiqueta [labelIndex] (índice de ML Kit). */
+    data class ObjectVerified(val labelIndex: Int) : ChallengeAnswer
 }
 
 sealed interface Availability {
@@ -38,12 +44,22 @@ interface Challenge {
 
     /** [level] va de 1 a 5; [params] es el JSON opaco de `ChallengeSpec.params` de este tipo. */
     fun generate(level: Int, params: String, random: Random): ChallengeInstance
+
+    /**
+     * Igual que [generate], pero con las instancias ya superadas en la sesión ([solved]) para que un tipo con
+     * varias opciones (p. ej. varios objetos) no repita la misma en retos consecutivos.
+     */
+    fun generate(level: Int, params: String, random: Random, solved: List<ChallengeInstance>): ChallengeInstance =
+        generate(level, params, random)
 }
 
 interface ChallengeInstance {
     val type: ChallengeType
     val level: Int
     val prompt: String
+
+    /** Si es verdadero, un fallo conserva esta instancia en vez de regenerar el reto (p. ej. la misma secuencia). */
+    val keepOnFailure: Boolean get() = false
 
     fun check(answer: ChallengeAnswer): Boolean
 }
