@@ -32,8 +32,6 @@ class MotionChallengesTest {
         assertEquals(60, MotionKind.SHAKE.targetFor(5))
         assertEquals(15, MotionKind.STEPS.targetFor(1))
         assertEquals(120, MotionKind.STEPS.targetFor(5))
-        assertEquals(5, MotionKind.STAND_UP.targetFor(1))
-        assertEquals(40, MotionKind.STAND_UP.targetFor(5))
     }
 
     @Test
@@ -59,7 +57,6 @@ class MotionChallengesTest {
         val challenges = listOf(
             MotionKind.SHAKE to ShakeChallenge(caps),
             MotionKind.STEPS to StepsChallenge(caps),
-            MotionKind.STAND_UP to StandUpChallenge(caps),
         )
         for ((kind, challenge) in challenges) {
             for (level in 1..5) {
@@ -76,10 +73,10 @@ class MotionChallengesTest {
 
     @Test
     fun `la sesion aplica el nivel que decide el proveedor de dificultad`() {
-        val registry = ChallengeRegistry(listOf(ShakeChallenge(Caps()), StepsChallenge(Caps()), StandUpChallenge(Caps())))
+        val registry = ChallengeRegistry(listOf(ShakeChallenge(Caps()), StepsChallenge(Caps())))
         val config = SessionConfig(
-            1, 3, ChallengeMode.CHAINED,
-            listOf(ChallengeSpec("shake"), ChallengeSpec("steps"), ChallengeSpec("standup")),
+            1, 2, ChallengeMode.CHAINED,
+            listOf(ChallengeSpec("shake"), ChallengeSpec("steps")),
         )
         // El proveedor adaptativo sube a 5 aunque la alarma diga 1.
         val session = ChallengeSession("s", 1L, config, registry, adaptiveFive, { })
@@ -89,7 +86,7 @@ class MotionChallengesTest {
             targets += current.target
             session.submit(ChallengeAnswer.MotionVerified(current.type))
         }
-        assertEquals(listOf(60, 120, 40), targets)
+        assertEquals(listOf(60, 120), targets)
     }
 
     @Test
@@ -100,10 +97,9 @@ class MotionChallengesTest {
     }
 
     @Test
-    fun `agitar y levantarse requieren acelerometro pero no permisos`() {
+    fun `agitar requiere acelerometro pero no permisos`() {
         val caps = Caps(hasStepSensor = false, hasActivityRecognitionPermission = false)
         assertEquals(Availability.Available, ShakeChallenge(caps).availability())
-        assertEquals(Availability.Available, StandUpChallenge(caps).availability())
         assertTrue(ShakeChallenge(Caps(hasAccelerometer = false)).availability() is Availability.Unavailable)
     }
 
