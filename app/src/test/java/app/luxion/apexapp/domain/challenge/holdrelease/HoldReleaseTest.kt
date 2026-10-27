@@ -10,8 +10,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HoldReleaseTest {
-    private val tuning = HoldReleaseTuning.forLevel(3)
-    private val window = tuning.windowMs
+    private val window = HoldReleaseTuning.forLevel(3).windowMs
 
     private fun game(rounds: Int = 3, seed: Int = 1, level: Int = 3) =
         HoldReleaseGame(rounds, HoldReleaseTuning.forLevel(level), Random(seed))
@@ -40,16 +39,10 @@ class HoldReleaseTest {
     }
 
     @Test
-    fun `la exigencia crece con la dificultad`() {
-        val levels = (1..5).map(HoldReleaseTuning::forLevel)
-        assertEquals(levels.map { it.windowMs }.sortedDescending(), levels.map { it.windowMs })
-        assertEquals(levels.map { it.maxHoldMs }.sorted(), levels.map { it.maxHoldMs })
-        assertEquals(levels.map { it.minHoldMs }.sorted(), levels.map { it.minHoldMs })
-        assertEquals(levels.map { it.maxExtra }.sortedDescending(), levels.map { it.maxExtra })
-        assertTrue(levels.first().windowMs > levels.last().windowMs)
-        assertTrue(levels.first().maxHoldMs < levels.last().maxHoldMs)
-        assertTrue(levels.first().maxExtra > levels.last().maxExtra)
-        assertTrue(levels.all { it.minHoldMs < it.maxHoldMs && it.maxExtra >= 1 })
+    fun `la ventana se estrecha con la dificultad`() {
+        val windows = (1..5).map { HoldReleaseTuning.forLevel(it).windowMs }
+        assertEquals(windows.sortedDescending(), windows)
+        assertTrue(windows.first() > windows.last())
     }
 
     @Test
@@ -69,17 +62,16 @@ class HoldReleaseTest {
     @Test
     fun `el instante de la señal cae en el rango y varia con la semilla`() {
         val signals = (1..20).map { seed -> game(seed = seed).run { pressAndFindSignal(0) } }
-        assertTrue(signals.all { it in tuning.minHoldMs..tuning.maxHoldMs })
+        assertTrue(signals.all { it in HoldReleaseGame.MIN_HOLD_MS..HoldReleaseGame.MAX_HOLD_MS })
         assertTrue(signals.toSet().size > 1)
     }
 
     @Test
-    fun `el rango de mantenimiento sigue el nivel`() {
-        (1..5).forEach { level ->
-            val t = HoldReleaseTuning.forLevel(level)
-            val signals = (1..20).map { seed -> game(seed = seed, level = level).run { pressAndFindSignal(0) } }
-            assertTrue(signals.all { it in t.minHoldMs..t.maxHoldMs })
+    fun `el rango de mantenimiento no depende del nivel`() {
+        val byLevel = (1..5).map { level ->
+            (1..20).map { seed -> game(seed = seed, level = level).run { pressAndFindSignal(0) } }
         }
+        assertEquals(1, byLevel.toSet().size)
     }
 
     @Test
@@ -116,18 +108,7 @@ class HoldReleaseTest {
     }
 
     @Test
-    fun `las rondas extra tienen tope`() {
-        val g = game(rounds = 6)
-        repeat(2) { g.press(it * 10_000L); g.release(it * 10_000L + 10) }
-        g.hit(50_000)
-        repeat(2) { g.press(60_000L + it * 10_000L); g.release(60_000L + it * 10_000L + 10) }
-        g.hit(90_000)
-        repeat(2) { g.press(100_000L + it * 10_000L); g.release(100_000L + it * 10_000L + 10) }
-        assertEquals(tuning.maxExtra, g.extraRounds)
-    }
-
-    @Test
-    fun `el tope de rondas extra baja con la dificultad`() {
+    fun `las rondas extra tienen tope y no dependen del nivel`() {
         fun extrasAfterFailures(level: Int): Int {
             val g = game(rounds = 6, level = level)
             repeat(2) { g.press(it * 10_000L); g.release(it * 10_000L + 10) }
@@ -137,9 +118,7 @@ class HoldReleaseTest {
             repeat(2) { g.press(100_000L + it * 10_000L); g.release(100_000L + it * 10_000L + 10) }
             return g.extraRounds
         }
-        assertEquals(HoldReleaseTuning.forLevel(1).maxExtra, extrasAfterFailures(1))
-        assertEquals(HoldReleaseTuning.forLevel(5).maxExtra, extrasAfterFailures(5))
-        assertTrue(extrasAfterFailures(1) > extrasAfterFailures(5))
+        (1..5).forEach { assertEquals(HoldReleaseGame.MAX_EXTRA, extrasAfterFailures(it)) }
     }
 
     @Test

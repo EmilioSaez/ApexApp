@@ -24,18 +24,12 @@ object HoldReleaseParams {
     fun paramsFor(rounds: Int): String = json.encodeToString(RoundsParams(rounds.coerceIn(MIN_ROUNDS, MAX_ROUNDS)))
 }
 
-/** Exigencia de un nivel: rango de mantenimiento antes de la señal, ventana de acierto y tope de rondas extra. */
-data class HoldReleaseLevel(val minHoldMs: Long, val maxHoldMs: Long, val windowMs: Long, val maxExtra: Int)
+/** Exigencia de un nivel: ventana de acierto tras la señal. La duración del reto no depende del nivel. */
+data class HoldReleaseLevel(val windowMs: Long)
 
 /** Tabla única de calibración, por nivel de dificultad (índice 0 = nivel 1). */
 object HoldReleaseTuning {
-    val BY_LEVEL: List<HoldReleaseLevel> = listOf(
-        HoldReleaseLevel(minHoldMs = 1_500, maxHoldMs = 3_000, windowMs = 1_200, maxExtra = 4),
-        HoldReleaseLevel(minHoldMs = 1_500, maxHoldMs = 3_500, windowMs = 1_000, maxExtra = 4),
-        HoldReleaseLevel(minHoldMs = 1_500, maxHoldMs = 4_000, windowMs = 800, maxExtra = 3),
-        HoldReleaseLevel(minHoldMs = 2_000, maxHoldMs = 4_500, windowMs = 650, maxExtra = 2),
-        HoldReleaseLevel(minHoldMs = 2_500, maxHoldMs = 5_000, windowMs = 500, maxExtra = 2),
-    )
+    val BY_LEVEL: List<HoldReleaseLevel> = listOf(1_200L, 1_000L, 800L, 650L, 500L).map(::HoldReleaseLevel)
 
     fun forLevel(level: Int): HoldReleaseLevel = BY_LEVEL[
         level.coerceIn(SessionConfig.MIN_DIFFICULTY, SessionConfig.MAX_DIFFICULTY) - SessionConfig.MIN_DIFFICULTY
