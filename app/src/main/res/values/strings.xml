@@ -118,10 +118,6 @@
         <item quantity="one">Da %d paso</item>
         <item quantity="other">Da %d pasos</item>
     </plurals>
-    <plurals name="challenge_standup_prompt">
-        <item quantity="one">Levántate y camina %d segundo</item>
-        <item quantity="other">Levántate y camina %d segundos</item>
-    </plurals>
     <string name="challenge_motion_progress">Progreso: %d %%</string>
     <plurals name="challenge_target_info_shakes">
         <item quantity="one">Objetivo con esta dificultad: %d sacudida</item>
@@ -130,10 +126,6 @@
     <plurals name="challenge_target_info_steps">
         <item quantity="one">Objetivo con esta dificultad: %d paso</item>
         <item quantity="other">Objetivo con esta dificultad: %d pasos</item>
-    </plurals>
-    <plurals name="challenge_target_info_seconds">
-        <item quantity="one">Objetivo con esta dificultad: %d segundo</item>
-        <item quantity="other">Objetivo con esta dificultad: %d segundos</item>
     </plurals>
     <string name="challenge_motion_rejected">Ese movimiento no parece real. Inténtalo de nuevo.</string>
     <string name="scanner_permission_rationale">Necesitamos la cámara para leer el código. La imagen no sale del móvil.</string>
@@ -155,7 +147,6 @@
     <string name="steps_permission_rationale">Para contar tus pasos necesitamos el permiso de actividad física.</string>
     <string name="challenge_type_shake">Agitar</string>
     <string name="challenge_type_steps">Pasos</string>
-    <string name="challenge_type_standup">Levantarse</string>
     <string name="challenge_type_qr">Código QR</string>
 
     <string name="sound_default">Tono por defecto</string>
