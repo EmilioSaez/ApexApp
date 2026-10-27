@@ -4,7 +4,10 @@ import app.luxion.apexapp.domain.ChallengeMode
 import app.luxion.apexapp.domain.ChallengeSpec
 import app.luxion.apexapp.domain.challenge.Availability
 import app.luxion.apexapp.domain.challenge.ChallengeAnswer
+import app.luxion.apexapp.domain.challenge.Challenge
 import app.luxion.apexapp.domain.challenge.ChallengeContext
+import app.luxion.apexapp.domain.challenge.ChallengeInstance
+import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.ChallengeEvent
 import app.luxion.apexapp.domain.challenge.ChallengeRegistry
 import app.luxion.apexapp.domain.challenge.ChallengeSession
@@ -18,6 +21,18 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertSame
 import org.junit.Assert.assertTrue
 import org.junit.Test
+
+private object OkChallenge : Challenge {
+    override val type = ChallengeType("ok")
+
+    override fun generate(level: Int, params: String, random: Random): ChallengeInstance =
+        object : ChallengeInstance {
+            override val type = OkChallenge.type
+            override val level = level
+            override val prompt = "ok"
+            override fun check(answer: ChallengeAnswer) = answer == ChallengeAnswer.Text("ok")
+        }
+}
 
 class MemoryChallengeTest {
     private val challenge = MemoryChallenge()
@@ -67,7 +82,7 @@ class MemoryChallengeTest {
         assertFalse(instance.check(ChallengeAnswer.Pattern(instance.type, instance.sequence.reversed().takeIf { it != instance.sequence } ?: emptyList())))
         assertFalse(instance.check(ChallengeAnswer.Pattern(instance.type, instance.sequence.dropLast(1))))
         assertFalse(instance.check(ChallengeAnswer.Pattern(instance.type, instance.sequence + 0)))
-        assertFalse(instance.check(ChallengeAnswer.Pattern(app.luxion.apexapp.domain.challenge.ChallengeType.MATH, instance.sequence)))
+        assertFalse(instance.check(ChallengeAnswer.Pattern(ChallengeType.MATH, instance.sequence)))
         assertFalse(instance.check(ChallengeAnswer.Text("1")))
     }
 
@@ -104,5 +119,30 @@ class MemoryChallengeTest {
         val first = session.state.value.current!!
         session.submit(ChallengeAnswer.Text("not-a-number"))
         assertNotEquals(first, session.state.value.current)
+    }
+
+    @Test
+    fun `una sesion mixta con memoria esta en el registro y termina`() {
+        val registry = ChallengeRegistry(listOf(challenge, MathChallenge(), OkChallenge))
+        assertTrue(ChallengeType("memory") in registry)
+        val config = SessionConfig(
+            2, 3, ChallengeMode.CHAINED,
+            listOf(ChallengeSpec("ok"), ChallengeSpec("memory")),
+        )
+        val provider = object : DifficultyProvider {
+            override fun levelFor(config: SessionConfig, context: ChallengeContext) = 2
+        }
+        val session = ChallengeSession("s", 1L, config, registry, provider, { }, Random(3))
+        var memorySolved = 0
+        while (!session.state.value.passed) {
+            val current = session.state.value.current!!
+            if (current is MemoryInstance) {
+                memorySolved++
+                session.submit(ChallengeAnswer.Pattern(current.type, current.sequence))
+            } else {
+                session.submit(ChallengeAnswer.Text("ok"))
+            }
+        }
+        assertTrue(memorySolved > 0)
     }
 }

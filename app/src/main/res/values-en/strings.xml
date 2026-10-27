@@ -156,6 +156,16 @@
     <string name="challenge_type_steps">Steps</string>
     <string name="challenge_type_standup">Stand up</string>
     <string name="challenge_type_qr">QR code</string>
+    <string name="challenge_type_memory">Memory</string>
+    <string name="challenge_memory_watch">Memorize the sequence</string>
+    <string name="challenge_memory_repeat">Repeat the sequence</string>
+    <string name="challenge_memory_wrong">Wrong sequence. Watch again.</string>
+    <string name="challenge_memory_cell">Cell %d</string>
+    <string name="challenge_memory_cell_lit">Cell %d, lit</string>
+    <plurals name="challenge_target_info_memory">
+        <item quantity="one">Sequence at this difficulty: %d cell</item>
+        <item quantity="other">Sequence at this difficulty: %d cells</item>
+    </plurals>
 
     <string name="sound_default">Default tone</string>
     <string name="sound_not_audio">That file is not audio or cannot be read.</string>

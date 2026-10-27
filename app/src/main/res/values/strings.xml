@@ -157,6 +157,16 @@
     <string name="challenge_type_steps">Pasos</string>
     <string name="challenge_type_standup">Levantarse</string>
     <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_type_memory">Memoria</string>
+    <string name="challenge_memory_watch">Memoriza la secuencia</string>
+    <string name="challenge_memory_repeat">Repite la secuencia</string>
+    <string name="challenge_memory_wrong">Secuencia incorrecta. Mira de nuevo.</string>
+    <string name="challenge_memory_cell">Casilla %d</string>
+    <string name="challenge_memory_cell_lit">Casilla %d, iluminada</string>
+    <plurals name="challenge_target_info_memory">
+        <item quantity="one">Secuencia con esta dificultad: %d casilla</item>
+        <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
+    </plurals>
 
     <string name="sound_default">Tono por defecto</string>
     <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
