@@ -11,17 +11,26 @@ class RhythmLogicTest {
 
     @Test
     fun `parametros ausentes, ilegibles o fuera de rango dan el defecto o se acotan`() {
-        assertEquals(RhythmParams.DEFAULT_ROUNDS, RhythmParams.rounds(""))
-        assertEquals(RhythmParams.DEFAULT_ROUNDS, RhythmParams.rounds("no json"))
-        assertEquals(RhythmParams.DEFAULT_ROUNDS, RhythmParams.rounds("{}"))
-        assertEquals(RhythmParams.MAX_ROUNDS, RhythmParams.rounds("""{"rounds":99}"""))
-        assertEquals(RhythmParams.MIN_ROUNDS, RhythmParams.rounds("""{"rounds":0,"x":1}"""))
+        val default = RhythmParams.defaultRounds(3)
+        assertEquals(default, RhythmParams.rounds("", 3))
+        assertEquals(default, RhythmParams.rounds("no json", 3))
+        assertEquals(default, RhythmParams.rounds("{}", 3))
+        assertEquals(RhythmParams.MAX_ROUNDS, RhythmParams.rounds("""{"rounds":99}""", 3))
+        assertEquals(RhythmParams.MIN_ROUNDS, RhythmParams.rounds("""{"rounds":0,"x":1}""", 3))
+    }
+
+    @Test
+    fun `sin params las rondas salen de la dificultad`() {
+        assertEquals(RhythmParams.DEFAULT_ROUNDS_BY_LEVEL, (1..5).map { RhythmParams.rounds("", it) })
+        assertTrue(RhythmParams.rounds("", 5) > RhythmParams.rounds("", 1))
+        assertEquals(RhythmParams.rounds("", 1), RhythmParams.rounds("", -3))
+        assertEquals(RhythmParams.rounds("", 5), RhythmParams.rounds("", 99))
     }
 
     @Test
     fun `los parametros hacen ida y vuelta`() {
-        assertEquals(6, RhythmParams.rounds(RhythmParams.paramsFor(6)))
-        assertEquals(RhythmParams.MAX_ROUNDS, RhythmParams.rounds(RhythmParams.paramsFor(50)))
+        assertEquals(6, RhythmParams.rounds(RhythmParams.paramsFor(6), 3))
+        assertEquals(RhythmParams.MAX_ROUNDS, RhythmParams.rounds(RhythmParams.paramsFor(50), 3))
     }
 
     private val pace = RhythmTuning.pace(3)

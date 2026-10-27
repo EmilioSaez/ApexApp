@@ -7,12 +7,12 @@ import app.luxion.apexapp.domain.challenge.ChallengeType
 import javax.inject.Inject
 import kotlin.random.Random
 
-/** Reto de ritmo: las rondas salen de `params`; la dificultad de la alarma solo acelera las notas, no cambia la duración. */
+/** Reto de ritmo: las rondas salen de `params` o, si faltan, de la dificultad; la dificultad de la alarma solo acelera las notas, no cambia la duración. */
 class RhythmChallenge @Inject constructor() : Challenge {
     override val type: ChallengeType = TYPE
 
     override fun generate(level: Int, params: String, random: Random): ChallengeInstance =
-        RhythmInstance(level, RhythmParams.rounds(params), random.nextLong())
+        RhythmInstance(level, RhythmParams.rounds(params, level), random.nextLong())
 
     companion object {
         val TYPE = ChallengeType("rhythm")

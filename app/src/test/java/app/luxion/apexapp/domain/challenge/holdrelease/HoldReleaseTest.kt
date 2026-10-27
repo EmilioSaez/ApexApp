@@ -30,12 +30,22 @@ class HoldReleaseTest {
 
     @Test
     fun `params ausentes corruptos o fuera de rango`() {
-        assertEquals(3, HoldReleaseParams.rounds(""))
-        assertEquals(3, HoldReleaseParams.rounds("no es json"))
-        assertEquals(3, HoldReleaseParams.rounds("{}"))
-        assertEquals(2, HoldReleaseParams.rounds("""{"rounds":0}"""))
-        assertEquals(6, HoldReleaseParams.rounds("""{"rounds":99}"""))
-        assertEquals(5, HoldReleaseParams.rounds(HoldReleaseParams.paramsFor(5)))
+        assertEquals(3, HoldReleaseParams.rounds("", 3))
+        assertEquals(3, HoldReleaseParams.rounds("no es json", 3))
+        assertEquals(3, HoldReleaseParams.rounds("{}", 3))
+        assertEquals(2, HoldReleaseParams.rounds("""{"rounds":0}""", 3))
+        assertEquals(6, HoldReleaseParams.rounds("""{"rounds":99}""", 3))
+        assertEquals(5, HoldReleaseParams.rounds(HoldReleaseParams.paramsFor(5), 3))
+    }
+
+    @Test
+    fun `sin params las rondas salen de la dificultad y los params mandan`() {
+        assertEquals(HoldReleaseParams.DEFAULT_ROUNDS_BY_LEVEL, (1..5).map { HoldReleaseParams.rounds("", it) })
+        assertEquals(HoldReleaseParams.rounds("", 1), (HoldReleaseChallenge().generate(1, "", Random(1)) as HoldReleaseInstance).rounds)
+        assertTrue(HoldReleaseParams.rounds("", 5) > HoldReleaseParams.rounds("", 1))
+        assertEquals(4, HoldReleaseParams.rounds(HoldReleaseParams.paramsFor(4), 1))
+        assertEquals(HoldReleaseParams.rounds("", 1), HoldReleaseParams.rounds("", -3))
+        assertEquals(HoldReleaseParams.rounds("", 5), HoldReleaseParams.rounds("", 99))
     }
 
     @Test

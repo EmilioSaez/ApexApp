@@ -6,20 +6,25 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 @Serializable
-private data class RoundsParams(val rounds: Int = HoldReleaseParams.DEFAULT_ROUNDS)
+private data class RoundsParams(val rounds: Int? = null)
 
 /** Lectura y escritura de `ChallengeSpec.params` del reto de mantener y soltar: `{"rounds":N}`. */
 object HoldReleaseParams {
     const val MIN_ROUNDS = 2
     const val MAX_ROUNDS = 6
-    const val DEFAULT_ROUNDS = 3
+
+    /** Rondas por defecto por nivel de dificultad (índice 0 = nivel 1). Tabla única: ajustar aquí al calibrar. */
+    val DEFAULT_ROUNDS_BY_LEVEL: List<Int> = listOf(2, 3, 3, 4, 5)
+
+    fun defaultRounds(level: Int): Int =
+        DEFAULT_ROUNDS_BY_LEVEL[level.coerceIn(SessionConfig.MIN_DIFFICULTY, SessionConfig.MAX_DIFFICULTY) - SessionConfig.MIN_DIFFICULTY]
 
     private val json = Json { ignoreUnknownKeys = true }
 
-    /** Rondas guardadas en [params], acotadas; [DEFAULT_ROUNDS] si está vacío o es ilegible. */
-    fun rounds(params: String): Int =
-        runCatching { json.decodeFromString<RoundsParams>(params.ifBlank { return DEFAULT_ROUNDS }) }
-            .getOrNull()?.rounds?.coerceIn(MIN_ROUNDS, MAX_ROUNDS) ?: DEFAULT_ROUNDS
+    /** Rondas guardadas en [params], acotadas; [defaultRounds] del [level] si faltan o son ilegibles. */
+    fun rounds(params: String, level: Int): Int =
+        (runCatching { json.decodeFromString<RoundsParams>(params) }.getOrNull()?.rounds ?: defaultRounds(level))
+            .coerceIn(MIN_ROUNDS, MAX_ROUNDS)
 
     fun paramsFor(rounds: Int): String = json.encodeToString(RoundsParams(rounds.coerceIn(MIN_ROUNDS, MAX_ROUNDS)))
 }
