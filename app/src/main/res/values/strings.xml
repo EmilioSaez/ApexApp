@@ -118,10 +118,6 @@
         <item quantity="one">Da %d paso</item>
         <item quantity="other">Da %d pasos</item>
     </plurals>
-    <plurals name="challenge_standup_prompt">
-        <item quantity="one">Levántate y camina %d segundo</item>
-        <item quantity="other">Levántate y camina %d segundos</item>
-    </plurals>
     <string name="challenge_motion_progress">Progreso: %d %%</string>
     <plurals name="challenge_target_info_shakes">
         <item quantity="one">Objetivo con esta dificultad: %d sacudida</item>
@@ -131,18 +127,37 @@
         <item quantity="one">Objetivo con esta dificultad: %d paso</item>
         <item quantity="other">Objetivo con esta dificultad: %d pasos</item>
     </plurals>
-    <plurals name="challenge_target_info_seconds">
-        <item quantity="one">Objetivo con esta dificultad: %d segundo</item>
-        <item quantity="other">Objetivo con esta dificultad: %d segundos</item>
-    </plurals>
     <string name="challenge_motion_rejected">Ese movimiento no parece real. Inténtalo de nuevo.</string>
     <string name="scanner_permission_rationale">Necesitamos la cámara para leer el código. La imagen no sale del móvil.</string>
-    <string name="scanner_permission_blocked">El permiso de cámara está denegado. Actívalo en los ajustes de la app para escanear.</string>
+    <string name="scanner_permission_blocked">El permiso de cámara está denegado. Actívalo en los ajustes de la app para usar este reto.</string>
+    <string name="challenge_qr_prompt">Escanea tu código</string>
+    <string name="challenge_qr_hold">Mantén el código en el encuadre…</string>
+    <string name="challenge_qr_wrong">Ese no es el código registrado.</string>
+    <string name="challenge_qr_rejected_screen">Parece una pantalla. Escanea el objeto real.</string>
+    <string name="challenge_qr_rejected_static">Parece una foto. Escanea el objeto real.</string>
+    <string name="qr_register_required">Registra un código para esta alarma.</string>
+    <string name="qr_register_scanning">Apunta la cámara al código que quieres usar.</string>
+    <string name="qr_register_done">Código registrado (%1$s).</string>
+    <string name="qr_register_action">Registrar código</string>
+    <string name="qr_register_replace">Sustituir código</string>
+    <string name="qr_register_placement_hint">Coloca el código lejos de la cama, para tener que levantarte.</string>
+    <string name="qr_format_qr">QR</string>
+    <string name="qr_format_barcode">código de barras</string>
     <string name="steps_unavailable">Este dispositivo no tiene contador de pasos.</string>
     <string name="steps_permission_rationale">Para contar tus pasos necesitamos el permiso de actividad física.</string>
     <string name="challenge_type_shake">Agitar</string>
     <string name="challenge_type_steps">Pasos</string>
-    <string name="challenge_type_standup">Levantarse</string>
+    <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_type_memory">Memoria</string>
+    <string name="challenge_memory_watch">Memoriza la secuencia</string>
+    <string name="challenge_memory_repeat">Repite la secuencia</string>
+    <string name="challenge_memory_wrong">Secuencia incorrecta. Mira de nuevo.</string>
+    <string name="challenge_memory_cell">Casilla %d</string>
+    <string name="challenge_memory_cell_lit">Casilla %d, iluminada</string>
+    <plurals name="challenge_target_info_memory">
+        <item quantity="one">Secuencia con esta dificultad: %d casilla</item>
+        <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
+    </plurals>
 
     <string name="sound_default">Tono por defecto</string>
     <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
@@ -269,6 +284,7 @@
     <string name="import_error_version">Necesitas una versión más reciente de ApexApp para abrir esta alarma.</string>
     <string name="import_error_invalid">La alarma tiene valores no válidos y no se ha importado.</string>
     <string name="import_error_file">No se pudo leer el archivo.</string>
+    <string name="import_note_qr">Se omite el reto QR: registra tu propio código al editar la alarma.</string>
     <string name="import_note_challenge">Se omite un reto que esta versión no conoce.</string>
     <string name="import_note_sound">El sonido no está disponible: se usará el de por defecto.</string>
     <string name="streak_share_open">Compartir racha</string>

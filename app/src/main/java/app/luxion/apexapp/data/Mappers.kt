@@ -24,9 +24,9 @@ internal val ConfigJson = Json {
     coerceInputValues = true
 }
 
-/** El reto QR (con cámara) se eliminó: las alarmas guardadas con él lo pierden en lugar de quedar con un tipo oculto. */
+/** El reto de foto a un objeto se eliminó: las alarmas guardadas con él lo pierden en lugar de quedar con un tipo oculto. */
 private fun ChallengeConfig.withoutRemovedTypes(): ChallengeConfig =
-    copy(challenges = challenges.filterNot { it.type == "qr" })
+    copy(challenges = challenges.filterNot { it.type == "object" })
 
 private inline fun <reified T> decodeConfig(json: String, default: T): T =
     runCatching { ConfigJson.decodeFromString<T>(json) }.getOrDefault(default)
