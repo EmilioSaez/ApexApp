@@ -34,18 +34,11 @@ class AndroidCapabilityChecker @Inject constructor(
     override fun current() = Capabilities(
         overlay = Settings.canDrawOverlays(context),
         deviceAdmin = dpm.isAdminActive(admin),
-        deviceOwner = dpm.isDeviceOwnerApp(context.packageName),
     )
 
     /** Ajuste del sistema para conceder la superposición. */
     fun overlaySettingsIntent(): Intent =
         Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:${context.packageName}"))
-
-    /** Renuncia a ser propietario del dispositivo (salida de emergencia del lock task). */
-    @Suppress("DEPRECATION")
-    fun clearDeviceOwner() {
-        if (dpm.isDeviceOwnerApp(context.packageName)) dpm.clearDeviceOwnerApp(context.packageName)
-    }
 
     /** Pantalla del sistema para activar el administrador de dispositivo. */
     fun deviceAdminIntent(): Intent =
@@ -69,25 +62,6 @@ class AndroidAlarmVolumeGateway @Inject constructor(
         }
         context.contentResolver.registerContentObserver(Settings.System.CONTENT_URI, true, observer)
         return { context.contentResolver.unregisterContentObserver(observer) }
-    }
-}
-
-@Singleton
-class AndroidLockTaskPolicy @Inject constructor(
-    @ApplicationContext private val context: Context,
-) : LockTaskPolicy {
-    private val dpm = context.getSystemService(DevicePolicyManager::class.java)
-    private val admin = ComponentName(context, ApexDeviceAdminReceiver::class.java)
-
-    override fun allow() {
-        if (!dpm.isDeviceOwnerApp(context.packageName)) return
-        dpm.setLockTaskPackages(admin, arrayOf(context.packageName))
-        dpm.setLockTaskFeatures(admin, DevicePolicyManager.LOCK_TASK_FEATURE_NONE)
-    }
-
-    override fun clear() {
-        if (!dpm.isDeviceOwnerApp(context.packageName)) return
-        dpm.setLockTaskPackages(admin, emptyArray())
     }
 }
 
@@ -155,7 +129,7 @@ class AndroidSnoozeScheduler @Inject constructor(
 }
 
 /**
- * Ayudante que cualquier pantalla de sonar usa para aplicar el lockdown: inmersivo, lock task y
+ * Ayudante que cualquier pantalla de sonar usa para aplicar el lockdown: inmersivo y
  * consumo de las teclas de volumen. La pantalla observa LockdownController.active.
  */
 object LockdownWindow {
@@ -166,11 +140,6 @@ object LockdownWindow {
             controller.hide(WindowInsetsCompat.Type.systemBars())
         } else {
             controller.show(WindowInsetsCompat.Type.systemBars())
-        }
-        if (lockdown?.protection?.lockTask == true) {
-            runCatching { activity.startLockTask() }
-        } else {
-            runCatching { activity.stopLockTask() }
         }
     }
 

@@ -27,11 +27,14 @@ import app.luxion.apexapp.domain.challenge.qr.FrameLivenessChecker
 import app.luxion.apexapp.domain.challenge.qr.LivenessVerdict
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
 import app.luxion.apexapp.domain.challenge.qr.QrParams
+import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
+import app.luxion.apexapp.domain.challenge.flappy.FlappyInstance
 import app.luxion.apexapp.domain.challenge.sensor.MotionInstance
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.scanner.BarcodeScanner
 import app.luxion.apexapp.scanner.CameraPermissionGate
+import app.luxion.apexapp.ui.challenge.flappy.FlappyChallengeContent
 import app.luxion.apexapp.ui.challenge.motion.MotionChallengeContent
 import app.luxion.apexapp.ui.theme.ApexTheme
 import javax.inject.Inject
@@ -149,5 +152,26 @@ class QrRenderer @Inject constructor() : ChallengeRenderer {
                 )
             }
         }
+    }
+}
+
+/** Reto Flappy: se supera al sumar los puntos que fija la dificultad sin chocar. */
+class FlappyRenderer @Inject constructor() : ChallengeRenderer {
+    override val type: ChallengeType = FlappyChallenge.TYPE
+
+    @Composable
+    override fun label(): String = stringResource(R.string.challenge_type_flappy)
+
+    @Composable
+    override fun Render(
+        instance: ChallengeInstance,
+        wrong: Boolean,
+        onAnswer: (ChallengeAnswer) -> Unit,
+        onUnavailable: (reason: String) -> Unit,
+    ) {
+        FlappyChallengeContent(
+            target = (instance as FlappyInstance).target,
+            onCompleted = { onAnswer(ChallengeAnswer.GameCompleted(type)) },
+        )
     }
 }

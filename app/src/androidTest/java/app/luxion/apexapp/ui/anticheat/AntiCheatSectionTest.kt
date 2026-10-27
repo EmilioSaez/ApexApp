@@ -26,7 +26,7 @@ class AntiCheatSectionTest {
 
     private fun show(
         initial: AntiCheatPolicy = AntiCheatPolicy(),
-        capabilities: Capabilities = Capabilities(overlay = true, deviceOwner = true),
+        capabilities: Capabilities = Capabilities(overlay = true),
         onOpenStatus: () -> Unit = {},
     ): () -> AntiCheatPolicy {
         var policy by mutableStateOf(initial)
@@ -46,8 +46,8 @@ class AntiCheatSectionTest {
     @Test
     fun choosingLevel_updatesPolicy() {
         val policy = show()
-        compose.onNodeWithText(str(R.string.anticheat_level_strict)).performClick()
-        assertEquals(AntiCheatLevel.STRICT, policy().level)
+        compose.onNodeWithText(str(R.string.anticheat_level_standard)).performClick()
+        assertEquals(AntiCheatLevel.STANDARD, policy().level)
     }
 
     @Test
@@ -70,12 +70,6 @@ class AntiCheatSectionTest {
     fun noWarnings_whenLevelIsOff() {
         show(AntiCheatPolicy(AntiCheatLevel.OFF), Capabilities())
         compose.onNodeWithText(str(R.string.anticheat_missing_overlay)).assertDoesNotExist()
-    }
-
-    @Test
-    fun strictWithoutOwner_isWarned() {
-        show(AntiCheatPolicy(AntiCheatLevel.STRICT), Capabilities(overlay = true))
-        compose.onNodeWithText(str(R.string.anticheat_missing_owner)).assertExists()
     }
 
     @Test

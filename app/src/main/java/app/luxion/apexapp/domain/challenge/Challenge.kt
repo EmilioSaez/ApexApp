@@ -17,14 +17,16 @@ sealed interface ChallengeAnswer {
     /** Un reto de movimiento (agitar, pasos, levantarse) verificó localmente su objetivo. */
     data class MotionVerified(val type: ChallengeType) : ChallengeAnswer
 
+    /** Un juego táctil (tocar, ritmo, mantener y soltar) se completó con toques que pasaron la plausibilidad. */
+    data class GameVerified(val type: ChallengeType) : ChallengeAnswer
+    /** Un reto de juego (Flappy) se completó: el usuario sumó los puntos exigidos. */
+    data class GameCompleted(val type: ChallengeType) : ChallengeAnswer
+
     /** El reto QR verificó en vivo un código; [codeHash] es el SHA-256 en hexadecimal de su valor. */
     data class ScanVerified(val codeHash: String) : ChallengeAnswer
 
     /** Casillas tocadas por el usuario, en orden, en el reto de memoria. */
     data class Pattern(val type: ChallengeType, val taps: List<Int>) : ChallengeAnswer
-
-    /** El reto de foto a un objeto verificó en vivo la etiqueta [labelIndex] (índice de ML Kit). */
-    data class ObjectVerified(val labelIndex: Int) : ChallengeAnswer
 }
 
 sealed interface Availability {

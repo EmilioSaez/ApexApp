@@ -1,6 +1,11 @@
 package app.luxion.apexapp.domain
 
+import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 
 /**
  * Campos de extensión de [Alarm]. Se guardan como JSON (una columna por clase): los changes que los
@@ -15,6 +20,8 @@ data class ChallengeConfig(
     /** Número de retos de la sesión (1..10). */
     val count: Int = 1,
     val mode: ChallengeMode = ChallengeMode.CHAINED,
+    /** El editor está en «Con retos»; permite tenerlo activo sin ningún tipo elegido todavía (no se puede guardar así). */
+    val challengesEnabled: Boolean = false,
 )
 
 /** CHAINED recorre `challenges` en orden y repite el ciclo; RANDOM elige al azar entre ellos. */
@@ -56,8 +63,20 @@ data class SoundConfig(
     }
 }
 
-@Serializable
-enum class AntiCheatLevel { OFF, STANDARD, STRICT }
+@Serializable(with = AntiCheatLevelSerializer::class)
+enum class AntiCheatLevel { OFF, STANDARD }
+
+/** El nivel `STRICT` se eliminó: las alarmas guardadas o compartidas con él pasan a `STANDARD` en lugar de a `OFF`. */
+internal object AntiCheatLevelSerializer : KSerializer<AntiCheatLevel> {
+    override val descriptor = PrimitiveSerialDescriptor("AntiCheatLevel", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: AntiCheatLevel) = encoder.encodeString(value.name)
+
+    override fun deserialize(decoder: Decoder): AntiCheatLevel = when (val name = decoder.decodeString()) {
+        "STRICT" -> AntiCheatLevel.STANDARD
+        else -> AntiCheatLevel.entries.firstOrNull { it.name == name } ?: AntiCheatLevel.OFF
+    }
+}
 
 @Serializable
 data class SnoozePolicy(

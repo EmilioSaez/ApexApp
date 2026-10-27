@@ -10,7 +10,6 @@ data class Protection(
     val blockBack: Boolean,
     val volumeLock: Boolean,
     val foregroundRecovery: Boolean,
-    val lockTask: Boolean,
 ) {
     val active: Boolean get() = effective != AntiCheatLevel.OFF
 
@@ -18,22 +17,20 @@ data class Protection(
     val degraded: Boolean get() = requested != effective || (active && !foregroundRecovery)
 
     companion object {
-        val NONE = Protection(AntiCheatLevel.OFF, AntiCheatLevel.OFF, false, false, false, false, false)
+        val NONE = Protection(AntiCheatLevel.OFF, AntiCheatLevel.OFF, false, false, false, false)
     }
 }
 
 object AntiCheatResolver {
     fun effective(requested: AntiCheatLevel, capabilities: Capabilities): Protection {
         if (requested == AntiCheatLevel.OFF) return Protection.NONE
-        val strict = requested == AntiCheatLevel.STRICT && capabilities.deviceOwner
         return Protection(
             requested = requested,
-            effective = if (strict) AntiCheatLevel.STRICT else AntiCheatLevel.STANDARD,
+            effective = AntiCheatLevel.STANDARD,
             immersive = true,
             blockBack = true,
             volumeLock = true,
             foregroundRecovery = capabilities.overlay,
-            lockTask = strict,
         )
     }
 }

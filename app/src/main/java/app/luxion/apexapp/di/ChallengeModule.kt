@@ -8,30 +8,39 @@ import app.luxion.apexapp.domain.challenge.DifficultyProvider
 import app.luxion.apexapp.domain.challenge.MathChallenge
 import app.luxion.apexapp.domain.challenge.SessionFinishedListener
 import app.luxion.apexapp.domain.challenge.WakeLoggingChallengeSink
+import app.luxion.apexapp.domain.challenge.rhythm.RhythmChallenge
 import app.luxion.apexapp.alarm.RingingLifecycleListener
 import app.luxion.apexapp.alarm.ResolvedWakeListener
 import app.luxion.apexapp.ui.challenge.ChallengeParamsEditor
 import app.luxion.apexapp.ui.challenge.ChallengeRenderer
 import app.luxion.apexapp.ui.challenge.ChallengesSection
 import app.luxion.apexapp.ui.challenge.MathRenderer
+import app.luxion.apexapp.ui.challenge.FlappyParamsEditor
 import app.luxion.apexapp.ui.challenge.MemoryParamsEditor
 import app.luxion.apexapp.ui.challenge.MemoryRenderer
 import app.luxion.apexapp.domain.challenge.memory.MemoryChallenge
 import app.luxion.apexapp.ui.challenge.QrParamsEditor
 import app.luxion.apexapp.ui.challenge.ShakeParamsEditor
 import app.luxion.apexapp.ui.challenge.StepsParamsEditor
+import app.luxion.apexapp.ui.challenge.rhythm.RhythmParamsEditor
+import app.luxion.apexapp.ui.challenge.rhythm.RhythmRenderer
 import app.luxion.apexapp.ui.editor.EditorSection
+import app.luxion.apexapp.ui.challenge.FlappyRenderer
 import app.luxion.apexapp.ui.challenge.QrRenderer
 import app.luxion.apexapp.ui.challenge.ShakeRenderer
 import app.luxion.apexapp.ui.challenge.StepsRenderer
+import app.luxion.apexapp.domain.challenge.holdrelease.HoldReleaseChallenge
+import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
-import app.luxion.apexapp.domain.challenge.objectphoto.ObjectPhotoChallenge
-import app.luxion.apexapp.ui.challenge.objectphoto.ObjectPhotoParamsEditor
-import app.luxion.apexapp.ui.challenge.objectphoto.ObjectPhotoRenderer
+import app.luxion.apexapp.ui.challenge.HoldReleaseParamsEditor
+import app.luxion.apexapp.ui.challenge.HoldReleaseRenderer
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
 import app.luxion.apexapp.domain.challenge.sensor.StepsChallenge
+import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
+import app.luxion.apexapp.ui.challenge.TapTargetsParamsEditor
+import app.luxion.apexapp.ui.challenge.TapTargetsRenderer
 import app.luxion.apexapp.platform.AndroidDeviceCapabilities
 import app.luxion.apexapp.platform.AndroidMotionSensors
 import app.luxion.apexapp.domain.challenge.PassedAlarmsReset
@@ -91,7 +100,7 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
-    fun objectPhoto(impl: ObjectPhotoChallenge): Challenge
+    fun flappy(impl: FlappyChallenge): Challenge
 
     @Binds
     @IntoSet
@@ -107,7 +116,7 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
-    fun objectPhotoRenderer(impl: ObjectPhotoRenderer): ChallengeRenderer
+    fun flappyRenderer(impl: FlappyRenderer): ChallengeRenderer
 
     @Binds
     @IntoSet
@@ -123,10 +132,6 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
-    fun objectPhotoEditor(impl: ObjectPhotoParamsEditor): ChallengeParamsEditor
-
-    @Binds
-    @IntoSet
     fun memory(impl: MemoryChallenge): Challenge
 
     @Binds
@@ -136,6 +141,46 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun memoryEditor(impl: MemoryParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun flappyEditor(impl: FlappyParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun holdRelease(impl: HoldReleaseChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun holdReleaseRenderer(impl: HoldReleaseRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun holdReleaseEditor(impl: HoldReleaseParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun rhythm(impl: RhythmChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun rhythmRenderer(impl: RhythmRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun rhythmEditor(impl: RhythmParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun tapTargets(impl: TapTargetsChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun tapTargetsRenderer(impl: TapTargetsRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun tapTargetsEditor(impl: TapTargetsParamsEditor): ChallengeParamsEditor
 
     @Binds
     fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities

@@ -12,7 +12,7 @@ import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.challenge.ChallengeRegistry
 import app.luxion.apexapp.domain.challenge.MathChallenge
 import app.luxion.apexapp.ui.theme.ApexAppTheme
-import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -39,12 +39,13 @@ class ChallengesSectionTest {
     }
 
     @Test
-    fun switchingToChallenges_preselectsMathAndShowsControls() {
+    fun switchingToChallenges_preselectsNothingAndRequiresAType() {
         show()
         compose.onNodeWithText(str(R.string.challenge_editor_mode_challenges)).performClick()
         compose.waitForIdle()
-        assertEquals(listOf("math"), draft.challenges.challenges.map { it.type })
-        compose.onNodeWithText(str(R.string.challenge_test_difficulty)).assertExists()
+        assertTrue(draft.challenges.challenges.isEmpty())
+        assertFalse(section.isValid(draft))
+        compose.onNodeWithText(str(R.string.challenge_editor_pick_type)).assertExists()
         compose.onNodeWithText(str(R.string.challenge_editor_none)).assertDoesNotExist()
     }
 

@@ -1,0 +1,161 @@
+package app.luxion.apexapp.domain.challenge.holdrelease
+
+import app.luxion.apexapp.domain.challenge.ChallengeAnswer
+import app.luxion.apexapp.domain.challenge.ChallengeType
+import kotlin.random.Random
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class HoldReleaseTest {
+    private val window = HoldReleaseTuning.forLevel(3).windowMs
+
+    private fun game(rounds: Int = 3, seed: Int = 1, level: Int = 3) =
+        HoldReleaseGame(rounds, HoldReleaseTuning.forLevel(level), Random(seed))
+
+    /** Pulsa en [t] y devuelve el instante de la señal, que sale de dejar correr el reloj. */
+    private fun HoldReleaseGame.pressAndFindSignal(t: Long): Long {
+        press(t)
+        var now = t
+        while (phase == HoldPhase.HOLDING) tick(++now)
+        return now
+    }
+
+    private fun HoldReleaseGame.hit(t: Long, reaction: Long = 300): RoundOutcome? {
+        val signal = pressAndFindSignal(t)
+        return release(signal + reaction)
+    }
+
+    @Test
+    fun `params ausentes corruptos o fuera de rango`() {
+        assertEquals(3, HoldReleaseParams.rounds("", 3))
+        assertEquals(3, HoldReleaseParams.rounds("no es json", 3))
+        assertEquals(3, HoldReleaseParams.rounds("{}", 3))
+        assertEquals(2, HoldReleaseParams.rounds("""{"rounds":0}""", 3))
+        assertEquals(6, HoldReleaseParams.rounds("""{"rounds":99}""", 3))
+        assertEquals(5, HoldReleaseParams.rounds(HoldReleaseParams.paramsFor(5), 3))
+    }
+
+    @Test
+    fun `sin params las rondas salen de la dificultad y los params mandan`() {
+        assertEquals(HoldReleaseParams.DEFAULT_ROUNDS_BY_LEVEL, (1..5).map { HoldReleaseParams.rounds("", it) })
+        assertEquals(HoldReleaseParams.rounds("", 1), (HoldReleaseChallenge().generate(1, "", Random(1)) as HoldReleaseInstance).rounds)
+        assertTrue(HoldReleaseParams.rounds("", 5) > HoldReleaseParams.rounds("", 1))
+        assertEquals(4, HoldReleaseParams.rounds(HoldReleaseParams.paramsFor(4), 1))
+        assertEquals(HoldReleaseParams.rounds("", 1), HoldReleaseParams.rounds("", -3))
+        assertEquals(HoldReleaseParams.rounds("", 5), HoldReleaseParams.rounds("", 99))
+    }
+
+    @Test
+    fun `la ventana se estrecha con la dificultad`() {
+        val windows = (1..5).map { HoldReleaseTuning.forLevel(it).windowMs }
+        assertEquals(windows.sortedDescending(), windows)
+        assertTrue(windows.first() > windows.last())
+    }
+
+    @Test
+    fun `niveles fuera de rango se acotan`() {
+        assertEquals(HoldReleaseTuning.forLevel(1), HoldReleaseTuning.forLevel(-3))
+        assertEquals(HoldReleaseTuning.forLevel(5), HoldReleaseTuning.forLevel(9))
+    }
+
+    @Test
+    fun `acertar todas las rondas supera el reto`() {
+        val g = game()
+        repeat(3) { assertEquals(RoundOutcome.HIT, g.hit(it * 10_000L)) }
+        assertTrue(g.done)
+        assertEquals(3, g.roundsDone)
+    }
+
+    @Test
+    fun `el instante de la señal cae en el rango y varia con la semilla`() {
+        val signals = (1..20).map { seed -> game(seed = seed).run { pressAndFindSignal(0) } }
+        assertTrue(signals.all { it in HoldReleaseGame.MIN_HOLD_MS..HoldReleaseGame.MAX_HOLD_MS })
+        assertTrue(signals.toSet().size > 1)
+    }
+
+    @Test
+    fun `el rango de mantenimiento no depende del nivel`() {
+        val byLevel = (1..5).map { level ->
+            (1..20).map { seed -> game(seed = seed, level = level).run { pressAndFindSignal(0) } }
+        }
+        assertEquals(1, byLevel.toSet().size)
+    }
+
+    @Test
+    fun `soltar antes de la señal falla`() {
+        val g = game()
+        g.press(0)
+        assertEquals(RoundOutcome.EARLY, g.release(500))
+        assertEquals(HoldPhase.IDLE, g.phase)
+    }
+
+    @Test
+    fun `soltar tras la ventana falla`() {
+        val g = game()
+        val signal = g.pressAndFindSignal(0)
+        assertEquals(RoundOutcome.LATE, g.release(signal + window + 1))
+    }
+
+    @Test
+    fun `mantener pasada la ventana falla sin soltar y el soltar posterior se ignora`() {
+        val g = game()
+        val signal = g.pressAndFindSignal(0)
+        assertEquals(RoundOutcome.LATE, g.tick(signal + window + 1))
+        assertNull(g.release(signal + window + 50))
+    }
+
+    @Test
+    fun `un fallo suma una ronda extra y conserva las superadas`() {
+        val g = game()
+        g.hit(0)
+        g.press(10_000)
+        g.release(10_100)
+        assertEquals(4, g.totalRounds)
+        assertEquals(1, g.roundsDone)
+    }
+
+    @Test
+    fun `las rondas extra tienen tope y no dependen del nivel`() {
+        fun extrasAfterFailures(level: Int): Int {
+            val g = game(rounds = 6, level = level)
+            repeat(2) { g.press(it * 10_000L); g.release(it * 10_000L + 10) }
+            g.hit(50_000)
+            repeat(2) { g.press(60_000L + it * 10_000L); g.release(60_000L + it * 10_000L + 10) }
+            g.hit(90_000)
+            repeat(2) { g.press(100_000L + it * 10_000L); g.release(100_000L + it * 10_000L + 10) }
+            return g.extraRounds
+        }
+        (1..5).forEach { assertEquals(HoldReleaseGame.MAX_EXTRA, extrasAfterFailures(it)) }
+    }
+
+    @Test
+    fun `tres fallos seguidos reinician la ronda sin ronda extra`() {
+        val g = game()
+        g.hit(0)
+        repeat(3) { g.press(10_000L + it * 10_000L); g.release(10_000L + it * 10_000L + 10) }
+        assertEquals(2, g.extraRounds)
+        assertEquals(1, g.roundsDone)
+        assertEquals(HoldPhase.IDLE, g.phase)
+    }
+
+    @Test
+    fun `cancelar la pulsacion cuenta como fallo`() {
+        val g = game()
+        g.press(0)
+        assertEquals(RoundOutcome.CANCELLED, g.cancel())
+        assertEquals(1, g.extraRounds)
+        assertNull(g.cancel())
+    }
+
+    @Test
+    fun `la instancia solo acepta GameVerified de su tipo`() {
+        val instance = HoldReleaseChallenge().generate(3, HoldReleaseParams.paramsFor(4), Random(1)) as HoldReleaseInstance
+        assertEquals(4, instance.rounds)
+        assertTrue(instance.check(ChallengeAnswer.GameVerified(HoldReleaseChallenge.TYPE)))
+        assertFalse(instance.check(ChallengeAnswer.GameVerified(ChallengeType("otro"))))
+        assertFalse(instance.check(ChallengeAnswer.MotionVerified(HoldReleaseChallenge.TYPE)))
+    }
+}

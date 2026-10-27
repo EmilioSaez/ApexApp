@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 /**
  * Solo debug. Crea una alarma desde adb:
- * `adb shell am broadcast -n app.luxion.apexapp/.debug.DebugAlarmReceiver --ei minutesFromNow 2 [--es label X] [--es level OFF|STANDARD|STRICT] [--ei snoozeMinutes 1 --ei snoozeMax 2]`
+ * `adb shell am broadcast -n app.luxion.apexapp/.debug.DebugAlarmReceiver --ei minutesFromNow 2 [--es label X] [--es level OFF|STANDARD] [--ei snoozeMinutes 1 --ei snoozeMax 2]`
  * `--ez removeAdmin true` desactiva el administrador de dispositivo (solo para pruebas).
  */
 @AndroidEntryPoint

@@ -41,17 +41,6 @@ private class FakeVolume(var volume: Int = 3, val maxVolume: Int = 7) : AlarmVol
     }
 }
 
-private class FakeLockTask : LockTaskPolicy {
-    var allowed = false
-    override fun allow() {
-        allowed = true
-    }
-
-    override fun clear() {
-        allowed = false
-    }
-}
-
 private class FakeActive : ActiveSessionStore {
     var session: Pair<String, Long>? = null
     override fun put(sessionId: String, alarmId: Long) {
@@ -119,8 +108,20 @@ class AntiCheatPolicyJsonTest {
 
     @Test
     fun unknownKeys_areIgnored() {
-        val policy = ConfigJson.decodeFromString<AntiCheatPolicy>("""{"level":"STRICT","future":1}""")
-        assertEquals(AntiCheatLevel.STRICT, policy.level)
+        val policy = ConfigJson.decodeFromString<AntiCheatPolicy>("""{"level":"STANDARD","future":1}""")
+        assertEquals(AntiCheatLevel.STANDARD, policy.level)
+    }
+
+    @Test
+    fun removedStrictLevel_decodesAsStandard() {
+        val policy = ConfigJson.decodeFromString<AntiCheatPolicy>("""{"level":"STRICT"}""")
+        assertEquals(AntiCheatLevel.STANDARD, policy.level)
+    }
+
+    @Test
+    fun unknownLevel_decodesAsOff() {
+        val policy = ConfigJson.decodeFromString<AntiCheatPolicy>("""{"level":"FUTURE"}""")
+        assertEquals(AntiCheatLevel.OFF, policy.level)
     }
 
     @Test
@@ -131,7 +132,7 @@ class AntiCheatPolicyJsonTest {
 }
 
 class AntiCheatResolverTest {
-    private val all = Capabilities(overlay = true, deviceAdmin = true, deviceOwner = true)
+    private val all = Capabilities(overlay = true, deviceAdmin = true)
 
     @Test
     fun off_appliesNothing() {
@@ -144,7 +145,6 @@ class AntiCheatResolverTest {
         assertEquals(AntiCheatLevel.STANDARD, p.effective)
         assertTrue(p.immersive && p.blockBack && p.volumeLock)
         assertFalse(p.foregroundRecovery)
-        assertFalse(p.lockTask)
         assertTrue(p.degraded)
     }
 
@@ -155,21 +155,6 @@ class AntiCheatResolverTest {
         assertFalse(p.degraded)
     }
 
-    @Test
-    fun strict_withoutDeviceOwner_fallsBackToStandard() {
-        val p = AntiCheatResolver.effective(AntiCheatLevel.STRICT, Capabilities(overlay = true))
-        assertEquals(AntiCheatLevel.STANDARD, p.effective)
-        assertFalse(p.lockTask)
-        assertTrue(p.degraded)
-    }
-
-    @Test
-    fun strict_withDeviceOwner_usesLockTask() {
-        val p = AntiCheatResolver.effective(AntiCheatLevel.STRICT, all)
-        assertEquals(AntiCheatLevel.STRICT, p.effective)
-        assertTrue(p.lockTask)
-        assertFalse(p.degraded)
-    }
 }
 
 class SessionIntegrityTrackerTest {
@@ -309,10 +294,9 @@ class SnoozeControllerTest {
 
 class LockdownControllerTest {
     private val clock = Clock.fixed(Instant.ofEpochMilli(5), ZoneOffset.UTC)
-    private val caps = FakeCapabilities(Capabilities(overlay = true, deviceOwner = true))
+    private val caps = FakeCapabilities(Capabilities(overlay = true))
     private val volume = FakeVolume()
     private val tracker = SessionIntegrityTracker()
-    private val lockTask = FakeLockTask()
     private val active = FakeActive()
     private val recorder = FakeRecorder()
     private val counts = FakeCounts()
@@ -320,7 +304,6 @@ class LockdownControllerTest {
         caps,
         VolumeLock(volume, tracker::volumeReset),
         tracker,
-        lockTask,
         active,
         counts,
         recorder,
@@ -370,15 +353,6 @@ class LockdownControllerTest {
     }
 
     @Test
-    fun strict_withOwner_allowsLockTaskAndClearsIt() {
-        val s = session(AntiCheatLevel.STRICT)
-        controller.onStarted(s)
-        assertTrue(lockTask.allowed)
-        controller.onEnded(s, EndReason.TIMED_OUT)
-        assertFalse(lockTask.allowed)
-    }
-
-    @Test
     fun timedOut_flagsSessionSuspicious() {
         val s = session(AntiCheatLevel.STANDARD)
         controller.onStarted(s)
@@ -402,15 +376,6 @@ class LockdownControllerTest {
         controller.onEnded(s, EndReason.SNOOZED)
         assertNull(controller.active.value)
         assertEquals(3, volume.volume)
-        assertTrue(recorder.events.isEmpty())
-    }
-
-    @Test
-    fun degradedStrict_isNotSuspicious() {
-        caps.caps = Capabilities(overlay = true)
-        val s = session(AntiCheatLevel.STRICT)
-        controller.onStarted(s)
-        controller.onEnded(s, EndReason.RESOLVED)
         assertTrue(recorder.events.isEmpty())
     }
 

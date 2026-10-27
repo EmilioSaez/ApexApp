@@ -10,14 +10,17 @@ import app.luxion.apexapp.domain.challenge.SessionConfig
 
 fun ChallengeConfig.isEnabled(type: ChallengeType): Boolean = challenges.any { it.type == type.id }
 
-/** Alarma normal: sin ningún tipo de reto, se apaga de un toque. El modo se deduce del dato, no se guarda. */
-val ChallengeConfig.isNormal: Boolean get() = challenges.isEmpty()
+/** Alarma normal: sin tipos de reto y sin haber pasado a «Con retos»; se apaga de un toque. */
+val ChallengeConfig.isNormal: Boolean get() = !challengesEnabled && challenges.isEmpty()
+
+/** «Con retos» sin ningún tipo elegido: el editor lo permite, pero la alarma no se puede guardar. */
+val ChallengeConfig.needsType: Boolean get() = !isNormal && challenges.isEmpty()
 
 /** Pasa a «Normal» quitando todos los tipos. */
-fun ChallengeConfig.asNormal(): ChallengeConfig = copy(challenges = emptyList())
+fun ChallengeConfig.asNormal(): ChallengeConfig = copy(challenges = emptyList(), challengesEnabled = false)
 
-/** Pasa a «Con retos»: si no había tipos, preselecciona el matemático; si ya había, no cambia nada. */
-fun ChallengeConfig.withChallenges(): ChallengeConfig = if (isNormal) toggled(ChallengeType.MATH) else this
+/** Pasa a «Con retos» sin preseleccionar ningún tipo: el usuario debe elegir al menos uno. */
+fun ChallengeConfig.withChallenges(): ChallengeConfig = copy(challengesEnabled = true)
 
 /** Mínimo de retos para los tipos elegidos: uno de cada tipo. */
 val ChallengeConfig.minCount: Int get() = SessionConfig.minCount(challenges.size)

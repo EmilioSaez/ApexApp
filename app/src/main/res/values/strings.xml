@@ -108,6 +108,7 @@
     <string name="challenge_done">Terminar</string>
     <string name="challenge_editor_section">Retos</string>
     <string name="challenge_editor_none">Se apaga con un toque.</string>
+    <string name="challenge_editor_pick_type">Elige al menos un tipo de reto para guardar la alarma.</string>
     <string name="challenge_editor_mode_normal">Normal</string>
     <string name="challenge_editor_mode_challenges">Con retos</string>
     <plurals name="challenge_shake_prompt">
@@ -148,22 +149,31 @@
     <string name="challenge_type_shake">Agitar</string>
     <string name="challenge_type_steps">Pasos</string>
     <string name="challenge_type_qr">Código QR</string>
-    <string name="challenge_object_prompt">Enfoca tu objeto: %1$s</string>
-    <string name="challenge_object_hold">Mantén el objeto en el encuadre…</string>
-    <string name="challenge_object_wrong">Ese no es el objeto registrado.</string>
-    <string name="challenge_object_rejected_screen">Parece una pantalla. Enfoca el objeto real.</string>
-    <string name="challenge_object_rejected_static">Parece una foto. Enfoca el objeto real.</string>
-    <string name="object_register_required">Elige el objeto de esta alarma.</string>
-    <string name="object_register_scanning">Apunta la cámara al objeto y elige una etiqueta.</string>
-    <string name="object_register_done">Objetos de la alarma (toca uno para quitarlo). Si salen varios retos de foto, se piden objetos distintos.</string>
-    <string name="object_register_action">Registrar objeto</string>
-    <string name="object_register_add">Añadir otro objeto</string>
-    <string name="object_register_remove">Quitar %1$s</string>
-    <string name="object_register_cancel">Cancelar</string>
-    <string name="object_register_none_detected">Aún no se reconoce nada. Acércate o mejora la luz.</string>
-    <string name="object_register_generic_hint">Si la etiqueta es muy genérica (p. ej. habitación), elige otra más específica.</string>
-    <string name="object_register_placement_hint">Elige un objeto lejos de la cama, para tener que levantarte.</string>
-    <string name="challenge_type_object">Foto a un objeto</string>
+    <string name="challenge_type_holdrelease">Mantener y soltar</string>
+    <string name="challenge_holdrelease_round">Ronda %1$d de %2$d</string>
+    <string name="challenge_holdrelease_hold">Mantén pulsado</string>
+    <string name="challenge_holdrelease_wait">Espera…</string>
+    <string name="challenge_holdrelease_release">¡Suelta!</string>
+    <string name="challenge_holdrelease_early">Soltaste antes de tiempo. Se añade una ronda.</string>
+    <string name="challenge_holdrelease_late">Soltaste tarde. Se añade una ronda.</string>
+    <string name="challenge_holdrelease_cancelled">Se interrumpió la pulsación.</string>
+    <string name="challenge_holdrelease_estimate">Duración orientativa: unos %d s</string>
+    <plurals name="challenge_holdrelease_rounds">
+        <item quantity="one">%d ronda</item>
+        <item quantity="other">%d rondas</item>
+    </plurals>
+    <string name="challenge_type_flappy">Flappy Bird</string>
+    <plurals name="challenge_flappy_prompt">
+        <item quantity="one">Pasa %d tubería sin chocar</item>
+        <item quantity="other">Pasa %d tuberías sin chocar</item>
+    </plurals>
+    <plurals name="challenge_flappy_target_info">
+        <item quantity="one">Objetivo con esta dificultad: %d punto</item>
+        <item quantity="other">Objetivo con esta dificultad: %d puntos</item>
+    </plurals>
+    <string name="challenge_flappy_score">Puntos: %1$d / %2$d</string>
+    <string name="challenge_flappy_tap_to_start">Toca para empezar y vuelve a tocar para saltar.</string>
+    <string name="challenge_flappy_crashed">Has chocado. Toca para empezar de nuevo desde cero.</string>
     <string name="challenge_type_memory">Memoria</string>
     <string name="challenge_memory_watch">Memoriza la secuencia</string>
     <string name="challenge_memory_repeat">Repite la secuencia</string>
@@ -174,6 +184,13 @@
         <item quantity="one">Secuencia con esta dificultad: %d casilla</item>
         <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
     </plurals>
+
+    <string name="challenge_type_rhythm">Ritmo</string>
+    <string name="challenge_rhythm_rounds">Rondas: %1$d</string>
+    <string name="challenge_rhythm_round">Ronda %1$d de %2$d</string>
+    <string name="challenge_rhythm_failures">Fallos: %1$d de %2$d</string>
+    <string name="challenge_rhythm_hint">Toca el carril cuando la nota llegue a la línea.</string>
+    <string name="challenge_rhythm_restarted">Demasiados fallos: la ronda empieza de nuevo.</string>
 
     <string name="sound_default">Tono por defecto</string>
     <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
@@ -202,29 +219,23 @@
     <string name="anticheat_section">Anti-trampas</string>
     <string name="anticheat_level_off">Desactivado</string>
     <string name="anticheat_level_standard">Estándar</string>
-    <string name="anticheat_level_strict">Estricto</string>
     <string name="anticheat_level_hint_off">La alarma se puede descartar sin restricciones.</string>
     <string name="anticheat_level_hint_standard">Pantalla completa, sin salir con Atrás o Home y volumen al máximo.</string>
-    <string name="anticheat_level_hint_strict">Como estándar, y con propietario del dispositivo bloquea Home, Recientes y el menú de apagado.</string>
     <string name="anticheat_snooze_allowed">Permitir posponer</string>
     <string name="anticheat_snooze_minutes">Minutos: %1$d</string>
     <string name="anticheat_snooze_max">Máximo de veces: %1$d</string>
     <string name="anticheat_missing_overlay">Falta el permiso de superposición: sin él no se puede recuperar la pantalla al pulsar Home.</string>
-    <string name="anticheat_missing_owner">Sin propietario del dispositivo, el nivel estricto funciona como estándar.</string>
     <string name="anticheat_open_status">Ver estado de permisos</string>
     <string name="anticheat_status_title">Estado anti-trampas</string>
     <string name="anticheat_cap_overlay">Superposición</string>
     <string name="anticheat_cap_overlay_desc">Permite traer la pantalla de la alarma al primer plano si se pulsa Home.</string>
     <string name="anticheat_cap_admin">Administrador de dispositivo</string>
     <string name="anticheat_cap_admin_desc">Impide desinstalar la app directamente mientras esté activo.</string>
-    <string name="anticheat_cap_owner">Propietario del dispositivo</string>
-    <string name="anticheat_cap_owner_desc">Necesario para bloquear Home, Recientes y el apagado. Se configura por ADB: consulta docs/anti-cheat.md.</string>
     <string name="anticheat_granted">Concedido</string>
     <string name="anticheat_not_granted">Pendiente</string>
     <string name="anticheat_grant">Conceder</string>
     <string name="anticheat_limits_title">Límites</string>
     <string name="anticheat_limits_body">No se puede impedir el apagado forzado por hardware, el modo seguro, la recuperación, ADB ni retirar la batería. El volumen forzado no controla salidas externas con volumen propio, como algunos auriculares Bluetooth.</string>
-    <string name="anticheat_release">Renunciar a propietario del dispositivo</string>
     <string name="stats_title">Estadísticas</string>
     <string name="stats_open">Estadísticas</string>
     <string name="stats_kpi_days">días</string>
@@ -336,4 +347,13 @@
     <string name="time_entry_invalid">Hora no válida</string>
     <string name="time_entry_ok">Fijar</string>
     <string name="time_entry_cancel">Cancelar</string>
+    <string name="challenge_type_tap_targets">Tocar objetivos</string>
+    <string name="tap_targets_round">Ronda %1$d de %2$d</string>
+    <string name="tap_targets_hint">Toca todos los círculos antes de que desaparezcan</string>
+    <string name="tap_targets_timeout">Tiempo agotado. Otra vez.</string>
+    <string name="tap_targets_rejected">Toque no válido</string>
+    <string name="tap_targets_area_description">Zona de juego: quedan %1$d círculos por tocar</string>
+    <string name="tap_targets_rounds_label">Rondas</string>
+    <string name="tap_targets_rounds_less">Menos rondas</string>
+    <string name="tap_targets_rounds_more">Más rondas</string>
 </resources>

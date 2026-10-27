@@ -13,6 +13,8 @@ import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
 import app.luxion.apexapp.domain.challenge.qr.QrParams
+import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
+import app.luxion.apexapp.domain.challenge.flappy.FlappyTargets
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
 import app.luxion.apexapp.ui.challenge.motion.ActivityRecognitionGate
 import app.luxion.apexapp.ui.challenge.motion.MotionTargetInfo
@@ -81,4 +83,18 @@ class QrParamsEditor @Inject constructor() : ChallengeParamsEditor {
     }
 
     override fun isValid(params: String): Boolean = QrParams.isRegistered(params)
+}
+
+/** Editor del reto Flappy: los puntos salen de la dificultad, aquí solo se muestran. */
+class FlappyParamsEditor @Inject constructor() : ChallengeParamsEditor {
+    override val type: ChallengeType = FlappyChallenge.TYPE
+
+    @Composable
+    override fun Content(params: String, difficulty: Int, onChange: (String) -> Unit) {
+        val target = FlappyTargets.targetFor(difficulty)
+        Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+            Text(stringResource(R.string.challenge_type_flappy), style = MaterialTheme.typography.titleSmall)
+            MotionTargetInfo(pluralStringResource(R.plurals.challenge_flappy_target_info, target, target))
+        }
+    }
 }

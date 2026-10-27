@@ -107,6 +107,7 @@
     <string name="challenge_done">Done</string>
     <string name="challenge_editor_section">Challenges</string>
     <string name="challenge_editor_none">Dismissed with one tap.</string>
+    <string name="challenge_editor_pick_type">Pick at least one challenge type to save the alarm.</string>
     <string name="challenge_editor_mode_normal">Normal</string>
     <string name="challenge_editor_mode_challenges">With challenges</string>
     <plurals name="challenge_shake_prompt">
@@ -147,22 +148,31 @@
     <string name="challenge_type_shake">Shake</string>
     <string name="challenge_type_steps">Steps</string>
     <string name="challenge_type_qr">QR code</string>
-    <string name="challenge_object_prompt">Point at your object: %1$s</string>
-    <string name="challenge_object_hold">Keep the object in view…</string>
-    <string name="challenge_object_wrong">That is not the registered object.</string>
-    <string name="challenge_object_rejected_screen">That looks like a screen. Point at the real object.</string>
-    <string name="challenge_object_rejected_static">That looks like a photo. Point at the real object.</string>
-    <string name="object_register_required">Choose the object for this alarm.</string>
-    <string name="object_register_scanning">Point the camera at the object and pick a label.</string>
-    <string name="object_register_done">Alarm objects (tap one to remove it). If several photo challenges come up, different objects are asked.</string>
-    <string name="object_register_action">Register object</string>
-    <string name="object_register_add">Add another object</string>
-    <string name="object_register_remove">Remove %1$s</string>
-    <string name="object_register_cancel">Cancel</string>
-    <string name="object_register_none_detected">Nothing recognised yet. Move closer or add light.</string>
-    <string name="object_register_generic_hint">If the label is very generic (e.g. room), pick a more specific one.</string>
-    <string name="object_register_placement_hint">Pick an object away from your bed so you have to get up.</string>
-    <string name="challenge_type_object">Photo of an object</string>
+    <string name="challenge_type_holdrelease">Hold and release</string>
+    <string name="challenge_holdrelease_round">Round %1$d of %2$d</string>
+    <string name="challenge_holdrelease_hold">Press and hold</string>
+    <string name="challenge_holdrelease_wait">Wait…</string>
+    <string name="challenge_holdrelease_release">Release!</string>
+    <string name="challenge_holdrelease_early">Released too soon. A round was added.</string>
+    <string name="challenge_holdrelease_late">Released too late. A round was added.</string>
+    <string name="challenge_holdrelease_cancelled">The press was interrupted.</string>
+    <string name="challenge_holdrelease_estimate">Estimated duration: about %d s</string>
+    <plurals name="challenge_holdrelease_rounds">
+        <item quantity="one">%d round</item>
+        <item quantity="other">%d rounds</item>
+    </plurals>
+    <string name="challenge_type_flappy">Flappy Bird</string>
+    <plurals name="challenge_flappy_prompt">
+        <item quantity="one">Pass %d pipe without crashing</item>
+        <item quantity="other">Pass %d pipes without crashing</item>
+    </plurals>
+    <plurals name="challenge_flappy_target_info">
+        <item quantity="one">Target at this difficulty: %d point</item>
+        <item quantity="other">Target at this difficulty: %d points</item>
+    </plurals>
+    <string name="challenge_flappy_score">Score: %1$d / %2$d</string>
+    <string name="challenge_flappy_tap_to_start">Tap to start, then tap again to jump.</string>
+    <string name="challenge_flappy_crashed">You crashed. Tap to start over from zero.</string>
     <string name="challenge_type_memory">Memory</string>
     <string name="challenge_memory_watch">Memorize the sequence</string>
     <string name="challenge_memory_repeat">Repeat the sequence</string>
@@ -173,6 +183,13 @@
         <item quantity="one">Sequence at this difficulty: %d cell</item>
         <item quantity="other">Sequence at this difficulty: %d cells</item>
     </plurals>
+
+    <string name="challenge_type_rhythm">Rhythm</string>
+    <string name="challenge_rhythm_rounds">Rounds: %1$d</string>
+    <string name="challenge_rhythm_round">Round %1$d of %2$d</string>
+    <string name="challenge_rhythm_failures">Misses: %1$d of %2$d</string>
+    <string name="challenge_rhythm_hint">Tap the lane when the note reaches the line.</string>
+    <string name="challenge_rhythm_restarted">Too many misses: the round starts over.</string>
 
     <string name="sound_default">Default tone</string>
     <string name="sound_not_audio">That file is not audio or cannot be read.</string>
@@ -201,29 +218,23 @@
     <string name="anticheat_section">Anti-cheat</string>
     <string name="anticheat_level_off">Off</string>
     <string name="anticheat_level_standard">Standard</string>
-    <string name="anticheat_level_strict">Strict</string>
     <string name="anticheat_level_hint_off">The alarm can be dismissed without restrictions.</string>
     <string name="anticheat_level_hint_standard">Full screen, no leaving with Back or Home, and volume at maximum.</string>
-    <string name="anticheat_level_hint_strict">Like standard, and with device owner it blocks Home, Recents and the power menu.</string>
     <string name="anticheat_snooze_allowed">Allow snooze</string>
     <string name="anticheat_snooze_minutes">Minutes: %1$d</string>
     <string name="anticheat_snooze_max">Maximum times: %1$d</string>
     <string name="anticheat_missing_overlay">Overlay permission is missing: without it the alarm screen cannot be brought back after pressing Home.</string>
-    <string name="anticheat_missing_owner">Without device owner, strict level works like standard.</string>
     <string name="anticheat_open_status">View permissions status</string>
     <string name="anticheat_status_title">Anti-cheat status</string>
     <string name="anticheat_cap_overlay">Overlay</string>
     <string name="anticheat_cap_overlay_desc">Lets the alarm screen return to the foreground if Home is pressed.</string>
     <string name="anticheat_cap_admin">Device administrator</string>
     <string name="anticheat_cap_admin_desc">Prevents uninstalling the app directly while active.</string>
-    <string name="anticheat_cap_owner">Device owner</string>
-    <string name="anticheat_cap_owner_desc">Required to block Home, Recents and power off. Set up through ADB: see docs/anti-cheat.md.</string>
     <string name="anticheat_granted">Granted</string>
     <string name="anticheat_not_granted">Pending</string>
     <string name="anticheat_grant">Grant</string>
     <string name="anticheat_limits_title">Limits</string>
     <string name="anticheat_limits_body">Forced hardware power-off, safe mode, recovery, ADB and removing the battery cannot be prevented. Forced volume does not control external outputs with their own volume, such as some Bluetooth headphones.</string>
-    <string name="anticheat_release">Give up device owner</string>
     <string name="stats_title">Statistics</string>
     <string name="stats_open">Statistics</string>
     <string name="stats_kpi_days">days</string>
@@ -335,4 +346,13 @@
     <string name="time_entry_invalid">Invalid time</string>
     <string name="time_entry_ok">Set</string>
     <string name="time_entry_cancel">Cancel</string>
+    <string name="challenge_type_tap_targets">Tap targets</string>
+    <string name="tap_targets_round">Round %1$d of %2$d</string>
+    <string name="tap_targets_hint">Tap every circle before it disappears</string>
+    <string name="tap_targets_timeout">Time\'s up. Try again.</string>
+    <string name="tap_targets_rejected">Invalid touch</string>
+    <string name="tap_targets_area_description">Play area: %1$d circles left to tap</string>
+    <string name="tap_targets_rounds_label">Rounds</string>
+    <string name="tap_targets_rounds_less">Fewer rounds</string>
+    <string name="tap_targets_rounds_more">More rounds</string>
 </resources>
