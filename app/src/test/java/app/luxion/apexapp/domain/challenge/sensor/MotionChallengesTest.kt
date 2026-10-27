@@ -21,9 +21,7 @@ class MotionChallengesTest {
     private class Caps(
         override val hasAccelerometer: Boolean = true,
         override val hasStepSensor: Boolean = true,
-        override val hasCamera: Boolean = true,
         override val hasActivityRecognitionPermission: Boolean = true,
-        override val hasCameraPermission: Boolean = true,
     ) : DeviceCapabilities
 
     @Test

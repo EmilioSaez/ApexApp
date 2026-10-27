@@ -254,7 +254,6 @@ private fun AntiCheatLevel.labelRes() = when (this) {
 
 @StringRes
 private fun ImportNote.messageRes() = when (this) {
-    ImportNote.QR_CHALLENGE_OMITTED -> R.string.import_note_qr
     ImportNote.UNKNOWN_CHALLENGE_OMITTED -> R.string.import_note_challenge
     ImportNote.UNKNOWN_SOUND_DEFAULTED -> R.string.import_note_sound
 }
@@ -285,7 +284,7 @@ private val PreviewImport = ImportUiState.Preview(
     ImportPreview(
         alarm = Alarm(hour = 6, minute = 30, repeatDays = java.time.DayOfWeek.entries.take(5).toSet(), label = "Gimnasio"),
         soundKey = null,
-        notes = setOf(ImportNote.QR_CHALLENGE_OMITTED),
+        notes = setOf(ImportNote.UNKNOWN_CHALLENGE_OMITTED),
     ),
 )
 

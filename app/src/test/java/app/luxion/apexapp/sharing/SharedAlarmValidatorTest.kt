@@ -11,7 +11,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class SharedAlarmValidatorTest {
-    private val types = setOf("math", "qr", "shake")
+    private val types = setOf("math", "shake")
     private val sounds = setOf("default")
 
     private fun shared(
@@ -90,11 +90,11 @@ class SharedAlarmValidatorTest {
     }
 
     @Test
-    fun qrChallenge_isOmittedWithNote() {
+    fun removedQrChallenge_isOmittedAsUnknown() {
         val result = preview(shared(challenge = withSpecs(ChallengeSpec("qr", "{}"), difficulty = 2)))
         assertTrue(result.alarm.challenges.challenges.isEmpty())
         assertEquals(2, result.alarm.challenges.difficulty)
-        assertEquals(setOf(ImportNote.QR_CHALLENGE_OMITTED), result.notes)
+        assertEquals(setOf(ImportNote.UNKNOWN_CHALLENGE_OMITTED), result.notes)
     }
 
     @Test

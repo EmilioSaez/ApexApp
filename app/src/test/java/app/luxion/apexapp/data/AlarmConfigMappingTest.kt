@@ -33,11 +33,17 @@ class AlarmConfigMappingTest {
             id = 3,
             hour = 6,
             minute = 30,
-            challenges = ChallengeConfig(4, listOf(ChallengeSpec("math", """{"ops":3}"""), ChallengeSpec("qr"))),
+            challenges = ChallengeConfig(4, listOf(ChallengeSpec("math", """{"ops":3}"""), ChallengeSpec("shake"))),
             soundConfig = SoundConfig(volume = 80, vibrate = false, ttsEnabled = true, ttsText = "Arriba", speakTime = true),
             antiCheat = AntiCheatPolicy(AntiCheatLevel.STRICT, SnoozePolicy(allowed = true, minutes = 10, maxCount = 1)),
         )
         assertEquals(alarm, alarm.toEntity().toDomain())
+    }
+
+    @Test
+    fun removedQrChallenge_isDroppedOnLoad() {
+        val alarm = Alarm(id = 3, hour = 6, minute = 30, challenges = ChallengeConfig(2, listOf(ChallengeSpec("math"), ChallengeSpec("qr"))))
+        assertEquals(listOf(ChallengeSpec("math")), alarm.toEntity().toDomain().challenges.challenges)
     }
 
     @Test

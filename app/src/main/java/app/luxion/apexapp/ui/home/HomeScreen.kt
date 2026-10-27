@@ -489,7 +489,7 @@ internal const val AlarmRowTag = "alarm_row_"
 private val PreviewAlarms = listOf(
     Alarm(
         id = 1, hour = 6, minute = 45, repeatDays = DayOfWeek.entries.take(5).toSet(), label = "Trabajo",
-        challenges = ChallengeConfig(challenges = listOf(ChallengeSpec("qr"))),
+        challenges = ChallengeConfig(challenges = listOf(ChallengeSpec("shake"))),
     ),
     Alarm(
         id = 2, hour = 7, minute = 30, repeatDays = setOf(DayOfWeek.TUESDAY, DayOfWeek.THURSDAY, DayOfWeek.SATURDAY),

@@ -27,7 +27,7 @@ class SharedAlarmCodecTest {
         soundId = 4,
         challenges = ChallengeConfig(
             3,
-            listOf(ChallengeSpec("math", """{"ops":3}"""), ChallengeSpec("qr", """{"format":256,"hash":"abc"}""")),
+            listOf(ChallengeSpec("math", """{"ops":3}"""), ChallengeSpec("shake")),
             count = 2,
         ),
         soundConfig = SoundConfig(volume = 70, ttsEnabled = true, ttsText = "Arriba"),
@@ -44,14 +44,13 @@ class SharedAlarmCodecTest {
     private fun failure(result: DecodeResult) = (result as DecodeResult.Failure).error
 
     @Test
-    fun export_leavesOutIdEnabledAndDeviceBoundData() {
+    fun export_leavesOutIdAndEnabled() {
         val shared = alarm.toShared(soundKey = "default")
         val text = String(InflaterInputStream(SharedAlarmCodec.encode(shared).inputStream()).readBytes())
         assertFalse(text.contains("\"id\""))
         assertFalse(text.contains("enabled"))
-        assertFalse(text.contains("abc"))
         assertEquals(listOf(1, 5), shared.alarm.days)
-        assertEquals(ChallengeSpec("qr"), shared.challenge!!.challenges[1])
+        assertEquals(ChallengeSpec("shake"), shared.challenge!!.challenges[1])
     }
 
     @Test

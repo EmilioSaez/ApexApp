@@ -73,7 +73,7 @@ class AlarmSharingTest {
         assertEquals(6, preview.alarm.hour)
         assertEquals("Correr", preview.alarm.label)
         assertEquals(listOf(ChallengeSpec("math")), preview.alarm.challenges.challenges)
-        assertEquals(setOf(ImportNote.QR_CHALLENGE_OMITTED), preview.notes)
+        assertEquals(setOf(ImportNote.UNKNOWN_CHALLENGE_OMITTED), preview.notes)
     }
 
     @Test

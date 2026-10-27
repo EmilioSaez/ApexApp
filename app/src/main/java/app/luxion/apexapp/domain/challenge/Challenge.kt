@@ -10,15 +10,12 @@ value class ChallengeType(val id: String) {
     }
 }
 
-/** Respuesta del usuario. Los retos QR y de sensores añaden sus propias variantes. */
+/** Respuesta del usuario. Los retos de sensores añaden sus propias variantes. */
 sealed interface ChallengeAnswer {
     data class Text(val value: String) : ChallengeAnswer
 
     /** Un reto de movimiento (agitar, pasos, levantarse) verificó localmente su objetivo. */
     data class MotionVerified(val type: ChallengeType) : ChallengeAnswer
-
-    /** El reto QR verificó en vivo un código; [codeHash] es el SHA-256 en hexadecimal de su valor. */
-    data class ScanVerified(val codeHash: String) : ChallengeAnswer
 }
 
 sealed interface Availability {

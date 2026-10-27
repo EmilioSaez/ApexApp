@@ -6,13 +6,12 @@ import app.luxion.apexapp.domain.ChallengeConfig
 import app.luxion.apexapp.domain.ChallengeSpec
 import app.luxion.apexapp.domain.SoundConfig
 import app.luxion.apexapp.domain.challenge.SessionConfig
-import app.luxion.apexapp.domain.challenge.qr.QrChallenge
 import java.time.DayOfWeek
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonObject
 
 /** Avisos de la vista previa: partes del contenido que no se importan tal cual. */
-enum class ImportNote { QR_CHALLENGE_OMITTED, UNKNOWN_CHALLENGE_OMITTED, UNKNOWN_SOUND_DEFAULTED }
+enum class ImportNote { UNKNOWN_CHALLENGE_OMITTED, UNKNOWN_SOUND_DEFAULTED }
 
 /**
  * Alarma lista para guardar. [soundKey] es la clave de un sonido incluido en la app (null = el de por defecto);
@@ -82,7 +81,6 @@ object SharedAlarmValidator {
         val specs = mutableListOf<ChallengeSpec>()
         for (spec in config.challenges) {
             when {
-                spec.type == QrChallenge.TYPE.id -> notes += ImportNote.QR_CHALLENGE_OMITTED
                 spec.type !in knownTypes -> notes += ImportNote.UNKNOWN_CHALLENGE_OMITTED
                 !isJsonObject(spec.params) -> return null
                 else -> specs += spec

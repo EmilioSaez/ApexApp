@@ -22,14 +22,8 @@ class AndroidDeviceCapabilities @Inject constructor(
     override val hasStepSensor: Boolean
         get() = sensors.getDefaultSensor(Sensor.TYPE_STEP_COUNTER) != null
 
-    override val hasCamera: Boolean
-        get() = context.packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
-
     override val hasActivityRecognitionPermission: Boolean
         get() = granted(Manifest.permission.ACTIVITY_RECOGNITION)
-
-    override val hasCameraPermission: Boolean
-        get() = granted(Manifest.permission.CAMERA)
 
     private fun granted(permission: String) =
         ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED

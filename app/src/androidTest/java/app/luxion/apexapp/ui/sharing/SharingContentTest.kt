@@ -44,7 +44,7 @@ class SharingContentTest {
     private val preview = ImportPreview(
         alarm = Alarm(hour = 6, minute = 45, enabled = false, label = "Gimnasio"),
         soundKey = null,
-        notes = setOf(ImportNote.QR_CHALLENGE_OMITTED),
+        notes = setOf(ImportNote.UNKNOWN_CHALLENGE_OMITTED),
     )
 
     @Test
@@ -60,7 +60,7 @@ class SharingContentTest {
         var discarded = 0
         showImport(ImportUiState.Preview(preview), onAccept = { accepted++ }, onDiscard = { discarded++ })
         compose.onNodeWithText("06:45").assertExists()
-        compose.onNodeWithText(str(R.string.import_note_qr)).assertExists()
+        compose.onNodeWithText(str(R.string.import_note_challenge)).assertExists()
         compose.onNodeWithText(str(R.string.import_disabled_note)).assertExists()
         compose.onNodeWithText(str(R.string.import_accept)).performClick()
         compose.onNodeWithText(str(R.string.import_discard)).performClick()
