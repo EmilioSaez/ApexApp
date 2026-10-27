@@ -27,30 +27,38 @@ class TapTargetsTest {
     }
 
     @Test
-    fun tuning_level5IsHarderThanLevel1() {
+    fun tuning_level5GivesLessTimePerTargetThanLevel1() {
         val easy = TapTargetsTuning.forLevel(1)
         val hard = TapTargetsTuning.forLevel(5)
-        assertTrue(hard.circles > easy.circles)
-        assertTrue(hard.diameterDp < easy.diameterDp)
-        assertTrue(hard.timeLimitMs < easy.timeLimitMs)
+        assertTrue(hard.timePerTargetMs < easy.timePerTargetMs)
+        assertTrue(TapTargetsTuning.BY_LEVEL.zipWithNext().all { (a, b) -> b.timePerTargetMs < a.timePerTargetMs })
         assertEquals(hard, TapTargetsTuning.forLevel(9))
         assertEquals(easy, TapTargetsTuning.forLevel(-3))
     }
 
     @Test
-    fun round_hasLevelCirclesInsideAreaWithoutOverlap() {
+    fun round_timeScalesWithLevelButShapeDoesNot() {
+        val easy = game(level = 1).nextRound(360f, 520f)
+        val hard = game(level = 5).nextRound(360f, 520f)
+        assertEquals(easy.circles.size, hard.circles.size)
+        assertEquals(easy.diameterDp, hard.diameterDp)
+        assertEquals(TapTargetsTuning.forLevel(1).timePerTargetMs * easy.circles.size, easy.timeLimitMs)
+        assertTrue(hard.timeLimitMs < easy.timeLimitMs)
+    }
+
+    @Test
+    fun round_hasCirclesInsideAreaWithoutOverlap() {
         repeat(50) { seed ->
             val level = seed % 5 + 1
             val round = game(level = level, seed = seed).nextRound(360f, 520f)
-            val tuning = TapTargetsTuning.forLevel(level)
-            assertEquals(tuning.circles, round.circles.size)
-            val r = tuning.diameterDp / 2f
+            assertEquals(TapTargetsTuning.CIRCLES, round.circles.size)
+            val r = TapTargetsTuning.DIAMETER_DP / 2f
             round.circles.forEach {
                 assertTrue(it.xDp in r..(360f - r) && it.yDp in r..(520f - r))
             }
             round.circles.forEachIndexed { i, a ->
                 round.circles.drop(i + 1).forEach { b ->
-                    assertTrue(hypot(a.xDp - b.xDp, a.yDp - b.yDp) >= tuning.diameterDp)
+                    assertTrue(hypot(a.xDp - b.xDp, a.yDp - b.yDp) >= TapTargetsTuning.DIAMETER_DP)
                 }
             }
             assertTrue(round.gapMs in TapTargetsTuning.GAP_MIN_MS..TapTargetsTuning.GAP_MAX_MS)
@@ -70,7 +78,7 @@ class TapTargetsTest {
     @Test
     fun tinyArea_doesNotHang() {
         val round = game(level = 5).nextRound(40f, 40f)
-        assertEquals(5, round.circles.size)
+        assertEquals(TapTargetsTuning.CIRCLES, round.circles.size)
     }
 
     @Test
