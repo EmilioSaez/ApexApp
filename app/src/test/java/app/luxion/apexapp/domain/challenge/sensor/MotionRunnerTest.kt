@@ -17,11 +17,9 @@ import org.junit.Test
 class MotionRunnerTest {
     private class FakeSensors(
         val accel: Flow<AccelSample> = emptyFlow(),
-        val motion: Flow<MotionSample> = emptyFlow(),
         val steps: Flow<StepReading> = emptyFlow(),
     ) : MotionSensors {
         override fun linearAcceleration() = accel
-        override fun motion() = motion
         override fun stepCounter() = steps
     }
 
