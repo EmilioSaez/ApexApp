@@ -17,6 +17,9 @@ sealed interface ChallengeAnswer {
     /** Un reto de movimiento (agitar, pasos, levantarse) verificó localmente su objetivo. */
     data class MotionVerified(val type: ChallengeType) : ChallengeAnswer
 
+    /** Un reto de juego (Flappy) se completó: el usuario sumó los puntos exigidos. */
+    data class GameCompleted(val type: ChallengeType) : ChallengeAnswer
+
     /** El reto QR verificó en vivo un código; [codeHash] es el SHA-256 en hexadecimal de su valor. */
     data class ScanVerified(val codeHash: String) : ChallengeAnswer
 }

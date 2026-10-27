@@ -156,6 +156,18 @@
     <string name="challenge_type_steps">Steps</string>
     <string name="challenge_type_standup">Stand up</string>
     <string name="challenge_type_qr">QR code</string>
+    <string name="challenge_type_flappy">Flappy Bird</string>
+    <plurals name="challenge_flappy_prompt">
+        <item quantity="one">Pass %d pipe without crashing</item>
+        <item quantity="other">Pass %d pipes without crashing</item>
+    </plurals>
+    <plurals name="challenge_flappy_target_info">
+        <item quantity="one">Target at this difficulty: %d point</item>
+        <item quantity="other">Target at this difficulty: %d points</item>
+    </plurals>
+    <string name="challenge_flappy_score">Score: %1$d / %2$d</string>
+    <string name="challenge_flappy_tap_to_start">Tap to start, then tap again to jump.</string>
+    <string name="challenge_flappy_crashed">You crashed. Tap to start over from zero.</string>
 
     <string name="sound_default">Default tone</string>
     <string name="sound_not_audio">That file is not audio or cannot be read.</string>

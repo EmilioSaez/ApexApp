@@ -157,6 +157,18 @@
     <string name="challenge_type_steps">Pasos</string>
     <string name="challenge_type_standup">Levantarse</string>
     <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_type_flappy">Flappy Bird</string>
+    <plurals name="challenge_flappy_prompt">
+        <item quantity="one">Pasa %d tubería sin chocar</item>
+        <item quantity="other">Pasa %d tuberías sin chocar</item>
+    </plurals>
+    <plurals name="challenge_flappy_target_info">
+        <item quantity="one">Objetivo con esta dificultad: %d punto</item>
+        <item quantity="other">Objetivo con esta dificultad: %d puntos</item>
+    </plurals>
+    <string name="challenge_flappy_score">Puntos: %1$d / %2$d</string>
+    <string name="challenge_flappy_tap_to_start">Toca para empezar y vuelve a tocar para saltar.</string>
+    <string name="challenge_flappy_crashed">Has chocado. Toca para empezar de nuevo desde cero.</string>
 
     <string name="sound_default">Tono por defecto</string>
     <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
