@@ -34,6 +34,12 @@ class RhythmLogicTest {
     }
 
     @Test
+    fun `las notas caen sobre pulsos de la musica`() {
+        assertEquals(500L, RhythmTuning.BEAT_MS)
+        assertTrue(RhythmPattern.generate(Random(1)).all { it.timeMs % RhythmTuning.BEAT_MS == 0L })
+    }
+
+    @Test
     fun `el patron no repite un carril mas de lo permitido`() {
         repeat(200) { seed ->
             val lanes = RhythmPattern.generate(Random(seed)).map { it.lane }

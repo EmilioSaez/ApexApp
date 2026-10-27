@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -107,7 +108,11 @@ private fun RhythmGame(instance: RhythmInstance, onCleared: () -> Unit) {
     var elapsed by remember(round) { mutableLongStateOf(0L) }
     var widthPx by remember { mutableIntStateOf(0) }
 
+    val music = remember { RhythmMusic() }
+    DisposableEffect(music) { onDispose { music.release() } }
+
     LaunchedEffect(round) {
+        music.restart()
         val start = SystemClock.uptimeMillis()
         startMs = start
         while (round.status == RhythmRound.Status.PLAYING) {
