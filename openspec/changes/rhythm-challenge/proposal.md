@@ -10,7 +10,7 @@ Los retos actuales piden cálculo (Mates), un objeto físico (QR) o movimiento d
 - Dificultad configurable por alarma con un único parámetro: el **número de rondas** (guardado en `ChallengeSpec.params`). Con los valores por defecto el reto dura ~1 min.
 - Un fallo no reinicia el reto entero: al acumular un número fijo de fallos en una ronda, solo esa ronda se reinicia con un patrón nuevo.
 - El patrón de notas se genera al azar en cada sesión, para que no se pueda memorizar.
-- Sigue el modo anti-trampas de la alarma tal cual (bloqueo de pantalla y salidas contadas por `session-integrity`); no añade un nivel propio.
+- Sigue el modo anti-trampas de la alarma (sin nivel propio): además del bloqueo de pantalla, valida los toques por carril con el validador compartido `TouchPlausibility(level)`, que introduce el change `touch-games-c9` (junto con `SuspicionReason.SYNTHETIC_INPUT` y la marca de sesión sospechosa en `STRICT`). Este change solo lo aplica, no lo define.
 - Integración en el editor de retos (selector de tipo y editor de rondas) y en el modo Normal / Con retos; textos en los mismos idiomas que los retos actuales (es, en).
 
 ## Capabilities
@@ -25,5 +25,6 @@ Los retos actuales piden cálculo (Mates), un objeto físico (QR) o movimiento d
 
 - **Código nuevo**: `domain/challenge/rhythm/` (reto, parámetros, generador de patrones, lógica de ronda) y `ui/challenge/rhythm/` (renderer y editor de rondas).
 - **Puntos compartidos (cambio mínimo)**: `ChallengeModule` (tres `@Binds @IntoSet`: `Challenge`, `ChallengeRenderer`, `ChallengeParamsEditor`), `strings.xml` en `values` y `values-en` (bloque propio al final de los retos). Sin cambios en Room, en `ChallengeSession` ni en el editor.
-- **Sin dependencias ni permisos nuevos.** Disponible siempre (`Availability.Available`).
+- **Dependencia**: commit compartido de `touch-games-c9` (`TouchPlausibility`, nivel hacia el renderer, `SuspicionReason.SYNTHETIC_INPUT`, `ChallengeAnswer.GameVerified`). La lógica pura no depende de él.
+- **Sin dependencias de librería ni permisos nuevos.** Disponible siempre (`Availability.Available`).
 - **Fuera de alcance**: música/audio sincronizado, niveles de dificultad por velocidad (la dificultad 1–5 de la alarma no escala este reto), ranking o estadísticas propias, los juegos «Tocar objetivos» y «Mantener y soltar» (changes aparte).

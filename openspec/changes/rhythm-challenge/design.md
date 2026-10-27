@@ -29,15 +29,15 @@ Otros dos juegos (Tocar objetivos, Mantener y soltar) se desarrollan en paralelo
 
 **Patrones aleatorios.** `RhythmPattern.generate(random)` elige carril por nota con `Random` inyectado (el de la sesión) y evita repetir el mismo carril más de 3 veces seguidas. Se regenera en cada reinicio.
 
-**Estado de rondas en la instancia/UI.** `RhythmInstance` guarda `rounds` y el prompt (`"rhythm:$rounds"`); el progreso vive en el estado de Compose (`remember(instance)`) igual que Math. Al superar la última ronda el renderer llama a `onAnswer(ChallengeAnswer.MotionVerified(type))`; `check` solo acepta esa respuesta de su tipo. Se reutiliza `MotionVerified` (su semántica real es «el reto verificó localmente su objetivo») en lugar de añadir una variante al `sealed interface`, que chocaría con los otros dos juegos; solo se ajusta su comentario si hace falta.
+**Estado de rondas en la instancia/UI.** `RhythmInstance` guarda `rounds` y el prompt (`"rhythm:$rounds"`); el progreso vive en el estado de Compose (`remember(instance)`) igual que Math. Al superar la última ronda el renderer llama a `onAnswer(ChallengeAnswer.GameVerified(type))`, la variante común que introduce `touch-games-c9`; `check` solo acepta esa respuesta de su tipo.
 
-**Disponibilidad y anti-trampas.** `availability()` siempre `Available`. No hay detección propia: aplica el lockdown de la alarma. Si el renderer sale de composición, la sesión lo regenera y empieza de cero (mismo comportamiento que otros retos).
+**Disponibilidad y anti-trampas.** `availability()` siempre `Available`. Sin nivel propio: el renderer recibe el nivel efectivo (plumbing de `touch-games-c9`) y alimenta `TouchPlausibility(level)` con cada toque de carril (tiempo, carril, posición). Un toque que el validador descarta no llega a `RhythmRound.tap`. La detección de «ritmo demasiado regular» es del validador compartido, no se duplica aquí; la marca `SYNTHETIC_INPUT` en `STRICT` también. Si el renderer sale de composición, la sesión lo regenera y empieza de cero.
 
 **Integración mínima.** Tres `@Binds @IntoSet` al final del bloque de retos en `ChallengeModule`; editor de rondas como paso `-`/`+` con texto «Rondas: N» en un único composable; strings en un bloque contiguo y comentado en `values` (es) y `values-en`. Sin nuevos botones en `ChallengesSection`: el tipo aparece solo por el registro.
 
 ## Risks / Trade-offs
 
-- **`MotionVerified` reutilizado**: nombre poco preciso; si los otros juegos añaden una respuesta común, unificar al fusionar.
+- **Dependencia del commit compartido**: renderer y `check` no compilan hasta integrar `touch-games-c9`; la lógica pura sí. Si cambia la API de `TouchPlausibility`, solo afecta al renderer.
 - **Sin escala por dificultad**: alarmas con dificultad 5 no tienen un ritmo más duro; es decisión de producto (una sola perilla).
 - **Reloj de la UI**: la precisión depende de `withFrameMillis`; la ventana de ±0,25 s tolera jank. Con la pantalla en segundo plano el juego se detiene y reanuda por composición.
 - **Fallos acumulados sin tope de reintentos**: el usuario puede reiniciar una ronda indefinidamente; es coherente con los demás retos (no hay tope), y el lockdown/tiempo máximo de sonado limitan la sesión.

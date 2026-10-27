@@ -66,16 +66,31 @@ El sistema SHALL ofrecer «Ritmo» entre los tipos de reto del editor, con el ed
 - **WHEN** la alarma tiene habilitados Ritmo y otros tipos
 - **THEN** Ritmo cuenta como un reto más del número de retos y de los modos encadenado o aleatorio
 
-### Requirement: Aleatoriedad por sesión y anti-trampas de la alarma
-El sistema SHALL generar los patrones de notas de forma aleatoria en cada sesión y en cada reinicio de ronda. El reto SHALL NOT definir un nivel anti-trampas propio: se ejecuta bajo el nivel anti-trampas efectivo de la alarma, y sus salidas de pantalla se cuentan según `session-integrity`.
+### Requirement: Aleatoriedad por sesión
+El sistema SHALL generar los patrones de notas de forma aleatoria en cada sesión y en cada reinicio de ronda.
 
 #### Scenario: Dos sesiones
 - **WHEN** la alarma suena dos días seguidos con la misma configuración
 - **THEN** los patrones de notas son distintos
 
+### Requirement: Anti-trampas de la alarma
+El reto SHALL NOT definir un nivel anti-trampas propio: se ejecuta bajo el nivel efectivo de la alarma. El sistema SHALL pasar cada toque por carril al validador de plausibilidad de toques de ese nivel, que descarta como no humano un ritmo de toques sintético (por ejemplo, demasiado regular o sin variación de posición). Un toque descartado SHALL NOT acertar notas. En `STRICT`, detectar toques sintéticos SHALL marcar la sesión como sospechosa con el motivo de entrada sintética. Las salidas de pantalla se cuentan según `session-integrity`.
+
+#### Scenario: Toques humanos
+- **WHEN** el usuario toca los carriles con la irregularidad natural de una persona
+- **THEN** los toques se aceptan y se evalúan contra las notas
+
+#### Scenario: Ritmo sintético en STRICT
+- **WHEN** el validador detecta toques sintéticos en una alarma `STRICT`
+- **THEN** esos toques no acertan notas y la sesión se marca como sospechosa por entrada sintética
+
+#### Scenario: Ritmo sintético en OFF
+- **WHEN** el nivel efectivo de la alarma es `OFF`
+- **THEN** el reto no descarta toques por plausibilidad
+
 #### Scenario: Salir durante el reto
 - **WHEN** el usuario abandona la pantalla de sonar durante el reto con la alarma en `STANDARD`
-- **THEN** se aplica la recuperación de pantalla y el conteo de salidas habituales de la alarma, sin reglas propias del reto
+- **THEN** se aplica la recuperación de pantalla y el conteo de salidas habituales, sin reglas propias del reto
 
 ### Requirement: Textos localizados
 El sistema SHALL ofrecer todos los textos del reto de ritmo (nombre del tipo, instrucciones, rondas, fallos) en los mismos idiomas que los demás retos.
