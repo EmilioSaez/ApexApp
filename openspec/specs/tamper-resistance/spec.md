@@ -6,15 +6,11 @@ Define las medidas best-effort contra apagar el móvil, cerrar la app, desinstal
 ## Requirements
 
 ### Requirement: Detección de capacidades
-El sistema SHALL determinar qué capacidades de resistencia están disponibles: superposición, administrador de dispositivo y propietario del dispositivo.
+El sistema SHALL determinar qué capacidades de resistencia están disponibles: superposición y administrador de dispositivo.
 
 #### Scenario: Sin privilegios
-- **WHEN** la app no tiene administrador de dispositivo ni propietario del dispositivo
+- **WHEN** la app no tiene administrador de dispositivo
 - **THEN** el sistema registra la capacidad como básica y solo aplica las medidas que no requieren privilegios
-
-#### Scenario: Propietario del dispositivo
-- **WHEN** la app es propietaria del dispositivo
-- **THEN** el sistema registra la capacidad como completa y habilita el modo de tarea bloqueada
 
 ### Requirement: Modo de tarea bloqueada
 El sistema SHALL entrar en modo de tarea bloqueada durante el lockdown con nivel `STRICT` cuando la app es propietaria del dispositivo, de modo que Home, Recientes, la barra de estado y el menú de apagado queden suprimidos.

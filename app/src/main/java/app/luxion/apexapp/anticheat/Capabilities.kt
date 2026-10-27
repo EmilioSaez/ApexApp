@@ -4,7 +4,6 @@ package app.luxion.apexapp.anticheat
 data class Capabilities(
     val overlay: Boolean = false,
     val deviceAdmin: Boolean = false,
-    val deviceOwner: Boolean = false,
 )
 
 interface CapabilityChecker {

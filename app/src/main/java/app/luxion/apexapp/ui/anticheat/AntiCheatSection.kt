@@ -38,7 +38,7 @@ fun AntiCheatSection(
     onChange: (AntiCheatPolicy) -> Unit,
     onOpenStatus: () -> Unit,
     modifier: Modifier = Modifier,
-    capabilities: Capabilities = Capabilities(overlay = true, deviceOwner = true),
+    capabilities: Capabilities = Capabilities(overlay = true),
 ) {
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
         SectionHeader(stringResource(R.string.anticheat_section), horizontalPadding = 0.dp)
@@ -112,12 +112,12 @@ private fun MissingNote(@StringRes text: Int) {
 
 @Preview(name = "Claro", showBackground = true, heightDp = 700)
 @Composable
-private fun AntiCheatLight() = ApexAppTheme(darkTheme = false) { Surface { AntiCheatSection(policy = AntiCheatPolicy(level = AntiCheatLevel.STANDARD), onChange = {}, onOpenStatus = {}, capabilities = Capabilities(overlay = false, deviceOwner = false), modifier = Modifier.padding(ApexTheme.spacing.screen)) } }
+private fun AntiCheatLight() = ApexAppTheme(darkTheme = false) { Surface { AntiCheatSection(policy = AntiCheatPolicy(level = AntiCheatLevel.STANDARD), onChange = {}, onOpenStatus = {}, capabilities = Capabilities(overlay = false), modifier = Modifier.padding(ApexTheme.spacing.screen)) } }
 
 @Preview(name = "Oscuro", showBackground = true, heightDp = 700, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
-private fun AntiCheatDark() = ApexAppTheme(darkTheme = true) { Surface { AntiCheatSection(policy = AntiCheatPolicy(level = AntiCheatLevel.STANDARD), onChange = {}, onOpenStatus = {}, capabilities = Capabilities(overlay = false, deviceOwner = false), modifier = Modifier.padding(ApexTheme.spacing.screen)) } }
+private fun AntiCheatDark() = ApexAppTheme(darkTheme = true) { Surface { AntiCheatSection(policy = AntiCheatPolicy(level = AntiCheatLevel.STANDARD), onChange = {}, onOpenStatus = {}, capabilities = Capabilities(overlay = false), modifier = Modifier.padding(ApexTheme.spacing.screen)) } }
 
 @Preview(name = "Fuente 1.3", showBackground = true, heightDp = 700, fontScale = 1.3f)
 @Composable
-private fun AntiCheatLargeFont() = ApexAppTheme(darkTheme = false) { Surface { AntiCheatSection(policy = AntiCheatPolicy(level = AntiCheatLevel.STANDARD), onChange = {}, onOpenStatus = {}, capabilities = Capabilities(overlay = false, deviceOwner = false), modifier = Modifier.padding(ApexTheme.spacing.screen)) } }
+private fun AntiCheatLargeFont() = ApexAppTheme(darkTheme = false) { Surface { AntiCheatSection(policy = AntiCheatPolicy(level = AntiCheatLevel.STANDARD), onChange = {}, onOpenStatus = {}, capabilities = Capabilities(overlay = false), modifier = Modifier.padding(ApexTheme.spacing.screen)) } }
