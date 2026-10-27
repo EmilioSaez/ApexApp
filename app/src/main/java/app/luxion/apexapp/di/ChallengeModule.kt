@@ -25,6 +25,9 @@ import app.luxion.apexapp.ui.challenge.QrRenderer
 import app.luxion.apexapp.ui.challenge.ShakeRenderer
 import app.luxion.apexapp.ui.challenge.StepsRenderer
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
+import app.luxion.apexapp.domain.challenge.objectphoto.ObjectPhotoChallenge
+import app.luxion.apexapp.ui.challenge.objectphoto.ObjectPhotoParamsEditor
+import app.luxion.apexapp.ui.challenge.objectphoto.ObjectPhotoRenderer
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
@@ -88,6 +91,10 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
+    fun objectPhoto(impl: ObjectPhotoChallenge): Challenge
+
+    @Binds
+    @IntoSet
     fun shakeRenderer(impl: ShakeRenderer): ChallengeRenderer
 
     @Binds
@@ -97,6 +104,10 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun qrRenderer(impl: QrRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun objectPhotoRenderer(impl: ObjectPhotoRenderer): ChallengeRenderer
 
     @Binds
     @IntoSet

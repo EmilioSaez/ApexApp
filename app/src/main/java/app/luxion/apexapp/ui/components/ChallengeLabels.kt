@@ -14,6 +14,7 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
     MotionKind.STEPS.typeId -> R.string.challenge_type_steps
     "memory" -> R.string.challenge_type_memory
     "qr" -> R.string.challenge_type_qr
+    "object" -> R.string.challenge_type_object
     else -> null
 }
 

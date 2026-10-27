@@ -38,6 +38,8 @@ class ChallengeSession(
     /** En modo aleatorio sale primero uno de cada tipo, en orden aleatorio, y después cualquiera. */
     private val firstRound = ArrayDeque(pool.distinctBy { it.type }.shuffled(random))
 
+    private val solvedInstances = mutableListOf<ChallengeInstance>()
+
     private var index = 0
     private var failures = 0
     private var currentSpec: ChallengeSpec = mathSpec
@@ -54,6 +56,7 @@ class ChallengeSession(
         val current = _state.value.current ?: return
         if (_state.value.passed) return
         if (current.check(answer)) {
+            solvedInstances += current
             emit { ChallengeEvent.ChallengeSolved(sessionId, alarmId, it, current.type, current.level, index) }
             index++
             if (index >= total) {
@@ -118,7 +121,7 @@ class ChallengeSession(
         val level = difficultyProvider
             .levelFor(config, ChallengeContext(sessionId, alarmId, challenge.type, index, failures))
             .coerceIn(SessionConfig.MIN_DIFFICULTY, SessionConfig.MAX_DIFFICULTY)
-        return challenge.generate(level, spec.params, random)
+        return challenge.generate(level, spec.params, random, solvedInstances)
     }
 
     private fun emit(event: (Long) -> ChallengeEvent) = eventSink.onEvent(event(clock()))
