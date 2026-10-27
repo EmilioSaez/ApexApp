@@ -15,20 +15,20 @@ class ChallengeConfigEditsTest {
     fun `adding types raises the count only when needed`() {
         val two = base.toggled(ChallengeType("shake"))
         assertEquals(2, two.count)
-        val four = two.toggled(ChallengeType("steps")).toggled(ChallengeType("standup"))
+        val four = two.toggled(ChallengeType("steps")).toggled(ChallengeType("qr"))
         assertEquals(4, four.count)
-        assertEquals(6, four.copy(count = 6).toggled(ChallengeType("qr")).count)
+        assertEquals(6, four.copy(count = 6).toggled(ChallengeType("extra")).count)
     }
 
     @Test
     fun `removing a type does not lower the count`() {
-        val four = base.copy(count = 4, challenges = listOf("math", "shake", "steps", "standup").map { ChallengeSpec(it) })
+        val four = base.copy(count = 4, challenges = listOf("math", "shake", "steps", "qr").map { ChallengeSpec(it) })
         assertEquals(4, four.toggled(ChallengeType("steps")).count)
     }
 
     @Test
     fun `count cannot go below the number of types nor above 10`() {
-        val four = base.copy(count = 4, challenges = listOf("math", "shake", "steps", "standup").map { ChallengeSpec(it) })
+        val four = base.copy(count = 4, challenges = listOf("math", "shake", "steps", "qr").map { ChallengeSpec(it) })
         assertEquals(4, four.withCount(2).count)
         assertEquals(10, four.withCount(30).count)
         assertEquals(4, four.minCount)
