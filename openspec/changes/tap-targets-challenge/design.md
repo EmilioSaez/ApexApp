@@ -17,17 +17,18 @@ Los retos implementan `Challenge`/`ChallengeInstance` y se registran en `Challen
 1. **Una instancia = el juego completo.** `TapTargetsChallenge` genera una `TapTargetsInstance` que lleva la regla de rondas; la UI le informa de aciertos/fallos de ronda y, al completarse, entrega `ChallengeAnswer.GameVerified(type)` (variante común a los tres juegos táctiles, ya en el commit compartido). El motor ve un reto que se supera o se falla como los de movimiento. La instancia toma el nivel que le da la sesión (proveedor de dificultad, adaptativo incluido) y escala como Mates.
 2. **Dificultad por nivel (tabla única `TapTargetsTuning.BY_LEVEL`, como `MotionTargets`).**
 
-   | Nivel | Círculos | Diámetro | Plazo |
-   |---|---|---|---|
-   | 1 | 2 | 72 dp | 4,0 s |
-   | 2 | 3 | 64 dp | 3,5 s |
-   | 3 | 3 | 56 dp | 3,0 s |
-   | 4 | 4 | 52 dp | 2,5 s |
-   | 5 | 5 | 48 dp | 2,0 s |
+   | Nivel | Tiempo por círculo |
+   |---|---|
+   | 1 | 1,6 s |
+   | 2 | 1,3 s |
+   | 3 | 1,0 s |
+   | 4 | 0,8 s |
+   | 5 | 0,65 s |
 
-   Valores a calibrar en dispositivo. Las rondas no dependen del nivel.
+   Círculos por ronda (3) y diámetro (56 dp) fijos; el plazo de la ronda es el tiempo por círculo × círculos.
+   Valores a calibrar en dispositivo. Ni las rondas ni su tamaño dependen del nivel.
 3. **`params`: `{"rounds":N}`.** Se lee con una función tolerante (falta/ inválido → 8; fuera de rango → acotado a 3..15). El editor es un stepper; no hace falta `isValid`.
-4. **Duración ~1 min** en nivel 3: 3 círculos, 3,0 s de plazo, pausa aleatoria de 0,6–1,2 s entre rondas, 8 rondas ≈ 45–60 s.
+4. **Duración ~1 min** en nivel 3: 3 círculos, 3,0 s de plazo (1,0 s por círculo), pausa aleatoria de 0,6–1,2 s entre rondas, 8 rondas ≈ 45–60 s.
 5. **La alarma no se apaga sin superar el reto.** No hay salida: el fallo solo repite la ronda (la sesión ya mantiene el sonado hasta `passed`). Si el reto no puede completarse (p. ej. fallo de la vista), el renderer usa `onUnavailable` y se aplica la reserva del motor.
 6. **Regla de fallo (documentada en el spec).** Ronda fallida (tiempo agotado) → no cuenta y se añade 1 ronda extra, con tope `extras ≤ rondas configuradas`. Superado el tope, la ronda se repite sin crecer. Nunca se descartan rondas ya superadas. Alternativas descartadas: reinicio total (lo prohíbe el encargo) y reinicio tras X fallos (introduce estados difíciles de explicar al usuario).
 7. **Posiciones.** El generador coloca los círculos del nivel (≥ 48 dp de diámetro táctil) por muestreo con rechazo para evitar solapes, en coordenadas normalizadas 0..1 que la UI traduce al tamaño real. Usa el `Random` recibido (por sesión) y se regenera en cada ronda y reintento.

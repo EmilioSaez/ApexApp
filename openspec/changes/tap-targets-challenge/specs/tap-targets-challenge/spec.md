@@ -34,11 +34,11 @@ El sistema SHALL permitir configurar por alarma el número de rondas del reto (3
 - **THEN** el reto dura en torno a un minuto
 
 ### Requirement: Dificultad por nivel
-El sistema SHALL escalar la exigencia del reto con el nivel de dificultad de 1 a 5, igual que el reto de matemáticas, y SHALL obtener el nivel del proveedor de dificultad de la sesión (incluido el adaptativo). A mayor nivel, más círculos por ronda, más pequeños y con menos tiempo; el número de rondas no depende del nivel.
+El sistema SHALL escalar la exigencia del reto con el nivel de dificultad de 1 a 5, igual que el reto de matemáticas, y SHALL obtener el nivel del proveedor de dificultad de la sesión (incluido el adaptativo). A mayor nivel, menos tiempo para tocar cada círculo; el número de círculos por ronda, su tamaño y el número de rondas no dependen del nivel.
 
 #### Scenario: Nivel 1 frente a nivel 5
 - **WHEN** se generan rondas en nivel 1 y en nivel 5
-- **THEN** las de nivel 5 tienen más círculos, de menor tamaño y con menos tiempo que las de nivel 1
+- **THEN** las de nivel 5 tienen los mismos círculos y tamaño que las de nivel 1, pero menos tiempo para tocar cada círculo
 
 #### Scenario: Nivel fuera de rango
 - **WHEN** se pide una instancia con un nivel fuera de 1 a 5

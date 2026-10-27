@@ -8,7 +8,7 @@
 ## 1. Lógica de dominio (`domain/challenge/touch/`)
 
 - [x] 1.1 `TapTargetsParams`: lectura tolerante de `{"rounds":N}` (defecto 8, rango 3..15) y test
-- [x] 1.2 `TapTargetsTuning.BY_LEVEL` (círculos, diámetro y plazo por nivel 1–5) y test de que el nivel 5 es más exigente que el 1
+- [x] 1.2 `TapTargetsTuning.BY_LEVEL` (tiempo por círculo por nivel 1–5; círculos y diámetro fijos) y test de que el nivel 5 da menos tiempo que el 1
 - [x] 1.3 Generador de rondas (círculos del nivel sin solape, coordenadas 0..1, `Random` de la sesión) y test
 - [x] 1.4 Regla de rondas y penalización (fallo → +1 extra con tope, sin reinicio) y test
 - [x] 1.6 `TapTargetsChallenge`/instancia, `GameVerified` y test de `check`

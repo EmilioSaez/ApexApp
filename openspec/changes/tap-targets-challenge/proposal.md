@@ -7,7 +7,7 @@ Los retos actuales exigen cálculo, moverse o escanear un código; ninguno es un
 ## What Changes
 
 - Nuevo reto **Tocar objetivos**: en cada ronda aparecen varios círculos en posiciones aleatorias y hay que tocarlos todos antes de que desaparezcan.
-- **Escala con la dificultad 1–5** como Mates (círculos por ronda, tamaño y tiempo, en una tabla única), también con la dificultad adaptativa.
+- **Escala con la dificultad 1–5** como Mates (solo el tiempo por círculo, en una tabla única), también con la dificultad adaptativa.
 - Un único parámetro propio por alarma: el **número de rondas** (por defecto ~1 min de juego), guardado en `ChallengeSpec.params`.
 - Editor del parámetro en la sección «Retos» (visible solo con el tipo habilitado y la alarma en modo «Con retos»).
 - **Penalización por fallo**: una ronda fallida no cuenta y añade una ronda extra (con tope); el progreso nunca se reinicia por completo.
