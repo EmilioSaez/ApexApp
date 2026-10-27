@@ -27,11 +27,14 @@ import app.luxion.apexapp.domain.challenge.qr.FrameLivenessChecker
 import app.luxion.apexapp.domain.challenge.qr.LivenessVerdict
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
 import app.luxion.apexapp.domain.challenge.qr.QrParams
+import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
+import app.luxion.apexapp.domain.challenge.flappy.FlappyInstance
 import app.luxion.apexapp.domain.challenge.sensor.MotionInstance
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.scanner.BarcodeScanner
 import app.luxion.apexapp.scanner.CameraPermissionGate
+import app.luxion.apexapp.ui.challenge.flappy.FlappyChallengeContent
 import app.luxion.apexapp.ui.challenge.motion.MotionChallengeContent
 import app.luxion.apexapp.ui.theme.ApexTheme
 import javax.inject.Inject
@@ -47,7 +50,6 @@ private class MotionRenderer(
         when (kind) {
             MotionKind.SHAKE -> R.string.challenge_type_shake
             MotionKind.STEPS -> R.string.challenge_type_steps
-            MotionKind.STAND_UP -> R.string.challenge_type_standup
         },
     )
 
@@ -74,9 +76,6 @@ class ShakeRenderer @Inject constructor(sensors: MotionSensors) :
 
 class StepsRenderer @Inject constructor(sensors: MotionSensors) :
     ChallengeRenderer by MotionRenderer(MotionKind.STEPS, sensors)
-
-class StandUpRenderer @Inject constructor(sensors: MotionSensors) :
-    ChallengeRenderer by MotionRenderer(MotionKind.STAND_UP, sensors)
 
 /**
  * Reto QR: escanea con la cámara y solo entrega [ChallengeAnswer.ScanVerified] cuando la lectura pasa la
@@ -153,5 +152,26 @@ class QrRenderer @Inject constructor() : ChallengeRenderer {
                 )
             }
         }
+    }
+}
+
+/** Reto Flappy: se supera al sumar los puntos que fija la dificultad sin chocar. */
+class FlappyRenderer @Inject constructor() : ChallengeRenderer {
+    override val type: ChallengeType = FlappyChallenge.TYPE
+
+    @Composable
+    override fun label(): String = stringResource(R.string.challenge_type_flappy)
+
+    @Composable
+    override fun Render(
+        instance: ChallengeInstance,
+        wrong: Boolean,
+        onAnswer: (ChallengeAnswer) -> Unit,
+        onUnavailable: (reason: String) -> Unit,
+    ) {
+        FlappyChallengeContent(
+            target = (instance as FlappyInstance).target,
+            onCompleted = { onAnswer(ChallengeAnswer.GameCompleted(type)) },
+        )
     }
 }

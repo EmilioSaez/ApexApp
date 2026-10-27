@@ -24,7 +24,6 @@ data class MotionProgress(
 /** Fuentes de muestras; las implementa el adaptador de `SensorManager` y los tests. */
 interface MotionSensors {
     fun linearAcceleration(): Flow<AccelSample>
-    fun motion(): Flow<MotionSample>
     fun stepCounter(): Flow<StepReading>
 }
 
@@ -66,12 +65,6 @@ class MotionRunner(
                 sensors.stepCounter().map {
                     val s = verifier.onStepCounter(it.tNanos, it.total)
                     MotionProgress(s.steps.toFloat() / s.target)
-                }
-            }
-            MotionKind.STAND_UP -> {
-                val detector = StandUpDetector(minWalkNanos = target * 1_000_000_000L)
-                sensors.motion().map {
-                    MotionProgress(detector.onSample(it).ordinal / StandUpPhase.DONE.ordinal.toFloat())
                 }
             }
         }
