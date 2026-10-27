@@ -61,7 +61,7 @@ class SessionConfigTest {
 
     @Test
     fun `saved alarm with fewer challenges than types is normalized`() {
-        val four = listOf("math", "shake", "steps", "standup").map { ChallengeSpec(it) }
+        val four = listOf("math", "shake", "steps", "qr").map { ChallengeSpec(it) }
         val config = SessionConfig.from(ChallengeConfig(count = 2, challenges = four))
         assertEquals(4, config.count)
         assertEquals(10, SessionConfig.from(ChallengeConfig(count = 10, challenges = four)).count)

@@ -107,6 +107,7 @@
     <string name="challenge_done">Done</string>
     <string name="challenge_editor_section">Challenges</string>
     <string name="challenge_editor_none">Dismissed with one tap.</string>
+    <string name="challenge_editor_pick_type">Pick at least one challenge type to save the alarm.</string>
     <string name="challenge_editor_mode_normal">Normal</string>
     <string name="challenge_editor_mode_challenges">With challenges</string>
     <plurals name="challenge_shake_prompt">
@@ -117,10 +118,6 @@
         <item quantity="one">Take %d step</item>
         <item quantity="other">Take %d steps</item>
     </plurals>
-    <plurals name="challenge_standup_prompt">
-        <item quantity="one">Get up and walk for %d second</item>
-        <item quantity="other">Get up and walk for %d seconds</item>
-    </plurals>
     <string name="challenge_motion_progress">Progress: %d %%</string>
     <plurals name="challenge_target_info_shakes">
         <item quantity="one">Target at this difficulty: %d shake</item>
@@ -129,10 +126,6 @@
     <plurals name="challenge_target_info_steps">
         <item quantity="one">Target at this difficulty: %d step</item>
         <item quantity="other">Target at this difficulty: %d steps</item>
-    </plurals>
-    <plurals name="challenge_target_info_seconds">
-        <item quantity="one">Target at this difficulty: %d second</item>
-        <item quantity="other">Target at this difficulty: %d seconds</item>
     </plurals>
     <string name="challenge_motion_rejected">That movement does not look real. Try again.</string>
     <string name="scanner_permission_rationale">We need the camera to read the code. The image never leaves your phone.</string>
@@ -154,7 +147,6 @@
     <string name="steps_permission_rationale">To count your steps we need the physical activity permission.</string>
     <string name="challenge_type_shake">Shake</string>
     <string name="challenge_type_steps">Steps</string>
-    <string name="challenge_type_standup">Stand up</string>
     <string name="challenge_type_qr">QR code</string>
     <string name="challenge_type_holdrelease">Hold and release</string>
     <string name="challenge_holdrelease_round">Round %1$d of %2$d</string>
@@ -168,6 +160,28 @@
     <plurals name="challenge_holdrelease_rounds">
         <item quantity="one">%d round</item>
         <item quantity="other">%d rounds</item>
+    </plurals>
+    <string name="challenge_type_flappy">Flappy Bird</string>
+    <plurals name="challenge_flappy_prompt">
+        <item quantity="one">Pass %d pipe without crashing</item>
+        <item quantity="other">Pass %d pipes without crashing</item>
+    </plurals>
+    <plurals name="challenge_flappy_target_info">
+        <item quantity="one">Target at this difficulty: %d point</item>
+        <item quantity="other">Target at this difficulty: %d points</item>
+    </plurals>
+    <string name="challenge_flappy_score">Score: %1$d / %2$d</string>
+    <string name="challenge_flappy_tap_to_start">Tap to start, then tap again to jump.</string>
+    <string name="challenge_flappy_crashed">You crashed. Tap to start over from zero.</string>
+    <string name="challenge_type_memory">Memory</string>
+    <string name="challenge_memory_watch">Memorize the sequence</string>
+    <string name="challenge_memory_repeat">Repeat the sequence</string>
+    <string name="challenge_memory_wrong">Wrong sequence. Watch again.</string>
+    <string name="challenge_memory_cell">Cell %d</string>
+    <string name="challenge_memory_cell_lit">Cell %d, lit</string>
+    <plurals name="challenge_target_info_memory">
+        <item quantity="one">Sequence at this difficulty: %d cell</item>
+        <item quantity="other">Sequence at this difficulty: %d cells</item>
     </plurals>
 
     <string name="sound_default">Default tone</string>

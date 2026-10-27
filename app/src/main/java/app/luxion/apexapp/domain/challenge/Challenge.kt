@@ -19,9 +19,14 @@ sealed interface ChallengeAnswer {
 
     /** Un juego táctil (tocar, ritmo, mantener y soltar) se completó con toques que pasaron la plausibilidad. */
     data class GameVerified(val type: ChallengeType) : ChallengeAnswer
+    /** Un reto de juego (Flappy) se completó: el usuario sumó los puntos exigidos. */
+    data class GameCompleted(val type: ChallengeType) : ChallengeAnswer
 
     /** El reto QR verificó en vivo un código; [codeHash] es el SHA-256 en hexadecimal de su valor. */
     data class ScanVerified(val codeHash: String) : ChallengeAnswer
+
+    /** Casillas tocadas por el usuario, en orden, en el reto de memoria. */
+    data class Pattern(val type: ChallengeType, val taps: List<Int>) : ChallengeAnswer
 }
 
 sealed interface Availability {
@@ -38,12 +43,22 @@ interface Challenge {
 
     /** [level] va de 1 a 5; [params] es el JSON opaco de `ChallengeSpec.params` de este tipo. */
     fun generate(level: Int, params: String, random: Random): ChallengeInstance
+
+    /**
+     * Igual que [generate], pero con las instancias ya superadas en la sesión ([solved]) para que un tipo con
+     * varias opciones (p. ej. varios objetos) no repita la misma en retos consecutivos.
+     */
+    fun generate(level: Int, params: String, random: Random, solved: List<ChallengeInstance>): ChallengeInstance =
+        generate(level, params, random)
 }
 
 interface ChallengeInstance {
     val type: ChallengeType
     val level: Int
     val prompt: String
+
+    /** Si es verdadero, un fallo conserva esta instancia en vez de regenerar el reto (p. ej. la misma secuencia). */
+    val keepOnFailure: Boolean get() = false
 
     fun check(answer: ChallengeAnswer): Boolean
 }
