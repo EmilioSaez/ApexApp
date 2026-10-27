@@ -242,6 +242,7 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
     MotionKind.SHAKE.typeId -> R.string.challenge_type_shake
     MotionKind.STEPS.typeId -> R.string.challenge_type_steps
     MotionKind.STAND_UP.typeId -> R.string.challenge_type_standup
+    "holdrelease" -> R.string.challenge_type_holdrelease
     else -> null
 }
 

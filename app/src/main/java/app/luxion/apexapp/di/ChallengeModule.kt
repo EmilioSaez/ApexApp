@@ -23,7 +23,10 @@ import app.luxion.apexapp.ui.challenge.QrRenderer
 import app.luxion.apexapp.ui.challenge.ShakeRenderer
 import app.luxion.apexapp.ui.challenge.StandUpRenderer
 import app.luxion.apexapp.ui.challenge.StepsRenderer
+import app.luxion.apexapp.domain.challenge.holdrelease.HoldReleaseChallenge
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
+import app.luxion.apexapp.ui.challenge.HoldReleaseParamsEditor
+import app.luxion.apexapp.ui.challenge.HoldReleaseRenderer
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
@@ -121,6 +124,18 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun qrEditor(impl: QrParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun holdRelease(impl: HoldReleaseChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun holdReleaseRenderer(impl: HoldReleaseRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun holdReleaseEditor(impl: HoldReleaseParamsEditor): ChallengeParamsEditor
 
     @Binds
     fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities

@@ -156,6 +156,19 @@
     <string name="challenge_type_steps">Steps</string>
     <string name="challenge_type_standup">Stand up</string>
     <string name="challenge_type_qr">QR code</string>
+    <string name="challenge_type_holdrelease">Hold and release</string>
+    <string name="challenge_holdrelease_round">Round %1$d of %2$d</string>
+    <string name="challenge_holdrelease_hold">Press and hold</string>
+    <string name="challenge_holdrelease_wait">Wait…</string>
+    <string name="challenge_holdrelease_release">Release!</string>
+    <string name="challenge_holdrelease_early">Released too soon. A round was added.</string>
+    <string name="challenge_holdrelease_late">Released too late. A round was added.</string>
+    <string name="challenge_holdrelease_cancelled">The press was interrupted.</string>
+    <string name="challenge_holdrelease_estimate">Estimated duration: about %d s</string>
+    <plurals name="challenge_holdrelease_rounds">
+        <item quantity="one">%d round</item>
+        <item quantity="other">%d rounds</item>
+    </plurals>
 
     <string name="sound_default">Default tone</string>
     <string name="sound_not_audio">That file is not audio or cannot be read.</string>
