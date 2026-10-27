@@ -242,7 +242,6 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
     MotionKind.SHAKE.typeId -> R.string.challenge_type_shake
     MotionKind.STEPS.typeId -> R.string.challenge_type_steps
     "memory" -> R.string.challenge_type_memory
-    "object" -> R.string.challenge_type_object
     else -> null
 }
 
