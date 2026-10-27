@@ -158,6 +158,13 @@
     <string name="challenge_type_standup">Levantarse</string>
     <string name="challenge_type_qr">Código QR</string>
 
+    <string name="challenge_type_rhythm">Ritmo</string>
+    <string name="challenge_rhythm_rounds">Rondas: %1$d</string>
+    <string name="challenge_rhythm_round">Ronda %1$d de %2$d</string>
+    <string name="challenge_rhythm_failures">Fallos: %1$d de %2$d</string>
+    <string name="challenge_rhythm_hint">Toca el carril cuando la nota llegue a la línea.</string>
+    <string name="challenge_rhythm_restarted">Demasiados fallos: la ronda empieza de nuevo.</string>
+
     <string name="sound_default">Tono por defecto</string>
     <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
     <string name="sound_pick_file">Archivo de audio</string>

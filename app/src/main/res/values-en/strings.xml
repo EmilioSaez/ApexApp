@@ -157,6 +157,13 @@
     <string name="challenge_type_standup">Stand up</string>
     <string name="challenge_type_qr">QR code</string>
 
+    <string name="challenge_type_rhythm">Rhythm</string>
+    <string name="challenge_rhythm_rounds">Rounds: %1$d</string>
+    <string name="challenge_rhythm_round">Round %1$d of %2$d</string>
+    <string name="challenge_rhythm_failures">Misses: %1$d of %2$d</string>
+    <string name="challenge_rhythm_hint">Tap the lane when the note reaches the line.</string>
+    <string name="challenge_rhythm_restarted">Too many misses: the round starts over.</string>
+
     <string name="sound_default">Default tone</string>
     <string name="sound_not_audio">That file is not audio or cannot be read.</string>
     <string name="sound_pick_file">Audio file</string>
