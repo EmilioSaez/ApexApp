@@ -185,6 +185,13 @@
         <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
     </plurals>
 
+    <string name="challenge_type_rhythm">Ritmo</string>
+    <string name="challenge_rhythm_rounds">Rondas: %1$d</string>
+    <string name="challenge_rhythm_round">Ronda %1$d de %2$d</string>
+    <string name="challenge_rhythm_failures">Fallos: %1$d de %2$d</string>
+    <string name="challenge_rhythm_hint">Toca el carril cuando la nota llegue a la línea.</string>
+    <string name="challenge_rhythm_restarted">Demasiados fallos: la ronda empieza de nuevo.</string>
+
     <string name="sound_default">Tono por defecto</string>
     <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
     <string name="sound_pick_file">Archivo de audio</string>
@@ -346,4 +353,13 @@
     <string name="time_entry_invalid">Hora no válida</string>
     <string name="time_entry_ok">Fijar</string>
     <string name="time_entry_cancel">Cancelar</string>
+    <string name="challenge_type_tap_targets">Tocar objetivos</string>
+    <string name="tap_targets_round">Ronda %1$d de %2$d</string>
+    <string name="tap_targets_hint">Toca todos los círculos antes de que desaparezcan</string>
+    <string name="tap_targets_timeout">Tiempo agotado. Otra vez.</string>
+    <string name="tap_targets_rejected">Toque no válido</string>
+    <string name="tap_targets_area_description">Zona de juego: quedan %1$d círculos por tocar</string>
+    <string name="tap_targets_rounds_label">Rondas</string>
+    <string name="tap_targets_rounds_less">Menos rondas</string>
+    <string name="tap_targets_rounds_more">Más rondas</string>
 </resources>

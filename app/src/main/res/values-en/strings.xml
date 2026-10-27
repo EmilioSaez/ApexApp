@@ -184,6 +184,13 @@
         <item quantity="other">Sequence at this difficulty: %d cells</item>
     </plurals>
 
+    <string name="challenge_type_rhythm">Rhythm</string>
+    <string name="challenge_rhythm_rounds">Rounds: %1$d</string>
+    <string name="challenge_rhythm_round">Round %1$d of %2$d</string>
+    <string name="challenge_rhythm_failures">Misses: %1$d of %2$d</string>
+    <string name="challenge_rhythm_hint">Tap the lane when the note reaches the line.</string>
+    <string name="challenge_rhythm_restarted">Too many misses: the round starts over.</string>
+
     <string name="sound_default">Default tone</string>
     <string name="sound_not_audio">That file is not audio or cannot be read.</string>
     <string name="sound_pick_file">Audio file</string>
@@ -345,4 +352,13 @@
     <string name="time_entry_invalid">Invalid time</string>
     <string name="time_entry_ok">Set</string>
     <string name="time_entry_cancel">Cancel</string>
+    <string name="challenge_type_tap_targets">Tap targets</string>
+    <string name="tap_targets_round">Round %1$d of %2$d</string>
+    <string name="tap_targets_hint">Tap every circle before it disappears</string>
+    <string name="tap_targets_timeout">Time\'s up. Try again.</string>
+    <string name="tap_targets_rejected">Invalid touch</string>
+    <string name="tap_targets_area_description">Play area: %1$d circles left to tap</string>
+    <string name="tap_targets_rounds_label">Rounds</string>
+    <string name="tap_targets_rounds_less">Fewer rounds</string>
+    <string name="tap_targets_rounds_more">More rounds</string>
 </resources>

@@ -8,6 +8,7 @@ import app.luxion.apexapp.domain.challenge.DifficultyProvider
 import app.luxion.apexapp.domain.challenge.MathChallenge
 import app.luxion.apexapp.domain.challenge.SessionFinishedListener
 import app.luxion.apexapp.domain.challenge.WakeLoggingChallengeSink
+import app.luxion.apexapp.domain.challenge.rhythm.RhythmChallenge
 import app.luxion.apexapp.alarm.RingingLifecycleListener
 import app.luxion.apexapp.alarm.ResolvedWakeListener
 import app.luxion.apexapp.ui.challenge.ChallengeParamsEditor
@@ -21,6 +22,8 @@ import app.luxion.apexapp.domain.challenge.memory.MemoryChallenge
 import app.luxion.apexapp.ui.challenge.QrParamsEditor
 import app.luxion.apexapp.ui.challenge.ShakeParamsEditor
 import app.luxion.apexapp.ui.challenge.StepsParamsEditor
+import app.luxion.apexapp.ui.challenge.rhythm.RhythmParamsEditor
+import app.luxion.apexapp.ui.challenge.rhythm.RhythmRenderer
 import app.luxion.apexapp.ui.editor.EditorSection
 import app.luxion.apexapp.ui.challenge.FlappyRenderer
 import app.luxion.apexapp.ui.challenge.QrRenderer
@@ -35,6 +38,9 @@ import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
 import app.luxion.apexapp.domain.challenge.sensor.StepsChallenge
+import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
+import app.luxion.apexapp.ui.challenge.TapTargetsParamsEditor
+import app.luxion.apexapp.ui.challenge.TapTargetsRenderer
 import app.luxion.apexapp.platform.AndroidDeviceCapabilities
 import app.luxion.apexapp.platform.AndroidMotionSensors
 import app.luxion.apexapp.domain.challenge.PassedAlarmsReset

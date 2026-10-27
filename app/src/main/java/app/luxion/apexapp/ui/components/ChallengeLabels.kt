@@ -7,6 +7,7 @@ import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.ChallengeConfig
 import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
+import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
 
 @StringRes
 private fun challengeLabelRes(type: String): Int? = when (type) {
