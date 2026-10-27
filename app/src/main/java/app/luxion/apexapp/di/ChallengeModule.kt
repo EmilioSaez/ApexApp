@@ -159,6 +159,30 @@ interface ChallengeModule {
     fun holdReleaseEditor(impl: HoldReleaseParamsEditor): ChallengeParamsEditor
 
     @Binds
+    @IntoSet
+    fun rhythm(impl: RhythmChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun rhythmRenderer(impl: RhythmRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun rhythmEditor(impl: RhythmParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun tapTargets(impl: TapTargetsChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun tapTargetsRenderer(impl: TapTargetsRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun tapTargetsEditor(impl: TapTargetsParamsEditor): ChallengeParamsEditor
+
+    @Binds
     fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities
 
     @Binds
