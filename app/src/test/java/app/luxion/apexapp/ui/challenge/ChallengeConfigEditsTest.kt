@@ -45,6 +45,7 @@ class ChallengeConfigEditsTest {
         assertTrue(ChallengeConfig().isNormal)
         assertFalse(base.isNormal)
         assertTrue(base.toggled(ChallengeType.MATH).isNormal)
+        assertFalse(ChallengeConfig(challengesEnabled = true).isNormal)
     }
 
     @Test
@@ -54,13 +55,29 @@ class ChallengeConfigEditsTest {
     }
 
     @Test
-    fun `switching from normal to challenges preselects math, and keeps existing types`() {
-        assertEquals(listOf("math"), ChallengeConfig().withChallenges().challenges.map { it.type })
-        assertEquals(base, base.withChallenges())
+    fun `switching from normal to challenges preselects nothing and keeps existing types`() {
+        val empty = ChallengeConfig().withChallenges()
+        assertTrue(empty.challenges.isEmpty())
+        assertFalse(empty.isNormal)
+        assertTrue(empty.needsType)
+        assertEquals(base.copy(challengesEnabled = true), base.withChallenges())
+        assertFalse(base.withChallenges().needsType)
     }
 
     @Test
-    fun `preselecting math keeps the count at its minimum`() {
+    fun `removing the last type keeps challenges mode and requires picking one`() {
+        val none = base.withChallenges().toggled(ChallengeType.MATH)
+        assertFalse(none.isNormal)
+        assertTrue(none.needsType)
+    }
+
+    @Test
+    fun `switching to normal clears the challenges mode`() {
+        assertTrue(base.withChallenges().asNormal().isNormal)
+    }
+
+    @Test
+    fun `entering challenges mode keeps the count at its minimum`() {
         assertEquals(1, ChallengeConfig(count = 1).withChallenges().count)
     }
 }

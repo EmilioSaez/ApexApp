@@ -15,6 +15,8 @@ data class ChallengeConfig(
     /** Número de retos de la sesión (1..10). */
     val count: Int = 1,
     val mode: ChallengeMode = ChallengeMode.CHAINED,
+    /** El editor está en «Con retos»; permite tenerlo activo sin ningún tipo elegido todavía (no se puede guardar así). */
+    val challengesEnabled: Boolean = false,
 )
 
 /** CHAINED recorre `challenges` en orden y repite el ciclo; RANDOM elige al azar entre ellos. */
