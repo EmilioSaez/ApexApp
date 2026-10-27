@@ -123,6 +123,10 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
+    fun objectPhotoEditor(impl: ObjectPhotoParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
     fun memory(impl: MemoryChallenge): Challenge
 
     @Binds
