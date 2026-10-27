@@ -29,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
+import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.challenge.SessionConfig
 import app.luxion.apexapp.ui.challenge.ChallengeSessionScreen
 import app.luxion.apexapp.ui.components.PrimaryAction
@@ -37,7 +38,12 @@ import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 @Composable
-fun RingScreen(onFinished: () -> Unit, viewModel: RingViewModel = hiltViewModel()) {
+fun RingScreen(
+    onFinished: () -> Unit,
+    antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
+    onSyntheticInput: () -> Unit = {},
+    viewModel: RingViewModel = hiltViewModel(),
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(state.finished) { if (state.finished) onFinished() }
     val alarm = state.alarm ?: return
@@ -53,6 +59,8 @@ fun RingScreen(onFinished: () -> Unit, viewModel: RingViewModel = hiltViewModel(
             onPassed = viewModel::dismiss,
             canSnooze = state.canSnooze,
             onSnooze = viewModel::snooze,
+            antiCheat = antiCheat,
+            onSyntheticInput = onSyntheticInput,
         )
     }
 }
@@ -66,6 +74,8 @@ fun RingChallenges(
     onPassed: () -> Unit,
     canSnooze: Boolean,
     onSnooze: () -> Unit,
+    antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
+    onSyntheticInput: () -> Unit = {},
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
@@ -76,6 +86,8 @@ fun RingChallenges(
                 onFinished = onPassed,
                 modifier = Modifier.weight(1f),
                 alarmId = alarm.id,
+                antiCheat = antiCheat,
+                onSyntheticInput = onSyntheticInput,
             )
             if (canSnooze) {
                 SnoozeButton(
