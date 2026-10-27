@@ -76,7 +76,7 @@ class RhythmParamsEditor @Inject constructor() : ChallengeParamsEditor {
 
     @Composable
     override fun Content(params: String, difficulty: Int, onChange: (String) -> Unit) {
-        val rounds = RhythmParams.rounds(params)
+        val rounds = RhythmParams.rounds(params, difficulty)
         Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
             Text(stringResource(R.string.challenge_type_rhythm), style = MaterialTheme.typography.titleSmall)
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg)) {

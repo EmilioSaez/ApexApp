@@ -200,7 +200,7 @@ class HoldReleaseParamsEditor @Inject constructor() : ChallengeParamsEditor {
 
     @Composable
     override fun Content(params: String, difficulty: Int, onChange: (String) -> Unit) {
-        val rounds = HoldReleaseParams.rounds(params)
+        val rounds = HoldReleaseParams.rounds(params, difficulty)
         Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
             Text(stringResource(R.string.challenge_type_holdrelease), style = MaterialTheme.typography.titleSmall)
             Row(

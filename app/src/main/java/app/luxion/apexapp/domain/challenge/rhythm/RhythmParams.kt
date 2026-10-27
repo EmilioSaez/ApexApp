@@ -1,5 +1,6 @@
 package app.luxion.apexapp.domain.challenge.rhythm
 
+import app.luxion.apexapp.domain.challenge.SessionConfig
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -40,23 +41,27 @@ data class RhythmPace(val bpm: Int) {
 }
 
 @Serializable
-private data class RhythmSpecParams(val rounds: Int = RhythmParams.DEFAULT_ROUNDS)
+private data class RhythmSpecParams(val rounds: Int? = null)
 
 /** Lectura y escritura de `ChallengeSpec.params` del reto de ritmo: `{"rounds":N}`. */
 object RhythmParams {
     const val MIN_ROUNDS = 2
     const val MAX_ROUNDS = 8
-    const val DEFAULT_ROUNDS = 3
+
+    /** Rondas por defecto por nivel de dificultad (índice 0 = nivel 1). Tabla única: ajustar aquí al calibrar. */
+    val DEFAULT_ROUNDS_BY_LEVEL: List<Int> = listOf(2, 3, 3, 4, 5)
+
+    fun defaultRounds(level: Int): Int =
+        DEFAULT_ROUNDS_BY_LEVEL[level.coerceIn(SessionConfig.MIN_DIFFICULTY, SessionConfig.MAX_DIFFICULTY) - SessionConfig.MIN_DIFFICULTY]
 
     private val json = Json {
         ignoreUnknownKeys = true
         encodeDefaults = true
     }
 
-    /** Rondas de [params]; ausente o ilegible da [DEFAULT_ROUNDS] y fuera de rango se acota. */
-    fun rounds(params: String): Int =
-        runCatching { json.decodeFromString<RhythmSpecParams>(params).rounds }
-            .getOrDefault(DEFAULT_ROUNDS)
+    /** Rondas de [params]; ausente o ilegible da [defaultRounds] del [level] y fuera de rango se acota. */
+    fun rounds(params: String, level: Int): Int =
+        (runCatching { json.decodeFromString<RhythmSpecParams>(params).rounds }.getOrNull() ?: defaultRounds(level))
             .coerceIn(MIN_ROUNDS, MAX_ROUNDS)
 
     fun paramsFor(rounds: Int): String =
