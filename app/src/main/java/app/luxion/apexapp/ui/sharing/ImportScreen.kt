@@ -36,6 +36,7 @@ import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
+import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
 import app.luxion.apexapp.scanner.BarcodeScanner
 import app.luxion.apexapp.scanner.CameraPermissionGate
 import app.luxion.apexapp.sharing.ImportError
@@ -242,6 +243,7 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
     MotionKind.SHAKE.typeId -> R.string.challenge_type_shake
     MotionKind.STEPS.typeId -> R.string.challenge_type_steps
     MotionKind.STAND_UP.typeId -> R.string.challenge_type_standup
+    TapTargetsChallenge.TYPE.id -> R.string.challenge_type_tap_targets
     else -> null
 }
 

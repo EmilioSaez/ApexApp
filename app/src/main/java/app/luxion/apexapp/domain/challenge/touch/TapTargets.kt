@@ -87,6 +87,9 @@ class TapTargetsGame(
     private var current: TapRound? = null
     private val hit = mutableSetOf<Int>()
 
+    /** Índices de los círculos ya tocados en la ronda en curso. */
+    val hitCircles: Set<Int> get() = hit
+
     /** Genera la ronda siguiente (o la repetición de la fallida) con posiciones nuevas. */
     fun nextRound(areaWidthDp: Float, areaHeightDp: Float): TapRound {
         val radius = tuning.diameterDp / 2f

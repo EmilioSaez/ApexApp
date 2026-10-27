@@ -6,6 +6,7 @@ import androidx.compose.ui.res.stringResource
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.ChallengeConfig
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
+import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
 
 @StringRes
 private fun challengeLabelRes(type: String): Int? = when (type) {
@@ -14,6 +15,7 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
     MotionKind.STEPS.typeId -> R.string.challenge_type_steps
     MotionKind.STAND_UP.typeId -> R.string.challenge_type_standup
     "qr" -> R.string.challenge_type_qr
+    TapTargetsChallenge.TYPE.id -> R.string.challenge_type_tap_targets
     else -> null
 }
 
