@@ -37,6 +37,7 @@ import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
+import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
 import app.luxion.apexapp.scanner.BarcodeScanner
 import app.luxion.apexapp.scanner.CameraPermissionGate
 import app.luxion.apexapp.sharing.ImportError
@@ -242,6 +243,7 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
     "math" -> R.string.challenge_type_math
     MotionKind.SHAKE.typeId -> R.string.challenge_type_shake
     MotionKind.STEPS.typeId -> R.string.challenge_type_steps
+    TapTargetsChallenge.TYPE.id -> R.string.challenge_type_tap_targets
     FlappyChallenge.TYPE.id -> R.string.challenge_type_flappy
     "memory" -> R.string.challenge_type_memory
     else -> null

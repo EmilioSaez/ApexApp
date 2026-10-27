@@ -32,6 +32,9 @@ import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
 import app.luxion.apexapp.domain.challenge.sensor.ShakeChallenge
 import app.luxion.apexapp.domain.challenge.sensor.StepsChallenge
+import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
+import app.luxion.apexapp.ui.challenge.TapTargetsParamsEditor
+import app.luxion.apexapp.ui.challenge.TapTargetsRenderer
 import app.luxion.apexapp.platform.AndroidDeviceCapabilities
 import app.luxion.apexapp.platform.AndroidMotionSensors
 import app.luxion.apexapp.domain.challenge.PassedAlarmsReset
@@ -136,6 +139,18 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun flappyEditor(impl: FlappyParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun tapTargets(impl: TapTargetsChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun tapTargetsRenderer(impl: TapTargetsRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun tapTargetsEditor(impl: TapTargetsParamsEditor): ChallengeParamsEditor
 
     @Binds
     fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities

@@ -332,4 +332,13 @@
     <string name="time_entry_invalid">Invalid time</string>
     <string name="time_entry_ok">Set</string>
     <string name="time_entry_cancel">Cancel</string>
+    <string name="challenge_type_tap_targets">Tap targets</string>
+    <string name="tap_targets_round">Round %1$d of %2$d</string>
+    <string name="tap_targets_hint">Tap every circle before it disappears</string>
+    <string name="tap_targets_timeout">Time\'s up. Try again.</string>
+    <string name="tap_targets_rejected">Invalid touch</string>
+    <string name="tap_targets_area_description">Play area: %1$d circles left to tap</string>
+    <string name="tap_targets_rounds_label">Rounds</string>
+    <string name="tap_targets_rounds_less">Fewer rounds</string>
+    <string name="tap_targets_rounds_more">More rounds</string>
 </resources>

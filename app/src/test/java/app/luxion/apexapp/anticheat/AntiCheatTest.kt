@@ -188,6 +188,15 @@ class SessionIntegrityTrackerTest {
     }
 
     @Test
+    fun syntheticInput_isFlaggedAfterThreshold() {
+        val t = SessionIntegrityTracker()
+        repeat(2) { t.syntheticInput("a") }
+        assertTrue(t.finish("a", false).isEmpty())
+        repeat(3) { t.syntheticInput("b") }
+        assertEquals(setOf(SuspicionReason.SYNTHETIC_INPUT), t.finish("b", false))
+    }
+
+    @Test
     fun fewExits_areTolerated() {
         val t = SessionIntegrityTracker()
         repeat(2) { t.exitAttempt("a") }

@@ -1,6 +1,6 @@
 package app.luxion.apexapp.anticheat
 
-enum class SuspicionReason { REPEATED_EXIT, VOLUME_TAMPER, PROCESS_INTERRUPTED, TIMED_OUT }
+enum class SuspicionReason { REPEATED_EXIT, VOLUME_TAMPER, PROCESS_INTERRUPTED, TIMED_OUT, SYNTHETIC_INPUT }
 
 /**
  * Acumula intentos de manipulación por sesión y decide si es sospechosa. No guarda estado en
@@ -9,10 +9,12 @@ enum class SuspicionReason { REPEATED_EXIT, VOLUME_TAMPER, PROCESS_INTERRUPTED, 
 class SessionIntegrityTracker(
     private val exitThreshold: Int = DEFAULT_EXIT_THRESHOLD,
     private val volumeThreshold: Int = DEFAULT_VOLUME_THRESHOLD,
+    private val syntheticThreshold: Int = DEFAULT_SYNTHETIC_THRESHOLD,
 ) {
     private class State {
         var exits = 0
         var volumeResets = 0
+        var syntheticInputs = 0
         var interrupted = false
     }
 
@@ -33,6 +35,12 @@ class SessionIntegrityTracker(
         sessions.getOrPut(sessionId) { State() }.volumeResets++
     }
 
+    /** Un juego táctil descartó un toque por no parecer humano (solo se informa con anti-trampas `STRICT`). */
+    @Synchronized
+    fun syntheticInput(sessionId: String) {
+        sessions.getOrPut(sessionId) { State() }.syntheticInputs++
+    }
+
     @Synchronized
     fun interrupted(sessionId: String) {
         sessions.getOrPut(sessionId) { State() }.interrupted = true
@@ -45,6 +53,7 @@ class SessionIntegrityTracker(
         return buildSet {
             if (state.exits >= exitThreshold) add(SuspicionReason.REPEATED_EXIT)
             if (state.volumeResets >= volumeThreshold) add(SuspicionReason.VOLUME_TAMPER)
+            if (state.syntheticInputs >= syntheticThreshold) add(SuspicionReason.SYNTHETIC_INPUT)
             if (state.interrupted) add(SuspicionReason.PROCESS_INTERRUPTED)
             if (timedOut) add(SuspicionReason.TIMED_OUT)
         }
@@ -53,5 +62,6 @@ class SessionIntegrityTracker(
     companion object {
         const val DEFAULT_EXIT_THRESHOLD = 3
         const val DEFAULT_VOLUME_THRESHOLD = 3
+        const val DEFAULT_SYNTHETIC_THRESHOLD = 3
     }
 }

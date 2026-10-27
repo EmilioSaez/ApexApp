@@ -72,6 +72,9 @@ class LockdownController(
     /** La pantalla de sonar salió del primer plano durante el lockdown. */
     fun exitAttempt(sessionId: String) = tracker.exitAttempt(sessionId)
 
+    /** Un juego táctil descartó un toque sintético durante el sonado. */
+    fun syntheticInput(sessionId: String) = tracker.syntheticInput(sessionId)
+
     fun volumeKeyPressed() = volume.keyPressed()
 
     /** Llamar al arrancar la app: una sesión viva sin sonado es una interrupción (proceso muerto o reinicio). */

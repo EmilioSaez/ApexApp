@@ -17,6 +17,8 @@ sealed interface ChallengeAnswer {
     /** Un reto de movimiento (agitar, pasos, levantarse) verificó localmente su objetivo. */
     data class MotionVerified(val type: ChallengeType) : ChallengeAnswer
 
+    /** Un juego táctil (tocar, ritmo, mantener y soltar) se completó con toques que pasaron la plausibilidad. */
+    data class GameVerified(val type: ChallengeType) : ChallengeAnswer
     /** Un reto de juego (Flappy) se completó: el usuario sumó los puntos exigidos. */
     data class GameCompleted(val type: ChallengeType) : ChallengeAnswer
 

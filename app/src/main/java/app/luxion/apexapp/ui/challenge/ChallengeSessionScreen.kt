@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -24,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
+import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.challenge.ChallengeAnswer
 import app.luxion.apexapp.domain.challenge.ChallengeInstance
 import app.luxion.apexapp.domain.challenge.ChallengeType
@@ -47,6 +49,9 @@ fun ChallengeSessionScreen(
     onFinished: () -> Unit,
     modifier: Modifier = Modifier,
     alarmId: Long? = null,
+    /** Nivel anti-trampas efectivo que aplican los juegos táctiles a sus toques. */
+    antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
+    onSyntheticInput: () -> Unit = {},
     // Una sesión por sessionId: al empezar otra se crea un ViewModel nuevo.
     viewModel: ChallengeSessionViewModel = hiltViewModel(key = sessionId),
 ) {
@@ -56,15 +61,17 @@ fun ChallengeSessionScreen(
     LaunchedEffect(alarmId) { noticeViewModel.load(alarmId) }
     val notice by noticeViewModel.notice.collectAsStateWithLifecycle()
     state?.let {
-        ChallengeSessionContent(
-            state = it,
-            rendererFor = viewModel::rendererFor,
-            onAnswer = viewModel::submit,
-            onUnavailable = viewModel::reportUnavailable,
-            onFinished = onFinished,
-            modifier = modifier,
-            header = { notice?.let { n -> AdaptiveLevelNotice(n) } },
-        )
+        CompositionLocalProvider(LocalTouchGuard provides TouchGuard(antiCheat, onSyntheticInput)) {
+            ChallengeSessionContent(
+                state = it,
+                rendererFor = viewModel::rendererFor,
+                onAnswer = viewModel::submit,
+                onUnavailable = viewModel::reportUnavailable,
+                onFinished = onFinished,
+                modifier = modifier,
+                header = { notice?.let { n -> AdaptiveLevelNotice(n) } },
+            )
+        }
     }
 }
 
