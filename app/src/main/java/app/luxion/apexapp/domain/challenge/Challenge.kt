@@ -19,6 +19,9 @@ sealed interface ChallengeAnswer {
 
     /** El reto QR verificó en vivo un código; [codeHash] es el SHA-256 en hexadecimal de su valor. */
     data class ScanVerified(val codeHash: String) : ChallengeAnswer
+
+    /** El reto de foto a un objeto verificó en vivo la etiqueta [labelIndex] (índice de ML Kit). */
+    data class ObjectVerified(val labelIndex: Int) : ChallengeAnswer
 }
 
 sealed interface Availability {

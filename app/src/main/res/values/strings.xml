@@ -157,6 +157,21 @@
     <string name="challenge_type_steps">Pasos</string>
     <string name="challenge_type_standup">Levantarse</string>
     <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_object_prompt">Enfoca tu objeto: %1$s</string>
+    <string name="challenge_object_hold">Mantén el objeto en el encuadre…</string>
+    <string name="challenge_object_wrong">Ese no es el objeto registrado.</string>
+    <string name="challenge_object_rejected_screen">Parece una pantalla. Enfoca el objeto real.</string>
+    <string name="challenge_object_rejected_static">Parece una foto. Enfoca el objeto real.</string>
+    <string name="object_register_required">Elige el objeto de esta alarma.</string>
+    <string name="object_register_scanning">Apunta la cámara al objeto y elige una etiqueta.</string>
+    <string name="object_register_done">Objeto registrado: %1$s.</string>
+    <string name="object_register_action">Registrar objeto</string>
+    <string name="object_register_replace">Cambiar objeto</string>
+    <string name="object_register_cancel">Cancelar</string>
+    <string name="object_register_none_detected">Aún no se reconoce nada. Acércate o mejora la luz.</string>
+    <string name="object_register_generic_hint">Si la etiqueta es muy genérica (p. ej. habitación), elige otra más específica.</string>
+    <string name="object_register_placement_hint">Elige un objeto lejos de la cama, para tener que levantarte.</string>
+    <string name="challenge_type_object">Foto a un objeto</string>
 
     <string name="sound_default">Tono por defecto</string>
     <string name="sound_not_audio">Ese archivo no es de audio o no se puede leer.</string>
