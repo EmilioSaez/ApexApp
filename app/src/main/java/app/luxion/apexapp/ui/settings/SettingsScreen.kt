@@ -1,14 +1,31 @@
 package app.luxion.apexapp.ui.settings
 
 import android.content.res.Configuration
+import android.graphics.Color as AndroidColor
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.ui.components.ScreenTopBar
@@ -29,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
+import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.ThemeMode
 import app.luxion.apexapp.ui.components.SectionHeader
 import app.luxion.apexapp.ui.theme.ApexAppTheme
@@ -37,11 +55,14 @@ import app.luxion.apexapp.ui.theme.ApexTheme
 @Composable
 fun SettingsScreen(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
     val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
+    val customColors by viewModel.customColors.collectAsStateWithLifecycle()
     val language by viewModel.language.collectAsStateWithLifecycle()
     SettingsContent(
         themeMode = themeMode,
+        customColors = customColors,
         language = language,
         onThemeMode = viewModel::setThemeMode,
+        onCustomColors = viewModel::setCustomColors,
         onLanguage = viewModel::setLanguage,
         onBack = onBack,
     )
@@ -51,8 +72,10 @@ fun SettingsScreen(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewMo
 @Composable
 fun SettingsContent(
     themeMode: ThemeMode,
+    customColors: CustomThemeColors,
     language: AppLanguage,
     onThemeMode: (ThemeMode) -> Unit,
+    onCustomColors: (CustomThemeColors) -> Unit,
     onLanguage: (AppLanguage) -> Unit,
     onBack: () -> Unit,
 ) {
@@ -69,10 +92,14 @@ fun SettingsContent(
                     ThemeMode.SYSTEM to stringResource(R.string.settings_theme_system),
                     ThemeMode.LIGHT to stringResource(R.string.settings_theme_light),
                     ThemeMode.DARK to stringResource(R.string.settings_theme_dark),
+                    ThemeMode.CUSTOM to stringResource(R.string.settings_theme_custom),
                 ),
                 selected = themeMode,
                 onSelect = onThemeMode,
             )
+            if (themeMode == ThemeMode.CUSTOM) {
+                CustomColorRows(customColors, onCustomColors)
+            }
             Spacer(Modifier.height(ApexTheme.spacing.lg))
             SectionHeader(stringResource(R.string.settings_section_language))
             Choice(
@@ -85,6 +112,80 @@ fun SettingsContent(
                 onSelect = onLanguage,
             )
         }
+    }
+}
+
+private enum class CustomColorSlot(val label: Int) {
+    PRIMARY(R.string.settings_custom_primary), SECONDARY(R.string.settings_custom_secondary);
+
+    fun of(colors: CustomThemeColors): Int = if (this == PRIMARY) colors.primary else colors.secondary
+
+    fun with(colors: CustomThemeColors, argb: Int): CustomThemeColors =
+        if (this == PRIMARY) colors.copy(primary = argb) else colors.copy(secondary = argb)
+}
+
+/** Una fila por color con su muestra; tocarla abre el selector de ese color. */
+@Composable
+private fun CustomColorRows(colors: CustomThemeColors, onChange: (CustomThemeColors) -> Unit) {
+    var editing by remember { mutableStateOf<CustomColorSlot?>(null) }
+    Column(Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen)) {
+        CustomColorSlot.entries.forEach { slot ->
+            Row(
+                Modifier.fillMaxWidth().defaultMinSize(minHeight = 56.dp)
+                    .clickable(role = Role.Button) { editing = slot },
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(stringResource(slot.label), modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+                Box(
+                    Modifier.size(28.dp).clip(CircleShape).background(Color(slot.of(colors)))
+                        .border(1.dp, MaterialTheme.colorScheme.outline, CircleShape),
+                )
+            }
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+        }
+    }
+    editing?.let { slot ->
+        ColorPickerDialog(
+            title = stringResource(slot.label),
+            initial = slot.of(colors),
+            onDismiss = { editing = null },
+            onApply = { argb ->
+                onChange(slot.with(colors, argb))
+                editing = null
+            },
+        )
+    }
+}
+
+/** Selector HSV con tres deslizadores; el contraste lo garantiza el tema al generar el esquema, no el selector. */
+@Composable
+private fun ColorPickerDialog(title: String, initial: Int, onDismiss: () -> Unit, onApply: (Int) -> Unit) {
+    val start = remember { FloatArray(3).also { AndroidColor.colorToHSV(initial, it) } }
+    var hue by remember { mutableFloatStateOf(start[0]) }
+    var saturation by remember { mutableFloatStateOf(start[1]) }
+    var brightness by remember { mutableFloatStateOf(start[2]) }
+    val current = AndroidColor.HSVToColor(floatArrayOf(hue, saturation, brightness))
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = {
+            Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+                Box(Modifier.fillMaxWidth().height(48.dp).clip(MaterialTheme.shapes.small).background(Color(current)))
+                ColorSlider(stringResource(R.string.settings_color_hue), hue, 0f..360f) { hue = it }
+                ColorSlider(stringResource(R.string.settings_color_saturation), saturation, 0f..1f) { saturation = it }
+                ColorSlider(stringResource(R.string.settings_color_brightness), brightness, 0f..1f) { brightness = it }
+            }
+        },
+        confirmButton = { TextButton(onClick = { onApply(current) }) { Text(stringResource(R.string.settings_color_apply)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.settings_color_cancel)) } },
+    )
+}
+
+@Composable
+private fun ColorSlider(label: String, value: Float, range: ClosedFloatingPointRange<Float>, onChange: (Float) -> Unit) {
+    Column {
+        Text(label, style = MaterialTheme.typography.labelLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Slider(value = value, onValueChange = onChange, valueRange = range)
     }
 }
 
@@ -109,9 +210,11 @@ private fun <T> Choice(options: List<Pair<T, String>>, selected: T, onSelect: (T
 
 @Composable
 private fun SettingsPreview() = SettingsContent(
-    themeMode = ThemeMode.DARK,
+    themeMode = ThemeMode.CUSTOM,
+    customColors = CustomThemeColors.Default,
     language = AppLanguage.SYSTEM,
     onThemeMode = {},
+    onCustomColors = {},
     onLanguage = {},
     onBack = {},
 )

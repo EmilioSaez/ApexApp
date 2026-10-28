@@ -1,6 +1,7 @@
 package app.luxion.apexapp.data
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.ThemeMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -31,6 +32,15 @@ class DataStoreSettingsRepositoryTest {
     @Test
     fun defaultsToSystem() = runTest {
         assertEquals(ThemeMode.SYSTEM, repository(folder.newFile("a.preferences_pb").also { it.delete() }).observeThemeMode().first())
+    }
+
+    @Test
+    fun customColorsDefaultAndPersist() = runTest {
+        val repository = repository(File(folder.root, "c.preferences_pb"))
+        assertEquals(CustomThemeColors.Default, repository.observeCustomThemeColors().first())
+        val chosen = CustomThemeColors(primary = 0xFF112233.toInt(), secondary = 0xFF445566.toInt())
+        repository.setCustomThemeColors(chosen)
+        assertEquals(chosen, repository.observeCustomThemeColors().first())
     }
 
     @Test

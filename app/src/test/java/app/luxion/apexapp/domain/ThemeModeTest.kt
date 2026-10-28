@@ -12,6 +12,12 @@ class ThemeModeTest {
     }
 
     @Test
+    fun custom_followsDeviceForLightOrDark() {
+        assertTrue(ThemeMode.CUSTOM.isDark(systemDark = true))
+        assertFalse(ThemeMode.CUSTOM.isDark(systemDark = false))
+    }
+
+    @Test
     fun explicitModes_ignoreDevice() {
         assertTrue(ThemeMode.DARK.isDark(systemDark = false))
         assertFalse(ThemeMode.LIGHT.isDark(systemDark = true))

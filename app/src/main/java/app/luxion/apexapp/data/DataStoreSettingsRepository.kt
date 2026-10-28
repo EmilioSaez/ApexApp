@@ -3,7 +3,9 @@ package app.luxion.apexapp.data
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.SettingsRepository
 import app.luxion.apexapp.domain.ThemeMode
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +24,23 @@ class DataStoreSettingsRepository @Inject constructor(
         store.edit { it[THEME_MODE] = mode.name }
     }
 
+    override fun observeCustomThemeColors(): Flow<CustomThemeColors> = store.data.map { prefs ->
+        CustomThemeColors(
+            primary = prefs[CUSTOM_PRIMARY] ?: CustomThemeColors.Default.primary,
+            secondary = prefs[CUSTOM_SECONDARY] ?: CustomThemeColors.Default.secondary,
+        )
+    }
+
+    override suspend fun setCustomThemeColors(colors: CustomThemeColors) {
+        store.edit {
+            it[CUSTOM_PRIMARY] = colors.primary
+            it[CUSTOM_SECONDARY] = colors.secondary
+        }
+    }
+
     private companion object {
         val THEME_MODE = stringPreferencesKey("theme_mode")
+        val CUSTOM_PRIMARY = intPreferencesKey("theme_custom_primary")
+        val CUSTOM_SECONDARY = intPreferencesKey("theme_custom_secondary")
     }
 }

@@ -2,6 +2,7 @@ package app.luxion.apexapp.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.SettingsRepository
 import app.luxion.apexapp.domain.ThemeMode
 import app.luxion.apexapp.sharing.PendingImport
@@ -19,6 +20,9 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
     val themeMode: StateFlow<ThemeMode> = settings.observeThemeMode()
         .stateIn(viewModelScope, SharingStarted.Eagerly, ThemeMode.SYSTEM)
+
+    val customColors: StateFlow<CustomThemeColors> = settings.observeCustomThemeColors()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, CustomThemeColors.Default)
 
     /** Verdadero mientras hay un enlace o archivo de ApexApp recibido que aún no ha visto la pantalla de importación. */
     val importRequested: StateFlow<Boolean> = pendingImport.content.map { it != null }
