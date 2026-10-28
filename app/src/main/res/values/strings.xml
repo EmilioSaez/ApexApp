@@ -131,13 +131,13 @@
     <string name="challenge_motion_rejected">Ese movimiento no parece real. Inténtalo de nuevo.</string>
     <string name="scanner_permission_rationale">Necesitamos la cámara para leer el código. La imagen no sale del móvil.</string>
     <string name="scanner_permission_blocked">El permiso de cámara está denegado. Actívalo en los ajustes de la app para usar este reto.</string>
-    <string name="challenge_qr_prompt">Escanea tu código</string>
+    <string name="challenge_qr_prompt">Escanea tu código QR o de barras</string>
     <string name="challenge_qr_hold">Mantén el código en el encuadre…</string>
     <string name="challenge_qr_wrong">Ese no es el código registrado.</string>
     <string name="challenge_qr_rejected_screen">Parece una pantalla. Escanea el objeto real.</string>
     <string name="challenge_qr_rejected_static">Parece una foto. Escanea el objeto real.</string>
-    <string name="qr_register_required">Registra un código para esta alarma.</string>
-    <string name="qr_register_scanning">Apunta la cámara al código que quieres usar.</string>
+    <string name="qr_register_required">Registra un código QR o de barras para esta alarma.</string>
+    <string name="qr_register_scanning">Apunta la cámara al código QR o de barras que quieres usar.</string>
     <string name="qr_register_done">Código registrado (%1$s).</string>
     <string name="qr_register_action">Registrar código</string>
     <string name="qr_register_replace">Sustituir código</string>
@@ -148,7 +148,7 @@
     <string name="steps_permission_rationale">Para contar tus pasos necesitamos el permiso de actividad física.</string>
     <string name="challenge_type_shake">Agitar</string>
     <string name="challenge_type_steps">Pasos</string>
-    <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_type_qr">Código QR o de barras</string>
     <string name="challenge_type_holdrelease">Mantener y soltar</string>
     <string name="challenge_holdrelease_round">Ronda %1$d de %2$d</string>
     <string name="challenge_holdrelease_hold">Mantén pulsado</string>
@@ -310,7 +310,7 @@
     <string name="import_error_version">Necesitas una versión más reciente de ApexApp para abrir esta alarma.</string>
     <string name="import_error_invalid">La alarma tiene valores no válidos y no se ha importado.</string>
     <string name="import_error_file">No se pudo leer el archivo.</string>
-    <string name="import_note_qr">Se omite el reto QR: registra tu propio código al editar la alarma.</string>
+    <string name="import_note_qr">Se omite el reto de código QR o de barras: registra tu propio código al editar la alarma.</string>
     <string name="import_note_challenge">Se omite un reto que esta versión no conoce.</string>
     <string name="import_note_sound">El sonido no está disponible: se usará el de por defecto.</string>
     <string name="streak_share_open">Compartir racha</string>
