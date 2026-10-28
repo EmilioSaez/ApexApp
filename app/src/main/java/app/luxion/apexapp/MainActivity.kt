@@ -33,8 +33,9 @@ class MainActivity : AppCompatActivity() {
             val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
             val customColors by viewModel.customColors.collectAsStateWithLifecycle()
             val importRequested by viewModel.importRequested.collectAsStateWithLifecycle()
+            val systemDark = isSystemInDarkTheme()
             ApexAppTheme(
-                darkTheme = themeMode.isDark(isSystemInDarkTheme()),
+                darkTheme = if (themeMode == ThemeMode.CUSTOM) customColors.base.isDark(systemDark) else themeMode.isDark(systemDark),
                 customColors = customColors.takeIf { themeMode == ThemeMode.CUSTOM },
             ) {
                 AppNavigation(importRequested)

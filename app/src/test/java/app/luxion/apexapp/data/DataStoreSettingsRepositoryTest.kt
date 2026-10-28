@@ -2,6 +2,7 @@ package app.luxion.apexapp.data
 
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import app.luxion.apexapp.domain.AppIconVariant
+import app.luxion.apexapp.domain.CustomBase
 import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.ThemeMode
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +40,7 @@ class DataStoreSettingsRepositoryTest {
     fun customColorsDefaultAndPersist() = runTest {
         val repository = repository(File(folder.root, "c.preferences_pb"))
         assertEquals(CustomThemeColors.Default, repository.observeCustomThemeColors().first())
-        val chosen = CustomThemeColors(primary = 0xFF112233.toInt(), secondary = 0xFF445566.toInt())
+        val chosen = CustomThemeColors(primary = 0xFF112233.toInt(), secondary = 0xFF445566.toInt(), base = CustomBase.DARK)
         repository.setCustomThemeColors(chosen)
         assertEquals(chosen, repository.observeCustomThemeColors().first())
     }
