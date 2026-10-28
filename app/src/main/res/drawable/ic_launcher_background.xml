@@ -7,4 +7,8 @@
     <path
         android:fillColor="#0B0B0B"
         android:pathData="M0,0h108v108h-108z" />
+    <!-- Ladera -->
+    <path
+        android:fillColor="#181818"
+        android:pathData="M0,90.3L108,37.5L108,108L0,108Z" />
 </vector>
