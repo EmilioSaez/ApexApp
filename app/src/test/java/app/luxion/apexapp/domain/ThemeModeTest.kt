@@ -22,4 +22,12 @@ class ThemeModeTest {
         assertTrue(ThemeMode.DARK.isDark(systemDark = false))
         assertFalse(ThemeMode.LIGHT.isDark(systemDark = true))
     }
+
+    @Test
+    fun customBase_decidesVariant() {
+        assertTrue(CustomBase.SYSTEM.isDark(systemDark = true))
+        assertFalse(CustomBase.SYSTEM.isDark(systemDark = false))
+        assertTrue(CustomBase.DARK.isDark(systemDark = false))
+        assertFalse(CustomBase.LIGHT.isDark(systemDark = true))
+    }
 }

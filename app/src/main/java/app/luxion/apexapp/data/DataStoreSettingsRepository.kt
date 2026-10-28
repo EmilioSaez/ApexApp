@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import app.luxion.apexapp.domain.AppIconVariant
+import app.luxion.apexapp.domain.CustomBase
 import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.SettingsRepository
 import app.luxion.apexapp.domain.ThemeMode
@@ -29,6 +30,7 @@ class DataStoreSettingsRepository @Inject constructor(
         CustomThemeColors(
             primary = prefs[CUSTOM_PRIMARY] ?: CustomThemeColors.Default.primary,
             secondary = prefs[CUSTOM_SECONDARY] ?: CustomThemeColors.Default.secondary,
+            base = prefs[CUSTOM_BASE]?.let { name -> CustomBase.entries.firstOrNull { it.name == name } } ?: CustomBase.SYSTEM,
         )
     }
 
@@ -36,6 +38,7 @@ class DataStoreSettingsRepository @Inject constructor(
         store.edit {
             it[CUSTOM_PRIMARY] = colors.primary
             it[CUSTOM_SECONDARY] = colors.secondary
+            it[CUSTOM_BASE] = colors.base.name
         }
     }
 
@@ -52,5 +55,6 @@ class DataStoreSettingsRepository @Inject constructor(
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val CUSTOM_PRIMARY = intPreferencesKey("theme_custom_primary")
         val CUSTOM_SECONDARY = intPreferencesKey("theme_custom_secondary")
+        val CUSTOM_BASE = stringPreferencesKey("theme_custom_base")
     }
 }

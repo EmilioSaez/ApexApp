@@ -44,6 +44,7 @@
     <string name="settings_theme_custom">Personalizado</string>
     <string name="settings_custom_primary">Color primario</string>
     <string name="settings_custom_secondary">Color secundario</string>
+    <string name="settings_custom_base">Base del tema</string>
     <string name="settings_color_hue">Tono</string>
     <string name="settings_color_saturation">Saturación</string>
     <string name="settings_color_brightness">Brillo</string>

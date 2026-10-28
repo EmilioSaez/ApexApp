@@ -49,6 +49,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.AppIconVariant
+import app.luxion.apexapp.domain.CustomBase
 import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.ThemeMode
 import app.luxion.apexapp.ui.components.SectionHeader
@@ -107,6 +108,13 @@ fun SettingsContent(
             )
             if (themeMode == ThemeMode.CUSTOM) {
                 CustomColorRows(customColors, onCustomColors)
+                Text(
+                    stringResource(R.string.settings_custom_base),
+                    modifier = Modifier.padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.sm),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                CustomBaseChoice(customColors, onCustomColors)
             }
             if (themeMode == ThemeMode.CUSTOM || appIcon != AppIconVariant.DEFAULT) {
                 AppIconRows(
@@ -137,6 +145,20 @@ private enum class CustomColorSlot(val label: Int) {
 
     fun with(colors: CustomThemeColors, argb: Int): CustomThemeColors =
         if (this == PRIMARY) colors.copy(primary = argb) else colors.copy(secondary = argb)
+}
+
+/** Base clara u oscura del tema personalizado. */
+@Composable
+private fun CustomBaseChoice(colors: CustomThemeColors, onChange: (CustomThemeColors) -> Unit) {
+    Choice(
+        options = listOf(
+            CustomBase.SYSTEM to stringResource(R.string.settings_theme_system),
+            CustomBase.LIGHT to stringResource(R.string.settings_theme_light),
+            CustomBase.DARK to stringResource(R.string.settings_theme_dark),
+        ),
+        selected = colors.base,
+        onSelect = { onChange(colors.copy(base = it)) },
+    )
 }
 
 /** Una fila por color con su muestra; tocarla abre el selector de ese color. */
