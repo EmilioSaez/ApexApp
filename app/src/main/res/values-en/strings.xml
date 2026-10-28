@@ -40,6 +40,14 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_custom">Custom</string>
+    <string name="settings_custom_primary">Primary color</string>
+    <string name="settings_custom_secondary">Secondary color</string>
+    <string name="settings_color_hue">Hue</string>
+    <string name="settings_color_saturation">Saturation</string>
+    <string name="settings_color_brightness">Brightness</string>
+    <string name="settings_color_apply">Apply</string>
+    <string name="settings_color_cancel">Cancel</string>
     <string name="settings_section_language">Language</string>
     <string name="settings_language_system">System</string>
     <string name="settings_language_es">Español</string>

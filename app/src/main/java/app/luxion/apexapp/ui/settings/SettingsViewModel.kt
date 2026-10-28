@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.SettingsRepository
 import app.luxion.apexapp.domain.ThemeMode
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,13 +32,20 @@ class SettingsViewModel @Inject constructor(
     val themeMode: StateFlow<ThemeMode> = settings.observeThemeMode()
         .stateIn(viewModelScope, SharingStarted.Eagerly, ThemeMode.SYSTEM)
 
-    private val _language = MutableStateFlow(
+    val customColors: StateFlow<CustomThemeColors> = settings.observeCustomThemeColors()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, CustomThemeColors.Default)
+
+    private val _language =MutableStateFlow(
         AppLanguage.fromTags(AppCompatDelegate.getApplicationLocales().toLanguageTags()),
     )
     val language: StateFlow<AppLanguage> = _language
 
     fun setThemeMode(mode: ThemeMode) {
         viewModelScope.launch { settings.setThemeMode(mode) }
+    }
+
+    fun setCustomColors(colors: CustomThemeColors) {
+        viewModelScope.launch { settings.setCustomThemeColors(colors) }
     }
 
     fun setLanguage(language: AppLanguage) {

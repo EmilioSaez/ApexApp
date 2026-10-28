@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import app.luxion.apexapp.domain.ThemeMode
 import app.luxion.apexapp.sharing.ImportIntents
 import app.luxion.apexapp.sharing.PendingImport
 import app.luxion.apexapp.ui.MainViewModel
@@ -30,8 +31,12 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) offerImport(intent)
         setContent {
             val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
+            val customColors by viewModel.customColors.collectAsStateWithLifecycle()
             val importRequested by viewModel.importRequested.collectAsStateWithLifecycle()
-            ApexAppTheme(darkTheme = themeMode.isDark(isSystemInDarkTheme())) {
+            ApexAppTheme(
+                darkTheme = themeMode.isDark(isSystemInDarkTheme()),
+                customColors = customColors.takeIf { themeMode == ThemeMode.CUSTOM },
+            ) {
                 AppNavigation(importRequested)
             }
         }
