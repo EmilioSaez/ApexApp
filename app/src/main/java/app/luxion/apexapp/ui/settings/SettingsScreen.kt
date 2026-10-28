@@ -2,6 +2,7 @@ package app.luxion.apexapp.ui.settings
 
 import android.content.res.Configuration
 import android.graphics.Color as AndroidColor
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,11 +42,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
+import app.luxion.apexapp.domain.AppIconVariant
 import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.ThemeMode
 import app.luxion.apexapp.ui.components.SectionHeader
@@ -57,12 +60,15 @@ fun SettingsScreen(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewMo
     val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
     val customColors by viewModel.customColors.collectAsStateWithLifecycle()
     val language by viewModel.language.collectAsStateWithLifecycle()
+    val appIcon by viewModel.appIcon.collectAsStateWithLifecycle()
     SettingsContent(
         themeMode = themeMode,
         customColors = customColors,
+        appIcon = appIcon,
         language = language,
         onThemeMode = viewModel::setThemeMode,
         onCustomColors = viewModel::setCustomColors,
+        onAppIcon = viewModel::setAppIcon,
         onLanguage = viewModel::setLanguage,
         onBack = onBack,
     )
@@ -73,9 +79,11 @@ fun SettingsScreen(onBack: () -> Unit, viewModel: SettingsViewModel = hiltViewMo
 fun SettingsContent(
     themeMode: ThemeMode,
     customColors: CustomThemeColors,
+    appIcon: AppIconVariant,
     language: AppLanguage,
     onThemeMode: (ThemeMode) -> Unit,
     onCustomColors: (CustomThemeColors) -> Unit,
+    onAppIcon: (AppIconVariant) -> Unit,
     onLanguage: (AppLanguage) -> Unit,
     onBack: () -> Unit,
 ) {
@@ -99,6 +107,13 @@ fun SettingsContent(
             )
             if (themeMode == ThemeMode.CUSTOM) {
                 CustomColorRows(customColors, onCustomColors)
+            }
+            if (themeMode == ThemeMode.CUSTOM || appIcon != AppIconVariant.DEFAULT) {
+                AppIconRows(
+                    current = appIcon,
+                    suggested = if (themeMode == ThemeMode.CUSTOM) AppIconVariant.nearestTo(customColors.primary) else null,
+                    onApply = onAppIcon,
+                )
             }
             Spacer(Modifier.height(ApexTheme.spacing.lg))
             SectionHeader(stringResource(R.string.settings_section_language))
@@ -157,6 +172,88 @@ private fun CustomColorRows(colors: CustomThemeColors, onChange: (CustomThemeCol
     }
 }
 
+private fun AppIconVariant.foreground(): Int = when (this) {
+    AppIconVariant.DEFAULT -> R.drawable.ic_launcher_foreground
+    AppIconVariant.ORANGE -> R.drawable.ic_launcher_foreground_orange
+    AppIconVariant.AMBER -> R.drawable.ic_launcher_foreground_amber
+    AppIconVariant.GREEN -> R.drawable.ic_launcher_foreground_green
+    AppIconVariant.TEAL -> R.drawable.ic_launcher_foreground_teal
+    AppIconVariant.BLUE -> R.drawable.ic_launcher_foreground_blue
+    AppIconVariant.PURPLE -> R.drawable.ic_launcher_foreground_purple
+    AppIconVariant.PINK -> R.drawable.ic_launcher_foreground_pink
+    AppIconVariant.NEUTRAL -> R.drawable.ic_launcher_foreground_neutral
+}
+
+/**
+ * Icono del launcher: con Personalizado ofrece la variante más cercana al color primario y, si ya hay otra
+ * aplicada, permite volver al icono original. Aplicar es explícito: cambiar de alias puede cerrar la app.
+ */
+@Composable
+private fun AppIconRows(current: AppIconVariant, suggested: AppIconVariant?, onApply: (AppIconVariant) -> Unit) {
+    Column(Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen)) {
+        if (suggested != null) {
+            AppIconRow(
+                variant = suggested,
+                title = stringResource(R.string.settings_icon_themed),
+                supporting = stringResource(
+                    if (suggested == current) R.string.settings_icon_applied else R.string.settings_icon_suggested,
+                ),
+                action = stringResource(R.string.settings_icon_apply),
+                actionEnabled = suggested != current,
+                onAction = { onApply(suggested) },
+            )
+        }
+        if (current != AppIconVariant.DEFAULT && suggested != AppIconVariant.DEFAULT) {
+            AppIconRow(
+                variant = AppIconVariant.DEFAULT,
+                title = stringResource(R.string.settings_icon_original),
+                supporting = null,
+                action = stringResource(R.string.settings_icon_restore),
+                actionEnabled = true,
+                onAction = { onApply(AppIconVariant.DEFAULT) },
+            )
+        }
+        if (suggested != null) {
+            Text(
+                stringResource(R.string.settings_icon_note),
+                modifier = Modifier.padding(vertical = ApexTheme.spacing.sm),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+@Composable
+private fun AppIconRow(
+    variant: AppIconVariant,
+    title: String,
+    supporting: String?,
+    action: String,
+    actionEnabled: Boolean,
+    onAction: () -> Unit,
+) {
+    Row(
+        Modifier.fillMaxWidth().defaultMinSize(minHeight = 64.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md),
+    ) {
+        Image(
+            painter = painterResource(variant.foreground()),
+            contentDescription = null,
+            modifier = Modifier.size(44.dp).clip(CircleShape).background(Color(0xFF0B0B0B)),
+        )
+        Column(Modifier.weight(1f)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge)
+            if (supporting != null) {
+                Text(supporting, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
+        TextButton(onClick = onAction, enabled = actionEnabled) { Text(action) }
+    }
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+}
+
 /** Selector HSV con tres deslizadores; el contraste lo garantiza el tema al generar el esquema, no el selector. */
 @Composable
 private fun ColorPickerDialog(title: String, initial: Int, onDismiss: () -> Unit, onApply: (Int) -> Unit) {
@@ -212,9 +309,11 @@ private fun <T> Choice(options: List<Pair<T, String>>, selected: T, onSelect: (T
 private fun SettingsPreview() = SettingsContent(
     themeMode = ThemeMode.CUSTOM,
     customColors = CustomThemeColors.Default,
+    appIcon = AppIconVariant.DEFAULT,
     language = AppLanguage.SYSTEM,
     onThemeMode = {},
     onCustomColors = {},
+    onAppIcon = {},
     onLanguage = {},
     onBack = {},
 )

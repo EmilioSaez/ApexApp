@@ -48,6 +48,13 @@
     <string name="settings_color_brightness">Brightness</string>
     <string name="settings_color_apply">Apply</string>
     <string name="settings_color_cancel">Cancel</string>
+    <string name="settings_icon_themed">App icon</string>
+    <string name="settings_icon_suggested">Closest variant to your primary color</string>
+    <string name="settings_icon_applied">Applied</string>
+    <string name="settings_icon_apply">Apply</string>
+    <string name="settings_icon_original">Original icon</string>
+    <string name="settings_icon_restore">Restore</string>
+    <string name="settings_icon_note">The launcher may take a few seconds to show the change, and on some phones the app closes when it is applied.</string>
     <string name="settings_section_language">Language</string>
     <string name="settings_language_system">System</string>
     <string name="settings_language_es">Español</string>

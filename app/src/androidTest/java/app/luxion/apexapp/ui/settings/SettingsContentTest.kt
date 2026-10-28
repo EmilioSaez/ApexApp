@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import app.luxion.apexapp.domain.AppIconVariant
 import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.ThemeMode
 import app.luxion.apexapp.ui.theme.ApexAppTheme
@@ -30,9 +31,11 @@ class SettingsContentTest {
                 SettingsContent(
                     themeMode = theme,
                     customColors = CustomThemeColors.Default,
+                    appIcon = AppIconVariant.DEFAULT,
                     language = language,
                     onThemeMode = { theme = it },
                     onCustomColors = {},
+                    onAppIcon = {},
                     onLanguage = { language = it },
                     onBack = {},
                 )

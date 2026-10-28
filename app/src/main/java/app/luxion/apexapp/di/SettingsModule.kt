@@ -5,7 +5,9 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import app.luxion.apexapp.data.DataStoreSettingsRepository
+import app.luxion.apexapp.domain.AppIconSwitcher
 import app.luxion.apexapp.domain.SettingsRepository
+import app.luxion.apexapp.platform.AndroidAppIconSwitcher
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -29,4 +31,7 @@ object SettingsStoreModule {
 interface SettingsBindingModule {
     @Binds
     fun settingsRepository(impl: DataStoreSettingsRepository): SettingsRepository
+
+    @Binds
+    fun appIconSwitcher(impl: AndroidAppIconSwitcher): AppIconSwitcher
 }
