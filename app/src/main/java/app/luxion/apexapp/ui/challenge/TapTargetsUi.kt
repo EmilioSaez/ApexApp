@@ -10,22 +10,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,7 +40,7 @@ import app.luxion.apexapp.domain.challenge.touch.TapResult
 import app.luxion.apexapp.domain.challenge.touch.TapRound
 import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
 import app.luxion.apexapp.domain.challenge.touch.TapTargetsInstance
-import app.luxion.apexapp.domain.challenge.touch.TapTargetsParams
+import app.luxion.apexapp.domain.challenge.touch.TapTargetsTuning
 import app.luxion.apexapp.domain.challenge.touch.TouchAction
 import app.luxion.apexapp.domain.challenge.touch.TouchSample
 import app.luxion.apexapp.domain.challenge.touch.TouchVerdict
@@ -84,24 +80,16 @@ private fun TapTargetsContent(instance: TapTargetsInstance, onVerified: () -> Un
 
     var round by remember(instance) { mutableStateOf<TapRound?>(null) }
     var hits by remember(instance) { mutableStateOf(emptySet<Int>()) }
-    var solved by remember(instance) { mutableIntStateOf(0) }
-    var total by remember(instance) { mutableIntStateOf(game.total) }
     var message by remember(instance) { mutableStateOf<Int?>(null) }
     val timeLeft = remember(instance) { Animatable(1f) }
     val cleared = remember(instance) { Channel<Unit>(Channel.CONFLATED) }
 
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
-                stringResource(R.string.tap_targets_round, (solved + 1).coerceAtMost(total), total),
-                style = MaterialTheme.typography.labelLarge,
-            )
-            Text(
-                stringResource(message ?: R.string.tap_targets_hint),
-                style = MaterialTheme.typography.labelMedium,
-                color = if (message == null) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error,
-            )
-        }
+        Text(
+            stringResource(message ?: R.string.tap_targets_hint),
+            style = MaterialTheme.typography.labelMedium,
+            color = if (message == null) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.error,
+        )
         LinearProgressIndicator(progress = { timeLeft.value }, modifier = Modifier.fillMaxWidth())
         BoxWithConstraints(
             Modifier
@@ -137,8 +125,6 @@ private fun TapTargetsContent(instance: TapTargetsInstance, onVerified: () -> Un
                         game.expire()
                         message = R.string.tap_targets_timeout
                     }
-                    solved = game.solved
-                    total = game.total
                 }
                 round = null
                 verified()
@@ -186,34 +172,20 @@ private fun TapTargetsContent(instance: TapTargetsInstance, onVerified: () -> Un
 private val AreaHeight = 360.dp
 private const val ObscuredFlags = MotionEvent.FLAG_WINDOW_IS_OBSCURED or MotionEvent.FLAG_WINDOW_IS_PARTIALLY_OBSCURED
 
-/** Editor del único parámetro del reto: el número de rondas. La exigencia de cada ronda sale de la dificultad. */
+/** Editor del reto: la ronda única sale de la dificultad, aquí solo se muestra lo que exige. */
 class TapTargetsParamsEditor @Inject constructor() : ChallengeParamsEditor {
     override val type: ChallengeType = TapTargetsChallenge.TYPE
 
     @Composable
     override fun Content(params: String, difficulty: Int, onChange: (String) -> Unit) {
-        val rounds = TapTargetsParams.rounds(params)
-        val less = stringResource(R.string.tap_targets_rounds_less)
-        val more = stringResource(R.string.tap_targets_rounds_more)
+        val level = TapTargetsTuning.forLevel(difficulty)
         Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
             Text(stringResource(R.string.challenge_type_tap_targets), style = MaterialTheme.typography.titleSmall)
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
-            ) {
-                Text(stringResource(R.string.tap_targets_rounds_label), style = MaterialTheme.typography.bodyMedium)
-                OutlinedIconButton(
-                    onClick = { onChange(TapTargetsParams.paramsFor(rounds - 1)) },
-                    enabled = rounds > TapTargetsParams.MIN_ROUNDS,
-                    modifier = Modifier.semantics { contentDescription = less },
-                ) { Text("-") }
-                Text(rounds.toString(), style = MaterialTheme.typography.titleLarge)
-                OutlinedIconButton(
-                    onClick = { onChange(TapTargetsParams.paramsFor(rounds + 1)) },
-                    enabled = rounds < TapTargetsParams.MAX_ROUNDS,
-                    modifier = Modifier.semantics { contentDescription = more },
-                ) { Text("+") }
-            }
+            Text(
+                stringResource(R.string.tap_targets_level_info, level.circles, level.roundMs / 1000f),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }

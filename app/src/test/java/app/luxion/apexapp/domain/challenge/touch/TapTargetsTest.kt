@@ -11,39 +11,31 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class TapTargetsTest {
-    private fun game(rounds: Int = 5, level: Int = 3, seed: Int = 1) = TapTargetsGame(rounds, level, Random(seed))
+    private fun game(level: Int = 3, seed: Int = 1) = TapTargetsGame(level, Random(seed))
 
     private fun clear(game: TapTargetsGame, round: TapRound): TapResult =
         round.circles.map { game.tap(it.xDp, it.yDp) }.last()
 
     @Test
-    fun params_defaultAndClamp() {
-        assertEquals(8, TapTargetsParams.rounds("{}"))
-        assertEquals(8, TapTargetsParams.rounds("no json"))
-        assertEquals(12, TapTargetsParams.rounds("""{"rounds":12}"""))
-        assertEquals(15, TapTargetsParams.rounds("""{"rounds":40}"""))
-        assertEquals(3, TapTargetsParams.rounds("""{"rounds":-2}"""))
-        assertEquals(10, TapTargetsParams.rounds(TapTargetsParams.paramsFor(10)))
-    }
-
-    @Test
-    fun tuning_level5GivesLessTimePerTargetThanLevel1() {
+    fun tuning_higherLevelIsFasterAndLongerOrEqual() {
         val easy = TapTargetsTuning.forLevel(1)
         val hard = TapTargetsTuning.forLevel(5)
         assertTrue(hard.timePerTargetMs < easy.timePerTargetMs)
         assertTrue(TapTargetsTuning.BY_LEVEL.zipWithNext().all { (a, b) -> b.timePerTargetMs < a.timePerTargetMs })
+        assertTrue(TapTargetsTuning.BY_LEVEL.zipWithNext().all { (a, b) -> b.circles > a.circles })
         assertEquals(hard, TapTargetsTuning.forLevel(9))
         assertEquals(easy, TapTargetsTuning.forLevel(-3))
     }
 
     @Test
-    fun round_timeScalesWithLevelButShapeDoesNot() {
-        val easy = game(level = 1).nextRound(360f, 520f)
-        val hard = game(level = 5).nextRound(360f, 520f)
-        assertEquals(easy.circles.size, hard.circles.size)
-        assertEquals(easy.diameterDp, hard.diameterDp)
-        assertEquals(TapTargetsTuning.forLevel(1).timePerTargetMs * easy.circles.size, easy.timeLimitMs)
-        assertTrue(hard.timeLimitMs < easy.timeLimitMs)
+    fun round_matchesLevelTuning() {
+        (1..5).forEach { level ->
+            val tuning = TapTargetsTuning.forLevel(level)
+            val round = game(level = level).nextRound(360f, 520f)
+            assertEquals(tuning.circles, round.circles.size)
+            assertEquals(tuning.circles * tuning.timePerTargetMs, round.timeLimitMs)
+            assertEquals(TapTargetsTuning.DIAMETER_DP, round.diameterDp)
+        }
     }
 
     @Test
@@ -51,7 +43,7 @@ class TapTargetsTest {
         repeat(50) { seed ->
             val level = seed % 5 + 1
             val round = game(level = level, seed = seed).nextRound(360f, 520f)
-            assertEquals(TapTargetsTuning.CIRCLES, round.circles.size)
+            assertEquals(TapTargetsTuning.forLevel(level).circles, round.circles.size)
             val r = TapTargetsTuning.DIAMETER_DP / 2f
             round.circles.forEach {
                 assertTrue(it.xDp in r..(360f - r) && it.yDp in r..(520f - r))
@@ -78,7 +70,7 @@ class TapTargetsTest {
     @Test
     fun tinyArea_doesNotHang() {
         val round = game(level = 5).nextRound(40f, 40f)
-        assertEquals(TapTargetsTuning.CIRCLES, round.circles.size)
+        assertEquals(TapTargetsTuning.forLevel(5).circles, round.circles.size)
     }
 
     @Test
@@ -101,53 +93,37 @@ class TapTargetsTest {
     }
 
     @Test
-    fun failure_addsExtraRoundAndKeepsProgress() {
-        val g = game(rounds = 8)
-        repeat(3) { clear(g, g.nextRound(360f, 520f)) }
-        g.nextRound(360f, 520f)
-        g.expire()
-        assertEquals(3, g.solved)
-        assertEquals(9, g.total)
-        assertEquals(6, g.total - g.solved)
+    fun game_isDoneAfterClearingTheSingleRound() {
+        val g = game()
+        assertFalse(g.done)
+        clear(g, g.nextRound(360f, 520f))
+        assertTrue(g.done)
+        assertEquals(1, g.solved)
     }
 
     @Test
-    fun failure_extrasAreCappedAtConfiguredRounds() {
-        val g = game(rounds = 3)
+    fun failure_repeatsTheSameRoundUntilCleared() {
+        val g = game()
         repeat(10) {
             g.nextRound(360f, 520f)
             g.expire()
+            assertFalse(g.done)
         }
-        assertEquals(3, g.extras)
-        assertEquals(6, g.total)
-        assertFalse(g.done)
-    }
-
-    @Test
-    fun game_isDoneWhenAllPendingRoundsAreCleared() {
-        val g = game(rounds = 3)
-        g.nextRound(360f, 520f)
-        g.expire()
-        var rounds = 0
-        while (!g.done) {
-            clear(g, g.nextRound(360f, 520f))
-            rounds++
-        }
-        assertEquals(4, rounds)
-        assertEquals(4, g.solved)
+        assertEquals(0, g.solved)
+        clear(g, g.nextRound(360f, 520f))
+        assertTrue(g.done)
     }
 
     @Test
     fun expire_withoutActiveRoundDoesNothing() {
-        val g = game(rounds = 3)
+        val g = game()
         g.expire()
-        assertEquals(0, g.extras)
+        assertFalse(g.done)
     }
 
     @Test
-    fun challenge_generatesInstanceAccordingToParams() {
+    fun challenge_generatesInstanceFromLevelIgnoringLegacyParams() {
         val instance = TapTargetsChallenge().generate(4, """{"rounds":11}""", Random(1)) as TapTargetsInstance
-        assertEquals(11, instance.rounds)
         assertEquals(4, instance.level)
         assertEquals(TapTargetsChallenge.TYPE, instance.type)
     }
