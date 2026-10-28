@@ -186,8 +186,7 @@
     </plurals>
 
     <string name="challenge_type_rhythm">Ritmo</string>
-    <string name="challenge_rhythm_rounds">Rondas: %1$d</string>
-    <string name="challenge_rhythm_round">Ronda %1$d de %2$d</string>
+    <string name="challenge_rhythm_info">Una ronda: %1$d notas a %2$d BPM. La dificultad cambia la velocidad y la duración.</string>
     <string name="challenge_rhythm_failures">Fallos: %1$d de %2$d</string>
     <string name="challenge_rhythm_hint">Toca el carril cuando la nota llegue a la línea.</string>
     <string name="challenge_rhythm_restarted">Demasiados fallos: la ronda empieza de nuevo.</string>

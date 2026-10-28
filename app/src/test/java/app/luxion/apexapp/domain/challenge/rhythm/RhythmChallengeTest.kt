@@ -19,21 +19,18 @@ class RhythmChallengeTest {
     }
 
     @Test
-    fun `las rondas salen de los params y, si faltan, de la dificultad`() {
-        val params = RhythmParams.paramsFor(6)
-        assertEquals(6, (challenge.generate(1, params, Random(1)) as RhythmInstance).rounds)
-        assertEquals(6, (challenge.generate(5, params, Random(1)) as RhythmInstance).rounds)
-        assertEquals(RhythmParams.defaultRounds(3), (challenge.generate(3, "", Random(1)) as RhythmInstance).rounds)
-        assertEquals(RhythmParams.defaultRounds(5), (challenge.generate(5, "", Random(1)) as RhythmInstance).rounds)
+    fun `la dificultad cambia la velocidad y la duracion de la ronda unica`() {
+        val easy = challenge.generate(1, "", Random(1)) as RhythmInstance
+        val hard = challenge.generate(5, "", Random(1)) as RhythmInstance
+        assertTrue(hard.pace.bpm > easy.pace.bpm)
+        assertTrue(hard.pace.roundMs > easy.pace.roundMs)
     }
 
     @Test
-    fun `la dificultad acelera las notas sin cambiar las rondas`() {
-        val params = RhythmParams.paramsFor(4)
-        val easy = challenge.generate(1, params, Random(1)) as RhythmInstance
-        val hard = challenge.generate(5, params, Random(1)) as RhythmInstance
-        assertEquals(easy.rounds, hard.rounds)
-        assertTrue(hard.pace.bpm > easy.pace.bpm)
+    fun `los params antiguos con rondas se ignoran`() {
+        val old = challenge.generate(3, """{"rounds":5}""", Random(1)) as RhythmInstance
+        assertEquals(RhythmTuning.pace(3), old.pace)
+        assertEquals("rhythm", old.prompt)
     }
 
     @Test

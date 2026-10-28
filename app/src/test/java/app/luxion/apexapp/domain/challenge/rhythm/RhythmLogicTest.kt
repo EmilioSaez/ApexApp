@@ -9,30 +9,6 @@ import org.junit.Test
 class RhythmLogicTest {
     private val notes = listOf(RhythmNote(0, 1000), RhythmNote(1, 2000), RhythmNote(2, 3000))
 
-    @Test
-    fun `parametros ausentes, ilegibles o fuera de rango dan el defecto o se acotan`() {
-        val default = RhythmParams.defaultRounds(3)
-        assertEquals(default, RhythmParams.rounds("", 3))
-        assertEquals(default, RhythmParams.rounds("no json", 3))
-        assertEquals(default, RhythmParams.rounds("{}", 3))
-        assertEquals(RhythmParams.MAX_ROUNDS, RhythmParams.rounds("""{"rounds":99}""", 3))
-        assertEquals(RhythmParams.MIN_ROUNDS, RhythmParams.rounds("""{"rounds":0,"x":1}""", 3))
-    }
-
-    @Test
-    fun `sin params las rondas salen de la dificultad`() {
-        assertEquals(RhythmParams.DEFAULT_ROUNDS_BY_LEVEL, (1..5).map { RhythmParams.rounds("", it) })
-        assertTrue(RhythmParams.rounds("", 5) > RhythmParams.rounds("", 1))
-        assertEquals(RhythmParams.rounds("", 1), RhythmParams.rounds("", -3))
-        assertEquals(RhythmParams.rounds("", 5), RhythmParams.rounds("", 99))
-    }
-
-    @Test
-    fun `los parametros hacen ida y vuelta`() {
-        assertEquals(6, RhythmParams.rounds(RhythmParams.paramsFor(6), 3))
-        assertEquals(RhythmParams.MAX_ROUNDS, RhythmParams.rounds(RhythmParams.paramsFor(50), 3))
-    }
-
     private val pace = RhythmTuning.pace(3)
 
     @Test
@@ -59,11 +35,17 @@ class RhythmLogicTest {
     }
 
     @Test
-    fun `la duracion de la ronda es la misma en todos los niveles`() {
+    fun `mas dificultad es una ronda mas larga`() {
+        val rounds = (1..5).map { RhythmTuning.pace(it).roundMs }
+        assertTrue(rounds.zipWithNext().all { (a, b) -> b > a })
+    }
+
+    @Test
+    fun `la ronda dura aproximadamente lo previsto en cada nivel`() {
         (1..5).forEach { level ->
             val p = RhythmTuning.pace(level)
             val end = RhythmPattern.generate(Random(1), p).last().timeMs + p.noteSpacingMs
-            assertTrue("nivel $level: $end", kotlin.math.abs(end - RhythmTuning.ROUND_MS) <= p.noteSpacingMs / 2)
+            assertTrue("nivel $level: $end", kotlin.math.abs(end - p.roundMs) <= p.noteSpacingMs / 2)
         }
     }
 
