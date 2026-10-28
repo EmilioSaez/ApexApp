@@ -3,47 +3,25 @@ package app.luxion.apexapp.domain.challenge.touch
 import app.luxion.apexapp.domain.challenge.SessionConfig
 import kotlin.math.hypot
 import kotlin.random.Random
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 
-/** Lectura y escritura de `ChallengeSpec.params` de Tocar objetivos: solo el número de rondas. */
-object TapTargetsParams {
-    const val MIN_ROUNDS = 3
-    const val MAX_ROUNDS = 15
-    const val DEFAULT_ROUNDS = 8
-
-    @Serializable
-    private data class Stored(val rounds: Int = DEFAULT_ROUNDS)
-
-    private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
-
-    /** Rondas de [params]; ausente o inválido da el valor por defecto y fuera de rango se acota. */
-    fun rounds(params: String): Int =
-        runCatching { json.decodeFromString<Stored>(params).rounds }.getOrDefault(DEFAULT_ROUNDS)
-            .coerceIn(MIN_ROUNDS, MAX_ROUNDS)
-
-    fun paramsFor(rounds: Int): String = json.encodeToString(Stored(rounds.coerceIn(MIN_ROUNDS, MAX_ROUNDS)))
+/** Exigencia de un nivel: cuántos círculos hay y el tiempo para tocar cada uno (la ronda dura su producto). */
+data class TapTargetsLevel(val circles: Int, val timePerTargetMs: Long) {
+    val roundMs: Long get() = circles * timePerTargetMs
 }
-
-/** Exigencia de un nivel: solo cambia el tiempo que hay para tocar cada círculo. */
-data class TapTargetsLevel(val timePerTargetMs: Long)
 
 /** Tabla única de calibración, por nivel de dificultad (índice 0 = nivel 1). */
 object TapTargetsTuning {
-    /** Círculos por ronda y tamaño: no dependen de la dificultad. */
-    const val CIRCLES = 3
     const val DIAMETER_DP = 56
 
     val BY_LEVEL: List<TapTargetsLevel> = listOf(
-        TapTargetsLevel(timePerTargetMs = 1_600),
-        TapTargetsLevel(timePerTargetMs = 1_300),
-        TapTargetsLevel(timePerTargetMs = 1_000),
-        TapTargetsLevel(timePerTargetMs = 800),
-        TapTargetsLevel(timePerTargetMs = 650),
+        TapTargetsLevel(circles = 3, timePerTargetMs = 1_600),
+        TapTargetsLevel(circles = 4, timePerTargetMs = 1_300),
+        TapTargetsLevel(circles = 5, timePerTargetMs = 1_000),
+        TapTargetsLevel(circles = 6, timePerTargetMs = 800),
+        TapTargetsLevel(circles = 7, timePerTargetMs = 650),
     )
 
-    /** Pausa aleatoria entre rondas. */
+    /** Pausa aleatoria antes de cada intento. */
     const val GAP_MIN_MS = 600L
     const val GAP_MAX_MS = 1_200L
 
@@ -69,24 +47,19 @@ data class TapRound(
 enum class TapResult { MISS, HIT, ROUND_CLEARED }
 
 /**
- * Estado puro del juego. Una ronda fallida no cuenta y añade una ronda extra mientras haya menos extras que
- * rondas configuradas; superado el tope se repite sin crecer. Nunca se pierden rondas ya superadas. El tiempo
- * lo controla quien lo usa: llama a [expire] cuando vence el plazo de la ronda.
+ * Estado puro del juego: una única ronda con los círculos del nivel. Si vence el plazo se repite con posiciones
+ * nuevas hasta superarla. El tiempo lo controla quien lo usa: llama a [expire] cuando vence el plazo.
  */
 class TapTargetsGame(
-    private val rounds: Int,
     level: Int,
     private val random: Random,
 ) {
-    private val timeLimitMs = TapTargetsTuning.forLevel(level).timePerTargetMs * TapTargetsTuning.CIRCLES
+    private val config = TapTargetsTuning.forLevel(level)
 
     var solved = 0
         private set
-    var extras = 0
-        private set
 
-    val total: Int get() = rounds + extras
-    val done: Boolean get() = solved >= total
+    val done: Boolean get() = solved >= 1
 
     private var current: TapRound? = null
     private val hit = mutableSetOf<Int>()
@@ -94,12 +67,12 @@ class TapTargetsGame(
     /** Índices de los círculos ya tocados en la ronda en curso. */
     val hitCircles: Set<Int> get() = hit
 
-    /** Genera la ronda siguiente (o la repetición de la fallida) con posiciones nuevas. */
+    /** Genera la ronda (o la repetición de la fallida) con posiciones nuevas. */
     fun nextRound(areaWidthDp: Float, areaHeightDp: Float): TapRound {
         val radius = TapTargetsTuning.DIAMETER_DP / 2f
         val circles = ArrayList<Circle>()
         var attempts = 0
-        while (circles.size < TapTargetsTuning.CIRCLES) {
+        while (circles.size < config.circles) {
             val candidate = Circle(
                 xDp = randomIn(radius, areaWidthDp - radius),
                 yDp = randomIn(radius, areaHeightDp - radius),
@@ -113,7 +86,7 @@ class TapTargetsGame(
         val round = TapRound(
             circles = circles,
             diameterDp = TapTargetsTuning.DIAMETER_DP,
-            timeLimitMs = timeLimitMs,
+            timeLimitMs = config.roundMs,
             gapMs = random.nextLong(TapTargetsTuning.GAP_MIN_MS, TapTargetsTuning.GAP_MAX_MS + 1),
         )
         current = round
@@ -134,11 +107,9 @@ class TapTargetsGame(
         return TapResult.ROUND_CLEARED
     }
 
-    /** Venció el plazo de la ronda en curso: no cuenta y se añade una ronda extra si hay tope libre. */
+    /** Venció el plazo de la ronda en curso: no cuenta y habrá que repetirla. */
     fun expire() {
-        if (current == null) return
         current = null
-        if (extras < rounds) extras++
     }
 
     private fun randomIn(min: Float, max: Float): Float =
