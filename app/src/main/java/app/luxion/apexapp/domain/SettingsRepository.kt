@@ -7,4 +7,6 @@ interface SettingsRepository {
     suspend fun setThemeMode(mode: ThemeMode)
     fun observeCustomThemeColors(): Flow<CustomThemeColors>
     suspend fun setCustomThemeColors(colors: CustomThemeColors)
+    fun observeAppIcon(): Flow<AppIconVariant>
+    suspend fun setAppIcon(variant: AppIconVariant)
 }

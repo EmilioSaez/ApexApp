@@ -49,6 +49,13 @@
     <string name="settings_color_brightness">Brillo</string>
     <string name="settings_color_apply">Aplicar</string>
     <string name="settings_color_cancel">Cancelar</string>
+    <string name="settings_icon_themed">Icono de la app</string>
+    <string name="settings_icon_suggested">Variante más cercana a tu color primario</string>
+    <string name="settings_icon_applied">Aplicado</string>
+    <string name="settings_icon_apply">Aplicar</string>
+    <string name="settings_icon_original">Icono original</string>
+    <string name="settings_icon_restore">Restaurar</string>
+    <string name="settings_icon_note">El launcher puede tardar unos segundos en mostrar el cambio y, en algunos móviles, la app se cierra al aplicarlo.</string>
     <string name="settings_section_language">Idioma</string>
     <string name="settings_language_system">Sistema</string>
     <string name="settings_language_es">Español</string>

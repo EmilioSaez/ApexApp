@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.luxion.apexapp.domain.AppIconVariant
+import app.luxion.apexapp.domain.ApplyAppIcon
 import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.SettingsRepository
 import app.luxion.apexapp.domain.ThemeMode
@@ -27,6 +29,7 @@ enum class AppLanguage(val tag: String) {
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settings: SettingsRepository,
+    private val applyAppIcon: ApplyAppIcon,
 ) : ViewModel() {
 
     val themeMode: StateFlow<ThemeMode> = settings.observeThemeMode()
@@ -34,6 +37,9 @@ class SettingsViewModel @Inject constructor(
 
     val customColors: StateFlow<CustomThemeColors> = settings.observeCustomThemeColors()
         .stateIn(viewModelScope, SharingStarted.Eagerly, CustomThemeColors.Default)
+
+    val appIcon: StateFlow<AppIconVariant> = settings.observeAppIcon()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, AppIconVariant.DEFAULT)
 
     private val _language =MutableStateFlow(
         AppLanguage.fromTags(AppCompatDelegate.getApplicationLocales().toLanguageTags()),
@@ -46,6 +52,10 @@ class SettingsViewModel @Inject constructor(
 
     fun setCustomColors(colors: CustomThemeColors) {
         viewModelScope.launch { settings.setCustomThemeColors(colors) }
+    }
+
+    fun setAppIcon(variant: AppIconVariant) {
+        viewModelScope.launch { applyAppIcon(variant) }
     }
 
     fun setLanguage(language: AppLanguage) {

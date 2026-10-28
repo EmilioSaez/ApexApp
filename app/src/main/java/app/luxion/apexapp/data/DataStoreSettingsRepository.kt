@@ -5,6 +5,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import app.luxion.apexapp.domain.AppIconVariant
 import app.luxion.apexapp.domain.CustomThemeColors
 import app.luxion.apexapp.domain.SettingsRepository
 import app.luxion.apexapp.domain.ThemeMode
@@ -38,7 +39,16 @@ class DataStoreSettingsRepository @Inject constructor(
         }
     }
 
+    override fun observeAppIcon(): Flow<AppIconVariant> = store.data.map { prefs ->
+        prefs[APP_ICON]?.let { name -> AppIconVariant.entries.firstOrNull { it.name == name } } ?: AppIconVariant.DEFAULT
+    }
+
+    override suspend fun setAppIcon(variant: AppIconVariant) {
+        store.edit { it[APP_ICON] = variant.name }
+    }
+
     private companion object {
+        val APP_ICON = stringPreferencesKey("app_icon")
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val CUSTOM_PRIMARY = intPreferencesKey("theme_custom_primary")
         val CUSTOM_SECONDARY = intPreferencesKey("theme_custom_secondary")
