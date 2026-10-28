@@ -185,8 +185,7 @@
     </plurals>
 
     <string name="challenge_type_rhythm">Rhythm</string>
-    <string name="challenge_rhythm_rounds">Rounds: %1$d</string>
-    <string name="challenge_rhythm_round">Round %1$d of %2$d</string>
+    <string name="challenge_rhythm_info">One round: %1$d notes at %2$d BPM. Difficulty changes the speed and the length.</string>
     <string name="challenge_rhythm_failures">Misses: %1$d of %2$d</string>
     <string name="challenge_rhythm_hint">Tap the lane when the note reaches the line.</string>
     <string name="challenge_rhythm_restarted">Too many misses: the round starts over.</string>

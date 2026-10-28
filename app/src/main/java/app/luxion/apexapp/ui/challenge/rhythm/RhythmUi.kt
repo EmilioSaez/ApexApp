@@ -6,12 +6,10 @@ import android.view.MotionEvent
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -22,7 +20,6 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameMillis
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.CornerRadius
@@ -39,7 +36,6 @@ import app.luxion.apexapp.domain.challenge.ChallengeInstance
 import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.rhythm.RhythmChallenge
 import app.luxion.apexapp.domain.challenge.rhythm.RhythmInstance
-import app.luxion.apexapp.domain.challenge.rhythm.RhythmParams
 import app.luxion.apexapp.domain.challenge.rhythm.RhythmPattern
 import app.luxion.apexapp.domain.challenge.rhythm.RhythmRound
 import app.luxion.apexapp.domain.challenge.rhythm.RhythmTuning
@@ -70,26 +66,20 @@ class RhythmRenderer @Inject constructor() : ChallengeRenderer {
     }
 }
 
-/** Selector del número de rondas, entre [RhythmParams.MIN_ROUNDS] y [RhythmParams.MAX_ROUNDS]. */
+/** Editor del reto de ritmo: la velocidad y la duración salen de la dificultad, aquí solo se muestran. */
 class RhythmParamsEditor @Inject constructor() : ChallengeParamsEditor {
     override val type: ChallengeType = RhythmChallenge.TYPE
 
     @Composable
     override fun Content(params: String, difficulty: Int, onChange: (String) -> Unit) {
-        val rounds = RhythmParams.rounds(params, difficulty)
+        val pace = RhythmTuning.pace(difficulty)
         Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
             Text(stringResource(R.string.challenge_type_rhythm), style = MaterialTheme.typography.titleSmall)
-            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg)) {
-                OutlinedIconButton(
-                    onClick = { onChange(RhythmParams.paramsFor(rounds - 1)) },
-                    enabled = rounds > RhythmParams.MIN_ROUNDS,
-                ) { Text("-") }
-                Text(stringResource(R.string.challenge_rhythm_rounds, rounds), style = MaterialTheme.typography.titleMedium)
-                OutlinedIconButton(
-                    onClick = { onChange(RhythmParams.paramsFor(rounds + 1)) },
-                    enabled = rounds < RhythmParams.MAX_ROUNDS,
-                ) { Text("+") }
-            }
+            Text(
+                stringResource(R.string.challenge_rhythm_info, pace.notesPerRound, pace.bpm),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
@@ -99,10 +89,8 @@ class RhythmParamsEditor @Inject constructor() : ChallengeParamsEditor {
 private fun RhythmGame(instance: RhythmInstance, onCleared: () -> Unit) {
     val plausibility = rememberTouchPlausibility()
     val random = remember(instance) { Random(instance.seed) }
-    var roundNumber by remember(instance) { mutableIntStateOf(1) }
     var attempt by remember(instance) { mutableIntStateOf(0) }
-    var restartedRound by remember(instance) { mutableIntStateOf(0) }
-    val round = remember(instance, roundNumber, attempt) { RhythmRound(RhythmPattern.generate(random, instance.pace)) }
+    val round = remember(instance, attempt) { RhythmRound(RhythmPattern.generate(random, instance.pace)) }
     var startMs by remember(round) { mutableLongStateOf(0L) }
     // Se lee al dibujar: cada fotograma y cada toque lo actualizan y provocan la recomposición.
     var elapsed by remember(round) { mutableLongStateOf(0L) }
@@ -122,11 +110,8 @@ private fun RhythmGame(instance: RhythmInstance, onCleared: () -> Unit) {
             }
         }
         when (round.status) {
-            RhythmRound.Status.CLEARED -> if (roundNumber >= instance.rounds) onCleared() else roundNumber++
-            RhythmRound.Status.RESTART -> {
-                restartedRound = roundNumber
-                attempt++
-            }
+            RhythmRound.Status.CLEARED -> onCleared()
+            RhythmRound.Status.RESTART -> attempt++
             RhythmRound.Status.PLAYING -> Unit
         }
     }
@@ -137,21 +122,13 @@ private fun RhythmGame(instance: RhythmInstance, onCleared: () -> Unit) {
     val lineColor = MaterialTheme.colorScheme.outline
 
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(
-                stringResource(R.string.challenge_rhythm_round, roundNumber, instance.rounds),
-                style = MaterialTheme.typography.titleMedium,
-            )
-            Text(
-                stringResource(R.string.challenge_rhythm_failures, round.failures, RhythmTuning.MAX_FAILURES),
-                style = MaterialTheme.typography.titleMedium,
-                color = if (round.failures > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
         Text(
-            stringResource(
-                if (restartedRound == roundNumber) R.string.challenge_rhythm_restarted else R.string.challenge_rhythm_hint,
-            ),
+            stringResource(R.string.challenge_rhythm_failures, round.failures, RhythmTuning.MAX_FAILURES),
+            style = MaterialTheme.typography.titleMedium,
+            color = if (round.failures > 0) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Text(
+            stringResource(if (attempt > 0) R.string.challenge_rhythm_restarted else R.string.challenge_rhythm_hint),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
