@@ -33,4 +33,7 @@ data class AlarmEntity(
     @ColumnInfo(defaultValue = "{}") val soundJson: String = "{}",
     /** JSON de `AntiCheatPolicy`. */
     @ColumnInfo(defaultValue = "{}") val antiCheatJson: String = "{}",
+    /** Silencio durante los retos (change mute-during-challenges). */
+    @ColumnInfo(defaultValue = "0") val muteDuringChallenges: Boolean = false,
+    @ColumnInfo(defaultValue = "30") val muteInactivitySeconds: Int = 30,
 )

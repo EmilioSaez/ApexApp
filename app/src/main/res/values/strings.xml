@@ -264,6 +264,13 @@
     <string name="sound_preview_stop">Detener prueba</string>
     <string name="sound_ramp_off">Volumen progresivo: desactivado</string>
     <string name="sound_ramp_seconds">Volumen progresivo: %1$d s</string>
+    <string name="mute_section">Mientras resuelves los retos</string>
+    <string name="mute_toggle">No sonar mientras resuelvo</string>
+    <string name="mute_hint">La alarma calla mientras tocas la pantalla y vuelve a sonar si dejas de hacerlo.</string>
+    <string name="mute_inactivity">Vuelve a sonar tras</string>
+    <string name="mute_inactivity_hint">Sin tocar la pantalla durante ese tiempo.</string>
+    <string name="mute_inactivity_seconds">%1$d s</string>
+    <string name="mute_inactivity_minutes">%1$d min</string>
     <string name="sound_section">Sonido</string>
     <string name="sound_use_default">Por defecto</string>
     <string name="speech_time">Son las %1$s</string>

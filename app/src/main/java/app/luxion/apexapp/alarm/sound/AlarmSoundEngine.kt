@@ -31,9 +31,13 @@ class AlarmSoundEngine(
     private var session: Job? = null
     private var rampGain = 1f
     private var ducked = false
+    private var muted = false
+    private var alarm: Alarm? = null
+    private var speech: Job? = null
 
     fun start(alarm: Alarm) {
         stop()
+        this.alarm = alarm
         _playing.value = true
         session = scope.launch {
             val config = alarm.soundConfig
@@ -44,7 +48,29 @@ class AlarmSoundEngine(
             if (config.vibrate) vibrator.start(config.vibrationPattern)
             if (config.rampSeconds > 0) launch { runRamp(config.rampSeconds, ceiling) }
             if (SpeechScript.build(config, LocalTime.now(clock), announcer::announce).isNotEmpty()) {
-                launch { runSpeech(alarm) }
+                speech = launch { runSpeech(alarm) }
+            }
+        }
+    }
+
+    /**
+     * Silencia o reactiva sonido, vibración y voz sin tocar el volumen del stream de alarma (el bloqueo
+     * de volumen sigue intacto). El tono sigue en bucle con ganancia 0 para reactivarse al instante.
+     */
+    fun setMuted(muted: Boolean) {
+        val active = alarm ?: return
+        if (this.muted == muted) return
+        this.muted = muted
+        tone.setGain(currentGain())
+        val config = active.soundConfig
+        if (muted) {
+            vibrator.stop()
+            speech?.cancel()
+            speaker.stop()
+        } else {
+            if (config.vibrate) vibrator.start(config.vibrationPattern)
+            if (SpeechScript.build(config, LocalTime.now(clock), announcer::announce).isNotEmpty()) {
+                speech = scope.launch { runSpeech(active) }
             }
         }
     }
@@ -52,6 +78,10 @@ class AlarmSoundEngine(
     fun stop() {
         session?.cancel()
         session = null
+        speech?.cancel()
+        speech = null
+        alarm = null
+        muted = false
         tone.stop()
         vibrator.stop()
         speaker.stop()
@@ -97,7 +127,11 @@ class AlarmSoundEngine(
         }
     }
 
-    private fun currentGain(): Float = if (ducked) rampGain * DUCK_FACTOR else rampGain
+    private fun currentGain(): Float = when {
+        muted -> 0f
+        ducked -> rampGain * DUCK_FACTOR
+        else -> rampGain
+    }
 
     companion object {
         const val RAMP_STEP_MS = 250L

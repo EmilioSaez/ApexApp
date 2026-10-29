@@ -263,6 +263,13 @@
     <string name="sound_preview_stop">Stop test</string>
     <string name="sound_ramp_off">Gradual volume: off</string>
     <string name="sound_ramp_seconds">Gradual volume: %1$d s</string>
+    <string name="mute_section">While you solve the challenges</string>
+    <string name="mute_toggle">No ringing while I solve</string>
+    <string name="mute_hint">The alarm goes quiet while you touch the screen and rings again if you stop.</string>
+    <string name="mute_inactivity">Rings again after</string>
+    <string name="mute_inactivity_hint">Without touching the screen for that long.</string>
+    <string name="mute_inactivity_seconds">%1$d s</string>
+    <string name="mute_inactivity_minutes">%1$d min</string>
     <string name="sound_section">Sound</string>
     <string name="sound_use_default">Default</string>
     <string name="speech_time">It is %1$s</string>

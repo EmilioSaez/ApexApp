@@ -226,4 +226,68 @@ class AlarmSoundEngineTest {
         assertEquals(gainsAtStop, tone.gains.size)
         assertEquals(spokenAtStop, speaker.spoken.size)
     }
+
+    @Test
+    fun mute_silencesToneVibrationAndSpeech_andUnmuteRestoresThem() = runTest {
+        val tone = FakeTone()
+        val vibrator = FakeVibrator()
+        val speaker = FakeSpeaker()
+        val engine = engine(tone, vibrator, speaker)
+        val config = SoundConfig(volume = 80, rampSeconds = 0, ttsEnabled = true, ttsText = "Arriba", speakRepeatSeconds = 20)
+        engine.start(alarm(config))
+        runCurrent()
+        val vibrationStops = vibrator.stops
+
+        engine.setMuted(true)
+        assertEquals(0f, tone.gains.last(), 0.001f)
+        assertEquals(vibrationStops + 1, vibrator.stops)
+        val spokenWhileMuted = speaker.spoken.size
+        advanceTimeBy(60_000)
+        runCurrent()
+        assertEquals(spokenWhileMuted, speaker.spoken.size)
+        assertEquals(0f, tone.gains.last(), 0.001f)
+
+        engine.setMuted(false)
+        runCurrent()
+        assertEquals(0.8f, tone.gains.last(), 0.001f)
+        assertEquals(2, vibrator.patterns.size)
+        assertTrue(speaker.spoken.size > spokenWhileMuted)
+    }
+
+    @Test
+    fun mute_keepsRampRunningInSilence() = runTest {
+        val tone = FakeTone()
+        val engine = engine(tone)
+        engine.start(alarm(SoundConfig(volume = 100, rampSeconds = 4)))
+        runCurrent()
+        engine.setMuted(true)
+        advanceTimeBy(10_000)
+        runCurrent()
+        assertEquals(0f, tone.gains.last(), 0.001f)
+
+        engine.setMuted(false)
+        assertEquals(1f, tone.gains.last(), 0.001f)
+    }
+
+    @Test
+    fun restart_startsUnmuted() = runTest {
+        val tone = FakeTone()
+        val engine = engine(tone)
+        engine.start(alarm(SoundConfig(rampSeconds = 0)))
+        runCurrent()
+        engine.setMuted(true)
+        engine.start(alarm(SoundConfig(rampSeconds = 0)))
+        runCurrent()
+        assertEquals(1f, tone.gains.last(), 0.001f)
+    }
+
+    @Test
+    fun mute_withoutRingingIsIgnored() = runTest {
+        val tone = FakeTone()
+        val engine = engine(tone)
+        engine.setMuted(true)
+        engine.start(alarm(SoundConfig(rampSeconds = 0)))
+        runCurrent()
+        assertEquals(1f, tone.gains.last(), 0.001f)
+    }
 }

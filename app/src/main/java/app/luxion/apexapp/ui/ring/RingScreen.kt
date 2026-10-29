@@ -25,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -63,6 +65,7 @@ fun RingScreen(
             onSnooze = viewModel::snooze,
             snoozesLeft = state.snoozesLeft,
             antiCheat = antiCheat,
+            onInteraction = viewModel::onChallengeInteraction,
         )
     }
 }
@@ -78,8 +81,10 @@ fun RingChallenges(
     onSnooze: () -> Unit,
     snoozesLeft: Int? = null,
     antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
+    /** Cada toque o respuesta en los retos; alimenta el silencio mientras se resuelven. */
+    onInteraction: () -> Unit = {},
 ) {
-    Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
+    Scaffold(modifier = Modifier.fillMaxSize().observeTouches(onInteraction)) { padding ->
         Column(Modifier.fillMaxSize().padding(padding)) {
             RingChallengeHeader(alarm)
             ChallengeSessionScreen(
@@ -89,7 +94,8 @@ fun RingChallenges(
                 modifier = Modifier.weight(1f),
                 alarmId = alarm.id,
                 antiCheat = antiCheat,
-                )
+                onProgress = onInteraction,
+            )
             SnoozeActions(
                 alarm,
                 canSnooze,
@@ -97,6 +103,16 @@ fun RingChallenges(
                 snoozesLeft,
                 Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen).padding(bottom = ApexTheme.spacing.xl),
             )
+        }
+    }
+}
+
+/** Avisa de cada pulsación o movimiento de dedo sin consumir el evento (pasada `Initial`). */
+private fun Modifier.observeTouches(onTouch: () -> Unit): Modifier = pointerInput(onTouch) {
+    awaitPointerEventScope {
+        while (true) {
+            val event = awaitPointerEvent(PointerEventPass.Initial)
+            if (event.changes.any { it.pressed }) onTouch()
         }
     }
 }

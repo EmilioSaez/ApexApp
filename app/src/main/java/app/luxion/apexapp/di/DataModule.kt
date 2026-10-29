@@ -14,6 +14,7 @@ import app.luxion.apexapp.data.local.MIGRATION_1_2
 import app.luxion.apexapp.data.local.MIGRATION_2_3
 import app.luxion.apexapp.data.local.MIGRATION_3_4
 import app.luxion.apexapp.data.local.MIGRATION_4_5
+import app.luxion.apexapp.data.local.MIGRATION_5_6
 import app.luxion.apexapp.data.local.SleepDao
 import app.luxion.apexapp.data.local.SoundDao
 import app.luxion.apexapp.data.local.WakeEventDao
@@ -42,7 +43,7 @@ object DatabaseModule {
     @Singleton
     fun database(@ApplicationContext context: Context): ApexDatabase =
         Room.databaseBuilder(context, ApexDatabase::class.java, "apex.db")
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
             .build()
 
     @Provides
