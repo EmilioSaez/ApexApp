@@ -8,12 +8,13 @@
 
 ## 2. UI
 
-- [ ] 2.1 `ShapeSequenceRenderer`: fase de muestra (una forma cada vez), fase de elección con paleta, bloqueo de toques durante la muestra y aviso de fallo
-- [ ] 2.2 `ShapeSequenceParamsEditor` (solo información de dificultad, sin parámetros propios)
-- [ ] 2.3 Bindings en `ChallengeModule` y etiquetas en `ChallengeLabels` e `ImportScreen`
-- [ ] 2.4 Strings es/en (nombre, aviso de fallo, nombres de forma para accesibilidad, info de dificultad)
+- [x] 2.1 `ShapeSequenceRenderer`: fase de muestra (una forma cada vez), fase de elección con paleta, bloqueo de toques durante la muestra y aviso de fallo
+- [x] 2.2 `ShapeSequenceParamsEditor` (solo información de dificultad, sin parámetros propios)
+- [x] 2.3 Bindings en `ChallengeModule` y etiquetas en `ChallengeLabels` e `ImportScreen`
+- [x] 2.4 Strings es/en (nombre, aviso de fallo, nombres de forma para accesibilidad, info de dificultad)
 
 ## 3. Verificación
 
 - [x] 3.1 Test de sesión: el reto aparece en el registro y una sesión con formas termina
-- [ ] 3.2 `./gradlew test assembleDebug` y prueba manual en emulador (muestra, fallo, éxito)
+- [x] 3.2 `./gradlew test assembleDebug`
+- [ ] 3.3 Prueba manual en emulador (muestra, fallo, éxito)

@@ -209,6 +209,23 @@
         <item quantity="other">Sequence at this difficulty: %d cells</item>
     </plurals>
 
+    <string name="challenge_type_shapes">Shape sequence</string>
+    <string name="challenge_shapes_watch">Memorize the shapes</string>
+    <string name="challenge_shapes_repeat">Pick them in the same order</string>
+    <string name="challenge_shapes_wrong">Wrong order. Watch again.</string>
+    <string name="challenge_shapes_showing">Shape: %s</string>
+    <string name="challenge_shapes_stage_wait">Waiting for the next shape</string>
+    <string name="challenge_shapes_stage_ready">Pick the shapes in order</string>
+    <string name="challenge_shape_circle">Circle</string>
+    <string name="challenge_shape_square">Square</string>
+    <string name="challenge_shape_triangle">Triangle</string>
+    <string name="challenge_shape_star">Star</string>
+    <string name="challenge_shape_diamond">Diamond</string>
+    <plurals name="challenge_target_info_shapes">
+        <item quantity="one">Sequence at this difficulty: %1$d shape out of %2$d different</item>
+        <item quantity="other">Sequence at this difficulty: %1$d shapes out of %2$d different</item>
+    </plurals>
+
     <string name="challenge_type_rhythm">Rhythm</string>
     <string name="challenge_rhythm_info">One round: %1$d notes at %2$d BPM. Difficulty changes the speed and the length.</string>
     <string name="challenge_rhythm_failures">Misses: %1$d of %2$d</string>
