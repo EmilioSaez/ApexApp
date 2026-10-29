@@ -13,6 +13,8 @@ data class Alarm(
     val challenges: ChallengeConfig = ChallengeConfig(),
     val soundConfig: SoundConfig = SoundConfig(),
     val antiCheat: AntiCheatPolicy = AntiCheatPolicy(),
+    /** Tras resolver la alarma, comprueba que el usuario sigue despierto (ver `AwakeVerifier`). */
+    val awakeVerification: Boolean = false,
 ) {
     init {
         require(hour in 0..23) { "hour must be in 0..23" }

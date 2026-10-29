@@ -33,4 +33,6 @@ data class AlarmEntity(
     @ColumnInfo(defaultValue = "{}") val soundJson: String = "{}",
     /** JSON de `AntiCheatPolicy`. */
     @ColumnInfo(defaultValue = "{}") val antiCheatJson: String = "{}",
+    /** Verificar que el usuario sigue despierto tras apagar la alarma. */
+    @ColumnInfo(defaultValue = "0") val awakeVerificationEnabled: Boolean = false,
 )

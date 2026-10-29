@@ -41,6 +41,14 @@ class AlarmConfigMappingTest {
     }
 
     @Test
+    fun awakeVerification_isOffByDefault_andRoundTrips() {
+        assertEquals(false, Alarm(hour = 7, minute = 0).awakeVerification)
+        val alarm = Alarm(id = 2, hour = 7, minute = 0, awakeVerification = true)
+        assertEquals(true, alarm.toEntity().awakeVerificationEnabled)
+        assertEquals(alarm, alarm.toEntity().toDomain())
+    }
+
+    @Test
     fun emptyJson_decodesToDefaults() {
         val entity = AlarmEntity(id = 1, hour = 7, minute = 0, repeatMask = 0, enabled = true, label = null, soundId = null)
         assertEquals(Alarm(id = 1, hour = 7, minute = 0), entity.toDomain())

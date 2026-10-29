@@ -47,6 +47,7 @@ internal fun AlarmEntity.toDomain() = Alarm(
     challenges = decodeConfig(challengesJson, ChallengeConfig()).withoutRemovedTypes(),
     soundConfig = decodeConfig(soundJson, SoundConfig()),
     antiCheat = decodeConfig(antiCheatJson, AntiCheatPolicy()),
+    awakeVerification = awakeVerificationEnabled,
 )
 
 internal fun Alarm.toEntity() = AlarmEntity(
@@ -60,6 +61,7 @@ internal fun Alarm.toEntity() = AlarmEntity(
     challengesJson = ConfigJson.encodeToString(challenges),
     soundJson = ConfigJson.encodeToString(soundConfig),
     antiCheatJson = ConfigJson.encodeToString(antiCheat),
+    awakeVerificationEnabled = awakeVerification,
 )
 
 internal fun SoundEntity.toDomain() = Sound(

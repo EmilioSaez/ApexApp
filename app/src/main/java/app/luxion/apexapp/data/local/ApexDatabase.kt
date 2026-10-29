@@ -15,7 +15,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SleepPreferencesEntity::class,
         AdaptiveSettingsEntity::class,
     ],
-    version = 5,
+    version = 8,
     exportSchema = true,
 )
 abstract class ApexDatabase : RoomDatabase() {
@@ -80,5 +80,12 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
                 "`lastChangeSessionId` TEXT, `noticePending` INTEGER NOT NULL, PRIMARY KEY(`alarmId`), " +
                 "FOREIGN KEY(`alarmId`) REFERENCES `alarms`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)",
         )
+    }
+}
+
+/** v7 → v8: verificar que el usuario sigue despierto tras apagar la alarma (columna aditiva). */
+val MIGRATION_7_8 = object : Migration(7, 8) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE alarms ADD COLUMN awakeVerificationEnabled INTEGER NOT NULL DEFAULT 0")
     }
 }
