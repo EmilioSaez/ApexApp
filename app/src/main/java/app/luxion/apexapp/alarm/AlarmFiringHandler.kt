@@ -41,7 +41,7 @@ class AlarmFiringHandler @Inject constructor(
     private val fireState: FireStateRepository,
     private val clock: Clock,
     private val recorder: WakeEventRecorder,
-) {
+) : RingAgain {
     /**
      * Devuelve la sesión iniciada, o `null` si no hay nada que sonar (alarma inexistente, inactiva
      * o ya sonando). Con [sessionId] (re-disparo de un snooze) se reutiliza la sesión y no se
@@ -59,11 +59,7 @@ class AlarmFiringHandler @Inject constructor(
         val session = RingingSession(sessionId ?: sessionIds.next(), alarm)
         if (!registry.tryBegin(session)) return null
 
-        // Primero el sonado: lo que venga después no debe poder impedirlo.
-        if (!launcher.start(session)) {
-            registry.end(session.sessionId)
-            notifier.notify(alarm, session.sessionId)
-        }
+        startRinging(session)
         // El registro nunca debe impedir ni retrasar el sonado ni la reprogramación.
         if (!isTest && sessionId == null) {
             runCatching {
@@ -84,5 +80,35 @@ class AlarmFiringHandler @Inject constructor(
             }
         }
         return session
+    }
+
+    /**
+     * Vuelve a sonar una alarma en una sesión nueva (verificación de despierto): igual que un disparo
+     * normal, pero sin reprogramar ni desactivar la alarma y sin exigir que siga activa.
+     */
+    override suspend fun ringAgain(alarmId: Long): RingingSession? {
+        val alarm = repository.get(alarmId) ?: return null
+        val session = RingingSession(sessionIds.next(), alarm)
+        if (!registry.tryBegin(session)) return null
+        startRinging(session)
+        val now = clock.millis()
+        runCatching {
+            recorder.record(
+                sessionId = session.sessionId,
+                type = WakeEventType.RANG,
+                alarmId = alarm.id,
+                timestamp = now,
+                scheduledAt = now,
+            )
+        }
+        return session
+    }
+
+    // Primero el sonado: lo que venga después no debe poder impedirlo.
+    private fun startRinging(session: RingingSession) {
+        if (!launcher.start(session)) {
+            registry.end(session.sessionId)
+            notifier.notify(session.alarm, session.sessionId)
+        }
     }
 }

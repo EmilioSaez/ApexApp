@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Opción por alarma
-El sistema SHALL ofrecer en cada alarma la opción «Verificar que estoy despierto», desactivada por defecto, que se guarda y se comparte como el resto de la configuración de la alarma.
+El sistema SHALL ofrecer en cada alarma la opción «Verificar que estoy despierto», desactivada por defecto, que se guarda con el resto de la configuración de la alarma.
 
 #### Scenario: Valor por defecto
 - **WHEN** se crea una alarma nueva

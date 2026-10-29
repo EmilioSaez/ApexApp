@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class BootReceiver : BroadcastReceiver() {
     @Inject lateinit var controller: AlarmController
+    @Inject lateinit var awakeVerifier: AwakeVerifier
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action !in RESCHEDULE_ACTIONS) return
@@ -21,6 +22,7 @@ class BootReceiver : BroadcastReceiver() {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 controller.rescheduleAll()
+                awakeVerifier.restoreAll()
             } finally {
                 pending.finish()
             }

@@ -2,6 +2,10 @@
     <string name="app_name">ApexApp</string>
     <string name="alarm_default_title">Alarma</string>
     <string name="alarm_channel_name">Alarmas</string>
+    <string name="awake_verification_channel_name">Verificación de despierto</string>
+    <string name="awake_verification_notification_title">¿Sigues despierto?</string>
+    <string name="awake_verification_notification_text">Confirma antes de las %1$s o la alarma volverá a sonar.</string>
+    <string name="awake_verification_action">Estoy despierto</string>
     <string name="alarm_once">Una vez</string>
     <string name="alarm_every_day">Todos los días</string>
     <string name="home_empty">No hay alarmas todavía</string>

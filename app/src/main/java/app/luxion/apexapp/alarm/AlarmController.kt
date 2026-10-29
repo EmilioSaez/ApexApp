@@ -17,20 +17,24 @@ class AlarmController @Inject constructor(
     private val firingHandler: AlarmFiringHandler,
     private val recorder: WakeEventRecorder,
     private val clock: Clock,
+    private val awakeVerification: AwakeVerificationCanceller,
 ) {
     /** Guarda la alarma y la programa (o cancela si está inactiva). */
     suspend fun save(alarm: Alarm): ScheduleResult {
         val id = repository.save(alarm)
+        if (!alarm.awakeVerification) awakeVerification.cancel(id)
         return scheduler.schedule(alarm.copy(id = id))
     }
 
     suspend fun setEnabled(id: Long, enabled: Boolean): ScheduleResult? {
         val alarm = repository.get(id) ?: return null
+        if (!enabled) awakeVerification.cancel(id)
         return save(alarm.copy(enabled = enabled))
     }
 
     suspend fun delete(id: Long) {
         scheduler.cancel(id)
+        awakeVerification.cancel(id)
         fireState.clear(id)
         repository.delete(id)
     }

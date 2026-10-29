@@ -1,6 +1,6 @@
 ## 1. Dominio y datos
 
-- [ ] 1.1 `Alarm.awakeVerification`, `AlarmEntity.awakeVerificationEnabled`, mapeo y compartir
+- [ ] 1.1 `Alarm.awakeVerification`, `AlarmEntity.awakeVerificationEnabled`, mapeo (compartir queda fuera de alcance)
 - [ ] 1.2 `ApexDatabase` versión 8, `MIGRATION_7_8`, registro en `DataModule`, esquema 8.json y test de migración
 - [ ] 1.3 `WakeEventType.VERIFIED` y `VERIFICATION_FAILED`
 

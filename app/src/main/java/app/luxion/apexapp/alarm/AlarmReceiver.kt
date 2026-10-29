@@ -12,6 +12,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class AlarmReceiver : BroadcastReceiver() {
     @Inject lateinit var handler: AlarmFiringHandler
+    @Inject lateinit var awakeVerification: AwakeVerificationCanceller
 
     override fun onReceive(context: Context, intent: Intent) {
         val alarmId = intent.getLongExtra(AndroidAlarmClockGateway.EXTRA_ALARM_ID, -1)
@@ -20,6 +21,8 @@ class AlarmReceiver : BroadcastReceiver() {
         val pending = goAsync()
         CoroutineScope(Dispatchers.IO).launch {
             try {
+                // Un disparo regular de la alarma deja obsoleta su verificación pendiente.
+                if (sessionId == null) awakeVerification.cancel(alarmId)
                 handler.onFire(alarmId, sessionId)
             } finally {
                 pending.finish()
