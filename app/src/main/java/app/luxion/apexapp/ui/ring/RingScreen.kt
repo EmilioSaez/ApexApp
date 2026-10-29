@@ -2,6 +2,7 @@ package app.luxion.apexapp.ui.ring
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatLevel
@@ -48,7 +51,7 @@ fun RingScreen(
     val alarm = state.alarm ?: return
     val challenges = state.challenges
     if (challenges == null) {
-        RingContent(alarm, state.canDismiss, viewModel::dismiss, state.canSnooze, viewModel::snooze)
+        RingContent(alarm, state.canDismiss, viewModel::dismiss, state.canSnooze, viewModel::snooze, state.snoozesLeft)
     } else {
         // Al superar la sesión el gate la reconoce y dismiss() apaga la alarma; sin superarla no hay salida.
         RingChallenges(
@@ -58,6 +61,7 @@ fun RingScreen(
             onPassed = viewModel::dismiss,
             canSnooze = state.canSnooze,
             onSnooze = viewModel::snooze,
+            snoozesLeft = state.snoozesLeft,
             antiCheat = antiCheat,
         )
     }
@@ -72,6 +76,7 @@ fun RingChallenges(
     onPassed: () -> Unit,
     canSnooze: Boolean,
     onSnooze: () -> Unit,
+    snoozesLeft: Int? = null,
     antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
@@ -85,25 +90,69 @@ fun RingChallenges(
                 alarmId = alarm.id,
                 antiCheat = antiCheat,
                 )
-            if (canSnooze) {
-                SnoozeButton(
-                    alarm,
-                    onSnooze,
-                    Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen).padding(bottom = ApexTheme.spacing.xl),
-                )
-            }
+            SnoozeActions(
+                alarm,
+                canSnooze,
+                onSnooze,
+                snoozesLeft,
+                Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen).padding(bottom = ApexTheme.spacing.xl),
+            )
         }
     }
 }
 
+/** Botón de posponer con las posposiciones que quedan; agotadas, lo sustituye un aviso no pulsable. */
 @Composable
-private fun SnoozeButton(alarm: Alarm, onSnooze: () -> Unit, modifier: Modifier = Modifier) {
+private fun SnoozeActions(
+    alarm: Alarm,
+    canSnooze: Boolean,
+    onSnooze: () -> Unit,
+    snoozesLeft: Int?,
+    modifier: Modifier = Modifier,
+) {
+    val snooze = alarm.antiCheat.snooze
+    when {
+        canSnooze -> SnoozeButton(snooze.minutes, snoozesLeft, onSnooze, modifier)
+        snooze.allowed && snoozesLeft == 0 -> SnoozeExhausted(snooze.maxCount, modifier)
+    }
+}
+
+@Composable
+private fun SnoozeButton(minutes: Int, snoozesLeft: Int?, onSnooze: () -> Unit, modifier: Modifier = Modifier) {
     OutlinedButton(
         onClick = onSnooze,
         modifier = modifier.defaultMinSize(minHeight = ApexTheme.spacing.xxxl),
         shape = MaterialTheme.shapes.small,
     ) {
-        Text(stringResource(R.string.ring_snooze, alarm.antiCheat.snooze.minutes), style = MaterialTheme.typography.labelLarge)
+        val text = if (snoozesLeft == null) {
+            stringResource(R.string.ring_snooze, minutes)
+        } else {
+            pluralStringResource(R.plurals.ring_snooze_with_left, snoozesLeft, minutes, snoozesLeft)
+        }
+        Text(text, style = MaterialTheme.typography.labelLarge)
+    }
+}
+
+@Composable
+private fun SnoozeExhausted(done: Int, modifier: Modifier = Modifier) {
+    Row(
+        modifier
+            .defaultMinSize(minHeight = 56.dp)
+            .background(MaterialTheme.colorScheme.surfaceContainerLow, MaterialTheme.shapes.small)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.small)
+            .padding(horizontal = ApexTheme.spacing.lg, vertical = ApexTheme.spacing.md),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md),
+    ) {
+        Icon(painterResource(R.drawable.ic_snooze), contentDescription = null, Modifier.size(20.dp), tint = MaterialTheme.colorScheme.onSurface)
+        Column {
+            Text(stringResource(R.string.ring_snooze_exhausted_title), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+            Text(
+                stringResource(R.string.ring_snooze_exhausted_body, done),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 
@@ -152,6 +201,7 @@ fun RingContent(
     onDismiss: () -> Unit,
     canSnooze: Boolean = false,
     onSnooze: () -> Unit = {},
+    snoozesLeft: Int? = null,
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
         // La hora manda arriba y centrada; las acciones quedan al alcance del pulgar.
@@ -182,9 +232,7 @@ fun RingContent(
                         icon = painterResource(R.drawable.ic_check),
                     )
                 }
-                if (canSnooze) {
-                    SnoozeButton(alarm, onSnooze, Modifier.fillMaxWidth())
-                }
+                SnoozeActions(alarm, canSnooze, onSnooze, snoozesLeft, Modifier.fillMaxWidth())
             }
         }
     }
@@ -196,6 +244,7 @@ private fun RingPreview() = RingContent(
     canDismiss = true,
     onDismiss = {},
     canSnooze = true,
+    snoozesLeft = 2,
 )
 
 @Preview(name = "Claro", showBackground = true, heightDp = 780)

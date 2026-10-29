@@ -117,5 +117,12 @@ class SharedAlarmValidatorTest {
         assertInvalid(shared(antiCheat = AntiCheatPolicy(snooze = SnoozePolicy(minutes = 0))))
         assertInvalid(shared(antiCheat = AntiCheatPolicy(snooze = SnoozePolicy(minutes = 61))))
         assertInvalid(shared(antiCheat = AntiCheatPolicy(snooze = SnoozePolicy(maxCount = 11))))
+        assertInvalid(shared(antiCheat = AntiCheatPolicy(snooze = SnoozePolicy(maxCount = -2))))
+    }
+
+    @Test
+    fun unlimitedSnooze_isValid() {
+        val policy = AntiCheatPolicy(snooze = SnoozePolicy(allowed = true, maxCount = SnoozePolicy.UNLIMITED))
+        assertEquals(policy, preview(shared(antiCheat = policy)).alarm.antiCheat)
     }
 }

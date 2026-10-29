@@ -159,6 +159,27 @@ class RingViewModelTest {
         assertTrue(vm.uiState.value.finished)
     }
 
+    @Test
+    fun snoozesLeft_reflectsLimitAndHidesSnoozeAtZero() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0, antiCheat = snoozable))
+        val vm = viewModel(id)
+        assertEquals(1, vm.uiState.first { it.alarm != null }.snoozesLeft)
+        counts["s-1"] = 1
+        val exhausted = viewModel(id).uiState.first { it.alarm != null }
+        assertEquals(0, exhausted.snoozesLeft)
+        assertFalse(exhausted.canSnooze)
+    }
+
+    @Test
+    fun snoozesLeft_isNullWhenUnlimited() = runTest {
+        val unlimited = snoozable.copy(snooze = snoozable.snooze.copy(maxCount = SnoozePolicy.UNLIMITED))
+        val id = repository.save(Alarm(hour = 7, minute = 0, antiCheat = unlimited))
+        counts["s-1"] = 50
+        val state = viewModel(id).uiState.first { it.alarm != null }
+        assertEquals(null, state.snoozesLeft)
+        assertTrue(state.canSnooze)
+    }
+
     private val withChallenges = ChallengeConfig(count = 1, challenges = listOf(ChallengeSpec("math")))
     private val passedAlarms = PassedAlarms()
 
