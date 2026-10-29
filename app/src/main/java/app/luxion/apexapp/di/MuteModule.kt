@@ -5,6 +5,8 @@ import app.luxion.apexapp.alarm.RingingRegistry
 import app.luxion.apexapp.alarm.mute.ChallengeMuteController
 import app.luxion.apexapp.alarm.mute.RingMuter
 import app.luxion.apexapp.alarm.sound.AlarmSoundEngine
+import app.luxion.apexapp.ui.editor.EditorSection
+import app.luxion.apexapp.ui.editor.mute.MuteSection
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,6 +32,10 @@ object MuteModule {
         )
 
     /** Al terminar una sesión se descarta su estado de silencio. */
+    @Provides
+    @IntoSet
+    fun editorSection(impl: MuteSection): EditorSection = impl
+
     @Provides
     @IntoSet
     fun lifecycleListener(controller: ChallengeMuteController): RingingLifecycleListener = controller
