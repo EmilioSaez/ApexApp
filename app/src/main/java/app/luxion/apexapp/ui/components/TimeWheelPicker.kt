@@ -111,7 +111,7 @@ fun TimeWheelPicker(
         Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
             Box(
                 Modifier.fillMaxWidth().height(rowHeight)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh, MaterialTheme.shapes.small),
+                    .background(MaterialTheme.colorScheme.surfaceContainerHighest, MaterialTheme.shapes.small),
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Wheel(

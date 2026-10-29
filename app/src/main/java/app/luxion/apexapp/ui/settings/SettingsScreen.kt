@@ -194,16 +194,16 @@ private fun CustomColorRows(colors: CustomThemeColors, onChange: (CustomThemeCol
     }
 }
 
-private fun AppIconVariant.foreground(): Int = when (this) {
-    AppIconVariant.DEFAULT -> R.drawable.ic_launcher_foreground
-    AppIconVariant.ORANGE -> R.drawable.ic_launcher_foreground_orange
-    AppIconVariant.AMBER -> R.drawable.ic_launcher_foreground_amber
-    AppIconVariant.GREEN -> R.drawable.ic_launcher_foreground_green
-    AppIconVariant.TEAL -> R.drawable.ic_launcher_foreground_teal
-    AppIconVariant.BLUE -> R.drawable.ic_launcher_foreground_blue
-    AppIconVariant.PURPLE -> R.drawable.ic_launcher_foreground_purple
-    AppIconVariant.PINK -> R.drawable.ic_launcher_foreground_pink
-    AppIconVariant.NEUTRAL -> R.drawable.ic_launcher_foreground_neutral
+private fun AppIconVariant.background(): Int = when (this) {
+    AppIconVariant.DEFAULT -> R.drawable.ic_launcher_background
+    AppIconVariant.ORANGE -> R.drawable.ic_launcher_background_orange
+    AppIconVariant.AMBER -> R.drawable.ic_launcher_background_amber
+    AppIconVariant.GREEN -> R.drawable.ic_launcher_background_green
+    AppIconVariant.TEAL -> R.drawable.ic_launcher_background_teal
+    AppIconVariant.BLUE -> R.drawable.ic_launcher_background_blue
+    AppIconVariant.PURPLE -> R.drawable.ic_launcher_background_purple
+    AppIconVariant.PINK -> R.drawable.ic_launcher_background_pink
+    AppIconVariant.NEUTRAL -> R.drawable.ic_launcher_background_neutral
 }
 
 /**
@@ -260,11 +260,10 @@ private fun AppIconRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md),
     ) {
-        Image(
-            painter = painterResource(variant.foreground()),
-            contentDescription = null,
-            modifier = Modifier.size(44.dp).clip(CircleShape).background(Color(0xFF0B0B0B)),
-        )
+        Box(Modifier.size(44.dp).clip(CircleShape)) {
+            Image(painter = painterResource(variant.background()), contentDescription = null, modifier = Modifier.matchParentSize())
+            Image(painter = painterResource(R.drawable.ic_launcher_foreground), contentDescription = null, modifier = Modifier.matchParentSize())
+        }
         Column(Modifier.weight(1f)) {
             Text(title, style = MaterialTheme.typography.bodyLarge)
             if (supporting != null) {

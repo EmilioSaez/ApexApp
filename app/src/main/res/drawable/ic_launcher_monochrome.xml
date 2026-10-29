@@ -1,40 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Icono temático (Android 13+): la misma silueta en una tinta; el sistema la colorea. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
     <path
-        android:pathData="M0,90.3L108,37.5"
+        android:fillColor="#FFFFFF"
+        android:pathData="M0,97.9L108,45.3L108,108L0,108Z" />
+    <path
+        android:pathData="M30.6,83.0L33.5,64.2L40.0,53.0L48.9,50.7M44.6,76.1L42.9,67.0L33.5,64.2"
         android:strokeColor="#FFFFFF"
-        android:strokeWidth="2"
-        android:strokeLineCap="round" />
-    <group
-        android:scaleX="0.17"
-        android:scaleY="0.17"
-        android:translateX="8.1"
-        android:translateY="4.7">
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M370,145a26,26 0 0 1 50,0Z M338,142h12v14h-12z" />
-        <!-- Aro del despertador -->
-        <path
-            android:fillColor="#FFFFFF"
-            android:fillType="evenOdd"
-            android:pathData="M345,150a95,95 0 1 0 0.1,0Z M345,169a76,76 0 1 0 0.1,0Z" />
-        <path
-            android:pathData="M280,365L260,395 M390,315L410,342 M345,245L315,280 M345,245L345,185"
-            android:strokeColor="#FFFFFF"
-            android:strokeWidth="9"
-            android:strokeLineCap="round" />
-        <path
-            android:fillColor="#FFFFFF"
-            android:pathData="M168,283a22,22 0 1 0 0.1,0Z M172,328L228,358L210,395L158,355Z M345,238a7,7 0 1 0 0.1,0Z" />
-        <path
-            android:pathData="M200,338L270,326 M185,348L265,342 M168,375L125,405L105,438 M205,385L190,420L220,442"
-            android:strokeColor="#FFFFFF"
-            android:strokeWidth="15"
-            android:strokeLineCap="round"
-            android:strokeLineJoin="round" />
-    </group>
+        android:strokeWidth="4.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35.1,46a4.2,4.2 0,1 0,8.4 0a4.2,4.2 0,1 0,-8.4 0Z M51.7,34.2a3.8,3.8 0,1 0,7.6 0a3.8,3.8 0,1 0,-7.6 0Z M66.3,34.2a3.8,3.8 0,1 0,7.6 0a3.8,3.8 0,1 0,-7.6 0Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M47.8,50.6a15,15 0,1 0,30 0a15,15 0,1 0,-30 0Z M51.8,50.6a11,11 0,1 0,22 0a11,11 0,1 0,-22 0Z" />
+    <path
+        android:pathData="M55.9,50.3L62.8,50.6L59.5,42.2"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 </vector>
