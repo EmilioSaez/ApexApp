@@ -14,8 +14,6 @@ import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
-import java.text.DateFormat
-import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineScope
@@ -63,6 +61,9 @@ class AndroidAwakeVerificationGateway @Inject constructor(
         const val ACTION_DEADLINE = "app.luxion.apexapp.action.VERIFY_DEADLINE"
         const val ACTION_CONFIRM = "app.luxion.apexapp.action.VERIFY_CONFIRM"
         const val EXTRA_ALARM_ID = "alarmId"
+
+        /** Extra de `MainActivity`: la notificación tocada confirma esa alarma. */
+        const val EXTRA_CONFIRM_ALARM_ID = "confirmAwakeAlarmId"
     }
 }
 
@@ -120,15 +121,29 @@ class AndroidAwakeVerificationNotifier @Inject constructor(
             },
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
-        val limit = DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(deadlineAt))
+        // Tocar la notificación abre la app y cuenta como confirmación.
+        val open = PendingIntent.getActivity(
+            context,
+            0,
+            Intent(context, MainActivity::class.java).apply {
+                data = Uri.parse("apexapp://verify/${alarm.id}/open")
+                putExtra(AndroidAwakeVerificationGateway.EXTRA_CONFIRM_ALARM_ID, alarm.id)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            },
+            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
+        )
+        val minutes = (AwakeVerificationPolicy.CONFIRM_WINDOW_MILLIS / 60_000L).toInt()
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_lock_idle_alarm)
+            .setSmallIcon(R.drawable.ic_launcher_monochrome)
             .setContentTitle(context.getString(R.string.awake_verification_notification_title))
-            .setContentText(context.getString(R.string.awake_verification_notification_text, limit))
+            .setContentText(context.getString(R.string.awake_verification_notification_text, minutes))
+            .setContentIntent(open)
+            // No se descarta deslizando: se resuelve confirmando o al vencer el plazo.
+            .setOngoing(true)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setOnlyAlertOnce(true)
-            .setAutoCancel(false)
+            .setAutoCancel(true)
             .setTimeoutAfter(maxOf(deadlineAt - System.currentTimeMillis(), 1L))
             .addAction(0, context.getString(R.string.awake_verification_action), confirm)
             .build()

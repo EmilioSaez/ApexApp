@@ -68,23 +68,26 @@ fun AwakeVerificationSection(
                 onValueChange = onChange,
             ),
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
         ) {
-            Text(
-                stringResource(R.string.awake_verification_option),
-                Modifier.weight(1f),
-                style = MaterialTheme.typography.bodyLarge,
-            )
+            Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
+                Text(
+                    stringResource(R.string.awake_verification_option),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    stringResource(
+                        R.string.awake_verification_hint,
+                        (AwakeVerificationPolicy.PROMPT_DELAY_MILLIS / MILLIS_PER_MINUTE).toInt(),
+                        (AwakeVerificationPolicy.CONFIRM_WINDOW_MILLIS / MILLIS_PER_MINUTE).toInt(),
+                    ),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
             Switch(checked = enabled, onCheckedChange = null)
         }
-        Text(
-            stringResource(
-                R.string.awake_verification_hint,
-                (AwakeVerificationPolicy.PROMPT_DELAY_MILLIS / MILLIS_PER_MINUTE).toInt(),
-                (AwakeVerificationPolicy.CONFIRM_WINDOW_MILLIS / MILLIS_PER_MINUTE).toInt(),
-            ),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
         if (enabled && !notificationsEnabled) {
             Text(
                 stringResource(R.string.awake_verification_missing_notifications),

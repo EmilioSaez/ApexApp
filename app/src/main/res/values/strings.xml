@@ -2,13 +2,13 @@
     <string name="app_name">ApexApp</string>
     <string name="alarm_default_title">Alarma</string>
     <string name="alarm_channel_name">Alarmas</string>
-    <string name="awake_verification_section">Verificación</string>
+    <string name="awake_verification_section">Al despertar</string>
     <string name="awake_verification_option">Verificar que estoy despierto</string>
-    <string name="awake_verification_hint">Tras apagar la alarma, a los %1$d min te pediremos confirmar. Si no lo haces en %2$d min, volverá a sonar con todos sus retos.</string>
+    <string name="awake_verification_hint">%1$d min después de apagarla recibirás un aviso. Si no pulsas «Estoy despierto» en %2$d min, vuelve a sonar.</string>
     <string name="awake_verification_missing_notifications">Las notificaciones están bloqueadas: la verificación se omitirá.</string>
     <string name="awake_verification_channel_name">Verificación de despierto</string>
     <string name="awake_verification_notification_title">¿Sigues despierto?</string>
-    <string name="awake_verification_notification_text">Confirma antes de las %1$s o la alarma volverá a sonar.</string>
+    <string name="awake_verification_notification_text">Confírmalo antes de %1$d min o la alarma volverá a sonar.</string>
     <string name="awake_verification_action">Estoy despierto</string>
     <string name="alarm_once">Una vez</string>
     <string name="alarm_every_day">Todos los días</string>
