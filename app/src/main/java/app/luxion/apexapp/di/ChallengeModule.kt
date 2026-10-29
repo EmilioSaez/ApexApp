@@ -16,6 +16,9 @@ import app.luxion.apexapp.ui.challenge.ChallengeRenderer
 import app.luxion.apexapp.ui.challenge.ChallengesSection
 import app.luxion.apexapp.ui.challenge.MathRenderer
 import app.luxion.apexapp.ui.challenge.FlappyParamsEditor
+import app.luxion.apexapp.domain.challenge.gridmemory.GridMemoryChallenge
+import app.luxion.apexapp.ui.challenge.GridMemoryParamsEditor
+import app.luxion.apexapp.ui.challenge.GridMemoryRenderer
 import app.luxion.apexapp.domain.challenge.maze.MazeChallenge
 import app.luxion.apexapp.ui.challenge.MazeParamsEditor
 import app.luxion.apexapp.ui.challenge.MazeRenderer
@@ -194,6 +197,18 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun tapTargetsEditor(impl: TapTargetsParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun gridMemory(impl: GridMemoryChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun gridMemoryRenderer(impl: GridMemoryRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun gridMemoryEditor(impl: GridMemoryParamsEditor): ChallengeParamsEditor
 
     @Binds
     @IntoSet

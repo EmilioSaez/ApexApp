@@ -204,6 +204,19 @@
         <item quantity="other">Sequence at this difficulty: %d cells</item>
     </plurals>
 
+    <string name="challenge_type_grid_memory">Grid memory</string>
+    <string name="challenge_grid_memory_watch">Memorize the lit squares</string>
+    <string name="challenge_grid_memory_repeat">Tap the lit squares</string>
+    <string name="challenge_grid_memory_hold">Do not tap yet</string>
+    <string name="challenge_grid_memory_progress">%1$d of %2$d</string>
+    <string name="challenge_grid_memory_wrong">Wrong square. Watch again.</string>
+    <string name="challenge_grid_memory_cell">Square %d</string>
+    <string name="challenge_grid_memory_cell_on">Square %d, marked</string>
+    <plurals name="challenge_target_info_grid_memory">
+        <item quantity="one">%1$d×%2$d board with %3$d square to remember</item>
+        <item quantity="other">%1$d×%2$d board with %3$d squares to remember</item>
+    </plurals>
+
     <string name="challenge_type_maze">Maze</string>
     <string name="challenge_maze_title">Take the alarm to the exit</string>
     <string name="challenge_maze_hint">Trace without lifting your finger. Touch a wall and you start over.</string>
