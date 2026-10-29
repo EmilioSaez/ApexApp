@@ -284,6 +284,41 @@ class SnoozeControllerTest {
     }
 
     @Test
+    fun remaining_countsDownToZero() = runBlocking {
+        val s = session(AntiCheatLevel.STANDARD, allowed)
+        assertEquals(2, controller.remaining(s))
+        controller.snooze(s)
+        assertEquals(1, controller.remaining(s))
+        controller.snooze(s)
+        assertEquals(0, controller.remaining(s))
+    }
+
+    @Test
+    fun unlimited_neverStopsOfferingSnooze() = runBlocking {
+        val s = session(AntiCheatLevel.STANDARD, allowed.copy(maxCount = SnoozePolicy.UNLIMITED))
+        repeat(25) { assertTrue(controller.snooze(s)) }
+        assertTrue(controller.canSnooze(s))
+        assertEquals(null, controller.remaining(s))
+    }
+
+    @Test
+    fun newSession_restartsCounter() = runBlocking {
+        val first = session(AntiCheatLevel.STANDARD, allowed, id = "s1")
+        controller.snooze(first)
+        controller.snooze(first)
+        controller.finished("s1")
+        assertTrue(controller.canSnooze(session(AntiCheatLevel.STANDARD, allowed, id = "s2")))
+        assertTrue(controller.canSnooze(first))
+    }
+
+    @Test
+    fun zeroMaxCount_rejectsSnooze() = runBlocking {
+        val s = session(AntiCheatLevel.STANDARD, allowed.copy(maxCount = 0))
+        assertFalse(controller.canSnooze(s))
+        assertEquals(0, controller.remaining(s))
+    }
+
+    @Test
     fun finished_clearsCounter() = runBlocking {
         val s = session(AntiCheatLevel.STANDARD, allowed)
         controller.snooze(s)

@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=360">
+<title>ApexApp · Editor · silencio, posponer y verificar</title>
+<link rel="stylesheet" href="apex-tokens.css">
+<link rel="stylesheet" href="apex-ui.css">
+</head>
+<body>
+<div class="screen" style="min-height: 1020px">
+<header class="topbar">
+  <button class="iconbtn" aria-label="Cerrar sin guardar"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <h1 class="t-title-l">Editar alarma</h1>
+  <button class="btn-text">Compartir</button>
+</header>
+<main class="editor">
+  <div class="row" style="min-height: 48px; border-bottom: 1px solid var(--outline-variant)"><span class="t-body-m muted" style="flex: 1">Hora, días, nombre y retos, como hasta ahora</span></div>
+
+  <section class="sec" aria-labelledby="hRes">
+    <h2 id="hRes" class="t-label-m">Mientras resuelves los retos</h2>
+    <div class="row">
+      <div class="txt"><span class="t-title-m" style="color: var(--on-surface)">No sonar mientras resuelvo</span><span class="t-body-m muted">La alarma calla mientras tocas la pantalla y vuelve a sonar si dejas de hacerlo.</span></div>
+      <label style="display: inline-flex; min-width: 48px; min-height: 48px; align-items: center; justify-content: center"><input type="checkbox" checked aria-label="No sonar mientras resuelvo" style="position: absolute; opacity: 0; width: 1px; height: 1px"><span class="switch on" aria-hidden="true"></span></label>
+    </div>
+    <div class="indent">
+      <div class="sub"><span class="t-title-m" style="color: var(--on-surface)">Vuelve a sonar tras</span><div class="seg" role="radiogroup" aria-label="Inactividad" style="grid-template-columns: repeat(4, minmax(0, 1fr))"><button role="radio" aria-checked="false" class="">15 s</button><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>30 s</button><button role="radio" aria-checked="false" class="">1 min</button><button role="radio" aria-checked="false" class="">2 min</button></div><span class="t-body-m muted">Sin tocar la pantalla durante ese tiempo.</span></div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="hPos">
+    <h2 id="hPos" class="t-label-m">Posponer</h2>
+    <div class="row">
+      <div class="txt"><span class="t-title-m" style="color: var(--on-surface)">Permitir posponer</span></div>
+      <label style="display: inline-flex; min-width: 48px; min-height: 48px; align-items: center; justify-content: center"><input type="checkbox" checked aria-label="Permitir posponer" style="position: absolute; opacity: 0; width: 1px; height: 1px"><span class="switch on" aria-hidden="true"></span></label>
+    </div>
+    <div class="indent">
+      <div class="sub"><span class="t-title-m" style="color: var(--on-surface)">Duración</span><div class="seg" role="radiogroup" aria-label="Duración" style="grid-template-columns: repeat(3, minmax(0, 1fr))"><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>5 min</button><button role="radio" aria-checked="false" class="">10 min</button><button role="radio" aria-checked="false" class="">15 min</button></div></div>
+      <div class="sub"><span class="t-title-m" style="color: var(--on-surface)">Límite de veces</span><div class="seg" role="radiogroup" aria-label="Límite de posposiciones" style="grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(0, 1.8fr)"><button role="radio" aria-checked="false" class="">1</button><button role="radio" aria-checked="false" class="">2</button><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>3</button><button role="radio" aria-checked="false" class="">5</button><button role="radio" aria-checked="false" class="">Sin límite</button></div><span class="t-body-m muted">Después de 3 veces solo queda apagarla.</span></div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="hDes">
+    <h2 id="hDes" class="t-label-m">Al despertar</h2>
+    <div class="row">
+      <div class="txt"><span class="t-title-m" style="color: var(--on-surface)">Verificar que estoy despierto</span><span class="t-body-m muted">5 min después de apagarla recibirás un aviso. Si no pulsas «Estoy despierto» en 2 min, vuelve a sonar.</span></div>
+      <label style="display: inline-flex; min-width: 48px; min-height: 48px; align-items: center; justify-content: center"><input type="checkbox" checked aria-label="Verificar que estoy despierto" style="position: absolute; opacity: 0; width: 1px; height: 1px"><span class="switch on" aria-hidden="true"></span></label>
+    </div>
+  </section>
+</main>
+<div class="savebar"><button class="btn-primary"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Guardar</button></div>
+</div>
+</body>
+</html>

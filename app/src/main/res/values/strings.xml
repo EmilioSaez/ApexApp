@@ -182,11 +182,6 @@
     <string name="challenge_holdrelease_early">Soltaste antes de tiempo. Se añade una ronda.</string>
     <string name="challenge_holdrelease_late">Soltaste tarde. Se añade una ronda.</string>
     <string name="challenge_holdrelease_cancelled">Se interrumpió la pulsación.</string>
-    <string name="challenge_holdrelease_estimate">Duración orientativa: unos %d s</string>
-    <plurals name="challenge_holdrelease_rounds">
-        <item quantity="one">%d ronda</item>
-        <item quantity="other">%d rondas</item>
-    </plurals>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
         <item quantity="one">Pasa %d tubería sin chocar</item>
@@ -208,6 +203,51 @@
     <plurals name="challenge_target_info_memory">
         <item quantity="one">Secuencia con esta dificultad: %d casilla</item>
         <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
+    </plurals>
+
+    <string name="challenge_type_grid_memory">Memoria de cuadrícula</string>
+    <string name="challenge_grid_memory_watch">Memoriza los cuadrados iluminados</string>
+    <string name="challenge_grid_memory_repeat">Toca los cuadrados iluminados</string>
+    <string name="challenge_grid_memory_hold">No toques todavía</string>
+    <string name="challenge_grid_memory_progress">%1$d de %2$d</string>
+    <string name="challenge_grid_memory_wrong">Cuadrado equivocado. Mira de nuevo.</string>
+    <string name="challenge_grid_memory_cell">Cuadrado %d</string>
+    <string name="challenge_grid_memory_cell_on">Cuadrado %d, marcado</string>
+    <plurals name="challenge_target_info_grid_memory">
+        <item quantity="one">Tablero de %1$d×%2$d con %3$d cuadrado a recordar</item>
+        <item quantity="other">Tablero de %1$d×%2$d con %3$d cuadrados a recordar</item>
+    </plurals>
+
+    <string name="challenge_type_maze">Laberinto</string>
+    <string name="challenge_maze_title">Lleva la alarma hasta la salida</string>
+    <string name="challenge_maze_hint">Traza sin levantar el dedo. Si tocas un muro, vuelves a empezar.</string>
+    <string name="challenge_maze_attempt">Intento %d</string>
+    <string name="challenge_maze_wrong">Has tocado un muro. Empieza de nuevo desde la alarma.</string>
+    <string name="challenge_maze_rejected">Toque no válido. Usa el dedo sobre la pantalla.</string>
+    <string name="challenge_maze_area_description">Laberinto: arrastra el dedo desde la alarma hasta la salida</string>
+    <string name="challenge_maze_start">Entrada</string>
+    <string name="challenge_maze_exit">Salida</string>
+    <string name="challenge_maze_level_info">Laberinto con esta dificultad: %1$d × %2$d casillas</string>
+
+    <string name="challenge_type_shapes">Secuencia de formas</string>
+    <string name="challenge_shapes_watch">Memoriza las formas</string>
+    <string name="challenge_shapes_repeat">Elígelas en el mismo orden</string>
+    <string name="challenge_shapes_wrong">Orden incorrecto. Mira de nuevo.</string>
+    <string name="challenge_shapes_showing">Forma: %s</string>
+    <string name="challenge_shapes_progress_watch">Forma %1$d de %2$d</string>
+    <string name="challenge_shapes_progress_repeat">%1$d de %2$d</string>
+    <string name="challenge_shapes_your_sequence">Tu secuencia</string>
+    <string name="challenge_shapes_next_slot">Siguiente</string>
+    <string name="challenge_shapes_delete_last">Borrar última</string>
+    <string name="challenge_shape_circle">Círculo</string>
+    <string name="challenge_shape_square">Cuadrado</string>
+    <string name="challenge_shape_triangle">Triángulo</string>
+    <string name="challenge_shape_cross">Cruz</string>
+    <string name="challenge_shape_hexagon">Hexágono</string>
+    <string name="challenge_shape_diamond">Rombo</string>
+    <plurals name="challenge_target_info_shapes">
+        <item quantity="one">Secuencia con esta dificultad: %1$d forma entre %2$d distintas</item>
+        <item quantity="other">Secuencia con esta dificultad: %1$d formas entre %2$d distintas</item>
     </plurals>
 
     <string name="challenge_type_rhythm">Ritmo</string>
@@ -247,14 +287,27 @@
     <string name="voice_repeat_every">Repetir cada %1$d s</string>
     <string name="voice_speak_time">Leer la hora</string>
     <string name="ring_snooze">Posponer %1$d min</string>
+    <plurals name="ring_snooze_with_left">
+        <item quantity="one">Posponer %1$d min · queda %2$d</item>
+        <item quantity="other">Posponer %1$d min · quedan %2$d</item>
+    </plurals>
+    <string name="ring_snooze_exhausted_title">Sin posposiciones</string>
+    <string name="ring_snooze_exhausted_body">Ya la has pospuesto %1$d de %1$d veces.</string>
     <string name="anticheat_section">Anti-trampas</string>
     <string name="anticheat_level_off">Desactivado</string>
     <string name="anticheat_level_standard">Estándar</string>
     <string name="anticheat_level_hint_off">La alarma se puede descartar sin restricciones.</string>
     <string name="anticheat_level_hint_standard">Pantalla completa, sin salir con Atrás o Home y volumen al máximo.</string>
     <string name="anticheat_snooze_allowed">Permitir posponer</string>
-    <string name="anticheat_snooze_minutes">Minutos: %1$d</string>
-    <string name="anticheat_snooze_max">Máximo de veces: %1$d</string>
+    <string name="anticheat_snooze_section">Posponer</string>
+    <string name="anticheat_snooze_duration">Duración</string>
+    <string name="anticheat_snooze_minutes_option">%1$d min</string>
+    <string name="anticheat_snooze_limit">Límite de veces</string>
+    <string name="anticheat_snooze_unlimited">Sin límite</string>
+    <plurals name="anticheat_snooze_limit_hint">
+        <item quantity="one">Después de %d vez solo queda apagarla.</item>
+        <item quantity="other">Después de %d veces solo queda apagarla.</item>
+    </plurals>
     <string name="anticheat_missing_overlay">Falta el permiso de superposición: sin él no se puede recuperar la pantalla al pulsar Home.</string>
     <string name="anticheat_open_status">Ver estado de permisos</string>
     <string name="anticheat_status_title">Estado anti-trampas</string>
@@ -335,6 +388,7 @@
     <string name="import_challenges">Retos: %1$s · dificultad %2$d · %3$d por sesión</string>
     <string name="import_sound_default">Sonido por defecto · volumen %1$d %%</string>
     <string name="import_snooze_allowed">Posponer: %1$d min, hasta %2$d veces</string>
+    <string name="import_snooze_unlimited">Posponer: %1$d min, sin límite</string>
     <string name="import_snooze_denied">Sin posponer</string>
     <string name="import_anticheat">Anti-trampa: %1$s</string>
     <string name="import_error_malformed">Este contenido no es una alarma de ApexApp válida.</string>
