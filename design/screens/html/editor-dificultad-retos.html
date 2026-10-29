@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=360">
+<title>ApexApp · Editor · dificultad de los retos</title>
+<link rel="stylesheet" href="apex-tokens.css">
+<link rel="stylesheet" href="apex-ui.css">
+</head>
+<body>
+<div class="screen" style="min-height: 1390px">
+<header class="topbar">
+  <button class="iconbtn" aria-label="Cerrar sin guardar"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <h1 class="t-title-l">Editar alarma</h1>
+  <button class="btn-text">Compartir</button>
+</header>
+<main class="editor">
+  <section class="sec" aria-labelledby="hRet">
+    <h2 id="hRet" class="t-label-m">Cómo apagarla</h2>
+    <div class="seg" role="radiogroup" aria-label="Tipo de alarma" style="grid-template-columns: repeat(2, minmax(0, 1fr))"><button role="radio" aria-checked="false" class="">Normal</button><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Con retos</button></div>
+    <div class="sub"><span class="t-title-m" style="color: var(--on-surface)">Tipos</span><div class="chips"><button class="chip on" aria-pressed="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Secuencia de formas</button><button class="chip on" aria-pressed="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Laberinto</button><button class="chip on" aria-pressed="true"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Memoria de cuadrícula</button><button class="chip " aria-pressed="false">Matemáticas</button><button class="chip " aria-pressed="false">Memoria</button><button class="chip " aria-pressed="false">Tocar objetivos</button><button class="chip " aria-pressed="false">Ritmo</button></div></div>
+    <div class="sub"><span class="t-title-m" style="color: var(--on-surface)">Dificultad</span><div class="seg" role="radiogroup" aria-label="Dificultad" style="grid-template-columns: repeat(5, minmax(0, 1fr))"><button role="radio" aria-checked="false" class="">1</button><button role="radio" aria-checked="false" class="">2</button><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>3</button><button role="radio" aria-checked="false" class="">4</button><button role="radio" aria-checked="false" class="">5</button></div><span class="t-body-m muted">Cada reto ajusta su tamaño y su ritmo a este nivel. Puedes cambiarlo por reto abajo.</span></div>
+  </section>
+
+  <section class="sec" aria-labelledby="hPar">
+    <h2 id="hPar" class="t-label-m">Ajustes de cada reto</h2>
+    <div class="params">
+      <h3 class="t-title-m">Secuencia de formas</h3>
+      <span class="t-body-m muted">5 formas · cada una se ve 0,8 s</span>
+      <div class="sub"><span class="t-body-m" style="color: var(--on-surface)">Formas posibles</span><div class="seg" role="radiogroup" aria-label="Formas posibles" style="grid-template-columns: repeat(2, minmax(0, 1fr))"><button role="radio" aria-checked="false" class="">4</button><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>6</button></div></div>
+    </div>
+    <div class="params">
+      <h3 class="t-title-m">Laberinto</h3>
+      <span class="t-body-m muted">8 × 8 · si tocas un muro vuelves al inicio</span>
+      <div class="sub"><span class="t-body-m" style="color: var(--on-surface)">Tamaño</span><div class="seg" role="radiogroup" aria-label="Tamaño del laberinto" style="grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr)"><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Según nivel</button><button role="radio" aria-checked="false" class="">8 × 8</button><button role="radio" aria-checked="false" class="">12 × 12</button></div></div>
+    </div>
+    <div class="params">
+      <h3 class="t-title-m">Memoria de cuadrícula</h3>
+      <span class="t-body-m muted">5 pasos · ritmo medio</span>
+      <div class="sub"><span class="t-body-m" style="color: var(--on-surface)">Tablero</span><div class="seg" role="radiogroup" aria-label="Tablero" style="grid-template-columns: repeat(3, minmax(0, 1fr))"><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>3 × 3</button><button role="radio" aria-checked="false" class="">4 × 4</button><button role="radio" aria-checked="false" class="">5 × 5</button></div></div>
+      <div class="sub"><span class="t-body-m" style="color: var(--on-surface)">Ritmo</span><div class="seg" role="radiogroup" aria-label="Ritmo" style="grid-template-columns: repeat(3, minmax(0, 1fr))"><button role="radio" aria-checked="false" class="">Lento</button><button role="radio" aria-checked="true" class="on"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Medio</button><button role="radio" aria-checked="false" class="">Rápido</button></div></div>
+    </div>
+  </section>
+</main>
+<div class="savebar"><button class="btn-primary"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Guardar</button></div>
+</div>
+</body>
+</html>

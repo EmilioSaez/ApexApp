@@ -182,11 +182,6 @@
     <string name="challenge_holdrelease_early">Soltaste antes de tiempo. Se añade una ronda.</string>
     <string name="challenge_holdrelease_late">Soltaste tarde. Se añade una ronda.</string>
     <string name="challenge_holdrelease_cancelled">Se interrumpió la pulsación.</string>
-    <string name="challenge_holdrelease_estimate">Duración orientativa: unos %d s</string>
-    <plurals name="challenge_holdrelease_rounds">
-        <item quantity="one">%d ronda</item>
-        <item quantity="other">%d rondas</item>
-    </plurals>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
         <item quantity="one">Pasa %d tubería sin chocar</item>
@@ -220,6 +215,27 @@
     <string name="challenge_maze_start">Entrada</string>
     <string name="challenge_maze_exit">Salida</string>
     <string name="challenge_maze_level_info">Laberinto con esta dificultad: %1$d × %2$d casillas</string>
+
+    <string name="challenge_type_shapes">Secuencia de formas</string>
+    <string name="challenge_shapes_watch">Memoriza las formas</string>
+    <string name="challenge_shapes_repeat">Elígelas en el mismo orden</string>
+    <string name="challenge_shapes_wrong">Orden incorrecto. Mira de nuevo.</string>
+    <string name="challenge_shapes_showing">Forma: %s</string>
+    <string name="challenge_shapes_progress_watch">Forma %1$d de %2$d</string>
+    <string name="challenge_shapes_progress_repeat">%1$d de %2$d</string>
+    <string name="challenge_shapes_your_sequence">Tu secuencia</string>
+    <string name="challenge_shapes_next_slot">Siguiente</string>
+    <string name="challenge_shapes_delete_last">Borrar última</string>
+    <string name="challenge_shape_circle">Círculo</string>
+    <string name="challenge_shape_square">Cuadrado</string>
+    <string name="challenge_shape_triangle">Triángulo</string>
+    <string name="challenge_shape_cross">Cruz</string>
+    <string name="challenge_shape_hexagon">Hexágono</string>
+    <string name="challenge_shape_diamond">Rombo</string>
+    <plurals name="challenge_target_info_shapes">
+        <item quantity="one">Secuencia con esta dificultad: %1$d forma entre %2$d distintas</item>
+        <item quantity="other">Secuencia con esta dificultad: %1$d formas entre %2$d distintas</item>
+    </plurals>
 
     <string name="challenge_type_rhythm">Ritmo</string>
     <string name="challenge_rhythm_info">Una ronda: %1$d notas a %2$d BPM. La dificultad cambia la velocidad y la duración.</string>

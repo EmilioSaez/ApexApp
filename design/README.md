@@ -123,3 +123,108 @@ Añade tu sección dentro de la columna de `SettingsContent` con `SectionHeader`
 ## Alarma normal / con retos
 
 La sección «Retos» del editor abre con un selector «Normal» / «Con retos» (`SegmentedButton`). Normal = sin tipos de reto: se ocultan el resto de controles y se muestra «Se apaga con un toque.». El modo es Normal si no hay tipos ni se ha pasado a «Con retos» (`ChallengeConfig.challengesEnabled`); al pasar a «Con retos» no se preselecciona ningún tipo y, mientras no haya al menos uno, se muestra «Elige al menos un tipo de reto para guardar la alarma.» y la alarma no se puede guardar. Capturas: `screens/app/editor-normal-claro.png`, `editor-normal-oscuro.png`, `editor-con-retos-claro.png` y `editor-con-retos-oscuro.png`.
+
+## Retos nuevos y mejoras de alarma
+
+Diseños hechos fuera de Stitch, en HTML con los tokens reales del tema. `screens/html/apex-tokens.css` copia los
+esquemas de `Color.kt`, la tipografía de `Type.kt`, el radio y el espaciado. Las fuentes salen de `res/font`.
+`screens/html/apex-ui.css` replica los componentes. Cada pantalla mide 360 dp de ancho (1 px = 1 dp); la versión
+`-claro` es el mismo HTML con `<html data-theme="light">`. Abre cualquiera directamente en el navegador.
+
+> **Pendiente:** estas pantallas solo existen como HTML; aún no hay PNG en `screens/`. La UI se implementa a partir de
+> los HTML y de esta especificación.
+>
+> **Supuestos por confirmar con el código real:** el margen de 2 min para pulsar «Estoy despierto» antes de que la
+> alarma vuelva a sonar, y las cifras de ejemplo de las líneas de nivel en «Ajustes de cada reto» (5 formas, 0,8 s,
+> 8 × 8, 5 pasos, ritmo medio).
+
+| Pantalla | Oscuro | Claro |
+|---|---|---|
+| Secuencia de formas · responder | `reto-secuencia-formas` | `reto-secuencia-formas-claro` |
+| Secuencia de formas · observar | `reto-secuencia-formas-observar` | `reto-secuencia-formas-observar-claro` |
+| Laberinto · trazo en curso (8 × 8) | `reto-laberinto` | `reto-laberinto-claro` |
+| Laberinto · muro tocado | `reto-laberinto-error` | `reto-laberinto-error-claro` |
+| Laberinto · 12 × 12 | `reto-laberinto-grande` | `reto-laberinto-grande-claro` |
+| Memoria de cuadrícula · responder (3 × 3) | `reto-memoria-cuadricula` | `reto-memoria-cuadricula-claro` |
+| Memoria de cuadrícula · observar | `reto-memoria-cuadricula-observar` | `reto-memoria-cuadricula-observar-claro` |
+| Memoria de cuadrícula · 5 × 5 | `reto-memoria-cuadricula-grande` | `reto-memoria-cuadricula-grande-claro` |
+| Editor · silencio, posponer y verificar | `editor-silencio-posponer-verificar` | `editor-silencio-posponer-verificar-claro` |
+| Editor · ajustes de cada reto | `editor-dificultad-retos` | `editor-dificultad-retos-claro` |
+| Alarma sonando · sin posposiciones | `alarma-sonando-sin-posposiciones` | `alarma-sonando-sin-posposiciones-claro` |
+| Notificación · verificar que estoy despierto | `notificacion-verificar` | `notificacion-verificar-claro` |
+
+### Marco común de los retos
+
+Igual que `RingChallenges`: `RingChallengeHeader` (estado, `TimeDisplay` mediano y etiqueta), luego la sesión con
+padding `screen` × `xl` y separación `xl`: «Reto n de N» + tipo (`labelLarge`) y `ProgressSegments` (4 dp, separación
+4 dp, hechos en `primary` y pendientes en `surfaceContainerHighest`). Debajo, título del reto (`titleMedium`,
+`onSurface`, centrado) y una línea de estado (`bodyMedium`, `onSurfaceVariant`). Al pie, el botón de posponer.
+
+Puntos de avance dentro de un reto: círculos de 8 dp separados 8 dp. Hechos en `onSurface`, el actual en `primary`
+y los pendientes en `surfaceContainerHighest`. Son decorativos: el avance se dice también con texto («2 de 5»).
+
+### Secuencia de formas
+
+- Seis formas que se distinguen por la silueta, nunca por el color: círculo, cuadrado, triángulo, rombo, cruz y
+  hexágono. Van rellenas de `onSurface` en una rejilla de 48 y cada una tiene nombre accesible.
+- **Observar:** escenario de 240 dp (`surfaceContainerLow`, borde `outlineVariant`) con la forma a 128 dp, una cada
+  vez. Debajo, «Forma 3 de 5» y los puntos de avance. No se puede tocar nada.
+- **Responder:** cinco huecos de 56 dp de alto en una fila. Los rellenos llevan la forma a 28 dp sobre
+  `surfaceContainerLow`; el siguiente, borde de 2 dp en `primary`; el resto, borde `outlineVariant` sin relleno.
+  «Borrar última» es un `TextButton` en `onSurface` con icono, alineado a la derecha y de 48 dp. Paleta de 3 × 2
+  botones de 88 dp de alto (borde `outline`, `surfaceContainerLow`) con la forma a 36 dp y su nombre en
+  `bodyMedium` `onSurfaceVariant`.
+- Fallo: el mismo patrón que la memoria actual, con el mensaje en `error` y la secuencia otra vez en «observar».
+
+### Laberinto
+
+- Tablero de 296 dp en `surfaceContainerLow`, centrado. Muros de 3 dp en `onSurfaceVariant`; 8 × 8 da casillas de
+  37 dp y 12 × 12 de 24,7 dp.
+- Inicio: el despertador (disco `primary` con esfera y aguja) en la casilla de arriba a la izquierda. Salida: hueco
+  en el borde derecho de la casilla de abajo a la derecha, con una flecha en `tertiary` y la leyenda «Salida».
+- Trazo en `primary`, 8 dp, con extremos y uniones redondeados. El dedo se marca con un aro de 2,5 dp y un punto en
+  `primary`.
+- Es un gesto continuo, no un toque, así que no aplica el mínimo de 48 dp. Para el 12 × 12, tolerad unos 8 dp antes
+  de contar un muro como tocado.
+- **Muro tocado:** aviso `errorContainer` / `onErrorContainer` con icono, «Has tocado un muro. Vuelve a empezar desde
+  la alarma.» El trazo fallido queda punteado en `error` y hay una X en `error` sobre el punto de contacto. Al
+  levantar el dedo o al volver a tocar el inicio, el trazo se borra. «Intento N» abajo a la izquierda.
+
+### Memoria de cuadrícula
+
+- Tablero 3 × 3 de 304 dp (casillas de 96 dp), 4 × 4 o 5 × 5 de 320 dp (casillas de 57,6 dp). Separación 8 dp,
+  `surfaceContainerLow` con borde `outlineVariant`.
+- Casilla iluminada: `primary`, borde incluido. Casilla al tocarla: `secondaryContainer` con borde de 2 dp en
+  `onSurface`. Iluminada y tocada se distinguen por luminosidad y borde, no solo por tono.
+- **Observar:** «Memoriza la secuencia» + «Paso 3 de 5 · no toques todavía»; casillas desactivadas. **Responder:**
+  «Repite la secuencia» + «2 de 5». Cada casilla anuncia «Casilla N» / «Casilla N, iluminada»
+  (`challenge_memory_cell*`).
+
+### Ajustes de alarma
+
+- **No sonar mientras resuelvo:** fila con `Switch` en la sección «Mientras resuelves los retos» (solo con «Con
+  retos»). Si está activo, debajo y sangrado (filete de 1 dp `outlineVariant`, sangría 16 dp) va «Vuelve a sonar
+  tras» con un segmented de 15 s / 30 s / 1 min / 2 min (por defecto 30 s).
+- **Posponer:** sale de Anti-trampas a su propia sección. `Switch` «Permitir posponer» y, sangrados, «Duración»
+  (5 / 10 / 15 min) y «Límite de veces» (1 / 2 / 3 / 5 / Sin límite, la última columna a 1,8 fr). Pista: «Después de
+  N veces solo queda apagarla.», oculta con «Sin límite».
+- **En la alarma sonando:** con posposiciones restantes, el botón con borde dice «Posponer 5 min · quedan 2». Sin
+  ellas, el botón se sustituye por un aviso no pulsable (`surfaceContainerLow`, borde `outlineVariant`, mín. 56 dp,
+  icono de posponer): «Sin posposiciones» / «Ya la has pospuesto 3 de 3 veces.». Vale para `RingContent` y para
+  `RingChallenges`.
+- **Verificar que estoy despierto:** fila con `Switch` en «Al despertar». A los 5 min de apagarla llega una
+  notificación de prioridad alta, que no se descarta deslizando, con «¿Sigues despierto?», un texto con el margen y la
+  acción «Estoy despierto». Tocar la notificación abre la app y cuenta como confirmación. Sin respuesta, la alarma
+  vuelve a sonar. El margen de 2 min del diseño está por confirmar. El icono pequeño es el glifo monocromo del icono.
+
+### Ajustes de cada reto
+
+Sección «Ajustes de cada reto» bajo «Cómo apagarla», con un bloque por reto activo (`surfaceContainerLow`, borde
+`outlineVariant`, padding 16, separación 12). Siguen el patrón de `MemoryParamsEditor`: título `titleMedium`, una
+línea con lo que implica el nivel (`bodyMedium` `onSurfaceVariant`) y sus controles, todos segmented de 48 dp:
+
+- Secuencia de formas: «5 formas · cada una se ve 0,8 s»; Formas posibles 4 / 6.
+- Laberinto: «8 × 8 · si tocas un muro vuelves al inicio»; Tamaño Según nivel / 8 × 8 / 12 × 12.
+- Memoria de cuadrícula: «5 pasos · ritmo medio»; Tablero 3 × 3 / 4 × 4 / 5 × 5; Ritmo Lento / Medio / Rápido.
+
+Las cifras de las líneas de nivel son de ejemplo: deben salir de las tablas de nivel de cada reto.
