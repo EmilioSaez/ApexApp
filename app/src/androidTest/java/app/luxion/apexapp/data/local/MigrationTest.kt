@@ -122,6 +122,25 @@ class MigrationTest {
         }
     }
 
+    @Test
+    fun migrate6To7_keepsAlarmsAndAddsAwakeVerificationOff() {
+        helper.createDatabase(DB, 6).apply {
+            execSQL("INSERT INTO alarms (id, hour, minute, repeatMask, enabled, label, soundId, challengesJson, soundJson, antiCheatJson, muteDuringChallenges, muteInactivitySeconds) VALUES (1, 6, 45, 3, 1, 'Gym', NULL, '{}', '{}', '{}', 1, 60)")
+            close()
+        }
+
+        val db = helper.runMigrationsAndValidate(DB, 7, true, MIGRATION_6_7)
+        db.query("SELECT hour, minute, label, muteDuringChallenges, muteInactivitySeconds, awakeVerificationEnabled FROM alarms WHERE id = 1").use {
+            it.moveToFirst()
+            assertEquals(6, it.getInt(0))
+            assertEquals(45, it.getInt(1))
+            assertEquals("Gym", it.getString(2))
+            assertEquals(1, it.getInt(3))
+            assertEquals(60, it.getInt(4))
+            assertEquals(0, it.getInt(5))
+        }
+    }
+
     private companion object {
         const val DB = "migration-test"
     }

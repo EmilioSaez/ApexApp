@@ -112,6 +112,29 @@ class AlarmFiringHandlerTest {
     }
 
     @Test
+    fun ringAgain_newSessionWithoutTouchingScheduleOrEnabled() = runBlocking {
+        val id = repository.save(Alarm(hour = 8, minute = 0, enabled = false, awakeVerification = true))
+        val session = handler.ringAgain(id)!!
+        assertEquals("session-1", session.sessionId)
+        assertEquals(listOf(session), launcher.started)
+        assertFalse(repository.get(id)!!.enabled)
+        assertTrue(gateway.scheduled.isEmpty())
+        assertNull(fireState.get(id))
+        val event = recorder.events.single()
+        assertEquals(WakeEventType.RANG, event.type)
+        assertEquals(session.sessionId, event.sessionId)
+    }
+
+    @Test
+    fun ringAgain_missingOrAlreadyRinging_doesNothing() = runBlocking {
+        assertNull(handler.ringAgain(999))
+        val id = repository.save(Alarm(hour = 8, minute = 0))
+        assertNotNull(handler.ringAgain(id))
+        assertNull(handler.ringAgain(id))
+        assertEquals(1, launcher.started.size)
+    }
+
+    @Test
     fun serviceCannotStart_fallsBackToNotificationWithSameSession() = runBlocking {
         launcher.canStart = false
         val id = repository.save(Alarm(hour = 8, minute = 0))

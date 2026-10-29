@@ -17,6 +17,8 @@ data class Alarm(
     val muteDuringChallenges: Boolean = false,
     /** Segundos sin interacción tras los que la alarma vuelve a sonar estando silenciada. */
     val muteInactivitySeconds: Int = DEFAULT_MUTE_INACTIVITY_SECONDS,
+    /** Tras resolver la alarma, comprueba que el usuario sigue despierto (ver `AwakeVerifier`). */
+    val awakeVerification: Boolean = false,
 ) {
     init {
         require(muteInactivitySeconds in MIN_MUTE_INACTIVITY_SECONDS..MAX_MUTE_INACTIVITY_SECONDS) {

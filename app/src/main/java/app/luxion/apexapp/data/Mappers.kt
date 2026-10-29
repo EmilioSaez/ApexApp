@@ -51,6 +51,7 @@ internal fun AlarmEntity.toDomain() = Alarm(
     antiCheat = decodeConfig(antiCheatJson, AntiCheatPolicy()),
     muteDuringChallenges = muteDuringChallenges,
     muteInactivitySeconds = muteInactivitySeconds.coerceIn(MIN_MUTE_INACTIVITY_SECONDS, MAX_MUTE_INACTIVITY_SECONDS),
+    awakeVerification = awakeVerificationEnabled,
 )
 
 internal fun Alarm.toEntity() = AlarmEntity(
@@ -66,6 +67,7 @@ internal fun Alarm.toEntity() = AlarmEntity(
     antiCheatJson = ConfigJson.encodeToString(antiCheat),
     muteDuringChallenges = muteDuringChallenges,
     muteInactivitySeconds = muteInactivitySeconds,
+    awakeVerificationEnabled = awakeVerification,
 )
 
 internal fun SoundEntity.toDomain() = Sound(

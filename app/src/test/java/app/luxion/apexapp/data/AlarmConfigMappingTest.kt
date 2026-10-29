@@ -52,6 +52,14 @@ class AlarmConfigMappingTest {
     }
 
     @Test
+    fun awakeVerification_isOffByDefault_andRoundTrips() {
+        assertEquals(false, Alarm(hour = 7, minute = 0).awakeVerification)
+        val alarm = Alarm(id = 2, hour = 7, minute = 0, awakeVerification = true)
+        assertEquals(true, alarm.toEntity().awakeVerificationEnabled)
+        assertEquals(alarm, alarm.toEntity().toDomain())
+    }
+
+    @Test
     fun muteInactivity_outOfRangeIsRejectedInDomainAndClampedFromStorage() {
         assertThrows(IllegalArgumentException::class.java) { Alarm(hour = 7, minute = 0, muteInactivitySeconds = 9) }
         assertThrows(IllegalArgumentException::class.java) { Alarm(hour = 7, minute = 0, muteInactivitySeconds = 301) }

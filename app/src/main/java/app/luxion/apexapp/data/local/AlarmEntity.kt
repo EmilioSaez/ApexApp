@@ -36,4 +36,6 @@ data class AlarmEntity(
     /** Silencio durante los retos (change mute-during-challenges). */
     @ColumnInfo(defaultValue = "0") val muteDuringChallenges: Boolean = false,
     @ColumnInfo(defaultValue = "30") val muteInactivitySeconds: Int = 30,
+    /** Verificar que el usuario sigue despierto tras apagar la alarma. */
+    @ColumnInfo(defaultValue = "0") val awakeVerificationEnabled: Boolean = false,
 )
