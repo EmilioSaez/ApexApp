@@ -5,6 +5,10 @@ import app.luxion.apexapp.alarm.AlarmNotifier
 import app.luxion.apexapp.alarm.AlarmResolver
 import app.luxion.apexapp.alarm.EndReason
 import app.luxion.apexapp.alarm.FakeAlarmRepository
+import app.luxion.apexapp.alarm.RingingRegistry
+import app.luxion.apexapp.alarm.RingingSession
+import app.luxion.apexapp.alarm.mute.ChallengeMuteController
+import app.luxion.apexapp.alarm.mute.RingMuter
 import app.luxion.apexapp.anticheat.SnoozeController
 import app.luxion.apexapp.anticheat.SnoozeCounts
 import app.luxion.apexapp.anticheat.SnoozeScheduler
@@ -20,8 +24,10 @@ import app.luxion.apexapp.domain.SnoozePolicy
 import app.luxion.apexapp.domain.WakeEventRecorder
 import app.luxion.apexapp.domain.WakeEventType
 import java.time.Clock
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -53,6 +59,14 @@ class RingViewModelTest {
         }
     }
 
+    private val muteRegistry = RingingRegistry()
+    private val muteCalls = mutableListOf<Boolean>()
+    private val muteController = ChallengeMuteController(
+        muteRegistry,
+        RingMuter { muteCalls += it },
+        Clock.systemUTC(),
+        CoroutineScope(Job()),
+    )
     private val snoozeCalls = mutableListOf<Triple<Long, String, Long>>()
     private val counts = HashMap<String, Int>()
     private val snoozeController = SnoozeController(
@@ -99,7 +113,31 @@ class RingViewModelTest {
         notifier,
         resolver,
         snoozeController,
+        muteController,
     )
+
+    @Test
+    fun challengeInteraction_mutesWhenTheAlarmHasTheOptionOn() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0, muteDuringChallenges = true))
+        muteRegistry.tryBegin(RingingSession("s-1", repository.get(id)!!))
+        val viewModel = viewModel(id)
+        viewModel.uiState.first { it.alarm != null }
+        assertTrue(muteCalls.isEmpty())
+
+        viewModel.onChallengeInteraction()
+        assertEquals(listOf(true), muteCalls)
+    }
+
+    @Test
+    fun challengeInteraction_doesNothingWhenTheOptionIsOff() = runTest {
+        val id = repository.save(Alarm(hour = 7, minute = 0))
+        muteRegistry.tryBegin(RingingSession("s-1", repository.get(id)!!))
+        val viewModel = viewModel(id)
+        viewModel.uiState.first { it.alarm != null }
+
+        viewModel.onChallengeInteraction()
+        assertTrue(muteCalls.isEmpty())
+    }
 
     @Test
     fun loadsAlarmAndSession_andAllowsDismissByDefault() = runTest {

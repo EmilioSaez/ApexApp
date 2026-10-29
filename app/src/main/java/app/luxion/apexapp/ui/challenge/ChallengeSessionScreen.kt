@@ -51,6 +51,8 @@ fun ChallengeSessionScreen(
     alarmId: Long? = null,
     /** Nivel anti-trampas efectivo que aplican los juegos táctiles a sus toques. */
     antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
+    /** Se llama con cada respuesta enviada (también las de retos por sensor, sin toques). */
+    onProgress: () -> Unit = {},
     // Una sesión por sessionId: al empezar otra se crea un ViewModel nuevo.
     viewModel: ChallengeSessionViewModel = hiltViewModel(key = sessionId),
 ) {
@@ -64,7 +66,10 @@ fun ChallengeSessionScreen(
             ChallengeSessionContent(
                 state = it,
                 rendererFor = viewModel::rendererFor,
-                onAnswer = viewModel::submit,
+                onAnswer = { answer ->
+                    onProgress()
+                    viewModel.submit(answer)
+                },
                 onUnavailable = viewModel::reportUnavailable,
                 onFinished = onFinished,
                 modifier = modifier,

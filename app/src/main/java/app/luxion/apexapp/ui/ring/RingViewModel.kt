@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import app.luxion.apexapp.alarm.AlarmNotifier
 import app.luxion.apexapp.alarm.AlarmResolver
 import app.luxion.apexapp.alarm.RingingSession
+import app.luxion.apexapp.alarm.mute.ChallengeMuteController
 import app.luxion.apexapp.anticheat.SnoozeController
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AlarmRepository
@@ -35,6 +36,7 @@ class RingViewModel @Inject constructor(
     private val notifier: AlarmNotifier,
     private val resolver: AlarmResolver,
     private val snoozeController: SnoozeController,
+    private val muteController: ChallengeMuteController,
 ) : ViewModel() {
     private val alarmId: Long = savedStateHandle[EXTRA_ALARM_ID] ?: -1L
     private val sessionId: String? = savedStateHandle[EXTRA_SESSION_ID]
@@ -69,6 +71,11 @@ class RingViewModel @Inject constructor(
         // Detiene el audio y el servicio de sonado; sin sesión (apertura manual) no hay nada que cerrar.
         sessionId?.let(resolver::resolve)
         _uiState.update { it.copy(finished = true) }
+    }
+
+    /** Toque o progreso del usuario en los retos; silencia la alarma si su opción está activa. */
+    fun onChallengeInteraction() {
+        sessionId?.let(muteController::onInteraction)
     }
 
     private fun challengesOf(alarm: Alarm): SessionConfig? =
