@@ -2,6 +2,10 @@ package app.luxion.apexapp.ui.challenge
 
 import android.view.InputDevice
 import android.view.MotionEvent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,11 +21,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,8 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.StrokeJoin
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInteropFilter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
@@ -47,22 +48,26 @@ import app.luxion.apexapp.domain.challenge.ChallengeInstance
 import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.MazeTrace
 import app.luxion.apexapp.domain.challenge.maze.MazeChallenge
+import app.luxion.apexapp.domain.challenge.maze.MazeDirection
 import app.luxion.apexapp.domain.challenge.maze.MazeInstance
 import app.luxion.apexapp.domain.challenge.maze.MazeLayout
 import app.luxion.apexapp.domain.challenge.maze.MazeLevels
 import app.luxion.apexapp.domain.challenge.maze.MazeSize
-import app.luxion.apexapp.domain.challenge.maze.MazeTracker
-import app.luxion.apexapp.domain.challenge.maze.TraceStatus
 import app.luxion.apexapp.domain.challenge.touch.TouchAction
 import app.luxion.apexapp.domain.challenge.touch.TouchSample
 import app.luxion.apexapp.domain.challenge.touch.TouchVerdict
 import app.luxion.apexapp.ui.theme.ApexTheme
 import javax.inject.Inject
-import kotlinx.coroutines.delay
+import kotlin.math.abs
+import kotlinx.coroutines.launch
 
 /** Alto máximo que se concede al calcular la celda; el laberinto mayor (9 filas × 40 dp) cabe de sobra. */
 private const val AvailableHeightDp = 440f
-private const val FailFlashMs = 450L
+/** Distancia mínima del dedo para contar como swipe. */
+private const val SwipeThresholdDp = 24f
+
+/** Duración de la animación de la ficha por cada celda. */
+private const val StepMs = 110
 private val IconSize = 28.dp
 
 class MazeRenderer @Inject constructor() : ChallengeRenderer {
@@ -78,40 +83,51 @@ class MazeRenderer @Inject constructor() : ChallengeRenderer {
         onAnswer: (ChallengeAnswer) -> Unit,
         onUnavailable: (reason: String) -> Unit,
     ) {
-        MazeContent(instance as MazeInstance, wrong) { onAnswer(MazeTrace(type, it)) }
+        MazeContent(instance as MazeInstance) { onAnswer(MazeTrace(type, it)) }
     }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<Int>) -> Unit) {
+private fun MazeContent(instance: MazeInstance, onTrace: (List<Int>) -> Unit) {
     val maze = instance.maze
     val plausibility = rememberTouchPlausibility()
     val density = LocalDensity.current.density
     val answer by rememberUpdatedState(onTrace)
 
-    var points by remember(instance) { mutableStateOf(emptyList<Offset>()) }
-    var failedFlash by remember(instance) { mutableStateOf(false) }
     var rejected by remember(instance) { mutableStateOf(false) }
     var solved by remember(instance) { mutableStateOf(false) }
-    var attempt by remember(instance) { mutableIntStateOf(1) }
+    var moving by remember(instance) { mutableStateOf(false) }
+    // Celdas por las que ha pasado la ficha, empezando en la entrada.
+    val trace = remember(instance) { mutableListOf(maze.start) }
+    val position = remember(instance) {
+        Animatable(Offset(maze.col(maze.start).toFloat(), maze.row(maze.start).toFloat()), Offset.VectorConverter)
+    }
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(failedFlash) {
-        if (failedFlash) {
-            val shown = points.size
-            delay(FailFlashMs)
-            failedFlash = false
-            // Si el usuario ya empezó otro trazo no se toca.
-            if (points.size == shown) points = emptyList()
+    fun swipe(direction: MazeDirection) {
+        val path = maze.slide(trace.last(), direction)
+        if (path.isEmpty()) return
+        moving = true
+        scope.launch {
+            for (cell in path) {
+                position.animateTo(Offset(maze.col(cell).toFloat(), maze.row(cell).toFloat()), tween(StepMs, easing = LinearEasing))
+                trace += cell
+            }
+            moving = false
+            if (trace.last() == maze.exit) {
+                solved = true
+                answer(trace.toList())
+            }
         }
     }
 
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
         Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
             Text(stringResource(R.string.challenge_maze_title), style = MaterialTheme.typography.titleMedium)
-            if (wrong || rejected) {
+            if (rejected) {
                 Text(
-                    stringResource(if (rejected) R.string.challenge_maze_rejected else R.string.challenge_maze_wrong),
+                    stringResource(R.string.challenge_maze_rejected),
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(MaterialTheme.colorScheme.errorContainer, MaterialTheme.shapes.small)
@@ -127,12 +143,7 @@ private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<I
                 )
             }
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                stringResource(R.string.challenge_maze_attempt, attempt),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically) {
             Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs + 2.dp)) {
                 Box(Modifier.size(16.dp, 3.dp).background(MaterialTheme.colorScheme.tertiary))
                 Text(
@@ -145,13 +156,11 @@ private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<I
         BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
             val size = MazeSize(maze.cols, maze.rows)
             val cellDp = MazeLayout.cellDp(maxWidth.value, AvailableHeightDp, size)
-            val cellPx = cellDp * density
-            val tracker = remember(instance, cellDp) { MazeTracker(maze, MazeLayout.wallThickness(cellDp)) }
+            val swipeThresholdPx = SwipeThresholdDp * density
             val description = stringResource(R.string.challenge_maze_area_description)
 
             val wallColor = MaterialTheme.colorScheme.onSurfaceVariant
-            val traceColor = MaterialTheme.colorScheme.primary
-            val failColor = MaterialTheme.colorScheme.error
+            val tokenColor = MaterialTheme.colorScheme.primary
             val surface = MaterialTheme.colorScheme.surfaceContainerLow
             val exitColor = MaterialTheme.colorScheme.tertiary
 
@@ -162,11 +171,13 @@ private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<I
                     .background(surface)
                     .semantics { contentDescription = description },
             ) {
+                var downX = 0f
+                var downY = 0f
+                var swiping = false
                 Canvas(
                     Modifier
                         .matchParentSize()
                         .pointerInteropFilter { event ->
-                            if (solved) return@pointerInteropFilter true
                             when (event.actionMasked) {
                                 MotionEvent.ACTION_DOWN -> {
                                     val sample = TouchSample(
@@ -175,50 +186,25 @@ private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<I
                                         fromTouchscreen = event.isFromSource(InputDevice.SOURCE_TOUCHSCREEN),
                                         obscured = event.flags and ObscuredFlags != 0,
                                     )
-                                    if (plausibility.check(sample) is TouchVerdict.Rejected) {
-                                        rejected = true
-                                    } else {
-                                        rejected = false
-                                        if (tracker.begin(event.x / cellPx, event.y / cellPx)) {
-                                            points = listOf(Offset(event.x, event.y))
-                                        }
+                                    rejected = plausibility.check(sample) is TouchVerdict.Rejected
+                                    swiping = !rejected
+                                    downX = event.x
+                                    downY = event.y
+                                }
+                                // El swipe se resuelve en cuanto el dedo supera el umbral, una vez por gesto.
+                                MotionEvent.ACTION_MOVE -> if (swiping && !solved && !moving) {
+                                    val direction = swipeDirection(event.x - downX, event.y - downY, swipeThresholdPx)
+                                    if (direction != null) {
+                                        swiping = false
+                                        swipe(direction)
                                     }
                                 }
-                                MotionEvent.ACTION_MOVE -> if (tracker.active) {
-                                    // Los puntos intermedios agrupados por Android evitan saltos entre eventos.
-                                    var status: TraceStatus? = tracker.status
-                                    for (i in 0 until event.historySize) {
-                                        status = tracker.move(event.getHistoricalX(i) / cellPx, event.getHistoricalY(i) / cellPx)
-                                        if (status != TraceStatus.TRACING) break
-                                    }
-                                    if (status == TraceStatus.TRACING) {
-                                        status = tracker.move(event.x / cellPx, event.y / cellPx)
-                                    }
-                                    points = points + Offset(event.x, event.y)
-                                    when (status) {
-                                        TraceStatus.HIT_WALL -> {
-                                            val cells = tracker.trace
-                                            tracker.reset()
-                                            failedFlash = true
-                                            attempt++
-                                            answer(cells)
-                                        }
-                                        TraceStatus.REACHED_EXIT -> {
-                                            solved = true
-                                            answer(tracker.trace)
-                                        }
-                                        else -> Unit
-                                    }
-                                }
-                                // Soltar antes de llegar borra el trazo sin contar como fallo.
-                                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                                    if (tracker.active) tracker.reset()
-                                    points = emptyList()
-                                }
+                                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> swiping = false
                             }
                             true
                         },
                 ) {
+                    val cellPx = cellDp * density
                     val wall = MazeLayout.WALL_DP * density
                     maze.walls.forEach { w ->
                         drawLine(
@@ -229,30 +215,29 @@ private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<I
                             cap = StrokeCap.Square,
                         )
                     }
-                    if (points.size > 1) {
-                        val path = androidx.compose.ui.graphics.Path().apply {
-                            moveTo(points.first().x, points.first().y)
-                            points.drop(1).forEach { lineTo(it.x, it.y) }
-                        }
-                        drawPath(
-                            path,
-                            if (failedFlash) failColor else traceColor,
-                            style = Stroke(wall * 2f, cap = StrokeCap.Round, join = StrokeJoin.Round),
-                        )
-                    }
                 }
-                CellIcon(R.drawable.ic_alarm, maze.col(maze.start), maze.row(maze.start), cellDp, traceColor, R.string.challenge_maze_start)
-                CellIcon(R.drawable.ic_flag, maze.col(maze.exit), maze.row(maze.exit), cellDp, exitColor, R.string.challenge_maze_exit)
+                CellIcon(R.drawable.ic_flag, maze.col(maze.exit).toFloat(), maze.row(maze.exit).toFloat(), cellDp, exitColor, R.string.challenge_maze_exit)
+                CellIcon(R.drawable.ic_alarm, position.value.x, position.value.y, cellDp, tokenColor, R.string.challenge_maze_start)
             }
         }
+    }
+}
+
+/** Dirección dominante de un desplazamiento del dedo, o null si no supera [threshold] píxeles. */
+internal fun swipeDirection(dx: Float, dy: Float, threshold: Float): MazeDirection? {
+    if (maxOf(abs(dx), abs(dy)) < threshold) return null
+    return if (abs(dx) > abs(dy)) {
+        if (dx > 0) MazeDirection.EAST else MazeDirection.WEST
+    } else {
+        if (dy > 0) MazeDirection.SOUTH else MazeDirection.NORTH
     }
 }
 
 @Composable
 private fun CellIcon(
     drawable: Int,
-    col: Int,
-    row: Int,
+    col: Float,
+    row: Float,
     cellDp: Float,
     tint: androidx.compose.ui.graphics.Color,
     description: Int,
