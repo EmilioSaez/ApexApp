@@ -33,7 +33,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.anticheat.AndroidCapabilityChecker
 import app.luxion.apexapp.anticheat.Capabilities
-import app.luxion.apexapp.ui.components.SectionHeader
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -108,12 +107,6 @@ fun AntiCheatStatusContent(
                 description = R.string.anticheat_cap_admin_desc,
                 granted = capabilities.deviceAdmin,
                 onGrant = onGrantAdmin,
-            )
-            SectionHeader(stringResource(R.string.anticheat_limits_title))
-            Text(
-                stringResource(R.string.anticheat_limits_body),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
     }

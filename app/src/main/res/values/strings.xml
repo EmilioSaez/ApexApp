@@ -324,8 +324,6 @@
     <string name="anticheat_granted">Concedido</string>
     <string name="anticheat_not_granted">Pendiente</string>
     <string name="anticheat_grant">Conceder</string>
-    <string name="anticheat_limits_title">Límites</string>
-    <string name="anticheat_limits_body">No se puede impedir el apagado forzado por hardware, el modo seguro, la recuperación, ADB ni retirar la batería. El volumen forzado no controla salidas externas con volumen propio, como algunos auriculares Bluetooth.</string>
     <string name="stats_title">Estadísticas</string>
     <string name="stats_open">Estadísticas</string>
     <string name="stats_kpi_days">días</string>
