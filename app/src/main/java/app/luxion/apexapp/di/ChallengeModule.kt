@@ -19,7 +19,10 @@ import app.luxion.apexapp.ui.challenge.FlappyParamsEditor
 import app.luxion.apexapp.ui.challenge.MemoryParamsEditor
 import app.luxion.apexapp.ui.challenge.MemoryRenderer
 import app.luxion.apexapp.domain.challenge.memory.MemoryChallenge
+import app.luxion.apexapp.domain.challenge.shapes.ShapeSequenceChallenge
 import app.luxion.apexapp.ui.challenge.QrParamsEditor
+import app.luxion.apexapp.ui.challenge.ShapeSequenceParamsEditor
+import app.luxion.apexapp.ui.challenge.ShapeSequenceRenderer
 import app.luxion.apexapp.ui.challenge.ShakeParamsEditor
 import app.luxion.apexapp.ui.challenge.StepsParamsEditor
 import app.luxion.apexapp.ui.challenge.rhythm.RhythmParamsEditor
@@ -140,6 +143,18 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun memoryEditor(impl: MemoryParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun shapeSequence(impl: ShapeSequenceChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun shapeSequenceRenderer(impl: ShapeSequenceRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun shapeSequenceEditor(impl: ShapeSequenceParamsEditor): ChallengeParamsEditor
 
     @Binds
     @IntoSet
