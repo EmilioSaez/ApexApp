@@ -82,8 +82,18 @@ internal object AntiCheatLevelSerializer : KSerializer<AntiCheatLevel> {
 data class SnoozePolicy(
     val allowed: Boolean = false,
     val minutes: Int = 5,
+    /** Posposiciones máximas por disparo; [UNLIMITED] las permite sin tope. */
     val maxCount: Int = 3,
-)
+) {
+    /** `null` si no hay tope; si no, las que quedan tras [done] posposiciones. */
+    fun remaining(done: Int): Int? = if (maxCount == UNLIMITED) null else (maxCount - done).coerceAtLeast(0)
+
+    fun canSnooze(done: Int): Boolean = allowed && minutes > 0 && (remaining(done)?.let { it > 0 } ?: true)
+
+    companion object {
+        const val UNLIMITED = -1
+    }
+}
 
 /** Ausente o vacío equivale a [AntiCheatLevel.OFF] y sin snooze. */
 @Serializable
