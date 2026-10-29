@@ -21,6 +21,9 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.semantics.Role
@@ -29,6 +32,7 @@ import app.luxion.apexapp.R
 import app.luxion.apexapp.anticheat.Capabilities
 import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.AntiCheatPolicy
+import app.luxion.apexapp.domain.SnoozePolicy
 import app.luxion.apexapp.ui.components.SectionHeader
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
@@ -70,26 +74,80 @@ fun AntiCheatSection(
             ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(stringResource(R.string.anticheat_snooze_allowed), Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+            Text(stringResource(R.string.anticheat_snooze_allowed), Modifier.weight(1f), style = MaterialTheme.typography.titleMedium)
             Switch(checked = policy.snooze.allowed, onCheckedChange = null)
         }
         if (policy.snooze.allowed) {
-            Text(stringResource(R.string.anticheat_snooze_minutes, policy.snooze.minutes), style = MaterialTheme.typography.bodyMedium)
-            Slider(
-                value = policy.snooze.minutes.toFloat(),
-                onValueChange = { onChange(policy.copy(snooze = policy.snooze.copy(minutes = it.toInt()))) },
-                valueRange = 1f..30f,
-            )
-            Text(stringResource(R.string.anticheat_snooze_max, policy.snooze.maxCount), style = MaterialTheme.typography.bodyMedium)
-            Slider(
-                value = policy.snooze.maxCount.toFloat(),
-                onValueChange = { onChange(policy.copy(snooze = policy.snooze.copy(maxCount = it.toInt()))) },
-                valueRange = 1f..10f,
-            )
+            SnoozeSettings(policy.snooze) { onChange(policy.copy(snooze = it)) }
         }
         TextButton(onClick = onOpenStatus) { Text(stringResource(R.string.anticheat_open_status)) }
     }
 }
+
+/** Duración y límite de la posposición, sangrados bajo el interruptor con un filete a la izquierda. */
+@Composable
+private fun SnoozeSettings(snooze: SnoozePolicy, onChange: (SnoozePolicy) -> Unit) {
+    val line = MaterialTheme.colorScheme.outlineVariant
+    Column(
+        Modifier
+            .fillMaxWidth()
+            .drawBehind { drawLine(line, Offset(0f, 0f), Offset(0f, size.height), strokeWidth = 1.dp.toPx()) }
+            .padding(start = ApexTheme.spacing.lg),
+        verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
+    ) {
+        SnoozeOptionRow(stringResource(R.string.anticheat_snooze_duration)) {
+            val options = (SNOOZE_MINUTES + snooze.minutes).distinct().sorted()
+            SnoozeSegments(
+                labels = options.map { stringResource(R.string.anticheat_snooze_minutes_option, it) },
+                selected = options.indexOf(snooze.minutes),
+                onSelect = { onChange(snooze.copy(minutes = options[it])) },
+            )
+        }
+        SnoozeOptionRow(stringResource(R.string.anticheat_snooze_limit)) {
+            val counts = if (snooze.maxCount == SnoozePolicy.UNLIMITED) SNOOZE_COUNTS else (SNOOZE_COUNTS + snooze.maxCount).distinct().sorted()
+            val options = counts + SnoozePolicy.UNLIMITED
+            SnoozeSegments(
+                labels = options.map { if (it == SnoozePolicy.UNLIMITED) stringResource(R.string.anticheat_snooze_unlimited) else it.toString() },
+                selected = options.indexOf(snooze.maxCount),
+                onSelect = { onChange(snooze.copy(maxCount = options[it])) },
+                lastWeight = 1.8f,
+            )
+            if (snooze.maxCount != SnoozePolicy.UNLIMITED) {
+                Text(
+                    pluralStringResource(R.plurals.anticheat_snooze_limit_hint, snooze.maxCount, snooze.maxCount),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SnoozeOptionRow(title: String, content: @Composable () -> Unit) {
+    Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+        Text(title, style = MaterialTheme.typography.titleMedium)
+        content()
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun SnoozeSegments(labels: List<String>, selected: Int, onSelect: (Int) -> Unit, lastWeight: Float = 1f) {
+    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+        labels.forEachIndexed { index, label ->
+            SegmentedButton(
+                selected = index == selected,
+                onClick = { onSelect(index) },
+                shape = SegmentedButtonDefaults.itemShape(index, labels.size, MaterialTheme.shapes.small),
+                modifier = Modifier.weight(if (index == labels.lastIndex) lastWeight else 1f),
+            ) { Text(label, maxLines = 1) }
+        }
+    }
+}
+
+private val SNOOZE_MINUTES = listOf(5, 10, 15)
+private val SNOOZE_COUNTS = listOf(1, 2, 3, 5)
 
 @StringRes
 private fun AntiCheatLevel.labelRes() = when (this) {

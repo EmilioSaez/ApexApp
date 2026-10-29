@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 8,
-    "identityHash": "a1057df6a046e52fde813ef54e687b9f",
+    "version": 7,
+    "identityHash": "8fbfd778be47bd9e4f631b9708393e71",
     "entities": [
       {
         "tableName": "alarms",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `repeatMask` INTEGER NOT NULL, `enabled` INTEGER NOT NULL, `label` TEXT, `soundId` INTEGER, `challengesJson` TEXT NOT NULL DEFAULT '{}', `soundJson` TEXT NOT NULL DEFAULT '{}', `antiCheatJson` TEXT NOT NULL DEFAULT '{}', `awakeVerificationEnabled` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`soundId`) REFERENCES `sounds`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `repeatMask` INTEGER NOT NULL, `enabled` INTEGER NOT NULL, `label` TEXT, `soundId` INTEGER, `challengesJson` TEXT NOT NULL DEFAULT '{}', `soundJson` TEXT NOT NULL DEFAULT '{}', `antiCheatJson` TEXT NOT NULL DEFAULT '{}', `muteDuringChallenges` INTEGER NOT NULL DEFAULT 0, `muteInactivitySeconds` INTEGER NOT NULL DEFAULT 30, `awakeVerificationEnabled` INTEGER NOT NULL DEFAULT 0, FOREIGN KEY(`soundId`) REFERENCES `sounds`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -68,6 +68,20 @@
             "affinity": "TEXT",
             "notNull": true,
             "defaultValue": "'{}'"
+          },
+          {
+            "fieldPath": "muteDuringChallenges",
+            "columnName": "muteDuringChallenges",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
+          },
+          {
+            "fieldPath": "muteInactivitySeconds",
+            "columnName": "muteInactivitySeconds",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "30"
           },
           {
             "fieldPath": "awakeVerificationEnabled",
@@ -407,7 +421,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a1057df6a046e52fde813ef54e687b9f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8fbfd778be47bd9e4f631b9708393e71')"
     ]
   }
 }

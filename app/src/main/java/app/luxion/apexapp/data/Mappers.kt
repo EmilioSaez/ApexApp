@@ -6,6 +6,8 @@ import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.Sound
 import app.luxion.apexapp.domain.SoundSource
 import app.luxion.apexapp.domain.AntiCheatPolicy
+import app.luxion.apexapp.domain.MAX_MUTE_INACTIVITY_SECONDS
+import app.luxion.apexapp.domain.MIN_MUTE_INACTIVITY_SECONDS
 import app.luxion.apexapp.domain.ChallengeConfig
 import app.luxion.apexapp.domain.SoundConfig
 import java.time.DayOfWeek
@@ -47,6 +49,8 @@ internal fun AlarmEntity.toDomain() = Alarm(
     challenges = decodeConfig(challengesJson, ChallengeConfig()).withoutRemovedTypes(),
     soundConfig = decodeConfig(soundJson, SoundConfig()),
     antiCheat = decodeConfig(antiCheatJson, AntiCheatPolicy()),
+    muteDuringChallenges = muteDuringChallenges,
+    muteInactivitySeconds = muteInactivitySeconds.coerceIn(MIN_MUTE_INACTIVITY_SECONDS, MAX_MUTE_INACTIVITY_SECONDS),
     awakeVerification = awakeVerificationEnabled,
 )
 
@@ -61,6 +65,8 @@ internal fun Alarm.toEntity() = AlarmEntity(
     challengesJson = ConfigJson.encodeToString(challenges),
     soundJson = ConfigJson.encodeToString(soundConfig),
     antiCheatJson = ConfigJson.encodeToString(antiCheat),
+    muteDuringChallenges = muteDuringChallenges,
+    muteInactivitySeconds = muteInactivitySeconds,
     awakeVerificationEnabled = awakeVerification,
 )
 

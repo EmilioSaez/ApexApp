@@ -28,5 +28,5 @@ Apagar la alarma no garantiza que el usuario siga despierto: es habitual resolve
 
 ## Impact
 
-- Código: `domain/Alarm`, `data/local/AlarmEntity`, `ApexDatabase` (versión 8 + `MIGRATION_7_8`), `data/Mappers`, `DataModule`, `alarm/` (nuevo `AwakeVerifier`, receiver, gateway y notifier de verificación; `AlarmFiringHandler.ringAgain`; `AlarmController`, `AlarmReceiver`, `BootReceiver`), `domain/WakeEvents`, editor (nueva `EditorSection`), `AndroidManifest.xml`, strings es/en.
-- **Conflicto previsible de numeración**: otros changes en paralelo usan la versión 6 (silenciar durante retos) y 7 (límite de posposición). Este change usa la **8** y `MIGRATION_7_8`. Colisionarán `ApexDatabase` (versión y migraciones), `DataModule` (`addMigrations`), `AlarmEntity`, `Alarm`, `Mappers` y el editor; al fusionar hay que renumerar versión y migración según el orden real y regenerar el esquema `app/schemas/.../N.json`.
+- Código: `domain/Alarm`, `data/local/AlarmEntity`, `ApexDatabase` (versión 7 + `MIGRATION_6_7`), `data/Mappers`, `DataModule`, `alarm/` (nuevo `AwakeVerifier`, receiver, gateway y notifier de verificación; `AlarmFiringHandler.ringAgain`; `AlarmController`, `AlarmReceiver`, `BootReceiver`), `domain/WakeEvents`, editor (nueva `EditorSection`), `AndroidManifest.xml`, strings es/en.
+- **Numeración de BD**: el silencio durante los retos usa la versión 6 y el límite de posposiciones no añade migración, así que este change usa la **7** y `MIGRATION_6_7`.

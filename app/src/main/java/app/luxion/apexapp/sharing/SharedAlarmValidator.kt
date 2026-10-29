@@ -4,6 +4,7 @@ import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatPolicy
 import app.luxion.apexapp.domain.ChallengeConfig
 import app.luxion.apexapp.domain.ChallengeSpec
+import app.luxion.apexapp.domain.SnoozePolicy
 import app.luxion.apexapp.domain.SoundConfig
 import app.luxion.apexapp.domain.challenge.SessionConfig
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
@@ -51,7 +52,7 @@ object SharedAlarmValidator {
         val challenges = validChallenges(shared.challenge, knownChallengeTypes, notes) ?: return invalid
         val antiCheat = shared.antiCheat ?: AntiCheatPolicy()
         if (antiCheat.snooze.minutes !in 1..MAX_SNOOZE_MINUTES) return invalid
-        if (antiCheat.snooze.maxCount !in 0..MAX_SNOOZE_COUNT) return invalid
+        if (antiCheat.snooze.maxCount != SnoozePolicy.UNLIMITED && antiCheat.snooze.maxCount !in 0..MAX_SNOOZE_COUNT) return invalid
 
         val key = shared.sound?.key
         val soundKey = key?.takeIf { it in knownSoundKeys }
