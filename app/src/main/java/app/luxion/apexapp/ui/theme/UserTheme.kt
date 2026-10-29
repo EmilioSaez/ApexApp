@@ -13,8 +13,10 @@ fun ApexUserTheme(viewModel: MainViewModel, content: @Composable () -> Unit) {
     val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
     val customColors by viewModel.customColors.collectAsStateWithLifecycle()
     val systemDark = isSystemInDarkTheme()
+    val darkTheme = if (themeMode == ThemeMode.CUSTOM) customColors.base.isDark(systemDark) else themeMode.isDark(systemDark)
+    SystemBarsEffect(darkTheme)
     ApexAppTheme(
-        darkTheme = if (themeMode == ThemeMode.CUSTOM) customColors.base.isDark(systemDark) else themeMode.isDark(systemDark),
+        darkTheme = darkTheme,
         customColors = customColors.takeIf { themeMode == ThemeMode.CUSTOM },
         content = content,
     )
