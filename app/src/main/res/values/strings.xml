@@ -240,6 +240,11 @@
     <string name="voice_repeat_every">Repetir cada %1$d s</string>
     <string name="voice_speak_time">Leer la hora</string>
     <string name="ring_snooze">Posponer %1$d min</string>
+    <string name="ring_snooze_exhausted">Sin posposiciones restantes</string>
+    <plurals name="ring_snoozes_left">
+        <item quantity="one">%d restante</item>
+        <item quantity="other">%d restantes</item>
+    </plurals>
     <string name="anticheat_section">Anti-trampas</string>
     <string name="anticheat_level_off">Desactivado</string>
     <string name="anticheat_level_standard">Estándar</string>
@@ -247,6 +252,7 @@
     <string name="anticheat_level_hint_standard">Pantalla completa, sin salir con Atrás o Home y volumen al máximo.</string>
     <string name="anticheat_snooze_allowed">Permitir posponer</string>
     <string name="anticheat_snooze_minutes">Minutos: %1$d</string>
+    <string name="anticheat_snooze_unlimited">Sin límite de veces</string>
     <string name="anticheat_snooze_max">Máximo de veces: %1$d</string>
     <string name="anticheat_missing_overlay">Falta el permiso de superposición: sin él no se puede recuperar la pantalla al pulsar Home.</string>
     <string name="anticheat_open_status">Ver estado de permisos</string>
@@ -328,6 +334,7 @@
     <string name="import_challenges">Retos: %1$s · dificultad %2$d · %3$d por sesión</string>
     <string name="import_sound_default">Sonido por defecto · volumen %1$d %%</string>
     <string name="import_snooze_allowed">Posponer: %1$d min, hasta %2$d veces</string>
+    <string name="import_snooze_unlimited">Posponer: %1$d min, sin límite</string>
     <string name="import_snooze_denied">Sin posponer</string>
     <string name="import_anticheat">Anti-trampa: %1$s</string>
     <string name="import_error_malformed">Este contenido no es una alarma de ApexApp válida.</string>

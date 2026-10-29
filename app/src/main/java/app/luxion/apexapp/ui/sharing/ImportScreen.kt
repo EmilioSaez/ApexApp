@@ -35,6 +35,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatLevel
+import app.luxion.apexapp.domain.SnoozePolicy
 import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
 import app.luxion.apexapp.domain.challenge.sensor.MotionKind
 import app.luxion.apexapp.domain.challenge.touch.TapTargetsChallenge
@@ -232,7 +233,11 @@ private fun challengesSummary(preview: ImportPreview): String {
 private fun snoozeSummary(preview: ImportPreview): String {
     val snooze = preview.alarm.antiCheat.snooze
     return if (snooze.allowed) {
-        stringResource(R.string.import_snooze_allowed, snooze.minutes, snooze.maxCount)
+        if (snooze.maxCount == SnoozePolicy.UNLIMITED) {
+            stringResource(R.string.import_snooze_unlimited, snooze.minutes)
+        } else {
+            stringResource(R.string.import_snooze_allowed, snooze.minutes, snooze.maxCount)
+        }
     } else {
         stringResource(R.string.import_snooze_denied)
     }

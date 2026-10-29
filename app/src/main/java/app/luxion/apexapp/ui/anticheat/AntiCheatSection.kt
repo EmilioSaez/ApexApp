@@ -29,6 +29,7 @@ import app.luxion.apexapp.R
 import app.luxion.apexapp.anticheat.Capabilities
 import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.domain.AntiCheatPolicy
+import app.luxion.apexapp.domain.SnoozePolicy
 import app.luxion.apexapp.ui.components.SectionHeader
 import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
@@ -80,12 +81,30 @@ fun AntiCheatSection(
                 onValueChange = { onChange(policy.copy(snooze = policy.snooze.copy(minutes = it.toInt()))) },
                 valueRange = 1f..30f,
             )
-            Text(stringResource(R.string.anticheat_snooze_max, policy.snooze.maxCount), style = MaterialTheme.typography.bodyMedium)
-            Slider(
-                value = policy.snooze.maxCount.toFloat(),
-                onValueChange = { onChange(policy.copy(snooze = policy.snooze.copy(maxCount = it.toInt()))) },
-                valueRange = 1f..10f,
-            )
+            val unlimited = policy.snooze.maxCount == SnoozePolicy.UNLIMITED
+            Row(
+                Modifier.fillMaxWidth().toggleable(
+                    value = unlimited,
+                    role = Role.Switch,
+                    onValueChange = {
+                        val max = if (it) SnoozePolicy.UNLIMITED else SnoozePolicy().maxCount
+                        onChange(policy.copy(snooze = policy.snooze.copy(maxCount = max)))
+                    },
+                ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(stringResource(R.string.anticheat_snooze_unlimited), Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+                Switch(checked = unlimited, onCheckedChange = null)
+            }
+            if (!unlimited) {
+                Text(stringResource(R.string.anticheat_snooze_max, policy.snooze.maxCount), style = MaterialTheme.typography.bodyMedium)
+                Slider(
+                    value = policy.snooze.maxCount.toFloat(),
+                    onValueChange = { onChange(policy.copy(snooze = policy.snooze.copy(maxCount = it.toInt()))) },
+                    valueRange = 0f..10f,
+                    steps = 9,
+                )
+            }
         }
         TextButton(onClick = onOpenStatus) { Text(stringResource(R.string.anticheat_open_status)) }
     }

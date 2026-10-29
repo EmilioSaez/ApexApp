@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -48,7 +49,7 @@ fun RingScreen(
     val alarm = state.alarm ?: return
     val challenges = state.challenges
     if (challenges == null) {
-        RingContent(alarm, state.canDismiss, viewModel::dismiss, state.canSnooze, viewModel::snooze)
+        RingContent(alarm, state.canDismiss, viewModel::dismiss, state.canSnooze, viewModel::snooze, state.snoozesLeft)
     } else {
         // Al superar la sesión el gate la reconoce y dismiss() apaga la alarma; sin superarla no hay salida.
         RingChallenges(
@@ -58,6 +59,7 @@ fun RingScreen(
             onPassed = viewModel::dismiss,
             canSnooze = state.canSnooze,
             onSnooze = viewModel::snooze,
+            snoozesLeft = state.snoozesLeft,
             antiCheat = antiCheat,
         )
     }
@@ -72,6 +74,7 @@ fun RingChallenges(
     onPassed: () -> Unit,
     canSnooze: Boolean,
     onSnooze: () -> Unit,
+    snoozesLeft: Int? = null,
     antiCheat: AntiCheatLevel = AntiCheatLevel.OFF,
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
@@ -85,13 +88,37 @@ fun RingChallenges(
                 alarmId = alarm.id,
                 antiCheat = antiCheat,
                 )
-            if (canSnooze) {
-                SnoozeButton(
-                    alarm,
-                    onSnooze,
-                    Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen).padding(bottom = ApexTheme.spacing.xl),
-                )
-            }
+            SnoozeActions(
+                alarm,
+                canSnooze,
+                onSnooze,
+                snoozesLeft,
+                Modifier.fillMaxWidth().padding(horizontal = ApexTheme.spacing.screen).padding(bottom = ApexTheme.spacing.xl),
+            )
+        }
+    }
+}
+
+/** Botón de posponer con las posposiciones restantes; agotadas, lo sustituye un aviso. */
+@Composable
+private fun SnoozeActions(
+    alarm: Alarm,
+    canSnooze: Boolean,
+    onSnooze: () -> Unit,
+    snoozesLeft: Int?,
+    modifier: Modifier = Modifier,
+) {
+    val exhausted = !canSnooze && alarm.antiCheat.snooze.allowed && snoozesLeft == 0
+    if (!canSnooze && !exhausted) return
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm), horizontalAlignment = Alignment.CenterHorizontally) {
+        if (canSnooze) SnoozeButton(alarm, onSnooze, Modifier.fillMaxWidth())
+        val note = when {
+            exhausted -> stringResource(R.string.ring_snooze_exhausted)
+            snoozesLeft != null -> pluralStringResource(R.plurals.ring_snoozes_left, snoozesLeft, snoozesLeft)
+            else -> null
+        }
+        if (note != null) {
+            Text(note, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
 }
@@ -152,6 +179,7 @@ fun RingContent(
     onDismiss: () -> Unit,
     canSnooze: Boolean = false,
     onSnooze: () -> Unit = {},
+    snoozesLeft: Int? = null,
 ) {
     Scaffold(modifier = Modifier.fillMaxSize()) { padding ->
         // La hora manda arriba y centrada; las acciones quedan al alcance del pulgar.
@@ -182,9 +210,7 @@ fun RingContent(
                         icon = painterResource(R.drawable.ic_check),
                     )
                 }
-                if (canSnooze) {
-                    SnoozeButton(alarm, onSnooze, Modifier.fillMaxWidth())
-                }
+                SnoozeActions(alarm, canSnooze, onSnooze, snoozesLeft, Modifier.fillMaxWidth())
             }
         }
     }
@@ -196,6 +222,7 @@ private fun RingPreview() = RingContent(
     canDismiss = true,
     onDismiss = {},
     canSnooze = true,
+    snoozesLeft = 2,
 )
 
 @Preview(name = "Claro", showBackground = true, heightDp = 780)

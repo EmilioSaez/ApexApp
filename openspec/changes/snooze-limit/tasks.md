@@ -7,11 +7,11 @@
 
 ## 2. UI
 
-- [ ] 2.1 Editor: control del máximo con «Sin límite» (0..10)
-- [ ] 2.2 Pantalla de sonar: restantes junto al botón y estado «agotadas»
-- [ ] 2.3 Resumen de importación con «sin límite»
-- [ ] 2.4 Strings es/en
+- [x] 2.1 Editor: control del máximo con «Sin límite» (0..10)
+- [x] 2.2 Pantalla de sonar: restantes junto al botón y estado «agotadas»
+- [x] 2.3 Resumen de importación con «sin límite»
+- [x] 2.4 Strings es/en
 
 ## 3. Verificación
 
-- [ ] 3.1 `./gradlew assembleDebug` y tests unitarios
+- [x] 3.1 `./gradlew assembleDebug` y tests unitarios
