@@ -12,6 +12,8 @@ import app.luxion.apexapp.alarm.AwakeVerifier
 import app.luxion.apexapp.alarm.PrefsAwakeVerificationStore
 import app.luxion.apexapp.alarm.RingAgain
 import app.luxion.apexapp.alarm.RingingLifecycleListener
+import app.luxion.apexapp.ui.awake.AwakeVerificationEditorSection
+import app.luxion.apexapp.ui.editor.EditorSection
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -30,6 +32,8 @@ interface AwakeVerificationModule {
     @Binds fun ringAgain(impl: AlarmFiringHandler): RingAgain
 
     @Binds fun canceller(impl: AwakeVerifier): AwakeVerificationCanceller
+
+    @Binds @IntoSet fun editorSection(impl: AwakeVerificationEditorSection): EditorSection
 
     @Binds @IntoSet fun lifecycleListener(impl: AwakeVerificationListener): RingingLifecycleListener
 }

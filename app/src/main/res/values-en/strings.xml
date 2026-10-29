@@ -2,6 +2,10 @@
     <string name="app_name">ApexApp</string>
     <string name="alarm_default_title">Alarm</string>
     <string name="alarm_channel_name">Alarms</string>
+    <string name="awake_verification_section">Verification</string>
+    <string name="awake_verification_option">Verify that I\'m awake</string>
+    <string name="awake_verification_hint">After you dismiss the alarm, we\'ll ask you to confirm %1$d min later. If you don\'t within %2$d min, it rings again with all its challenges.</string>
+    <string name="awake_verification_missing_notifications">Notifications are blocked: the verification will be skipped.</string>
     <string name="awake_verification_channel_name">Awake check</string>
     <string name="awake_verification_notification_title">Are you still awake?</string>
     <string name="awake_verification_notification_text">Confirm before %1$s or the alarm will ring again.</string>
