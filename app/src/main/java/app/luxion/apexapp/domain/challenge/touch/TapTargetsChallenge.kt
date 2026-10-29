@@ -10,13 +10,12 @@ import kotlin.random.Random
 /** Una instancia es el juego completo: se supera con [ChallengeAnswer.GameVerified] cuando la UI lo termina. */
 class TapTargetsInstance(
     override val level: Int,
-    val rounds: Int,
     private val random: Random,
 ) : ChallengeInstance {
     override val type: ChallengeType = TapTargetsChallenge.TYPE
-    override val prompt: String = "tap_targets:$rounds"
+    override val prompt: String = "tap_targets:$level"
 
-    fun newGame(): TapTargetsGame = TapTargetsGame(rounds, level, random)
+    fun newGame(): TapTargetsGame = TapTargetsGame(level, random)
 
     override fun check(answer: ChallengeAnswer): Boolean =
         answer is ChallengeAnswer.GameVerified && answer.type == type
@@ -27,7 +26,7 @@ class TapTargetsChallenge @Inject constructor() : Challenge {
     override val type: ChallengeType = TYPE
 
     override fun generate(level: Int, params: String, random: Random): ChallengeInstance =
-        TapTargetsInstance(level, TapTargetsParams.rounds(params), random)
+        TapTargetsInstance(level, random)
 
     companion object {
         val TYPE = ChallengeType("tap_targets")

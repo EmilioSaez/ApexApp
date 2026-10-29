@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono temático (Android 13+): la misma silueta en una tinta; el sistema la colorea. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M0,97.9L108,45.3L108,108L0,108Z" />
+    <path
+        android:pathData="M30.6,83.0L33.5,64.2L40.0,53.0L48.9,50.7M44.6,76.1L42.9,67.0L33.5,64.2"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="4.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35.1,46a4.2,4.2 0,1 0,8.4 0a4.2,4.2 0,1 0,-8.4 0Z M51.7,34.2a3.8,3.8 0,1 0,7.6 0a3.8,3.8 0,1 0,-7.6 0Z M66.3,34.2a3.8,3.8 0,1 0,7.6 0a3.8,3.8 0,1 0,-7.6 0Z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M47.8,50.6a15,15 0,1 0,30 0a15,15 0,1 0,-30 0Z M51.8,50.6a11,11 0,1 0,22 0a11,11 0,1 0,-22 0Z" />
+    <path
+        android:pathData="M55.9,50.3L62.8,50.6L59.5,42.2"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

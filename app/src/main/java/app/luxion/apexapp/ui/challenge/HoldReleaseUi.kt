@@ -6,13 +6,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -28,7 +26,6 @@ import androidx.compose.ui.input.pointer.PointerEvent
 import androidx.compose.ui.input.pointer.PointerType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -44,7 +41,6 @@ import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.holdrelease.HoldPhase
 import app.luxion.apexapp.domain.challenge.holdrelease.HoldReleaseChallenge
 import app.luxion.apexapp.domain.challenge.holdrelease.HoldReleaseInstance
-import app.luxion.apexapp.domain.challenge.holdrelease.HoldReleaseParams
 import app.luxion.apexapp.domain.challenge.holdrelease.RoundOutcome
 import app.luxion.apexapp.domain.challenge.touch.TouchAction
 import app.luxion.apexapp.domain.challenge.touch.TouchSample
@@ -192,43 +188,4 @@ private fun PointerEvent.sample(t: Long, action: TouchAction, type: PointerType)
     val flags = motionEvent?.flags ?: 0
     val obscured = flags and (MotionEvent.FLAG_WINDOW_IS_OBSCURED or MotionEvent.FLAG_WINDOW_IS_PARTIALLY_OBSCURED) != 0
     return TouchSample(t, action, fromTouchscreen = type == PointerType.Touch, obscured = obscured)
-}
-
-/** Selector de rondas del reto; muestra la duración orientativa (~20 s por ronda). */
-class HoldReleaseParamsEditor @Inject constructor() : ChallengeParamsEditor {
-    override val type: ChallengeType = HoldReleaseChallenge.TYPE
-
-    @Composable
-    override fun Content(params: String, difficulty: Int, onChange: (String) -> Unit) {
-        val rounds = HoldReleaseParams.rounds(params, difficulty)
-        Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-            Text(stringResource(R.string.challenge_type_holdrelease), style = MaterialTheme.typography.titleSmall)
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
-            ) {
-                OutlinedIconButton(
-                    onClick = { onChange(HoldReleaseParams.paramsFor(rounds - 1)) },
-                    enabled = rounds > HoldReleaseParams.MIN_ROUNDS,
-                ) { Text("-") }
-                Text(
-                    pluralStringResource(R.plurals.challenge_holdrelease_rounds, rounds, rounds),
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                OutlinedIconButton(
-                    onClick = { onChange(HoldReleaseParams.paramsFor(rounds + 1)) },
-                    enabled = rounds < HoldReleaseParams.MAX_ROUNDS,
-                ) { Text("+") }
-            }
-            Text(
-                stringResource(R.string.challenge_holdrelease_estimate, rounds * SECONDS_PER_ROUND),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-    }
-
-    private companion object {
-        const val SECONDS_PER_ROUND = 20
-    }
 }

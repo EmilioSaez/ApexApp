@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import app.luxion.apexapp.alarm.AlarmNotifier
 import app.luxion.apexapp.alarm.AlarmResolver
 import app.luxion.apexapp.alarm.RingingSession
+import app.luxion.apexapp.alarm.mute.ChallengeMuteController
 import app.luxion.apexapp.anticheat.SnoozeController
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AlarmRepository
@@ -22,6 +23,8 @@ data class RingUiState(
     val sessionId: String? = null,
     val canDismiss: Boolean = false,
     val canSnooze: Boolean = false,
+    /** Posposiciones que quedan; `null` si no hay límite. */
+    val snoozesLeft: Int? = null,
     /** Sesión de retos que hay que superar antes de poder apagar; `null` si se puede apagar ya. */
     val challenges: SessionConfig? = null,
     val finished: Boolean = false,
@@ -35,6 +38,7 @@ class RingViewModel @Inject constructor(
     private val notifier: AlarmNotifier,
     private val resolver: AlarmResolver,
     private val snoozeController: SnoozeController,
+    private val muteController: ChallengeMuteController,
 ) : ViewModel() {
     private val alarmId: Long = savedStateHandle[EXTRA_ALARM_ID] ?: -1L
     private val sessionId: String? = savedStateHandle[EXTRA_SESSION_ID]
@@ -55,6 +59,7 @@ class RingViewModel @Inject constructor(
                         alarm = alarm,
                         canDismiss = canDismiss,
                         canSnooze = canSnooze(alarm),
+                        snoozesLeft = snoozesLeft(alarm),
                         challenges = if (canDismiss) null else challengesOf(alarm),
                     )
                 }
@@ -71,11 +76,19 @@ class RingViewModel @Inject constructor(
         _uiState.update { it.copy(finished = true) }
     }
 
+    /** Toque o progreso del usuario en los retos; silencia la alarma si su opción está activa. */
+    fun onChallengeInteraction() {
+        sessionId?.let(muteController::onInteraction)
+    }
+
     private fun challengesOf(alarm: Alarm): SessionConfig? =
         alarm.challenges.takeIf { it.challenges.isNotEmpty() }?.let(SessionConfig::from)
 
     private fun canSnooze(alarm: Alarm): Boolean =
         sessionId != null && snoozeController.canSnooze(RingingSession(sessionId, alarm))
+
+    private fun snoozesLeft(alarm: Alarm): Int? =
+        sessionId?.let { snoozeController.remaining(RingingSession(it, alarm)) }
 
     /** Pospone la alarma: la sesión continúa cuando vuelva a sonar. */
     fun snooze() {

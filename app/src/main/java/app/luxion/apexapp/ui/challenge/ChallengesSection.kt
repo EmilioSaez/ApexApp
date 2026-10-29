@@ -1,6 +1,15 @@
 package app.luxion.apexapp.ui.challenge
 
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.res.pluralStringResource
+import app.luxion.apexapp.domain.ChallengeMode
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +26,7 @@ import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.ChallengeConfig
 import app.luxion.apexapp.domain.challenge.ChallengeRegistry
 import app.luxion.apexapp.domain.challenge.ChallengeType
+import app.luxion.apexapp.ui.components.SectionHeader
 import app.luxion.apexapp.ui.editor.EditorSection
 import app.luxion.apexapp.domain.challenge.MathChallenge
 import app.luxion.apexapp.ui.theme.ApexAppTheme
@@ -52,11 +62,8 @@ class ChallengesSection @Inject constructor(
     override fun Content(draft: Alarm, onChange: (Alarm) -> Unit) {
         val config = draft.challenges
         val update = { transform: (ChallengeConfig) -> ChallengeConfig -> onChange(draft.copy(challenges = transform(config))) }
-        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-            Text(
-                stringResource(R.string.challenge_editor_section),
-                style = MaterialTheme.typography.titleMedium,
-            )
+        Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
+            SectionHeader(stringResource(R.string.challenge_editor_title), horizontalPadding = 0.dp)
             ChallengeKindSelector(withChallenges = !config.isNormal, onChange = { on -> update { if (on) it.withChallenges() else it.asNormal() } })
             if (config.isNormal) {
                 Text(
@@ -66,6 +73,7 @@ class ChallengesSection @Inject constructor(
                 )
                 return@Column
             }
+            if (!config.needsType) SlopeSummary(config)
             TypeChips(
                 available = registry.types.sortedBy { it.id },
                 selected = config.challenges.map { ChallengeType(it.type) }.toSet(),
@@ -103,6 +111,41 @@ class ChallengesSection @Inject constructor(
     companion object {
         /** Los retos van antes que otras secciones habituales (sonido, anti-trampa). */
         const val ORDER = 100
+    }
+}
+
+/** Franja con la ladera: un nodo por reto y la cima en acento, más el resumen de la cadena. */
+@Composable
+private fun SlopeSummary(config: ChallengeConfig) {
+    val count = config.displayCount
+    val node = MaterialTheme.colorScheme.onSurfaceVariant
+    val summit = MaterialTheme.colorScheme.primary
+    val line = MaterialTheme.colorScheme.outlineVariant
+    Row(
+        Modifier.fillMaxWidth().background(MaterialTheme.colorScheme.surfaceContainerLow, MaterialTheme.shapes.small)
+            .padding(horizontal = ApexTheme.spacing.lg, vertical = ApexTheme.spacing.md),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
+    ) {
+        Canvas(Modifier.size(96.dp, 48.dp)) {
+            val r = 4.dp.toPx()
+            val start = Offset(r, size.height - r)
+            val end = Offset(size.width - r, r)
+            drawLine(line, start, end, strokeWidth = 2.dp.toPx(), cap = StrokeCap.Round)
+            for (i in 0 until count) {
+                val f = i.toFloat() / count
+                drawCircle(node, r, Offset(start.x + (end.x - start.x) * f, start.y + (end.y - start.y) * f))
+            }
+            drawCircle(summit, r, end)
+        }
+        Text(
+            if (config.mode == ChallengeMode.RANDOM) {
+                stringResource(R.string.challenge_editor_summary_random, count)
+            } else {
+                pluralStringResource(R.plurals.challenge_editor_summary, count, count)
+            },
+            style = MaterialTheme.typography.bodyMedium,
+        )
     }
 }
 

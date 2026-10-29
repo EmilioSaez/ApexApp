@@ -14,7 +14,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
@@ -185,7 +191,11 @@ private fun SoundSettingsContent(
             }
         }
 
-        OutlinedButton(onClick = onPreview, modifier = Modifier.fillMaxWidth()) {
+        TextButton(onClick = onPreview) {
+            if (!previewing) {
+                Icon(painterResource(R.drawable.ic_play_arrow), contentDescription = null, modifier = Modifier.size(20.dp))
+                Spacer(Modifier.width(spacing.sm))
+            }
             Text(stringResource(if (previewing) R.string.sound_preview_stop else R.string.sound_preview))
         }
     }

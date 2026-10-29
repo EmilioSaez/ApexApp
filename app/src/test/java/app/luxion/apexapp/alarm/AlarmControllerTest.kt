@@ -55,7 +55,15 @@ class AlarmControllerTest {
         NoOpNotifier, CountingSessionIds(),
         fireState, clock, FakeWakeEventRecorder(),
     )
-    private val controller = AlarmController(repository, scheduler, fireState, handler, recorder, clock)
+    private val cancelled = mutableListOf<Long>()
+    private val controller = AlarmController(
+        repository, scheduler, fireState, handler, recorder, clock,
+        object : AwakeVerificationCanceller {
+            override fun cancel(alarmId: Long) {
+                cancelled += alarmId
+            }
+        },
+    )
 
     private fun at(day: Int, hour: Int, minute: Int) =
         ZonedDateTime.of(2026, 10, day, hour, minute, 0, 0, zone)
@@ -75,6 +83,20 @@ class AlarmControllerTest {
         controller.setEnabled(id, false)
         assertTrue(gateway.scheduled.isEmpty())
         assertEquals(false, repository.get(id)!!.enabled)
+    }
+
+    @Test
+    fun awakeVerification_cancelledOnDisableDeleteAndOptionRemoved_notOnPlainSave() = runBlocking {
+        controller.save(Alarm(hour = 8, minute = 0, awakeVerification = true))
+        val id = repository.getEnabled().single().id
+        controller.save(repository.get(id)!!.copy(label = "x"))
+        assertTrue(cancelled.isEmpty())
+        controller.setEnabled(id, false)
+        assertEquals(listOf(id), cancelled)
+        controller.save(repository.get(id)!!.copy(enabled = true, awakeVerification = false))
+        assertEquals(listOf(id, id), cancelled)
+        controller.delete(id)
+        assertEquals(listOf(id, id, id), cancelled)
     }
 
     @Test
@@ -104,7 +126,7 @@ class AlarmControllerTest {
         val nyClock = Clock.fixed(start.toInstant(), newYork)
         val nyScheduler = AlarmClockScheduler(gateway, nyClock, fireState)
         val nyHandler = AlarmFiringHandler(repository, nyScheduler, RingingRegistry(), launcher, NoOpNotifier, CountingSessionIds(), fireState, nyClock, FakeWakeEventRecorder())
-        AlarmController(repository, nyScheduler, fireState, nyHandler, recorder, nyClock).rescheduleAll()
+        AlarmController(repository, nyScheduler, fireState, nyHandler, recorder, nyClock, NoOpCanceller).rescheduleAll()
         val expected = ZonedDateTime.of(2026, 10, 21, 8, 0, 0, 0, newYork).toInstant().toEpochMilli()
         assertEquals(expected, gateway.scheduled[id])
         assertTrue(recorder.events.isEmpty())

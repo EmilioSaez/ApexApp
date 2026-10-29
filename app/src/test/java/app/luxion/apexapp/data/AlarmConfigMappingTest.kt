@@ -11,6 +11,7 @@ import app.luxion.apexapp.domain.Sound
 import app.luxion.apexapp.domain.SoundConfig
 import app.luxion.apexapp.domain.SoundSource
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertThrows
 import org.junit.Test
 
 class AlarmConfigMappingTest {
@@ -38,6 +39,35 @@ class AlarmConfigMappingTest {
             antiCheat = AntiCheatPolicy(AntiCheatLevel.STANDARD, SnoozePolicy(allowed = true, minutes = 10, maxCount = 1)),
         )
         assertEquals(alarm, alarm.toEntity().toDomain())
+    }
+
+    @Test
+    fun muteFields_defaultOffAndRoundTrip() {
+        val default = Alarm(hour = 7, minute = 0)
+        assertEquals(false, default.muteDuringChallenges)
+        assertEquals(30, default.muteInactivitySeconds)
+
+        val alarm = Alarm(id = 4, hour = 6, minute = 0, muteDuringChallenges = true, muteInactivitySeconds = 60)
+        assertEquals(alarm, alarm.toEntity().toDomain())
+    }
+
+    @Test
+    fun awakeVerification_isOffByDefault_andRoundTrips() {
+        assertEquals(false, Alarm(hour = 7, minute = 0).awakeVerification)
+        val alarm = Alarm(id = 2, hour = 7, minute = 0, awakeVerification = true)
+        assertEquals(true, alarm.toEntity().awakeVerificationEnabled)
+        assertEquals(alarm, alarm.toEntity().toDomain())
+    }
+
+    @Test
+    fun muteInactivity_outOfRangeIsRejectedInDomainAndClampedFromStorage() {
+        assertThrows(IllegalArgumentException::class.java) { Alarm(hour = 7, minute = 0, muteInactivitySeconds = 9) }
+        assertThrows(IllegalArgumentException::class.java) { Alarm(hour = 7, minute = 0, muteInactivitySeconds = 301) }
+        val entity = AlarmEntity(
+            id = 1, hour = 7, minute = 0, repeatMask = 0, enabled = true, label = null, soundId = null,
+            muteDuringChallenges = true, muteInactivitySeconds = 5000,
+        )
+        assertEquals(300, entity.toDomain().muteInactivitySeconds)
     }
 
     @Test

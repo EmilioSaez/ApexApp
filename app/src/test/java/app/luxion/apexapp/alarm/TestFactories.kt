@@ -29,5 +29,9 @@ fun testController(
         repository, scheduler, RingingRegistry(), launcher, NoOpNotifier, CountingSessionIds(), fireState, clock,
         FakeWakeEventRecorder(),
     )
-    return AlarmController(repository, scheduler, fireState, handler, recorder, clock)
+    return AlarmController(repository, scheduler, fireState, handler, recorder, clock, NoOpCanceller)
+}
+
+object NoOpCanceller : AwakeVerificationCanceller {
+    override fun cancel(alarmId: Long) = Unit
 }

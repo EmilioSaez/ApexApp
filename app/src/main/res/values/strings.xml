@@ -2,6 +2,14 @@
     <string name="app_name">ApexApp</string>
     <string name="alarm_default_title">Alarma</string>
     <string name="alarm_channel_name">Alarmas</string>
+    <string name="awake_verification_section">Al despertar</string>
+    <string name="awake_verification_option">Verificar que estoy despierto</string>
+    <string name="awake_verification_hint">%1$d min después de apagarla recibirás un aviso. Si no pulsas «Estoy despierto» en %2$d min, vuelve a sonar.</string>
+    <string name="awake_verification_missing_notifications">Las notificaciones están bloqueadas: la verificación se omitirá.</string>
+    <string name="awake_verification_channel_name">Verificación de despierto</string>
+    <string name="awake_verification_notification_title">¿Sigues despierto?</string>
+    <string name="awake_verification_notification_text">Confírmalo antes de %1$d min o la alarma volverá a sonar.</string>
+    <string name="awake_verification_action">Estoy despierto</string>
     <string name="alarm_once">Una vez</string>
     <string name="alarm_every_day">Todos los días</string>
     <string name="home_empty">No hay alarmas todavía</string>
@@ -9,8 +17,17 @@
     <string name="home_wordmark" translatable="false">APEX</string>
     <string name="home_nav_alarms">Alarmas</string>
     <string name="home_next_in">Suena en %1$s</string>
+    <string name="home_next_label">Próxima alarma · %1$s</string>
+    <string name="home_remaining">Faltan %1$s</string>
+    <string name="home_day_today">Hoy</string>
+    <string name="home_day_tomorrow">Mañana</string>
+    <string name="home_row_no_challenges">Sin retos</string>
+    <string name="home_row_disabled">Desactivada</string>
+    <plurals name="home_challenge_count">
+        <item quantity="one">%d reto</item>
+        <item quantity="other">%d retos</item>
+    </plurals>
     <string name="home_scheduled">Alarmas programadas</string>
-    <string name="home_challenge_line">Reto: %1$s</string>
     <string name="home_settings">Ajustes</string>
     <string name="home_add_alarm">Nueva alarma</string>
     <string name="permission_notifications_missing">Las notificaciones están desactivadas: la alarma podría no mostrarse.</string>
@@ -41,6 +58,22 @@
     <string name="settings_theme_system">Sistema</string>
     <string name="settings_theme_light">Claro</string>
     <string name="settings_theme_dark">Oscuro</string>
+    <string name="settings_theme_custom">Personalizado</string>
+    <string name="settings_custom_primary">Color primario</string>
+    <string name="settings_custom_secondary">Color secundario</string>
+    <string name="settings_custom_base">Base del tema</string>
+    <string name="settings_color_hue">Tono</string>
+    <string name="settings_color_saturation">Saturación</string>
+    <string name="settings_color_brightness">Brillo</string>
+    <string name="settings_color_apply">Aplicar</string>
+    <string name="settings_color_cancel">Cancelar</string>
+    <string name="settings_icon_themed">Icono de la app</string>
+    <string name="settings_icon_suggested">Variante más cercana a tu color primario</string>
+    <string name="settings_icon_applied">Aplicado</string>
+    <string name="settings_icon_apply">Aplicar</string>
+    <string name="settings_icon_original">Icono original</string>
+    <string name="settings_icon_restore">Restaurar</string>
+    <string name="settings_icon_note">El launcher puede tardar unos segundos en mostrar el cambio y, en algunos móviles, la app se cierra al aplicarlo.</string>
     <string name="settings_section_language">Idioma</string>
     <string name="settings_language_system">Sistema</string>
     <string name="settings_language_es">Español</string>
@@ -131,13 +164,13 @@
     <string name="challenge_motion_rejected">Ese movimiento no parece real. Inténtalo de nuevo.</string>
     <string name="scanner_permission_rationale">Necesitamos la cámara para leer el código. La imagen no sale del móvil.</string>
     <string name="scanner_permission_blocked">El permiso de cámara está denegado. Actívalo en los ajustes de la app para usar este reto.</string>
-    <string name="challenge_qr_prompt">Escanea tu código</string>
+    <string name="challenge_qr_prompt">Escanea tu código QR o de barras</string>
     <string name="challenge_qr_hold">Mantén el código en el encuadre…</string>
     <string name="challenge_qr_wrong">Ese no es el código registrado.</string>
     <string name="challenge_qr_rejected_screen">Parece una pantalla. Escanea el objeto real.</string>
     <string name="challenge_qr_rejected_static">Parece una foto. Escanea el objeto real.</string>
-    <string name="qr_register_required">Registra un código para esta alarma.</string>
-    <string name="qr_register_scanning">Apunta la cámara al código que quieres usar.</string>
+    <string name="qr_register_required">Registra un código QR o de barras para esta alarma.</string>
+    <string name="qr_register_scanning">Apunta la cámara al código QR o de barras que quieres usar.</string>
     <string name="qr_register_done">Código registrado (%1$s).</string>
     <string name="qr_register_action">Registrar código</string>
     <string name="qr_register_replace">Sustituir código</string>
@@ -148,7 +181,7 @@
     <string name="steps_permission_rationale">Para contar tus pasos necesitamos el permiso de actividad física.</string>
     <string name="challenge_type_shake">Agitar</string>
     <string name="challenge_type_steps">Pasos</string>
-    <string name="challenge_type_qr">Código QR</string>
+    <string name="challenge_type_qr">Código QR o de barras</string>
     <string name="challenge_type_holdrelease">Mantener y soltar</string>
     <string name="challenge_holdrelease_round">Ronda %1$d de %2$d</string>
     <string name="challenge_holdrelease_hold">Mantén pulsado</string>
@@ -157,11 +190,6 @@
     <string name="challenge_holdrelease_early">Soltaste antes de tiempo. Se añade una ronda.</string>
     <string name="challenge_holdrelease_late">Soltaste tarde. Se añade una ronda.</string>
     <string name="challenge_holdrelease_cancelled">Se interrumpió la pulsación.</string>
-    <string name="challenge_holdrelease_estimate">Duración orientativa: unos %d s</string>
-    <plurals name="challenge_holdrelease_rounds">
-        <item quantity="one">%d ronda</item>
-        <item quantity="other">%d rondas</item>
-    </plurals>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
         <item quantity="one">Pasa %d tubería sin chocar</item>
@@ -185,9 +213,51 @@
         <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
     </plurals>
 
+    <string name="challenge_type_grid_memory">Memoria de cuadrícula</string>
+    <string name="challenge_grid_memory_watch">Memoriza los cuadrados iluminados</string>
+    <string name="challenge_grid_memory_repeat">Toca los cuadrados iluminados</string>
+    <string name="challenge_grid_memory_hold">No toques todavía</string>
+    <string name="challenge_grid_memory_progress">%1$d de %2$d</string>
+    <string name="challenge_grid_memory_wrong">Cuadrado equivocado. Mira de nuevo.</string>
+    <string name="challenge_grid_memory_cell">Cuadrado %d</string>
+    <string name="challenge_grid_memory_cell_on">Cuadrado %d, marcado</string>
+    <plurals name="challenge_target_info_grid_memory">
+        <item quantity="one">Tablero de %1$d×%2$d con %3$d cuadrado a recordar</item>
+        <item quantity="other">Tablero de %1$d×%2$d con %3$d cuadrados a recordar</item>
+    </plurals>
+
+    <string name="challenge_type_maze">Laberinto</string>
+    <string name="challenge_maze_title">Lleva la alarma hasta la salida</string>
+    <string name="challenge_maze_hint">Desliza el dedo arriba, abajo, izquierda o derecha: la alarma avanza hasta chocar con un muro.</string>
+    <string name="challenge_maze_rejected">Toque no válido. Usa el dedo sobre la pantalla.</string>
+    <string name="challenge_maze_area_description">Laberinto: desliza el dedo para llevar la alarma hasta la salida</string>
+    <string name="challenge_maze_start">Entrada</string>
+    <string name="challenge_maze_exit">Salida</string>
+    <string name="challenge_maze_level_info">Laberinto con esta dificultad: %1$d × %2$d casillas</string>
+
+    <string name="challenge_type_shapes">Secuencia de formas</string>
+    <string name="challenge_shapes_watch">Memoriza las formas</string>
+    <string name="challenge_shapes_repeat">Elígelas en el mismo orden</string>
+    <string name="challenge_shapes_wrong">Orden incorrecto. Mira de nuevo.</string>
+    <string name="challenge_shapes_showing">Forma: %s</string>
+    <string name="challenge_shapes_progress_watch">Forma %1$d de %2$d</string>
+    <string name="challenge_shapes_progress_repeat">%1$d de %2$d</string>
+    <string name="challenge_shapes_your_sequence">Tu secuencia</string>
+    <string name="challenge_shapes_next_slot">Siguiente</string>
+    <string name="challenge_shapes_delete_last">Borrar última</string>
+    <string name="challenge_shape_circle">Círculo</string>
+    <string name="challenge_shape_square">Cuadrado</string>
+    <string name="challenge_shape_triangle">Triángulo</string>
+    <string name="challenge_shape_cross">Cruz</string>
+    <string name="challenge_shape_hexagon">Hexágono</string>
+    <string name="challenge_shape_diamond">Rombo</string>
+    <plurals name="challenge_target_info_shapes">
+        <item quantity="one">Secuencia con esta dificultad: %1$d forma entre %2$d distintas</item>
+        <item quantity="other">Secuencia con esta dificultad: %1$d formas entre %2$d distintas</item>
+    </plurals>
+
     <string name="challenge_type_rhythm">Ritmo</string>
-    <string name="challenge_rhythm_rounds">Rondas: %1$d</string>
-    <string name="challenge_rhythm_round">Ronda %1$d de %2$d</string>
+    <string name="challenge_rhythm_info">Una ronda: %1$d notas a %2$d BPM. La dificultad cambia la velocidad y la duración.</string>
     <string name="challenge_rhythm_failures">Fallos: %1$d de %2$d</string>
     <string name="challenge_rhythm_hint">Toca el carril cuando la nota llegue a la línea.</string>
     <string name="challenge_rhythm_restarted">Demasiados fallos: la ronda empieza de nuevo.</string>
@@ -200,6 +270,13 @@
     <string name="sound_preview_stop">Detener prueba</string>
     <string name="sound_ramp_off">Volumen progresivo: desactivado</string>
     <string name="sound_ramp_seconds">Volumen progresivo: %1$d s</string>
+    <string name="mute_section">Mientras resuelves los retos</string>
+    <string name="mute_toggle">No sonar mientras resuelvo</string>
+    <string name="mute_hint">La alarma calla mientras tocas la pantalla y vuelve a sonar si dejas de hacerlo.</string>
+    <string name="mute_inactivity">Vuelve a sonar tras</string>
+    <string name="mute_inactivity_hint">Sin tocar la pantalla durante ese tiempo.</string>
+    <string name="mute_inactivity_seconds">%1$d s</string>
+    <string name="mute_inactivity_minutes">%1$d min</string>
     <string name="sound_section">Sonido</string>
     <string name="sound_use_default">Por defecto</string>
     <string name="speech_time">Son las %1$s</string>
@@ -216,14 +293,27 @@
     <string name="voice_repeat_every">Repetir cada %1$d s</string>
     <string name="voice_speak_time">Leer la hora</string>
     <string name="ring_snooze">Posponer %1$d min</string>
+    <plurals name="ring_snooze_with_left">
+        <item quantity="one">Posponer %1$d min · queda %2$d</item>
+        <item quantity="other">Posponer %1$d min · quedan %2$d</item>
+    </plurals>
+    <string name="ring_snooze_exhausted_title">Sin posposiciones</string>
+    <string name="ring_snooze_exhausted_body">Ya la has pospuesto %1$d de %1$d veces.</string>
     <string name="anticheat_section">Anti-trampas</string>
     <string name="anticheat_level_off">Desactivado</string>
     <string name="anticheat_level_standard">Estándar</string>
     <string name="anticheat_level_hint_off">La alarma se puede descartar sin restricciones.</string>
     <string name="anticheat_level_hint_standard">Pantalla completa, sin salir con Atrás o Home y volumen al máximo.</string>
     <string name="anticheat_snooze_allowed">Permitir posponer</string>
-    <string name="anticheat_snooze_minutes">Minutos: %1$d</string>
-    <string name="anticheat_snooze_max">Máximo de veces: %1$d</string>
+    <string name="anticheat_snooze_section">Posponer</string>
+    <string name="anticheat_snooze_duration">Duración</string>
+    <string name="anticheat_snooze_minutes_option">%1$d min</string>
+    <string name="anticheat_snooze_limit">Límite de veces</string>
+    <string name="anticheat_snooze_unlimited">Sin límite</string>
+    <plurals name="anticheat_snooze_limit_hint">
+        <item quantity="one">Después de %d vez solo queda apagarla.</item>
+        <item quantity="other">Después de %d veces solo queda apagarla.</item>
+    </plurals>
     <string name="anticheat_missing_overlay">Falta el permiso de superposición: sin él no se puede recuperar la pantalla al pulsar Home.</string>
     <string name="anticheat_open_status">Ver estado de permisos</string>
     <string name="anticheat_status_title">Estado anti-trampas</string>
@@ -234,8 +324,6 @@
     <string name="anticheat_granted">Concedido</string>
     <string name="anticheat_not_granted">Pendiente</string>
     <string name="anticheat_grant">Conceder</string>
-    <string name="anticheat_limits_title">Límites</string>
-    <string name="anticheat_limits_body">No se puede impedir el apagado forzado por hardware, el modo seguro, la recuperación, ADB ni retirar la batería. El volumen forzado no controla salidas externas con volumen propio, como algunos auriculares Bluetooth.</string>
     <string name="stats_title">Estadísticas</string>
     <string name="stats_open">Estadísticas</string>
     <string name="stats_kpi_days">días</string>
@@ -304,6 +392,7 @@
     <string name="import_challenges">Retos: %1$s · dificultad %2$d · %3$d por sesión</string>
     <string name="import_sound_default">Sonido por defecto · volumen %1$d %%</string>
     <string name="import_snooze_allowed">Posponer: %1$d min, hasta %2$d veces</string>
+    <string name="import_snooze_unlimited">Posponer: %1$d min, sin límite</string>
     <string name="import_snooze_denied">Sin posponer</string>
     <string name="import_anticheat">Anti-trampa: %1$s</string>
     <string name="import_error_malformed">Este contenido no es una alarma de ApexApp válida.</string>
@@ -311,7 +400,7 @@
     <string name="import_error_version">Necesitas una versión más reciente de ApexApp para abrir esta alarma.</string>
     <string name="import_error_invalid">La alarma tiene valores no válidos y no se ha importado.</string>
     <string name="import_error_file">No se pudo leer el archivo.</string>
-    <string name="import_note_qr">Se omite el reto QR: registra tu propio código al editar la alarma.</string>
+    <string name="import_note_qr">Se omite el reto de código QR o de barras: registra tu propio código al editar la alarma.</string>
     <string name="import_note_challenge">Se omite un reto que esta versión no conoce.</string>
     <string name="import_note_sound">El sonido no está disponible: se usará el de por defecto.</string>
     <string name="streak_share_open">Compartir racha</string>
@@ -348,12 +437,18 @@
     <string name="time_entry_ok">Fijar</string>
     <string name="time_entry_cancel">Cancelar</string>
     <string name="challenge_type_tap_targets">Tocar objetivos</string>
-    <string name="tap_targets_round">Ronda %1$d de %2$d</string>
+    <string name="tap_targets_level_info">Una única ronda con %1$d círculos y %2$.1f s para tocarlos</string>
     <string name="tap_targets_hint">Toca todos los círculos antes de que desaparezcan</string>
     <string name="tap_targets_timeout">Tiempo agotado. Otra vez.</string>
     <string name="tap_targets_rejected">Toque no válido</string>
     <string name="tap_targets_area_description">Zona de juego: quedan %1$d círculos por tocar</string>
-    <string name="tap_targets_rounds_label">Rondas</string>
-    <string name="tap_targets_rounds_less">Menos rondas</string>
-    <string name="tap_targets_rounds_more">Más rondas</string>
+    <string name="editor_shortcut_all">Todos</string>
+    <string name="editor_shortcut_weekdays">Laborables</string>
+    <string name="editor_shortcut_weekend">Fin de semana</string>
+    <string name="challenge_editor_title">Cómo apagarla</string>
+    <plurals name="challenge_editor_summary">
+        <item quantity="one">%1$d reto hasta apagarla</item>
+        <item quantity="other">%1$d retos encadenados hasta apagarla</item>
+    </plurals>
+    <string name="challenge_editor_summary_random">%1$d retos al azar hasta apagarla</string>
 </resources>

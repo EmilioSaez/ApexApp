@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Icono Contraluz: Sísifo empuja un despertador ladera arriba (26°), en silueta. Una sola tinta: el color lo pone el fondo. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <group
-        android:scaleX="0.14"
-        android:scaleY="0.14"
-        android:translateX="54"
-        android:translateY="60.3">
-        <!-- Pico: dos flancos con el hueco triangular y la punta -->
-        <path
-            android:fillColor="#FF4D4F"
-            android:pathData="M0,-180L140,90L70,90L10,-30L45,-30L0,-140Z M0,-180L-140,90L-70,90L-10,-30L-45,-30L0,-140Z M0,-215L18,-170L-18,-170Z" />
-        <!-- Aguja interior -->
-        <path
-            android:fillColor="#FF4D4F"
-            android:pathData="M0,-120L18,-50L-18,-50Z" />
-        <!-- Base -->
-        <path
-            android:fillColor="#FF4D4F"
-            android:pathData="M-125,115L125,115A5,5 0 0 1 125,125L-125,125A5,5 0 0 1 -125,115Z M-140,120a10,10 0 1 0 20,0a10,10 0 1 0 -20,0Z M120,120a10,10 0 1 0 20,0a10,10 0 1 0 -20,0Z" />
-        <path
-            android:fillColor="#FF4D4F"
-            android:fillType="evenOdd"
-            android:pathData="M-12,120a12,12 0 1 0 24,0a12,12 0 1 0 -24,0Z M-5,120a5,5 0 1 0 10,0a5,5 0 1 0 -10,0Z" />
-    </group>
+    <!-- Ladera -->
+    <path
+        android:fillColor="#0B0B0B"
+        android:pathData="M0,97.9L108,45.3L108,108L0,108Z" />
+    <!-- Sísifo: piernas, tronco y brazos -->
+    <path
+        android:pathData="M30.6,83.0L33.5,64.2L40.0,53.0L48.9,50.7M44.6,76.1L42.9,67.0L33.5,64.2"
+        android:strokeColor="#0B0B0B"
+        android:strokeWidth="4.2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <!-- Cabeza y campanas -->
+    <path
+        android:fillColor="#0B0B0B"
+        android:pathData="M35.1,46a4.2,4.2 0,1 0,8.4 0a4.2,4.2 0,1 0,-8.4 0Z M51.7,34.2a3.8,3.8 0,1 0,7.6 0a3.8,3.8 0,1 0,-7.6 0Z M66.3,34.2a3.8,3.8 0,1 0,7.6 0a3.8,3.8 0,1 0,-7.6 0Z" />
+    <!-- Aro del despertador: la esfera queda hueca y deja ver el fondo -->
+    <path
+        android:fillColor="#0B0B0B"
+        android:fillType="evenOdd"
+        android:pathData="M47.8,50.6a15,15 0,1 0,30 0a15,15 0,1 0,-30 0Z M51.8,50.6a11,11 0,1 0,22 0a11,11 0,1 0,-22 0Z" />
+    <!-- Manecillas -->
+    <path
+        android:pathData="M55.9,50.3L62.8,50.6L59.5,42.2"
+        android:strokeColor="#0B0B0B"
+        android:strokeWidth="2.6"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
 </vector>

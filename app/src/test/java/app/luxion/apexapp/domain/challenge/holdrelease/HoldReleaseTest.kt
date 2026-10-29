@@ -29,23 +29,15 @@ class HoldReleaseTest {
     }
 
     @Test
-    fun `params ausentes corruptos o fuera de rango`() {
-        assertEquals(3, HoldReleaseParams.rounds("", 3))
-        assertEquals(3, HoldReleaseParams.rounds("no es json", 3))
-        assertEquals(3, HoldReleaseParams.rounds("{}", 3))
-        assertEquals(2, HoldReleaseParams.rounds("""{"rounds":0}""", 3))
-        assertEquals(6, HoldReleaseParams.rounds("""{"rounds":99}""", 3))
-        assertEquals(5, HoldReleaseParams.rounds(HoldReleaseParams.paramsFor(5), 3))
-    }
-
-    @Test
-    fun `sin params las rondas salen de la dificultad y los params mandan`() {
-        assertEquals(HoldReleaseParams.DEFAULT_ROUNDS_BY_LEVEL, (1..5).map { HoldReleaseParams.rounds("", it) })
-        assertEquals(HoldReleaseParams.rounds("", 1), (HoldReleaseChallenge().generate(1, "", Random(1)) as HoldReleaseInstance).rounds)
-        assertTrue(HoldReleaseParams.rounds("", 5) > HoldReleaseParams.rounds("", 1))
-        assertEquals(4, HoldReleaseParams.rounds(HoldReleaseParams.paramsFor(4), 1))
-        assertEquals(HoldReleaseParams.rounds("", 1), HoldReleaseParams.rounds("", -3))
-        assertEquals(HoldReleaseParams.rounds("", 5), HoldReleaseParams.rounds("", 99))
+    fun `las rondas salen de la dificultad y no de los params`() {
+        assertEquals(HoldReleaseParams.ROUNDS_BY_LEVEL, (1..5).map { HoldReleaseParams.rounds(it) })
+        assertTrue(HoldReleaseParams.rounds(5) > HoldReleaseParams.rounds(1))
+        assertEquals(HoldReleaseParams.rounds(1), HoldReleaseParams.rounds(-3))
+        assertEquals(HoldReleaseParams.rounds(5), HoldReleaseParams.rounds(99))
+        for (params in listOf("", "no es json", """{"rounds":6}""")) {
+            val instance = HoldReleaseChallenge().generate(2, params, Random(1)) as HoldReleaseInstance
+            assertEquals(HoldReleaseParams.rounds(2), instance.rounds)
+        }
     }
 
     @Test
@@ -152,8 +144,7 @@ class HoldReleaseTest {
 
     @Test
     fun `la instancia solo acepta GameVerified de su tipo`() {
-        val instance = HoldReleaseChallenge().generate(3, HoldReleaseParams.paramsFor(4), Random(1)) as HoldReleaseInstance
-        assertEquals(4, instance.rounds)
+        val instance = HoldReleaseChallenge().generate(3, "", Random(1)) as HoldReleaseInstance
         assertTrue(instance.check(ChallengeAnswer.GameVerified(HoldReleaseChallenge.TYPE)))
         assertFalse(instance.check(ChallengeAnswer.GameVerified(ChallengeType("otro"))))
         assertFalse(instance.check(ChallengeAnswer.MotionVerified(HoldReleaseChallenge.TYPE)))

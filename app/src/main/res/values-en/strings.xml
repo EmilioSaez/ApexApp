@@ -2,14 +2,31 @@
     <string name="app_name">ApexApp</string>
     <string name="alarm_default_title">Alarm</string>
     <string name="alarm_channel_name">Alarms</string>
+    <string name="awake_verification_section">On waking</string>
+    <string name="awake_verification_option">Verify that I\'m awake</string>
+    <string name="awake_verification_hint">%1$d min after you dismiss it you\'ll get a prompt. If you don\'t tap “I\'m awake” within %2$d min, it rings again.</string>
+    <string name="awake_verification_missing_notifications">Notifications are blocked: the verification will be skipped.</string>
+    <string name="awake_verification_channel_name">Awake check</string>
+    <string name="awake_verification_notification_title">Are you still awake?</string>
+    <string name="awake_verification_notification_text">Confirm within %1$d min or the alarm will ring again.</string>
+    <string name="awake_verification_action">I\'m awake</string>
     <string name="alarm_once">Once</string>
     <string name="alarm_every_day">Every day</string>
     <string name="home_empty">No alarms yet</string>
     <string name="home_empty_hint">Create an alarm to get started.</string>
     <string name="home_nav_alarms">Alarms</string>
     <string name="home_next_in">Rings in %1$s</string>
+    <string name="home_next_label">Next alarm · %1$s</string>
+    <string name="home_remaining">%1$s left</string>
+    <string name="home_day_today">Today</string>
+    <string name="home_day_tomorrow">Tomorrow</string>
+    <string name="home_row_no_challenges">No challenges</string>
+    <string name="home_row_disabled">Off</string>
+    <plurals name="home_challenge_count">
+        <item quantity="one">%d challenge</item>
+        <item quantity="other">%d challenges</item>
+    </plurals>
     <string name="home_scheduled">Scheduled alarms</string>
-    <string name="home_challenge_line">Challenge: %1$s</string>
     <string name="home_settings">Settings</string>
     <string name="home_add_alarm">New alarm</string>
     <string name="permission_notifications_missing">Notifications are off: the alarm might not show.</string>
@@ -40,6 +57,22 @@
     <string name="settings_theme_system">System</string>
     <string name="settings_theme_light">Light</string>
     <string name="settings_theme_dark">Dark</string>
+    <string name="settings_theme_custom">Custom</string>
+    <string name="settings_custom_primary">Primary color</string>
+    <string name="settings_custom_secondary">Secondary color</string>
+    <string name="settings_custom_base">Theme base</string>
+    <string name="settings_color_hue">Hue</string>
+    <string name="settings_color_saturation">Saturation</string>
+    <string name="settings_color_brightness">Brightness</string>
+    <string name="settings_color_apply">Apply</string>
+    <string name="settings_color_cancel">Cancel</string>
+    <string name="settings_icon_themed">App icon</string>
+    <string name="settings_icon_suggested">Closest variant to your primary color</string>
+    <string name="settings_icon_applied">Applied</string>
+    <string name="settings_icon_apply">Apply</string>
+    <string name="settings_icon_original">Original icon</string>
+    <string name="settings_icon_restore">Restore</string>
+    <string name="settings_icon_note">The launcher may take a few seconds to show the change, and on some phones the app closes when it is applied.</string>
     <string name="settings_section_language">Language</string>
     <string name="settings_language_system">System</string>
     <string name="settings_language_es">Español</string>
@@ -130,13 +163,13 @@
     <string name="challenge_motion_rejected">That movement does not look real. Try again.</string>
     <string name="scanner_permission_rationale">We need the camera to read the code. The image never leaves your phone.</string>
     <string name="scanner_permission_blocked">Camera permission is denied. Enable it in the app settings to use this challenge.</string>
-    <string name="challenge_qr_prompt">Scan your code</string>
+    <string name="challenge_qr_prompt">Scan your QR code or barcode</string>
     <string name="challenge_qr_hold">Keep the code in view…</string>
     <string name="challenge_qr_wrong">That is not the registered code.</string>
     <string name="challenge_qr_rejected_screen">That looks like a screen. Scan the real object.</string>
     <string name="challenge_qr_rejected_static">That looks like a photo. Scan the real object.</string>
-    <string name="qr_register_required">Register a code for this alarm.</string>
-    <string name="qr_register_scanning">Point the camera at the code you want to use.</string>
+    <string name="qr_register_required">Register a QR code or barcode for this alarm.</string>
+    <string name="qr_register_scanning">Point the camera at the QR code or barcode you want to use.</string>
     <string name="qr_register_done">Code registered (%1$s).</string>
     <string name="qr_register_action">Register code</string>
     <string name="qr_register_replace">Replace code</string>
@@ -147,7 +180,7 @@
     <string name="steps_permission_rationale">To count your steps we need the physical activity permission.</string>
     <string name="challenge_type_shake">Shake</string>
     <string name="challenge_type_steps">Steps</string>
-    <string name="challenge_type_qr">QR code</string>
+    <string name="challenge_type_qr">QR or barcode</string>
     <string name="challenge_type_holdrelease">Hold and release</string>
     <string name="challenge_holdrelease_round">Round %1$d of %2$d</string>
     <string name="challenge_holdrelease_hold">Press and hold</string>
@@ -156,11 +189,6 @@
     <string name="challenge_holdrelease_early">Released too soon. A round was added.</string>
     <string name="challenge_holdrelease_late">Released too late. A round was added.</string>
     <string name="challenge_holdrelease_cancelled">The press was interrupted.</string>
-    <string name="challenge_holdrelease_estimate">Estimated duration: about %d s</string>
-    <plurals name="challenge_holdrelease_rounds">
-        <item quantity="one">%d round</item>
-        <item quantity="other">%d rounds</item>
-    </plurals>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
         <item quantity="one">Pass %d pipe without crashing</item>
@@ -184,9 +212,51 @@
         <item quantity="other">Sequence at this difficulty: %d cells</item>
     </plurals>
 
+    <string name="challenge_type_grid_memory">Grid memory</string>
+    <string name="challenge_grid_memory_watch">Memorize the lit squares</string>
+    <string name="challenge_grid_memory_repeat">Tap the lit squares</string>
+    <string name="challenge_grid_memory_hold">Do not tap yet</string>
+    <string name="challenge_grid_memory_progress">%1$d of %2$d</string>
+    <string name="challenge_grid_memory_wrong">Wrong square. Watch again.</string>
+    <string name="challenge_grid_memory_cell">Square %d</string>
+    <string name="challenge_grid_memory_cell_on">Square %d, marked</string>
+    <plurals name="challenge_target_info_grid_memory">
+        <item quantity="one">%1$d×%2$d board with %3$d square to remember</item>
+        <item quantity="other">%1$d×%2$d board with %3$d squares to remember</item>
+    </plurals>
+
+    <string name="challenge_type_maze">Maze</string>
+    <string name="challenge_maze_title">Take the alarm to the exit</string>
+    <string name="challenge_maze_hint">Swipe up, down, left or right: the alarm slides until it hits a wall.</string>
+    <string name="challenge_maze_rejected">Invalid touch. Use your finger on the screen.</string>
+    <string name="challenge_maze_area_description">Maze: swipe to move the alarm to the exit</string>
+    <string name="challenge_maze_start">Start</string>
+    <string name="challenge_maze_exit">Exit</string>
+    <string name="challenge_maze_level_info">Maze at this difficulty: %1$d × %2$d cells</string>
+
+    <string name="challenge_type_shapes">Shape sequence</string>
+    <string name="challenge_shapes_watch">Memorize the shapes</string>
+    <string name="challenge_shapes_repeat">Pick them in the same order</string>
+    <string name="challenge_shapes_wrong">Wrong order. Watch again.</string>
+    <string name="challenge_shapes_showing">Shape: %s</string>
+    <string name="challenge_shapes_progress_watch">Shape %1$d of %2$d</string>
+    <string name="challenge_shapes_progress_repeat">%1$d of %2$d</string>
+    <string name="challenge_shapes_your_sequence">Your sequence</string>
+    <string name="challenge_shapes_next_slot">Next</string>
+    <string name="challenge_shapes_delete_last">Delete last</string>
+    <string name="challenge_shape_circle">Circle</string>
+    <string name="challenge_shape_square">Square</string>
+    <string name="challenge_shape_triangle">Triangle</string>
+    <string name="challenge_shape_cross">Cross</string>
+    <string name="challenge_shape_hexagon">Hexagon</string>
+    <string name="challenge_shape_diamond">Diamond</string>
+    <plurals name="challenge_target_info_shapes">
+        <item quantity="one">Sequence at this difficulty: %1$d shape out of %2$d different</item>
+        <item quantity="other">Sequence at this difficulty: %1$d shapes out of %2$d different</item>
+    </plurals>
+
     <string name="challenge_type_rhythm">Rhythm</string>
-    <string name="challenge_rhythm_rounds">Rounds: %1$d</string>
-    <string name="challenge_rhythm_round">Round %1$d of %2$d</string>
+    <string name="challenge_rhythm_info">One round: %1$d notes at %2$d BPM. Difficulty changes the speed and the length.</string>
     <string name="challenge_rhythm_failures">Misses: %1$d of %2$d</string>
     <string name="challenge_rhythm_hint">Tap the lane when the note reaches the line.</string>
     <string name="challenge_rhythm_restarted">Too many misses: the round starts over.</string>
@@ -199,6 +269,13 @@
     <string name="sound_preview_stop">Stop test</string>
     <string name="sound_ramp_off">Gradual volume: off</string>
     <string name="sound_ramp_seconds">Gradual volume: %1$d s</string>
+    <string name="mute_section">While you solve the challenges</string>
+    <string name="mute_toggle">No ringing while I solve</string>
+    <string name="mute_hint">The alarm goes quiet while you touch the screen and rings again if you stop.</string>
+    <string name="mute_inactivity">Rings again after</string>
+    <string name="mute_inactivity_hint">Without touching the screen for that long.</string>
+    <string name="mute_inactivity_seconds">%1$d s</string>
+    <string name="mute_inactivity_minutes">%1$d min</string>
     <string name="sound_section">Sound</string>
     <string name="sound_use_default">Default</string>
     <string name="speech_time">It is %1$s</string>
@@ -215,14 +292,27 @@
     <string name="voice_repeat_every">Repeat every %1$d s</string>
     <string name="voice_speak_time">Speak the time</string>
     <string name="ring_snooze">Snooze %1$d min</string>
+    <plurals name="ring_snooze_with_left">
+        <item quantity="one">Snooze %1$d min · %2$d left</item>
+        <item quantity="other">Snooze %1$d min · %2$d left</item>
+    </plurals>
+    <string name="ring_snooze_exhausted_title">No snoozes left</string>
+    <string name="ring_snooze_exhausted_body">You have already snoozed %1$d of %1$d times.</string>
     <string name="anticheat_section">Anti-cheat</string>
     <string name="anticheat_level_off">Off</string>
     <string name="anticheat_level_standard">Standard</string>
     <string name="anticheat_level_hint_off">The alarm can be dismissed without restrictions.</string>
     <string name="anticheat_level_hint_standard">Full screen, no leaving with Back or Home, and volume at maximum.</string>
     <string name="anticheat_snooze_allowed">Allow snooze</string>
-    <string name="anticheat_snooze_minutes">Minutes: %1$d</string>
-    <string name="anticheat_snooze_max">Maximum times: %1$d</string>
+    <string name="anticheat_snooze_section">Snooze</string>
+    <string name="anticheat_snooze_duration">Duration</string>
+    <string name="anticheat_snooze_minutes_option">%1$d min</string>
+    <string name="anticheat_snooze_limit">Number of times</string>
+    <string name="anticheat_snooze_unlimited">No limit</string>
+    <plurals name="anticheat_snooze_limit_hint">
+        <item quantity="one">After %d time, the only way out is turning it off.</item>
+        <item quantity="other">After %d times, the only way out is turning it off.</item>
+    </plurals>
     <string name="anticheat_missing_overlay">Overlay permission is missing: without it the alarm screen cannot be brought back after pressing Home.</string>
     <string name="anticheat_open_status">View permissions status</string>
     <string name="anticheat_status_title">Anti-cheat status</string>
@@ -233,8 +323,6 @@
     <string name="anticheat_granted">Granted</string>
     <string name="anticheat_not_granted">Pending</string>
     <string name="anticheat_grant">Grant</string>
-    <string name="anticheat_limits_title">Limits</string>
-    <string name="anticheat_limits_body">Forced hardware power-off, safe mode, recovery, ADB and removing the battery cannot be prevented. Forced volume does not control external outputs with their own volume, such as some Bluetooth headphones.</string>
     <string name="stats_title">Statistics</string>
     <string name="stats_open">Statistics</string>
     <string name="stats_kpi_days">days</string>
@@ -303,6 +391,7 @@
     <string name="import_challenges">Challenges: %1$s · difficulty %2$d · %3$d per session</string>
     <string name="import_sound_default">Default sound · volume %1$d %%</string>
     <string name="import_snooze_allowed">Snooze: %1$d min, up to %2$d times</string>
+    <string name="import_snooze_unlimited">Snooze: %1$d min, no limit</string>
     <string name="import_snooze_denied">No snooze</string>
     <string name="import_anticheat">Anti-cheat: %1$s</string>
     <string name="import_error_malformed">This isn\'t a valid ApexApp alarm.</string>
@@ -310,7 +399,7 @@
     <string name="import_error_version">You need a newer version of ApexApp to open this alarm.</string>
     <string name="import_error_invalid">The alarm has invalid values and wasn\'t imported.</string>
     <string name="import_error_file">Couldn\'t read the file.</string>
-    <string name="import_note_qr">The QR challenge is left out: register your own code when editing the alarm.</string>
+    <string name="import_note_qr">The QR/barcode challenge is left out: register your own code when editing the alarm.</string>
     <string name="import_note_challenge">A challenge this version doesn\'t know is left out.</string>
     <string name="import_note_sound">The sound isn\'t available: the default one will be used.</string>
     <string name="streak_share_open">Share streak</string>
@@ -347,12 +436,18 @@
     <string name="time_entry_ok">Set</string>
     <string name="time_entry_cancel">Cancel</string>
     <string name="challenge_type_tap_targets">Tap targets</string>
-    <string name="tap_targets_round">Round %1$d of %2$d</string>
+    <string name="tap_targets_level_info">A single round with %1$d circles and %2$.1f s to tap them</string>
     <string name="tap_targets_hint">Tap every circle before it disappears</string>
     <string name="tap_targets_timeout">Time\'s up. Try again.</string>
     <string name="tap_targets_rejected">Invalid touch</string>
     <string name="tap_targets_area_description">Play area: %1$d circles left to tap</string>
-    <string name="tap_targets_rounds_label">Rounds</string>
-    <string name="tap_targets_rounds_less">Fewer rounds</string>
-    <string name="tap_targets_rounds_more">More rounds</string>
+    <string name="editor_shortcut_all">All</string>
+    <string name="editor_shortcut_weekdays">Weekdays</string>
+    <string name="editor_shortcut_weekend">Weekend</string>
+    <string name="challenge_editor_title">How to turn it off</string>
+    <plurals name="challenge_editor_summary">
+        <item quantity="one">%1$d challenge to turn it off</item>
+        <item quantity="other">%1$d chained challenges to turn it off</item>
+    </plurals>
+    <string name="challenge_editor_summary_random">%1$d random challenges to turn it off</string>
 </resources>

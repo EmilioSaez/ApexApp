@@ -5,8 +5,12 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.res.painterResource
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
 import androidx.compose.material3.SegmentedButton
@@ -47,15 +51,21 @@ fun CountStepper(
     inset: Dp = ApexTheme.spacing.screen,
     minCount: Int = SessionConfig.MIN_COUNT,
 ) {
-    ControlHeader(stringResource(R.string.challenge_test_count), inset)
     Row(
-        Modifier.padding(horizontal = inset),
+        Modifier.fillMaxWidth().padding(horizontal = inset),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        OutlinedIconButton(onClick = { onChange(count - 1) }, enabled = count > minCount) { Text("-") }
-        Text(count.toString(), style = MaterialTheme.typography.titleLarge)
-        OutlinedIconButton(onClick = { onChange(count + 1) }, enabled = count < SessionConfig.MAX_COUNT) { Text("+") }
+        Text(
+            stringResource(R.string.challenge_test_count),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+        )
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
+            OutlinedIconButton(onClick = { onChange(count - 1) }, enabled = count > minCount) { Text("-") }
+            Text(count.toString(), style = MaterialTheme.typography.titleLarge)
+            OutlinedIconButton(onClick = { onChange(count + 1) }, enabled = count < SessionConfig.MAX_COUNT) { Text("+") }
+        }
     }
 }
 
@@ -113,6 +123,16 @@ fun TypeChips(
                 onClick = { onToggle(type) },
                 shape = MaterialTheme.shapes.small,
                 label = { Text(label(type)) },
+                leadingIcon = if (type in selected) {
+                    { Icon(painterResource(R.drawable.ic_check), contentDescription = null, modifier = Modifier.size(FilterChipDefaults.IconSize)) }
+                } else {
+                    null
+                },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                    selectedLeadingIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                ),
             )
         }
     }
@@ -124,7 +144,7 @@ private fun ControlHeader(text: String, inset: Dp) {
     Text(
         text = text,
         modifier = Modifier.fillMaxWidth().padding(horizontal = inset, vertical = ApexTheme.spacing.md),
-        style = MaterialTheme.typography.labelLarge,
-        color = MaterialTheme.colorScheme.primary,
+        style = MaterialTheme.typography.titleMedium,
+        color = MaterialTheme.colorScheme.onSurface,
     )
 }
