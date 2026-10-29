@@ -210,6 +210,17 @@
         <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
     </plurals>
 
+    <string name="challenge_type_grid_memory">Memoria de cuadrícula</string>
+    <string name="challenge_grid_memory_watch">Memoriza los cuadrados iluminados</string>
+    <string name="challenge_grid_memory_remaining">Toca los cuadrados iluminados: faltan %d</string>
+    <string name="challenge_grid_memory_wrong">Cuadrado equivocado. Mira de nuevo.</string>
+    <string name="challenge_grid_memory_cell">Cuadrado %d</string>
+    <string name="challenge_grid_memory_cell_on">Cuadrado %d, marcado</string>
+    <plurals name="challenge_target_info_grid_memory">
+        <item quantity="one">Tablero de %1$d×%2$d con %3$d cuadrado a recordar</item>
+        <item quantity="other">Tablero de %1$d×%2$d con %3$d cuadrados a recordar</item>
+    </plurals>
+
     <string name="challenge_type_rhythm">Ritmo</string>
     <string name="challenge_rhythm_info">Una ronda: %1$d notas a %2$d BPM. La dificultad cambia la velocidad y la duración.</string>
     <string name="challenge_rhythm_failures">Fallos: %1$d de %2$d</string>

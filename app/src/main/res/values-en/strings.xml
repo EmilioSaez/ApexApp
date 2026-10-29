@@ -209,6 +209,17 @@
         <item quantity="other">Sequence at this difficulty: %d cells</item>
     </plurals>
 
+    <string name="challenge_type_grid_memory">Grid memory</string>
+    <string name="challenge_grid_memory_watch">Memorize the lit squares</string>
+    <string name="challenge_grid_memory_remaining">Tap the lit squares: %d to go</string>
+    <string name="challenge_grid_memory_wrong">Wrong square. Watch again.</string>
+    <string name="challenge_grid_memory_cell">Square %d</string>
+    <string name="challenge_grid_memory_cell_on">Square %d, marked</string>
+    <plurals name="challenge_target_info_grid_memory">
+        <item quantity="one">%1$d×%2$d board with %3$d square to remember</item>
+        <item quantity="other">%1$d×%2$d board with %3$d squares to remember</item>
+    </plurals>
+
     <string name="challenge_type_rhythm">Rhythm</string>
     <string name="challenge_rhythm_info">One round: %1$d notes at %2$d BPM. Difficulty changes the speed and the length.</string>
     <string name="challenge_rhythm_failures">Misses: %1$d of %2$d</string>

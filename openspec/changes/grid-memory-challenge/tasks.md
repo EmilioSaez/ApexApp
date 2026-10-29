@@ -8,12 +8,12 @@
 
 ## 2. UI
 
-- [ ] 2.1 `GridMemoryRenderer`: tablero, fase de exposición, bloqueo de toques, marcado de aciertos y fallo inmediato
-- [ ] 2.2 `GridMemoryParamsEditor` (solo información de dificultad, sin parámetros propios)
-- [ ] 2.3 Bindings en `ChallengeModule` y etiquetas en `ChallengeLabels` e `ImportScreen`
-- [ ] 2.4 Strings es/en (nombre, prompts, aviso de fallo, descripciones de accesibilidad)
+- [x] 2.1 `GridMemoryRenderer`: tablero, fase de exposición, bloqueo de toques, marcado de aciertos y fallo inmediato
+- [x] 2.2 `GridMemoryParamsEditor` (solo información de dificultad, sin parámetros propios)
+- [x] 2.3 Bindings en `ChallengeModule` y etiquetas en `ChallengeLabels` e `ImportScreen`
+- [x] 2.4 Strings es/en (nombre, prompts, aviso de fallo, descripciones de accesibilidad)
 
 ## 3. Verificación
 
-- [ ] 3.1 `./gradlew test assembleDebug`
+- [x] 3.1 `./gradlew test assembleDebug`
 - [ ] 3.2 Prueba manual en emulador (exposición, fallo, éxito, niveles 1 y 5)
