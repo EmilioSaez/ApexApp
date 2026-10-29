@@ -209,6 +209,15 @@
         <item quantity="other">Sequence at this difficulty: %d cells</item>
     </plurals>
 
+    <string name="challenge_type_maze">Maze</string>
+    <string name="challenge_maze_hint">Draw a line from the alarm to the flag without touching the walls</string>
+    <string name="challenge_maze_wrong">You touched a wall. Start again from the alarm.</string>
+    <string name="challenge_maze_rejected">Invalid touch. Use your finger on the screen.</string>
+    <string name="challenge_maze_area_description">Maze: drag your finger from the alarm to the exit</string>
+    <string name="challenge_maze_start">Start</string>
+    <string name="challenge_maze_exit">Exit</string>
+    <string name="challenge_maze_level_info">Maze at this difficulty: %1$d × %2$d cells</string>
+
     <string name="challenge_type_rhythm">Rhythm</string>
     <string name="challenge_rhythm_info">One round: %1$d notes at %2$d BPM. Difficulty changes the speed and the length.</string>
     <string name="challenge_rhythm_failures">Misses: %1$d of %2$d</string>

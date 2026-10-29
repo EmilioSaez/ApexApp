@@ -210,6 +210,15 @@
         <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
     </plurals>
 
+    <string name="challenge_type_maze">Laberinto</string>
+    <string name="challenge_maze_hint">Traza una línea desde la alarma hasta la bandera sin tocar las paredes</string>
+    <string name="challenge_maze_wrong">Has tocado una pared. Empieza de nuevo desde la alarma.</string>
+    <string name="challenge_maze_rejected">Toque no válido. Usa el dedo sobre la pantalla.</string>
+    <string name="challenge_maze_area_description">Laberinto: arrastra el dedo desde la alarma hasta la salida</string>
+    <string name="challenge_maze_start">Entrada</string>
+    <string name="challenge_maze_exit">Salida</string>
+    <string name="challenge_maze_level_info">Laberinto con esta dificultad: %1$d × %2$d casillas</string>
+
     <string name="challenge_type_rhythm">Ritmo</string>
     <string name="challenge_rhythm_info">Una ronda: %1$d notas a %2$d BPM. La dificultad cambia la velocidad y la duración.</string>
     <string name="challenge_rhythm_failures">Fallos: %1$d de %2$d</string>

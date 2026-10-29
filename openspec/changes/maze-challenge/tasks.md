@@ -9,12 +9,12 @@
 
 ## 2. UI
 
-- [ ] 2.1 `MazeRenderer` con laberinto dibujado en Canvas, icono de alarma en la entrada, trazo con el dedo, reinicio al chocar o soltar y aviso de fallo
-- [ ] 2.2 `MazeParamsEditor` (solo información de dificultad, sin parámetros propios)
-- [ ] 2.3 Bindings en `ChallengeModule` y etiquetas en `ChallengeLabels` e `ImportScreen`
-- [ ] 2.4 Strings es/en (nombre, pista, avisos, descripciones de accesibilidad)
+- [x] 2.1 `MazeRenderer` con laberinto dibujado en Canvas, icono de alarma en la entrada, trazo con el dedo, reinicio al chocar o soltar y aviso de fallo
+- [x] 2.2 `MazeParamsEditor` (solo información de dificultad, sin parámetros propios)
+- [x] 2.3 Bindings en `ChallengeModule` y etiquetas en `ChallengeLabels` e `ImportScreen`
+- [x] 2.4 Strings es/en (nombre, pista, avisos, descripciones de accesibilidad)
 
 ## 3. Verificación
 
-- [ ] 3.1 Test de sesión: el reto aparece en el registro y una sesión con laberinto termina
+- [x] 3.1 Test de sesión: el reto aparece en el registro y una sesión con laberinto termina
 - [ ] 3.2 `./gradlew test assembleDebug` y prueba manual en emulador (trazo, pared, soltar, llegada)
