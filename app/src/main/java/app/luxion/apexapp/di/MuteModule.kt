@@ -29,8 +29,8 @@ object MuteModule {
             RingMuter(engine::setMuted),
             clock,
             CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate),
+        )
 
-    /** Al terminar una sesión se descarta su estado de silencio. */
     @Provides
     @IntoSet
     fun editorSection(impl: MuteSection): EditorSection = impl
