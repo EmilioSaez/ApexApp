@@ -6,15 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import app.luxion.apexapp.domain.ThemeMode
 import app.luxion.apexapp.sharing.ImportIntents
 import app.luxion.apexapp.sharing.PendingImport
 import app.luxion.apexapp.ui.MainViewModel
 import app.luxion.apexapp.ui.navigation.AppNavigation
-import app.luxion.apexapp.ui.theme.ApexAppTheme
+import app.luxion.apexapp.ui.theme.ApexUserTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -30,14 +28,8 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         if (savedInstanceState == null) offerImport(intent)
         setContent {
-            val themeMode by viewModel.themeMode.collectAsStateWithLifecycle()
-            val customColors by viewModel.customColors.collectAsStateWithLifecycle()
             val importRequested by viewModel.importRequested.collectAsStateWithLifecycle()
-            val systemDark = isSystemInDarkTheme()
-            ApexAppTheme(
-                darkTheme = if (themeMode == ThemeMode.CUSTOM) customColors.base.isDark(systemDark) else themeMode.isDark(systemDark),
-                customColors = customColors.takeIf { themeMode == ThemeMode.CUSTOM },
-            ) {
+            ApexUserTheme(viewModel) {
                 AppNavigation(importRequested)
             }
         }

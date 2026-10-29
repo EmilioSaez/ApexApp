@@ -8,7 +8,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.activity.viewModels
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -20,7 +20,8 @@ import app.luxion.apexapp.anticheat.ActiveLockdown
 import app.luxion.apexapp.anticheat.LockdownController
 import app.luxion.apexapp.anticheat.LockdownWindow
 import app.luxion.apexapp.domain.AntiCheatLevel
-import app.luxion.apexapp.ui.theme.ApexAppTheme
+import app.luxion.apexapp.ui.MainViewModel
+import app.luxion.apexapp.ui.theme.ApexUserTheme
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -32,7 +33,8 @@ class RingActivity : ComponentActivity() {
     @Inject lateinit var registry: RingingRegistry
     @Inject lateinit var screenLauncher: RingScreenLauncher
 
-    private val handler = Handler(Looper.getMainLooper())
+    private val themeViewModel: MainViewModel by viewModels()
+    private val handler =Handler(Looper.getMainLooper())
     private var lockdown: ActiveLockdown? = null
     private val sessionId: String? get() = intent.getStringExtra(RingViewModel.EXTRA_SESSION_ID)
 
@@ -48,7 +50,7 @@ class RingActivity : ComponentActivity() {
         enableEdgeToEdge()
         onBackPressedDispatcher.addCallback(this, backGuard)
         setContent {
-            ApexAppTheme(darkTheme = isSystemInDarkTheme()) {
+            ApexUserTheme(themeViewModel) {
                 val active by lockdownController.active.collectAsStateWithLifecycle()
                 RingScreen(
                     onFinished = ::finish,

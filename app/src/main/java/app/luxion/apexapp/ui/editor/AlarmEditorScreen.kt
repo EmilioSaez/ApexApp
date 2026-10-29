@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -123,7 +125,7 @@ fun AlarmEditorContent(
     var hour by rememberSaveable { mutableIntStateOf(state.hour) }
     var minute by rememberSaveable { mutableIntStateOf(state.minute) }
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().imePadding(),
         topBar = {
             Row(
                 Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = ApexTheme.spacing.sm),
@@ -143,7 +145,7 @@ fun AlarmEditorContent(
             }
         },
         bottomBar = {
-            Column {
+            Column(Modifier.navigationBarsPadding()) {
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 Button(
                     onClick = { onSave(hour, minute) },
