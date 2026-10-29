@@ -5,6 +5,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +19,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
@@ -47,40 +51,61 @@ private val InactivityOptions = listOf(15, 30, 60, 120)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun MuteSettingsSection(alarm: Alarm, onChange: (Alarm) -> Unit, modifier: Modifier = Modifier) {
-    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+    val spacing = ApexTheme.spacing
+    val divider = MaterialTheme.colorScheme.outlineVariant
+    Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(spacing.lg)) {
         SectionHeader(stringResource(R.string.mute_section), horizontalPadding = 0.dp)
         Row(
-            Modifier.fillMaxWidth().toggleable(
+            Modifier.fillMaxWidth().defaultMinSize(minHeight = 56.dp).toggleable(
                 value = alarm.muteDuringChallenges,
                 role = Role.Switch,
                 onValueChange = { onChange(alarm.copy(muteDuringChallenges = it)) },
             ),
+            horizontalArrangement = Arrangement.spacedBy(spacing.lg),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(stringResource(R.string.mute_toggle), Modifier.weight(1f), style = MaterialTheme.typography.bodyLarge)
+            Column(Modifier.weight(1f)) {
+                Text(stringResource(R.string.mute_toggle), style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.mute_hint),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
             Switch(checked = alarm.muteDuringChallenges, onCheckedChange = null)
         }
-        Text(
-            stringResource(R.string.mute_hint),
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
         AnimatedVisibility(alarm.muteDuringChallenges) {
-            Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-                Text(stringResource(R.string.mute_inactivity), style = MaterialTheme.typography.labelLarge)
+            Column(
+                Modifier
+                    .padding(start = 1.dp)
+                    .drawBehind { drawLine(divider, Offset.Zero, Offset(0f, size.height), 1.dp.toPx()) }
+                    .padding(start = spacing.lg),
+                verticalArrangement = Arrangement.spacedBy(spacing.sm),
+            ) {
+                Text(stringResource(R.string.mute_inactivity), style = MaterialTheme.typography.titleMedium)
                 SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
                     InactivityOptions.forEachIndexed { index, seconds ->
                         SegmentedButton(
                             selected = alarm.muteInactivitySeconds == seconds,
                             onClick = { onChange(alarm.copy(muteInactivitySeconds = seconds)) },
                             shape = SegmentedButtonDefaults.itemShape(index, InactivityOptions.size, MaterialTheme.shapes.small),
-                        ) { Text(stringResource(R.string.mute_inactivity_option, seconds)) }
+                        ) { Text(inactivityLabel(seconds)) }
                     }
                 }
+                Text(
+                    stringResource(R.string.mute_inactivity_hint),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
             }
         }
     }
 }
+
+@Composable
+private fun inactivityLabel(seconds: Int): String =
+    if (seconds < 60) stringResource(R.string.mute_inactivity_seconds, seconds)
+    else stringResource(R.string.mute_inactivity_minutes, seconds / 60)
 
 @Composable
 private fun Sample(on: Boolean) = ApexAppTheme {
