@@ -212,7 +212,9 @@
 
     <string name="challenge_type_grid_memory">Memoria de cuadrícula</string>
     <string name="challenge_grid_memory_watch">Memoriza los cuadrados iluminados</string>
-    <string name="challenge_grid_memory_remaining">Toca los cuadrados iluminados: faltan %d</string>
+    <string name="challenge_grid_memory_repeat">Toca los cuadrados iluminados</string>
+    <string name="challenge_grid_memory_hold">No toques todavía</string>
+    <string name="challenge_grid_memory_progress">%1$d de %2$d</string>
     <string name="challenge_grid_memory_wrong">Cuadrado equivocado. Mira de nuevo.</string>
     <string name="challenge_grid_memory_cell">Cuadrado %d</string>
     <string name="challenge_grid_memory_cell_on">Cuadrado %d, marcado</string>

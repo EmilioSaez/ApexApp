@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -80,16 +81,25 @@ class GridMemoryRenderer @Inject constructor() : ChallengeRenderer {
 
         val gap = if (grid.side > 4) ApexTheme.spacing.xs else ApexTheme.spacing.sm
         Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg)) {
-            Text(
-                if (showing) {
-                    stringResource(R.string.challenge_grid_memory_watch)
-                } else {
-                    stringResource(R.string.challenge_grid_memory_remaining, grid.cells.size - taps.size)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.titleMedium,
-                textAlign = TextAlign.Center,
-            )
+            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    stringResource(
+                        if (showing) R.string.challenge_grid_memory_watch else R.string.challenge_grid_memory_repeat,
+                    ),
+                    style = MaterialTheme.typography.titleMedium,
+                    textAlign = TextAlign.Center,
+                )
+                Text(
+                    if (showing) {
+                        stringResource(R.string.challenge_grid_memory_hold)
+                    } else {
+                        stringResource(R.string.challenge_grid_memory_progress, taps.size, grid.cells.size)
+                    },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                )
+            }
             if (wrong && !showing) {
                 Text(
                     stringResource(R.string.challenge_grid_memory_wrong),
