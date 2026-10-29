@@ -21,6 +21,7 @@ import app.luxion.apexapp.anticheat.LockdownController
 import app.luxion.apexapp.anticheat.LockdownWindow
 import app.luxion.apexapp.domain.AntiCheatLevel
 import app.luxion.apexapp.ui.theme.ApexAppTheme
+import app.luxion.apexapp.ui.theme.SystemBarsEffect
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import kotlinx.coroutines.launch
@@ -48,7 +49,9 @@ class RingActivity : ComponentActivity() {
         enableEdgeToEdge()
         onBackPressedDispatcher.addCallback(this, backGuard)
         setContent {
-            ApexAppTheme(darkTheme = isSystemInDarkTheme()) {
+            val darkTheme = isSystemInDarkTheme()
+            SystemBarsEffect(darkTheme)
+            ApexAppTheme(darkTheme = darkTheme) {
                 val active by lockdownController.active.collectAsStateWithLifecycle()
                 RingScreen(
                     onFinished = ::finish,

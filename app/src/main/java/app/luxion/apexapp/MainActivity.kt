@@ -15,6 +15,7 @@ import app.luxion.apexapp.sharing.PendingImport
 import app.luxion.apexapp.ui.MainViewModel
 import app.luxion.apexapp.ui.navigation.AppNavigation
 import app.luxion.apexapp.ui.theme.ApexAppTheme
+import app.luxion.apexapp.ui.theme.SystemBarsEffect
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -34,8 +35,10 @@ class MainActivity : AppCompatActivity() {
             val customColors by viewModel.customColors.collectAsStateWithLifecycle()
             val importRequested by viewModel.importRequested.collectAsStateWithLifecycle()
             val systemDark = isSystemInDarkTheme()
+            val darkTheme = if (themeMode == ThemeMode.CUSTOM) customColors.base.isDark(systemDark) else themeMode.isDark(systemDark)
+            SystemBarsEffect(darkTheme)
             ApexAppTheme(
-                darkTheme = if (themeMode == ThemeMode.CUSTOM) customColors.base.isDark(systemDark) else themeMode.isDark(systemDark),
+                darkTheme = darkTheme,
                 customColors = customColors.takeIf { themeMode == ThemeMode.CUSTOM },
             ) {
                 AppNavigation(importRequested)
