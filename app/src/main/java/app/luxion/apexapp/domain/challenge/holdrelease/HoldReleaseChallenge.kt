@@ -26,7 +26,7 @@ class HoldReleaseChallenge @Inject constructor() : Challenge {
     override val type: ChallengeType = TYPE
 
     override fun generate(level: Int, params: String, random: Random): ChallengeInstance =
-        HoldReleaseInstance(level, HoldReleaseParams.rounds(params, level), random)
+        HoldReleaseInstance(level, HoldReleaseParams.rounds(level), random)
 
     companion object {
         val TYPE = ChallengeType("holdrelease")

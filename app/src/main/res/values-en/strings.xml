@@ -181,11 +181,6 @@
     <string name="challenge_holdrelease_early">Released too soon. A round was added.</string>
     <string name="challenge_holdrelease_late">Released too late. A round was added.</string>
     <string name="challenge_holdrelease_cancelled">The press was interrupted.</string>
-    <string name="challenge_holdrelease_estimate">Estimated duration: about %d s</string>
-    <plurals name="challenge_holdrelease_rounds">
-        <item quantity="one">%d round</item>
-        <item quantity="other">%d rounds</item>
-    </plurals>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
         <item quantity="one">Pass %d pipe without crashing</item>
@@ -207,6 +202,51 @@
     <plurals name="challenge_target_info_memory">
         <item quantity="one">Sequence at this difficulty: %d cell</item>
         <item quantity="other">Sequence at this difficulty: %d cells</item>
+    </plurals>
+
+    <string name="challenge_type_grid_memory">Grid memory</string>
+    <string name="challenge_grid_memory_watch">Memorize the lit squares</string>
+    <string name="challenge_grid_memory_repeat">Tap the lit squares</string>
+    <string name="challenge_grid_memory_hold">Do not tap yet</string>
+    <string name="challenge_grid_memory_progress">%1$d of %2$d</string>
+    <string name="challenge_grid_memory_wrong">Wrong square. Watch again.</string>
+    <string name="challenge_grid_memory_cell">Square %d</string>
+    <string name="challenge_grid_memory_cell_on">Square %d, marked</string>
+    <plurals name="challenge_target_info_grid_memory">
+        <item quantity="one">%1$d×%2$d board with %3$d square to remember</item>
+        <item quantity="other">%1$d×%2$d board with %3$d squares to remember</item>
+    </plurals>
+
+    <string name="challenge_type_maze">Maze</string>
+    <string name="challenge_maze_title">Take the alarm to the exit</string>
+    <string name="challenge_maze_hint">Trace without lifting your finger. Touch a wall and you start over.</string>
+    <string name="challenge_maze_attempt">Attempt %d</string>
+    <string name="challenge_maze_wrong">You touched a wall. Start again from the alarm.</string>
+    <string name="challenge_maze_rejected">Invalid touch. Use your finger on the screen.</string>
+    <string name="challenge_maze_area_description">Maze: drag your finger from the alarm to the exit</string>
+    <string name="challenge_maze_start">Start</string>
+    <string name="challenge_maze_exit">Exit</string>
+    <string name="challenge_maze_level_info">Maze at this difficulty: %1$d × %2$d cells</string>
+
+    <string name="challenge_type_shapes">Shape sequence</string>
+    <string name="challenge_shapes_watch">Memorize the shapes</string>
+    <string name="challenge_shapes_repeat">Pick them in the same order</string>
+    <string name="challenge_shapes_wrong">Wrong order. Watch again.</string>
+    <string name="challenge_shapes_showing">Shape: %s</string>
+    <string name="challenge_shapes_progress_watch">Shape %1$d of %2$d</string>
+    <string name="challenge_shapes_progress_repeat">%1$d of %2$d</string>
+    <string name="challenge_shapes_your_sequence">Your sequence</string>
+    <string name="challenge_shapes_next_slot">Next</string>
+    <string name="challenge_shapes_delete_last">Delete last</string>
+    <string name="challenge_shape_circle">Circle</string>
+    <string name="challenge_shape_square">Square</string>
+    <string name="challenge_shape_triangle">Triangle</string>
+    <string name="challenge_shape_cross">Cross</string>
+    <string name="challenge_shape_hexagon">Hexagon</string>
+    <string name="challenge_shape_diamond">Diamond</string>
+    <plurals name="challenge_target_info_shapes">
+        <item quantity="one">Sequence at this difficulty: %1$d shape out of %2$d different</item>
+        <item quantity="other">Sequence at this difficulty: %1$d shapes out of %2$d different</item>
     </plurals>
 
     <string name="challenge_type_rhythm">Rhythm</string>
@@ -246,14 +286,27 @@
     <string name="voice_repeat_every">Repeat every %1$d s</string>
     <string name="voice_speak_time">Speak the time</string>
     <string name="ring_snooze">Snooze %1$d min</string>
+    <plurals name="ring_snooze_with_left">
+        <item quantity="one">Snooze %1$d min · %2$d left</item>
+        <item quantity="other">Snooze %1$d min · %2$d left</item>
+    </plurals>
+    <string name="ring_snooze_exhausted_title">No snoozes left</string>
+    <string name="ring_snooze_exhausted_body">You have already snoozed %1$d of %1$d times.</string>
     <string name="anticheat_section">Anti-cheat</string>
     <string name="anticheat_level_off">Off</string>
     <string name="anticheat_level_standard">Standard</string>
     <string name="anticheat_level_hint_off">The alarm can be dismissed without restrictions.</string>
     <string name="anticheat_level_hint_standard">Full screen, no leaving with Back or Home, and volume at maximum.</string>
     <string name="anticheat_snooze_allowed">Allow snooze</string>
-    <string name="anticheat_snooze_minutes">Minutes: %1$d</string>
-    <string name="anticheat_snooze_max">Maximum times: %1$d</string>
+    <string name="anticheat_snooze_section">Snooze</string>
+    <string name="anticheat_snooze_duration">Duration</string>
+    <string name="anticheat_snooze_minutes_option">%1$d min</string>
+    <string name="anticheat_snooze_limit">Number of times</string>
+    <string name="anticheat_snooze_unlimited">No limit</string>
+    <plurals name="anticheat_snooze_limit_hint">
+        <item quantity="one">After %d time, the only way out is turning it off.</item>
+        <item quantity="other">After %d times, the only way out is turning it off.</item>
+    </plurals>
     <string name="anticheat_missing_overlay">Overlay permission is missing: without it the alarm screen cannot be brought back after pressing Home.</string>
     <string name="anticheat_open_status">View permissions status</string>
     <string name="anticheat_status_title">Anti-cheat status</string>
@@ -334,6 +387,7 @@
     <string name="import_challenges">Challenges: %1$s · difficulty %2$d · %3$d per session</string>
     <string name="import_sound_default">Default sound · volume %1$d %%</string>
     <string name="import_snooze_allowed">Snooze: %1$d min, up to %2$d times</string>
+    <string name="import_snooze_unlimited">Snooze: %1$d min, no limit</string>
     <string name="import_snooze_denied">No snooze</string>
     <string name="import_anticheat">Anti-cheat: %1$s</string>
     <string name="import_error_malformed">This isn\'t a valid ApexApp alarm.</string>

@@ -23,6 +23,8 @@ data class RingUiState(
     val sessionId: String? = null,
     val canDismiss: Boolean = false,
     val canSnooze: Boolean = false,
+    /** Posposiciones que quedan; `null` si no hay límite. */
+    val snoozesLeft: Int? = null,
     /** Sesión de retos que hay que superar antes de poder apagar; `null` si se puede apagar ya. */
     val challenges: SessionConfig? = null,
     val finished: Boolean = false,
@@ -57,6 +59,7 @@ class RingViewModel @Inject constructor(
                         alarm = alarm,
                         canDismiss = canDismiss,
                         canSnooze = canSnooze(alarm),
+                        snoozesLeft = snoozesLeft(alarm),
                         challenges = if (canDismiss) null else challengesOf(alarm),
                     )
                 }
@@ -83,6 +86,9 @@ class RingViewModel @Inject constructor(
 
     private fun canSnooze(alarm: Alarm): Boolean =
         sessionId != null && snoozeController.canSnooze(RingingSession(sessionId, alarm))
+
+    private fun snoozesLeft(alarm: Alarm): Int? =
+        sessionId?.let { snoozeController.remaining(RingingSession(it, alarm)) }
 
     /** Pospone la alarma: la sesión continúa cuando vuelva a sonar. */
     fun snooze() {
