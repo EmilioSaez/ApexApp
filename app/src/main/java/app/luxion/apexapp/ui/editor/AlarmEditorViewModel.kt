@@ -92,6 +92,8 @@ class AlarmEditorViewModel @Inject constructor(
         it.copy(repeatDays = if (day in it.repeatDays) it.repeatDays - day else it.repeatDays + day)
     }
 
+    fun setDays(days: Set<DayOfWeek>) = _uiState.update { it.copy(repeatDays = days) }
+
     /** Guarda con la hora elegida en el selector; conserva el resto de campos de una alarma existente. */
     fun save(hour: Int, minute: Int) {
         val state = _uiState.value

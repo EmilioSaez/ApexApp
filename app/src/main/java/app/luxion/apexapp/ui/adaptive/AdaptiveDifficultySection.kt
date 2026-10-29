@@ -58,8 +58,8 @@ fun AdaptiveDifficultyContent(
             modifier = Modifier.fillMaxWidth()) {
             Text(
                 stringResource(R.string.adaptive_title),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Switch(checked = state.enabled, onCheckedChange = onEnabled, enabled = state.available)
         }

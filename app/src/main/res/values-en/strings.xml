@@ -8,8 +8,17 @@
     <string name="home_empty_hint">Create an alarm to get started.</string>
     <string name="home_nav_alarms">Alarms</string>
     <string name="home_next_in">Rings in %1$s</string>
+    <string name="home_next_label">Next alarm · %1$s</string>
+    <string name="home_remaining">%1$s left</string>
+    <string name="home_day_today">Today</string>
+    <string name="home_day_tomorrow">Tomorrow</string>
+    <string name="home_row_no_challenges">No challenges</string>
+    <string name="home_row_disabled">Off</string>
+    <plurals name="home_challenge_count">
+        <item quantity="one">%d challenge</item>
+        <item quantity="other">%d challenges</item>
+    </plurals>
     <string name="home_scheduled">Scheduled alarms</string>
-    <string name="home_challenge_line">Challenge: %1$s</string>
     <string name="home_settings">Settings</string>
     <string name="home_add_alarm">New alarm</string>
     <string name="permission_notifications_missing">Notifications are off: the alarm might not show.</string>
@@ -367,4 +376,13 @@
     <string name="tap_targets_timeout">Time\'s up. Try again.</string>
     <string name="tap_targets_rejected">Invalid touch</string>
     <string name="tap_targets_area_description">Play area: %1$d circles left to tap</string>
+    <string name="editor_shortcut_all">All</string>
+    <string name="editor_shortcut_weekdays">Weekdays</string>
+    <string name="editor_shortcut_weekend">Weekend</string>
+    <string name="challenge_editor_title">How to turn it off</string>
+    <plurals name="challenge_editor_summary">
+        <item quantity="one">%1$d challenge to turn it off</item>
+        <item quantity="other">%1$d chained challenges to turn it off</item>
+    </plurals>
+    <string name="challenge_editor_summary_random">%1$d random challenges to turn it off</string>
 </resources>

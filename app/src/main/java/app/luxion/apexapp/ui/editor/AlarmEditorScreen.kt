@@ -29,6 +29,7 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -89,6 +90,7 @@ fun AlarmEditorScreen(onBack: () -> Unit, onShare: (Long) -> Unit = {}, viewMode
         onShare = { onShare(state.draft.id) },
         onLabelChange = viewModel::setLabel,
         onToggleDay = viewModel::toggleDay,
+        onSetDays = viewModel::setDays,
         saveEnabled = viewModel.canSave(state),
         extraContent = {
             viewModel.sections.forEach { it.Content(state.draft, viewModel::updateDraft) }
@@ -107,6 +109,7 @@ fun AlarmEditorContent(
     onBack: () -> Unit,
     onLabelChange: (String) -> Unit,
     onToggleDay: (DayOfWeek) -> Unit,
+    onSetDays: (Set<DayOfWeek>) -> Unit = {},
     saveEnabled: Boolean = true,
     is24Hour: Boolean = DateFormat.is24HourFormat(LocalContext.current),
     onShare: (() -> Unit)? = null,
@@ -122,21 +125,20 @@ fun AlarmEditorContent(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            Box(
+            Row(
                 Modifier.fillMaxWidth().statusBarsPadding().padding(horizontal = ApexTheme.spacing.sm),
-                contentAlignment = Alignment.Center,
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart).size(56.dp)) {
+                IconButton(onClick = onBack, modifier = Modifier.size(56.dp)) {
                     Icon(painterResource(R.drawable.ic_close), contentDescription = stringResource(R.string.back))
                 }
                 Text(
                     stringResource(if (state.isNew) R.string.editor_title else R.string.editor_title_edit),
+                    modifier = Modifier.weight(1f),
                     style = MaterialTheme.typography.titleLarge,
                 )
                 if (!state.isNew && onShare != null) {
-                    TextButton(onClick = onShare, modifier = Modifier.align(Alignment.CenterEnd)) {
-                        Text(stringResource(R.string.share_open))
-                    }
+                    TextButton(onClick = onShare) { Text(stringResource(R.string.share_open)) }
                 }
             }
         },
@@ -166,19 +168,19 @@ fun AlarmEditorContent(
         Column(
             Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState())
                 .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.sm),
-            verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
+            verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xxl),
         ) {
             TimeCard(hour, minute, { h, m -> hour = h; minute = m }, state.repeatDays, is24Hour)
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
                 EditorHeader(stringResource(R.string.editor_repeat))
+                DayShortcuts(state.repeatDays, onSetDays)
                 DayToggles(state.repeatDays, onToggleDay)
             }
             Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
-                EditorHeader(stringResource(R.string.editor_params))
+                EditorHeader(stringResource(R.string.editor_label))
                 OutlinedTextField(
                     value = state.label,
                     onValueChange = onLabelChange,
-                    label = { Text(stringResource(R.string.editor_label)) },
                     singleLine = true,
                     shape = MaterialTheme.shapes.small,
                     modifier = Modifier.fillMaxWidth(),
@@ -244,6 +246,36 @@ private fun TimeCard(hour: Int, minute: Int, onTimeChange: (Int, Int) -> Unit, r
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
+        }
+    }
+}
+
+/** Atajos de repetición: el que coincide con la selección lleva borde de acento. */
+@Composable
+private fun DayShortcuts(days: Set<DayOfWeek>, onSet: (Set<DayOfWeek>) -> Unit) {
+    val weekdays = DayOfWeek.entries.take(5).toSet()
+    val weekend = DayOfWeek.entries.drop(5).toSet()
+    val shortcuts = listOf(
+        stringResource(R.string.editor_shortcut_all) to DayOfWeek.entries.toSet(),
+        stringResource(R.string.editor_shortcut_weekdays) to weekdays,
+        stringResource(R.string.editor_shortcut_weekend) to weekend,
+    )
+    Row(horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
+        shortcuts.forEach { (label, set) ->
+            val active = days == set
+            OutlinedButton(
+                onClick = { onSet(set) },
+                modifier = Modifier.defaultMinSize(minHeight = 40.dp),
+                shape = MaterialTheme.shapes.small,
+                border = BorderStroke(1.dp, if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant),
+                contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = ApexTheme.spacing.md),
+            ) {
+                Text(
+                    label,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = if (active) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

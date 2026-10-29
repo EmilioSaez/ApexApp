@@ -6,6 +6,7 @@ import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -54,9 +55,11 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
@@ -88,6 +91,7 @@ import java.time.Duration
 import java.time.ZonedDateTime
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.math.tan
 import kotlinx.coroutines.delay
 
 @Composable
@@ -220,6 +224,7 @@ private fun AlarmList(
                 modifier = Modifier.padding(top = ApexTheme.spacing.xl, bottom = ApexTheme.spacing.sm),
             )
         }
+        item(key = "header-divider") { HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant) }
         items(alarms, key = { it.id }) { alarm ->
             AlarmRow(alarm, onToggle, onEdit, onDelete)
             HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
@@ -245,7 +250,7 @@ private fun NextAlarmCard(alarm: Alarm, remaining: Duration) {
     ) {
         Column(Modifier.padding(ApexTheme.spacing.xl), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
             Text(
-                stringResource(R.string.home_next_in, remainingLabel(remaining)).uppercase(),
+                stringResource(R.string.home_next_label, nextDayLabel(remaining)).uppercase(),
                 style = MaterialTheme.typography.labelMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -254,25 +259,82 @@ private fun NextAlarmCard(alarm: Alarm, remaining: Duration) {
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.primary,
             )
-            val details = listOfNotNull(alarm.label?.takeIf { it.isNotBlank() }, challengeLine(alarm)).joinToString(" · ")
-            if (details.isNotEmpty()) {
-                Text(details, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Row(
+                Modifier.padding(top = ApexTheme.spacing.sm),
+                horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                SlopeProgress(progress = nightProgress(remaining))
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        stringResource(R.string.home_remaining, remainingLabel(remaining)),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onSurface,
+                    )
+                    val details = listOfNotNull(alarm.label?.takeIf { it.isNotBlank() }, challengeCountLabel(alarm)).joinToString(" · ")
+                    if (details.isNotEmpty()) {
+                        Text(details, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
+                }
             }
         }
     }
 }
 
+/** Ladera a 26° con la roca subiendo según se acerca la alarma; el tramo recorrido va en acento. */
 @Composable
-private fun challengeLine(alarm: Alarm): String? =
-    challengeTypesLabel(alarm.challenges)?.let { stringResource(R.string.home_challenge_line, it) }
+private fun SlopeProgress(progress: Float) {
+    val done = MaterialTheme.colorScheme.primary
+    val rest = MaterialTheme.colorScheme.outlineVariant
+    Canvas(Modifier.size(SlopeWidth, SlopeHeight)) {
+        val inset = 8.dp.toPx()
+        val width = size.width - 2 * inset
+        val start = Offset(inset, size.height - inset)
+        val end = Offset(inset + width, size.height - inset - width * tan(SlopeRadians))
+        val rock = Offset(start.x + (end.x - start.x) * progress, start.y + (end.y - start.y) * progress)
+        val stroke = 2.dp.toPx()
+        drawLine(rest, rock, end, strokeWidth = stroke, cap = StrokeCap.Round)
+        drawLine(done, start, rock, strokeWidth = stroke, cap = StrokeCap.Round)
+        drawCircle(done, radius = 7.dp.toPx(), center = Offset(rock.x, rock.y - 7.dp.toPx()))
+    }
+}
+
+/** Fracción de la noche recorrida; se supone una ventana de [NightWindowHours] antes de que suene. */
+internal fun nightProgress(remaining: Duration): Float =
+    (1f - remaining.toMinutes().toFloat() / (NightWindowHours * 60)).coerceIn(0f, 1f)
+
+@Composable
+private fun nextDayLabel(remaining: Duration): String {
+    val today = ZonedDateTime.now(Clock.systemDefaultZone())
+    val date = today.plus(remaining).toLocalDate()
+    return when (date) {
+        today.toLocalDate() -> stringResource(R.string.home_day_today)
+        today.toLocalDate().plusDays(1) -> stringResource(R.string.home_day_tomorrow)
+        else -> date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
+    }
+}
+
+/** «2 retos» si la alarma tiene retos; `null` si es normal. */
+@Composable
+private fun challengeCountLabel(alarm: Alarm): String? =
+    alarm.challenges.takeIf { it.challenges.isNotEmpty() }
+        ?.let { pluralStringResource(R.plurals.home_challenge_count, it.count, it.count) }
+
+/** Cola de la línea de detalle de la fila: tipos de reto, «Sin retos» o «Desactivada». */
+@Composable
+private fun rowDetail(alarm: Alarm): String = when {
+    !alarm.enabled -> stringResource(R.string.home_row_disabled)
+    else -> challengeTypesLabel(alarm.challenges) ?: stringResource(R.string.home_row_no_challenges)
+}
 
 @Composable
 private fun AddAlarmButton(onClick: () -> Unit) {
+    HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
     Button(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.lg)
+            .padding(horizontal = ApexTheme.spacing.screen, vertical = ApexTheme.spacing.md)
             .defaultMinSize(minHeight = 56.dp),
         shape = MaterialTheme.shapes.small,
         colors = ButtonDefaults.buttonColors(
@@ -350,7 +412,12 @@ private fun HomeTopBar(onOpenSettings: () -> Unit) {
         Modifier.fillMaxWidth().padding(start = ApexTheme.spacing.screen, end = ApexTheme.spacing.sm),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(painterResource(R.drawable.ic_alarm), contentDescription = null, tint = MaterialTheme.colorScheme.primary)
+        Icon(
+            painterResource(R.drawable.ic_launcher_monochrome),
+            contentDescription = null,
+            modifier = Modifier.size(28.dp),
+            tint = MaterialTheme.colorScheme.primary,
+        )
         Text(
             stringResource(R.string.home_wordmark),
             modifier = Modifier.padding(start = ApexTheme.spacing.md).weight(1f),
@@ -371,8 +438,12 @@ private fun Banner(message: String, action: String, onAction: () -> Unit) {
         color = MaterialTheme.colorScheme.errorContainer,
         contentColor = MaterialTheme.colorScheme.onErrorContainer,
     ) {
-        Column(Modifier.padding(ApexTheme.spacing.lg), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
-            Text(message, style = MaterialTheme.typography.bodyMedium)
+        Row(
+            Modifier.padding(start = ApexTheme.spacing.lg, top = ApexTheme.spacing.sm, end = ApexTheme.spacing.sm, bottom = ApexTheme.spacing.sm),
+            horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(message, modifier = Modifier.weight(1f), style = MaterialTheme.typography.bodyMedium)
             TextButton(onClick = onAction, colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.onErrorContainer)) {
                 Text(action, style = MaterialTheme.typography.labelLarge)
             }
@@ -418,15 +489,12 @@ private fun AlarmRow(
             verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs),
         ) {
             Row(horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md), verticalAlignment = Alignment.CenterVertically) {
-                Row(
-                    Modifier.weight(1f).alpha(if (alarm.enabled) 1f else DisabledAlpha),
-                    horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md),
-                ) {
+                Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
                     Text(
                         "%02d:%02d".format(alarm.hour, alarm.minute),
                         modifier = Modifier.alignByBaseline(),
                         style = MaterialTheme.typography.headlineLarge,
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = if (alarm.enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     alarm.label?.takeIf { it.isNotBlank() }?.let {
                         Text(
@@ -439,23 +507,17 @@ private fun AlarmRow(
                 }
                 Switch(checked = alarm.enabled, onCheckedChange = { onToggle(alarm.id, it) })
             }
-            FlowRow(
-                Modifier.fillMaxWidth().alpha(if (alarm.enabled) 1f else DisabledAlpha),
-                horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.lg),
-                verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs),
-            ) {
-                DayLetters(alarm.repeatDays)
-                challengeLine(alarm)?.let {
-                    Text(it, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
-                }
+            FlowRow(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
+                DayLetters(alarm.repeatDays, alarm.enabled)
+                Text(" · " + rowDetail(alarm), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
 }
 
-/** Siete letras (L M X J V S D): las del repetido, en acento; las demás, atenuadas. Sin repetir, "Una vez". */
+/** Siete letras (L M X J V S D): las del repetido, en acento (apagada, en onSurfaceVariant); las demás, atenuadas. Sin repetir, "Una vez". */
 @Composable
-private fun DayLetters(days: Set<DayOfWeek>) {
+private fun DayLetters(days: Set<DayOfWeek>, enabled: Boolean) {
     if (days.isEmpty()) {
         Text(stringResource(R.string.alarm_once), style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
         return
@@ -466,7 +528,11 @@ private fun DayLetters(days: Set<DayOfWeek>) {
             Text(
                 day.getDisplayName(TextStyle.NARROW, Locale.getDefault()),
                 style = MaterialTheme.typography.labelLarge.copy(fontWeight = if (on) FontWeight.SemiBold else FontWeight.Normal),
-                color = if (on) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outline,
+                color = when {
+                    !on -> MaterialTheme.colorScheme.outline
+                    enabled -> MaterialTheme.colorScheme.primary
+                    else -> MaterialTheme.colorScheme.onSurfaceVariant
+                },
             )
         }
     }
@@ -481,7 +547,10 @@ internal fun daysSummary(days: Set<DayOfWeek>): String = when {
         .joinToString(" ") { it.getDisplayName(TextStyle.SHORT, Locale.getDefault()) }
 }
 
-private const val DisabledAlpha = 0.5f
+private const val NightWindowHours = 12
+private val SlopeWidth = 124.dp
+private val SlopeHeight = 60.dp
+private val SlopeRadians = Math.toRadians(26.0).toFloat()
 private const val MinuteMillis = 60_000L
 internal const val NextAlarmTag = "next_alarm"
 internal const val AlarmRowTag = "alarm_row_"

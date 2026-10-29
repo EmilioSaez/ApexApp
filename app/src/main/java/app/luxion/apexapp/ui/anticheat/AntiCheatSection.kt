@@ -4,12 +4,14 @@ import androidx.annotation.StringRes
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.FilterChip
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
@@ -32,6 +34,7 @@ import app.luxion.apexapp.ui.theme.ApexAppTheme
 import app.luxion.apexapp.ui.theme.ApexTheme
 
 /** Controles del editor de alarma: nivel anti-trampas y política de snooze. */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AntiCheatSection(
     policy: AntiCheatPolicy,
@@ -42,14 +45,13 @@ fun AntiCheatSection(
 ) {
     Column(modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
         SectionHeader(stringResource(R.string.anticheat_section), horizontalPadding = 0.dp)
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm)) {
-            AntiCheatLevel.entries.forEach { level ->
-                FilterChip(
+        SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth()) {
+            AntiCheatLevel.entries.forEachIndexed { index, level ->
+                SegmentedButton(
                     selected = policy.level == level,
                     onClick = { onChange(policy.copy(level = level)) },
-                    shape = MaterialTheme.shapes.small,
-                    label = { Text(stringResource(level.labelRes())) },
-                )
+                    shape = SegmentedButtonDefaults.itemShape(index, AntiCheatLevel.entries.size, MaterialTheme.shapes.small),
+                ) { Text(stringResource(level.labelRes())) }
             }
         }
         Text(

@@ -9,8 +9,17 @@
     <string name="home_wordmark" translatable="false">APEX</string>
     <string name="home_nav_alarms">Alarmas</string>
     <string name="home_next_in">Suena en %1$s</string>
+    <string name="home_next_label">Próxima alarma · %1$s</string>
+    <string name="home_remaining">Faltan %1$s</string>
+    <string name="home_day_today">Hoy</string>
+    <string name="home_day_tomorrow">Mañana</string>
+    <string name="home_row_no_challenges">Sin retos</string>
+    <string name="home_row_disabled">Desactivada</string>
+    <plurals name="home_challenge_count">
+        <item quantity="one">%d reto</item>
+        <item quantity="other">%d retos</item>
+    </plurals>
     <string name="home_scheduled">Alarmas programadas</string>
-    <string name="home_challenge_line">Reto: %1$s</string>
     <string name="home_settings">Ajustes</string>
     <string name="home_add_alarm">Nueva alarma</string>
     <string name="permission_notifications_missing">Las notificaciones están desactivadas: la alarma podría no mostrarse.</string>
@@ -368,4 +377,13 @@
     <string name="tap_targets_timeout">Tiempo agotado. Otra vez.</string>
     <string name="tap_targets_rejected">Toque no válido</string>
     <string name="tap_targets_area_description">Zona de juego: quedan %1$d círculos por tocar</string>
+    <string name="editor_shortcut_all">Todos</string>
+    <string name="editor_shortcut_weekdays">Laborables</string>
+    <string name="editor_shortcut_weekend">Fin de semana</string>
+    <string name="challenge_editor_title">Cómo apagarla</string>
+    <plurals name="challenge_editor_summary">
+        <item quantity="one">%1$d reto hasta apagarla</item>
+        <item quantity="other">%1$d retos encadenados hasta apagarla</item>
+    </plurals>
+    <string name="challenge_editor_summary_random">%1$d retos al azar hasta apagarla</string>
 </resources>
