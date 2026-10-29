@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -91,6 +94,7 @@ private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<I
     var failedFlash by remember(instance) { mutableStateOf(false) }
     var rejected by remember(instance) { mutableStateOf(false) }
     var solved by remember(instance) { mutableStateOf(false) }
+    var attempt by remember(instance) { mutableIntStateOf(1) }
 
     LaunchedEffect(failedFlash) {
         if (failedFlash) {
@@ -103,18 +107,41 @@ private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<I
     }
 
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md)) {
-        val message = when {
-            rejected -> R.string.challenge_maze_rejected
-            wrong -> R.string.challenge_maze_wrong
-            else -> R.string.challenge_maze_hint
+        Column(verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs)) {
+            Text(stringResource(R.string.challenge_maze_title), style = MaterialTheme.typography.titleMedium)
+            if (wrong || rejected) {
+                Text(
+                    stringResource(if (rejected) R.string.challenge_maze_rejected else R.string.challenge_maze_wrong),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.errorContainer, MaterialTheme.shapes.small)
+                        .padding(horizontal = ApexTheme.spacing.md, vertical = ApexTheme.spacing.sm),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onErrorContainer,
+                )
+            } else {
+                Text(
+                    stringResource(R.string.challenge_maze_hint),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
-        Text(
-            stringResource(message),
-            modifier = Modifier.fillMaxWidth(),
-            style = MaterialTheme.typography.titleMedium,
-            color = if (rejected || wrong) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.Start,
-        )
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                stringResource(R.string.challenge_maze_attempt, attempt),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.xs + 2.dp)) {
+                Box(Modifier.size(16.dp, 3.dp).background(MaterialTheme.colorScheme.tertiary))
+                Text(
+                    stringResource(R.string.challenge_maze_exit),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
         BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
             val size = MazeSize(maze.cols, maze.rows)
             val cellDp = MazeLayout.cellDp(maxWidth.value, AvailableHeightDp, size)
@@ -173,6 +200,7 @@ private fun MazeContent(instance: MazeInstance, wrong: Boolean, onTrace: (List<I
                                             val cells = tracker.trace
                                             tracker.reset()
                                             failedFlash = true
+                                            attempt++
                                             answer(cells)
                                         }
                                         TraceStatus.REACHED_EXIT -> {

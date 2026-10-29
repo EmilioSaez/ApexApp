@@ -211,8 +211,10 @@
     </plurals>
 
     <string name="challenge_type_maze">Laberinto</string>
-    <string name="challenge_maze_hint">Traza una línea desde la alarma hasta la bandera sin tocar las paredes</string>
-    <string name="challenge_maze_wrong">Has tocado una pared. Empieza de nuevo desde la alarma.</string>
+    <string name="challenge_maze_title">Lleva la alarma hasta la salida</string>
+    <string name="challenge_maze_hint">Traza sin levantar el dedo. Si tocas un muro, vuelves a empezar.</string>
+    <string name="challenge_maze_attempt">Intento %d</string>
+    <string name="challenge_maze_wrong">Has tocado un muro. Empieza de nuevo desde la alarma.</string>
     <string name="challenge_maze_rejected">Toque no válido. Usa el dedo sobre la pantalla.</string>
     <string name="challenge_maze_area_description">Laberinto: arrastra el dedo desde la alarma hasta la salida</string>
     <string name="challenge_maze_start">Entrada</string>
