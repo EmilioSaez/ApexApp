@@ -240,20 +240,27 @@
     <string name="voice_repeat_every">Repetir cada %1$d s</string>
     <string name="voice_speak_time">Leer la hora</string>
     <string name="ring_snooze">Posponer %1$d min</string>
-    <string name="ring_snooze_exhausted">Sin posposiciones restantes</string>
-    <plurals name="ring_snoozes_left">
-        <item quantity="one">%d restante</item>
-        <item quantity="other">%d restantes</item>
+    <plurals name="ring_snooze_with_left">
+        <item quantity="one">Posponer %1$d min · queda %2$d</item>
+        <item quantity="other">Posponer %1$d min · quedan %2$d</item>
     </plurals>
+    <string name="ring_snooze_exhausted_title">Sin posposiciones</string>
+    <string name="ring_snooze_exhausted_body">Ya la has pospuesto %1$d de %1$d veces.</string>
     <string name="anticheat_section">Anti-trampas</string>
     <string name="anticheat_level_off">Desactivado</string>
     <string name="anticheat_level_standard">Estándar</string>
     <string name="anticheat_level_hint_off">La alarma se puede descartar sin restricciones.</string>
     <string name="anticheat_level_hint_standard">Pantalla completa, sin salir con Atrás o Home y volumen al máximo.</string>
     <string name="anticheat_snooze_allowed">Permitir posponer</string>
-    <string name="anticheat_snooze_minutes">Minutos: %1$d</string>
-    <string name="anticheat_snooze_unlimited">Sin límite de veces</string>
-    <string name="anticheat_snooze_max">Máximo de veces: %1$d</string>
+    <string name="anticheat_snooze_section">Posponer</string>
+    <string name="anticheat_snooze_duration">Duración</string>
+    <string name="anticheat_snooze_minutes_option">%1$d min</string>
+    <string name="anticheat_snooze_limit">Límite de veces</string>
+    <string name="anticheat_snooze_unlimited">Sin límite</string>
+    <plurals name="anticheat_snooze_limit_hint">
+        <item quantity="one">Después de %d vez solo queda apagarla.</item>
+        <item quantity="other">Después de %d veces solo queda apagarla.</item>
+    </plurals>
     <string name="anticheat_missing_overlay">Falta el permiso de superposición: sin él no se puede recuperar la pantalla al pulsar Home.</string>
     <string name="anticheat_open_status">Ver estado de permisos</string>
     <string name="anticheat_status_title">Estado anti-trampas</string>

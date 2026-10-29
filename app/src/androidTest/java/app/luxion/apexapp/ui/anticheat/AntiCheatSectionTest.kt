@@ -53,11 +53,11 @@ class AntiCheatSectionTest {
     @Test
     fun snoozeControls_appearOnlyWhenAllowed() {
         val policy = show()
-        compose.onNodeWithText(str(R.string.anticheat_snooze_minutes, 5)).assertDoesNotExist()
+        compose.onNodeWithText(str(R.string.anticheat_snooze_duration)).assertDoesNotExist()
         compose.onNodeWithText(str(R.string.anticheat_snooze_allowed)).performClick()
         assertTrue(policy().snooze.allowed)
-        compose.onNodeWithText(str(R.string.anticheat_snooze_minutes, 5)).assertExists()
-        compose.onNodeWithText(str(R.string.anticheat_snooze_max, 3)).assertExists()
+        compose.onNodeWithText(str(R.string.anticheat_snooze_duration)).assertExists()
+        compose.onNodeWithText(str(R.string.anticheat_snooze_limit)).assertExists()
     }
 
     @Test

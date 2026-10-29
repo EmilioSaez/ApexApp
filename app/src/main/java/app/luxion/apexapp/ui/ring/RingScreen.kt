@@ -2,6 +2,7 @@ package app.luxion.apexapp.ui.ring
 
 import android.content.res.Configuration
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.ui.unit.dp
 import app.luxion.apexapp.R
 import app.luxion.apexapp.domain.Alarm
 import app.luxion.apexapp.domain.AntiCheatLevel
@@ -99,7 +101,7 @@ fun RingChallenges(
     }
 }
 
-/** Botón de posponer con las posposiciones restantes; agotadas, lo sustituye un aviso. */
+/** Botón de posponer con las posposiciones que quedan; agotadas, lo sustituye un aviso no pulsable. */
 @Composable
 private fun SnoozeActions(
     alarm: Alarm,
@@ -108,29 +110,49 @@ private fun SnoozeActions(
     snoozesLeft: Int?,
     modifier: Modifier = Modifier,
 ) {
-    val exhausted = !canSnooze && alarm.antiCheat.snooze.allowed && snoozesLeft == 0
-    if (!canSnooze && !exhausted) return
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(ApexTheme.spacing.sm), horizontalAlignment = Alignment.CenterHorizontally) {
-        if (canSnooze) SnoozeButton(alarm, onSnooze, Modifier.fillMaxWidth())
-        val note = when {
-            exhausted -> stringResource(R.string.ring_snooze_exhausted)
-            snoozesLeft != null -> pluralStringResource(R.plurals.ring_snoozes_left, snoozesLeft, snoozesLeft)
-            else -> null
-        }
-        if (note != null) {
-            Text(note, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        }
+    val snooze = alarm.antiCheat.snooze
+    when {
+        canSnooze -> SnoozeButton(snooze.minutes, snoozesLeft, onSnooze, modifier)
+        snooze.allowed && snoozesLeft == 0 -> SnoozeExhausted(snooze.maxCount, modifier)
     }
 }
 
 @Composable
-private fun SnoozeButton(alarm: Alarm, onSnooze: () -> Unit, modifier: Modifier = Modifier) {
+private fun SnoozeButton(minutes: Int, snoozesLeft: Int?, onSnooze: () -> Unit, modifier: Modifier = Modifier) {
     OutlinedButton(
         onClick = onSnooze,
         modifier = modifier.defaultMinSize(minHeight = ApexTheme.spacing.xxxl),
         shape = MaterialTheme.shapes.small,
     ) {
-        Text(stringResource(R.string.ring_snooze, alarm.antiCheat.snooze.minutes), style = MaterialTheme.typography.labelLarge)
+        val text = if (snoozesLeft == null) {
+            stringResource(R.string.ring_snooze, minutes)
+        } else {
+            pluralStringResource(R.plurals.ring_snooze_with_left, snoozesLeft, minutes, snoozesLeft)
+        }
+        Text(text, style = MaterialTheme.typography.labelLarge)
+    }
+}
+
+@Composable
+private fun SnoozeExhausted(done: Int, modifier: Modifier = Modifier) {
+    Row(
+        modifier
+            .defaultMinSize(minHeight = 56.dp)
+            .background(MaterialTheme.colorScheme.surfaceContainerLow, MaterialTheme.shapes.small)
+            .border(1.dp, MaterialTheme.colorScheme.outlineVariant, MaterialTheme.shapes.small)
+            .padding(horizontal = ApexTheme.spacing.lg, vertical = ApexTheme.spacing.md),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(ApexTheme.spacing.md),
+    ) {
+        Icon(painterResource(R.drawable.ic_snooze), contentDescription = null, Modifier.size(20.dp), tint = MaterialTheme.colorScheme.onSurface)
+        Column {
+            Text(stringResource(R.string.ring_snooze_exhausted_title), style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.onSurface)
+            Text(
+                stringResource(R.string.ring_snooze_exhausted_body, done),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
     }
 }
 

@@ -239,20 +239,27 @@
     <string name="voice_repeat_every">Repeat every %1$d s</string>
     <string name="voice_speak_time">Speak the time</string>
     <string name="ring_snooze">Snooze %1$d min</string>
-    <string name="ring_snooze_exhausted">No snoozes left</string>
-    <plurals name="ring_snoozes_left">
-        <item quantity="one">%d left</item>
-        <item quantity="other">%d left</item>
+    <plurals name="ring_snooze_with_left">
+        <item quantity="one">Snooze %1$d min · %2$d left</item>
+        <item quantity="other">Snooze %1$d min · %2$d left</item>
     </plurals>
+    <string name="ring_snooze_exhausted_title">No snoozes left</string>
+    <string name="ring_snooze_exhausted_body">You have already snoozed %1$d of %1$d times.</string>
     <string name="anticheat_section">Anti-cheat</string>
     <string name="anticheat_level_off">Off</string>
     <string name="anticheat_level_standard">Standard</string>
     <string name="anticheat_level_hint_off">The alarm can be dismissed without restrictions.</string>
     <string name="anticheat_level_hint_standard">Full screen, no leaving with Back or Home, and volume at maximum.</string>
     <string name="anticheat_snooze_allowed">Allow snooze</string>
-    <string name="anticheat_snooze_minutes">Minutes: %1$d</string>
-    <string name="anticheat_snooze_unlimited">No limit on times</string>
-    <string name="anticheat_snooze_max">Maximum times: %1$d</string>
+    <string name="anticheat_snooze_section">Snooze</string>
+    <string name="anticheat_snooze_duration">Duration</string>
+    <string name="anticheat_snooze_minutes_option">%1$d min</string>
+    <string name="anticheat_snooze_limit">Number of times</string>
+    <string name="anticheat_snooze_unlimited">No limit</string>
+    <plurals name="anticheat_snooze_limit_hint">
+        <item quantity="one">After %d time, the only way out is turning it off.</item>
+        <item quantity="other">After %d times, the only way out is turning it off.</item>
+    </plurals>
     <string name="anticheat_missing_overlay">Overlay permission is missing: without it the alarm screen cannot be brought back after pressing Home.</string>
     <string name="anticheat_open_status">View permissions status</string>
     <string name="anticheat_status_title">Anti-cheat status</string>
