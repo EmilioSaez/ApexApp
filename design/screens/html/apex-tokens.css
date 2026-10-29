@@ -1,0 +1,98 @@
+/* ApexApp — tokens de ui/theme (Color.kt, Type.kt, Shape.kt, Spacing.kt). Oscuro por defecto; claro con <html data-theme="light">. */
+@font-face { font-family: "Sora"; src: url("../../../app/src/main/res/font/sora.ttf") format("truetype"); font-weight: 100 800; font-style: normal; font-display: swap; }
+@font-face { font-family: "Inter"; src: url("../../../app/src/main/res/font/inter.ttf") format("truetype"); font-weight: 100 900; font-style: normal; font-display: swap; }
+:root, [data-theme="dark"] {
+  --primary: #ff4d4f;
+  --on-primary: #3a0004;
+  --primary-container: #8c1218;
+  --on-primary-container: #ffdad8;
+  --secondary: #bdbdbd;
+  --on-secondary: #1a1a1a;
+  --secondary-container: #2a2a2a;
+  --on-secondary-container: #ededed;
+  --tertiary: #5bd68a;
+  --on-tertiary: #00391b;
+  --tertiary-container: #14522e;
+  --on-tertiary-container: #b6f2cb;
+  --error: #ffb454;
+  --on-error: #4a2a00;
+  --error-container: #5c3a0e;
+  --on-error-container: #ffe0b8;
+  --background: #0b0b0b;
+  --on-background: #ededed;
+  --surface: #0b0b0b;
+  --on-surface: #ededed;
+  --surface-variant: #2a2a2a;
+  --on-surface-variant: #a8a8a8;
+  --surface-container-lowest: #000000;
+  --surface-container-low: #141414;
+  --surface-container: #1a1a1a;
+  --surface-container-high: #222222;
+  --surface-container-highest: #2a2a2a;
+  --outline: #7a7a7a;
+  --outline-variant: #383838;
+  --inverse-surface: #ededed;
+  --inverse-on-surface: #0b0b0b;
+  --inverse-primary: #c4161c;
+}
+[data-theme="light"] {
+  --primary: #c4161c;
+  --on-primary: #ffffff;
+  --primary-container: #ffdad8;
+  --on-primary-container: #3a0004;
+  --secondary: #4a4a4a;
+  --on-secondary: #ffffff;
+  --secondary-container: #e0dcdc;
+  --on-secondary-container: #0b0b0b;
+  --tertiary: #1b7a43;
+  --on-tertiary: #ffffff;
+  --tertiary-container: #b6f2cb;
+  --on-tertiary-container: #00210f;
+  --error: #9a5b00;
+  --on-error: #ffffff;
+  --error-container: #ffddb0;
+  --on-error-container: #2e1a00;
+  --background: #f7f5f5;
+  --on-background: #0b0b0b;
+  --surface: #f7f5f5;
+  --on-surface: #0b0b0b;
+  --surface-variant: #e0dcdc;
+  --on-surface-variant: #4a4a4a;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f1eeee;
+  --surface-container: #eae6e6;
+  --surface-container-high: #e4e0e0;
+  --surface-container-highest: #e0dcdc;
+  --outline: #6e6a6a;
+  --outline-variant: #cac5c5;
+  --inverse-surface: #2a2a2a;
+  --inverse-on-surface: #f1eeee;
+  --inverse-primary: #ff4d4f;
+}
+:root {
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+  --space-xxxl: 48px;
+  --space-screen: 20px;
+  --radius: 4px;
+  --touch-min: 48px;
+  --action-height: 56px;
+  --hairline: 1px;
+  --slope-angle: 26deg;
+  --font-display: "Sora", system-ui, sans-serif;
+  --font-text: "Inter", system-ui, sans-serif;
+}
+.display-large { font-family: var(--font-display); font-size: 88px; line-height: 92px; font-weight: 400; letter-spacing: -3px; }
+.display-medium { font-family: var(--font-display); font-size: 56px; line-height: 60px; font-weight: 400; letter-spacing: -2px; }
+.headline-large { font-family: var(--font-display); font-size: 32px; line-height: 36px; font-weight: 600; letter-spacing: -1px; }
+.title-large { font-family: var(--font-display); font-size: 24px; line-height: 30px; font-weight: 500; letter-spacing: -0.5px; }
+.title-medium { font-family: var(--font-text); font-size: 16px; line-height: 22px; font-weight: 600; }
+.body-large { font-family: var(--font-text); font-size: 16px; line-height: 24px; font-weight: 400; }
+.body-medium { font-family: var(--font-text); font-size: 14px; line-height: 20px; font-weight: 400; }
+.label-large { font-family: var(--font-text); font-size: 14px; line-height: 20px; font-weight: 500; }
+.label-medium { font-family: var(--font-text); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 1.2px; }
+.label-small { font-family: var(--font-text); font-size: 12px; line-height: 16px; font-weight: 500; }
