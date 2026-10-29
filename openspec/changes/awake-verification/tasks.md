@@ -1,26 +1,28 @@
 ## 1. Dominio y datos
 
-- [ ] 1.1 `Alarm.awakeVerification`, `AlarmEntity.awakeVerificationEnabled`, mapeo (compartir queda fuera de alcance)
-- [ ] 1.2 `ApexDatabase` versión 8, `MIGRATION_7_8`, registro en `DataModule`, esquema 8.json y test de migración
-- [ ] 1.3 `WakeEventType.VERIFIED` y `VERIFICATION_FAILED`
+- [x] 1.1 `Alarm.awakeVerification`, `AlarmEntity.awakeVerificationEnabled`, mapeo (compartir queda fuera de alcance)
+- [x] 1.2 `ApexDatabase` versión 8, `MIGRATION_7_8`, registro en `DataModule`, esquema 8.json
+- [ ] 1.2b Test instrumentado de migración 7→8 (requiere 7.json: pendiente de fusionar el change que crea la versión 7)
+- [x] 1.3 `WakeEventType.VERIFIED` y `VERIFICATION_FAILED`
 
 ## 2. Lógica y planificación
 
-- [ ] 2.1 `AwakeVerificationPolicy` (plazos, restauración tras reinicio) con tests
-- [ ] 2.2 `AwakeVerifier` + puertos (gateway, notifier, store) con tests: resolver, aviso, confirmar, plazo, repetición, borrar/desactivar, notificaciones bloqueadas, restauración
-- [ ] 2.3 `AlarmFiringHandler.ringAgain` con tests
-- [ ] 2.4 Integración en `AlarmController` (cancelar), `AlarmReceiver` (disparo regular cancela) y `BootReceiver` (restaurar)
+- [x] 2.1 `AwakeVerificationPolicy` (plazos, restauración tras reinicio) con tests
+- [x] 2.2 `AwakeVerifier` + puertos (gateway, notifier, store) con tests: resolver, aviso, confirmar, plazo, repetición, borrar/desactivar, notificaciones bloqueadas, restauración
+- [x] 2.3 `AlarmFiringHandler.ringAgain` con tests
+- [x] 2.4 Integración en `AlarmController` (cancelar), `AlarmReceiver` (disparo regular cancela) y `BootReceiver` (restaurar)
 
 ## 3. Android
 
-- [ ] 3.1 Gateway con `setAlarmClock`, `AwakeVerificationReceiver` (aviso/plazo/confirmar) y registro en el manifiesto
-- [ ] 3.2 Notificación (canal `awake_verification`, acción «Estoy despierto») y bindings Hilt
+- [x] 3.1 Gateway con `setAlarmClock`, `AwakeVerificationReceiver` (aviso/plazo/confirmar) y registro en el manifiesto
+- [x] 3.2 Notificación (canal `awake_verification`, acción «Estoy despierto») y bindings Hilt
 
 ## 4. UI
 
-- [ ] 4.1 `AwakeVerificationEditorSection` según el diseño de `diseno-retos-mejoras`, strings es/en
+- [x] 4.1 `AwakeVerificationEditorSection` según el diseño de `diseno-retos-mejoras`, strings es/en
 
 ## 5. Verificación
 
-- [ ] 5.1 `./gradlew assembleDebug` y tests unitarios en verde
-- [ ] 5.2 Prueba en emulador del flujo completo
+- [x] 5.1 `./gradlew assembleDebug` y tests unitarios en verde
+- [x] 5.2 Arranque en emulador sin fallos (instala y abre)
+- [ ] 5.3 Prueba manual del flujo completo (aviso, confirmar, nuevo sonado, reinicio)
