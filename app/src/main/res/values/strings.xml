@@ -205,6 +205,17 @@
         <item quantity="other">Secuencia con esta dificultad: %d casillas</item>
     </plurals>
 
+    <string name="challenge_type_maze">Laberinto</string>
+    <string name="challenge_maze_title">Lleva la alarma hasta la salida</string>
+    <string name="challenge_maze_hint">Traza sin levantar el dedo. Si tocas un muro, vuelves a empezar.</string>
+    <string name="challenge_maze_attempt">Intento %d</string>
+    <string name="challenge_maze_wrong">Has tocado un muro. Empieza de nuevo desde la alarma.</string>
+    <string name="challenge_maze_rejected">Toque no válido. Usa el dedo sobre la pantalla.</string>
+    <string name="challenge_maze_area_description">Laberinto: arrastra el dedo desde la alarma hasta la salida</string>
+    <string name="challenge_maze_start">Entrada</string>
+    <string name="challenge_maze_exit">Salida</string>
+    <string name="challenge_maze_level_info">Laberinto con esta dificultad: %1$d × %2$d casillas</string>
+
     <string name="challenge_type_shapes">Secuencia de formas</string>
     <string name="challenge_shapes_watch">Memoriza las formas</string>
     <string name="challenge_shapes_repeat">Elígelas en el mismo orden</string>
