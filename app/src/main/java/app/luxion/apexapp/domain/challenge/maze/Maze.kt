@@ -3,6 +3,14 @@ package app.luxion.apexapp.domain.challenge.maze
 import app.luxion.apexapp.domain.challenge.SessionConfig
 import kotlin.random.Random
 
+/** Dirección de un deslizamiento: norte arriba, oeste a la izquierda. */
+enum class MazeDirection(val dCol: Int, val dRow: Int) {
+    NORTH(0, -1),
+    SOUTH(0, 1),
+    WEST(-1, 0),
+    EAST(1, 0),
+}
+
 /** Tamaño del laberinto en celdas. */
 data class MazeSize(val cols: Int, val rows: Int)
 
@@ -25,17 +33,11 @@ object MazeLevels {
         SIZE_BY_LEVEL[level.coerceIn(SessionConfig.MIN_DIFFICULTY, SessionConfig.MAX_DIFFICULTY) - SessionConfig.MIN_DIFFICULTY]
 }
 
-/**
- * Medidas físicas del laberinto. Con celda de 40 dp y pared de 4 dp el pasillo libre mide 36 dp: el trazo sigue
- * el centro del dedo (no su huella, de unos 48 dp), así que sobran ±18 dp de margen para un pulso medio dormido.
- */
+/** Medidas físicas del laberinto. Con celda de 40 dp y pared de 4 dp el pasillo libre mide 36 dp. */
 object MazeLayout {
     const val MIN_CELL_DP = 40f
     const val MAX_CELL_DP = 64f
     const val WALL_DP = 4f
-
-    /** Pared en unidades de celda. */
-    fun wallThickness(cellDp: Float): Float = WALL_DP / cellDp
 
     /** Lado de celda que cabe en [availableWidthDp] y [availableHeightDp], nunca menor que [MIN_CELL_DP]. */
     fun cellDp(availableWidthDp: Float, availableHeightDp: Float, size: MazeSize): Float =
@@ -102,6 +104,27 @@ class Maze private constructor(
         if (col(cell) < cols - 1 && openRight[cell]) add(cell + 1)
         if (row(cell) > 0 && openDown[cell - cols]) add(cell - cols)
         if (row(cell) < rows - 1 && openDown[cell]) add(cell + cols)
+    }
+
+    /** Celda contigua a [cell] en [direction] si no hay pared entre ambas; null si la hay. */
+    fun step(cell: Int, direction: MazeDirection): Int? {
+        val c = col(cell) + direction.dCol
+        val r = row(cell) + direction.dRow
+        if (c !in 0 until cols || r !in 0 until rows) return null
+        val next = r * cols + c
+        return next.takeIf { isOpen(cell, it) }
+    }
+
+    /**
+     * Celdas que recorre una ficha que parte de [from] y se desliza en [direction] hasta chocar con un muro (sin
+     * incluir [from]). Se detiene al llegar a [exit]. Vacía si hay un muro justo delante.
+     */
+    fun slide(from: Int, direction: MazeDirection): List<Int> = buildList {
+        var cell = from
+        while (cell != exit) {
+            cell = step(cell, direction) ?: break
+            add(cell)
+        }
     }
 
     /** Segmento de pared entre vértices de la malla, en unidades de celda. */

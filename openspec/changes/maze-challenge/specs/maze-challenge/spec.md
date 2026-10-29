@@ -2,32 +2,28 @@
 
 ## Purpose
 
-Define el reto del laberinto: el usuario debe trazar con el dedo una línea continua desde la entrada hasta la salida de un laberinto sin tocar las paredes, como forma de comprobar que está despierto y con pulso firme.
+Define el reto del laberinto: el usuario debe llevar una ficha con el icono de alarma desde la entrada hasta la salida de un laberinto haciendo swipes en las cuatro direcciones, como forma de comprobar que está despierto y atento.
 
 ## ADDED Requirements
 
 ### Requirement: Reto de recorrer un laberinto
-El sistema SHALL ofrecer el tipo de reto "laberinto", que muestra un laberinto con una única solución, un icono de alarma en la entrada y una salida, y se supera cuando el usuario traza con el dedo una línea continua de la entrada a la salida.
+El sistema SHALL ofrecer el tipo de reto "laberinto", que muestra un laberinto con una única solución, una ficha con el icono de alarma en la entrada y una salida, y se supera cuando la ficha llega a la salida mediante swipes del usuario.
 
 #### Scenario: Recorrido correcto
-- **WHEN** el usuario apoya el dedo en el icono de alarma y lo arrastra sin soltar ni tocar paredes hasta la salida
+- **WHEN** el usuario hace swipes que llevan la ficha hasta la salida
 - **THEN** el reto se supera
 
-#### Scenario: Apoyar fuera de la entrada
-- **WHEN** el usuario apoya el dedo en cualquier punto distinto de la celda de entrada
-- **THEN** no se inicia ningún trazo y no cuenta como fallo
+#### Scenario: Deslizar hasta un muro
+- **WHEN** el usuario hace un swipe norte, sur, oeste o este
+- **THEN** la ficha se mueve animada, celda a celda, en esa dirección hasta tener un muro delante o llegar a la salida
 
-#### Scenario: Tocar una pared
-- **WHEN** el trazo toca una pared o sale del laberinto
-- **THEN** el trazo se borra, el intento cuenta como fallido, se avisa al usuario y el mismo laberinto queda listo para empezar de nuevo desde la entrada
+#### Scenario: Swipe contra un muro
+- **WHEN** hay un muro inmediatamente delante de la ficha en la dirección del swipe
+- **THEN** la ficha no se mueve y no cuenta como fallo
 
-#### Scenario: Movimiento rápido
-- **WHEN** el dedo se mueve tan deprisa que entre dos eventos táctiles cruzaría una pared
-- **THEN** se detecta el choque igual que si se hubiera rozado
-
-#### Scenario: Soltar el dedo antes de llegar
-- **WHEN** el usuario levanta el dedo antes de alcanzar la salida
-- **THEN** el trazo se borra sin contar como intento fallido y el usuario debe volver a empezar desde la entrada
+#### Scenario: Swipe durante la animación
+- **WHEN** el usuario hace un swipe mientras la ficha aún se está moviendo
+- **THEN** el swipe se ignora
 
 ### Requirement: Laberinto determinista con solución única
 El sistema SHALL generar el laberinto a partir de una semilla de modo que la misma semilla y tamaño produzcan siempre el mismo laberinto, sin ciclos y con un único camino entre la entrada y la salida, y SHALL generar uno nuevo e independiente cada vez que se crea una instancia del reto.
@@ -39,10 +35,6 @@ El sistema SHALL generar el laberinto a partir de una semilla de modo que la mis
 #### Scenario: Solución única
 - **WHEN** se genera un laberinto
 - **THEN** todas las celdas son alcanzables desde la entrada y solo existe un camino sin repeticiones hasta la salida
-
-#### Scenario: Reintento tras fallo
-- **WHEN** el usuario toca una pared y empieza otro intento
-- **THEN** el laberinto es el mismo que en el intento anterior
 
 ### Requirement: Dificultad y tamaño del laberinto
 El sistema SHALL determinar el tamaño del laberinto únicamente a partir del nivel de dificultad (1..5) efectivo de la sesión mediante una tabla única, de modo que un nivel mayor nunca produzca un laberinto con menos celdas.
@@ -78,15 +70,15 @@ El sistema SHALL tratar el reto del laberinto como siempre disponible, sin reque
 - **THEN** el reto del laberinto sigue estando disponible y seleccionable en el editor
 
 ### Requirement: Entrada táctil fiable y anti-trampas
-El sistema SHALL consumir los eventos del puntero del laberinto para que el desplazamiento de la pantalla no interrumpa el trazo, y SHALL aplicar la política anti-trampas táctil de la alarma al apoyo inicial del dedo.
+El sistema SHALL consumir los eventos del puntero del laberinto para que el desplazamiento de la pantalla no interrumpa el swipe, y SHALL aplicar la política anti-trampas táctil de la alarma al apoyo inicial del dedo.
 
-#### Scenario: Arrastre dentro de una pantalla desplazable
-- **WHEN** el usuario arrastra verticalmente sobre el laberinto
-- **THEN** el gesto traza la línea y no desplaza la pantalla
+#### Scenario: Swipe dentro de una pantalla desplazable
+- **WHEN** el usuario desliza verticalmente sobre el laberinto
+- **THEN** el gesto mueve la ficha y no desplaza la pantalla
 
 #### Scenario: Toque rechazado por anti-trampas
 - **WHEN** el nivel anti-trampas es estándar y el apoyo inicial no procede de la pantalla táctil o la ventana está tapada
-- **THEN** el trazo no se inicia y se avisa al usuario
+- **THEN** el swipe no se procesa y se avisa al usuario
 
 ### Requirement: Selección y compartición del tipo
 El sistema SHALL permitir añadir el reto del laberinto a una alarma desde el editor de retos y mostrarlo con nombre localizado en las listas y en la importación de alarmas compartidas.

@@ -3,6 +3,7 @@ package app.luxion.apexapp.domain.challenge.maze
 import app.luxion.apexapp.domain.challenge.ChallengeAnswer
 import app.luxion.apexapp.domain.challenge.ChallengeType
 import app.luxion.apexapp.domain.challenge.MazeTrace
+import app.luxion.apexapp.ui.challenge.swipeDirection
 import kotlin.random.Random
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -13,10 +14,6 @@ import org.junit.Test
 
 class MazeTest {
     private fun maze(seed: Long = 7, cols: Int = 6, rows: Int = 7) = Maze.generate(cols, rows, seed)
-
-    private fun centerX(maze: Maze, cell: Int) = maze.col(cell) + 0.5f
-
-    private fun centerY(maze: Maze, cell: Int) = maze.row(cell) + 0.5f
 
     @Test
     fun sameSeedSameMaze() {
@@ -72,70 +69,70 @@ class MazeTest {
         assertEquals(50f, MazeLayout.cellDp(350f, 600f, MazeSize(7, 9)), 0.001f)
     }
 
+    private fun direction(m: Maze, from: Int, to: Int) =
+        MazeDirection.entries.first { it.dCol == m.col(to) - m.col(from) && it.dRow == m.row(to) - m.row(from) }
+
     @Test
-    fun followingTheSolutionReachesExit() {
+    fun stepIsNullAgainstWallsAndBorder() {
         val m = maze()
-        val tracker = MazeTracker(m, 0.1f)
-        assertTrue(tracker.begin(centerX(m, m.start), centerY(m, m.start)))
-        var status: TraceStatus? = null
-        m.solution.drop(1).forEach { status = tracker.move(centerX(m, it), centerY(m, it)) }
-        assertEquals(TraceStatus.REACHED_EXIT, status)
-        assertEquals(m.solution, tracker.trace)
-        assertTrue(MazeInstanceFor(m).check(MazeTrace(MazeChallenge.TYPE, tracker.trace)))
+        assertNull(m.step(m.start, MazeDirection.NORTH))
+        assertNull(m.step(m.start, MazeDirection.WEST))
+        (0 until m.cellCount).forEach { cell ->
+            MazeDirection.entries.forEach { d ->
+                val next = m.step(cell, d)
+                if (next != null) {
+                    assertTrue(m.isOpen(cell, next))
+                    assertEquals(d.dCol, m.col(next) - m.col(cell))
+                    assertEquals(d.dRow, m.row(next) - m.row(cell))
+                }
+            }
+        }
     }
 
     @Test
-    fun fastMoveThroughWallsIsCaught() {
+    fun slideStopsAtWallAndReturnsEmptyWhenBlocked() {
         val m = maze()
-        val tracker = MazeTracker(m, 0.1f)
-        tracker.begin(centerX(m, m.start), centerY(m, m.start))
-        // Salto en línea recta a una celda que el camino no une directamente: cruza paredes.
-        val far = (0 until m.cellCount).first { m.col(it) == m.cols - 1 && m.row(it) == 0 && it != m.exit }
-        assertEquals(TraceStatus.HIT_WALL, tracker.move(centerX(m, far), centerY(m, far)))
+        (0 until m.cellCount).filter { it != m.exit }.forEach { cell ->
+            MazeDirection.entries.forEach { d ->
+                val path = m.slide(cell, d)
+                // Cada paso es contiguo y abierto, y tras el último hay muro (o es la salida).
+                (listOf(cell) + path).zipWithNext().forEach { (a, b) ->
+                    assertTrue(m.isOpen(a, b))
+                    assertEquals(d, direction(m, a, b))
+                }
+                val last = path.lastOrNull() ?: cell
+                assertTrue(last == m.exit || m.step(last, d) == null)
+            }
+        }
+        assertTrue(m.slide(m.start, MazeDirection.NORTH).isEmpty())
     }
 
     @Test
-    fun hittingBorderEndsTraceUntilNewBegin() {
+    fun slideStopsOnExit() {
         val m = maze()
-        val tracker = MazeTracker(m, 0.1f)
-        tracker.begin(0.5f, 0.5f)
-        assertEquals(TraceStatus.HIT_WALL, tracker.move(-0.3f, 0.5f))
-        assertFalse(tracker.active)
-        assertEquals(TraceStatus.HIT_WALL, tracker.move(0.5f, 0.5f))
-        assertTrue(tracker.begin(0.5f, 0.5f))
-        assertTrue(tracker.active)
+        val beforeExit = m.solution[m.solution.size - 2]
+        val d = direction(m, beforeExit, m.exit)
+        assertEquals(listOf(m.exit), m.slide(beforeExit, d))
+        // Desde la salida no se mueve.
+        MazeDirection.entries.forEach { assertTrue(m.slide(m.exit, it).isEmpty()) }
     }
 
     @Test
-    fun crossingClosedWallFailsButMovingInsideCellDoesNot() {
-        val m = maze()
-        val closed = listOf(1, m.cols).first { !m.isOpen(m.start, it) }
-        val tracker = MazeTracker(m, 0.1f)
-        tracker.begin(0.5f, 0.5f)
-        assertEquals(TraceStatus.TRACING, tracker.move(0.3f, 0.3f))
-        assertEquals(TraceStatus.HIT_WALL, tracker.move(centerX(m, closed), centerY(m, closed)))
+    fun slideTowardsSolutionFirstStepIsSolutionCell() {
+        repeat(30) { seed ->
+            val m = maze(seed.toLong())
+            val path = m.slide(m.start, direction(m, m.start, m.solution[1]))
+            assertEquals(m.solution[1], path.first())
+        }
     }
 
     @Test
-    fun beginOutsideStartCellOrOnWallIsIgnored() {
-        val m = maze()
-        val tracker = MazeTracker(m, 0.1f)
-        assertFalse(tracker.begin(centerX(m, m.exit), centerY(m, m.exit)))
-        assertFalse(tracker.active)
-        // El borde exterior (x = 0) es pared.
-        assertFalse(tracker.begin(0.02f, 0.5f))
-        assertNull(tracker.status)
-    }
-
-    @Test
-    fun resetDiscardsTrace() {
-        val m = maze()
-        val tracker = MazeTracker(m, 0.1f)
-        tracker.begin(0.5f, 0.5f)
-        tracker.reset()
-        assertFalse(tracker.active)
-        assertTrue(tracker.trace.isEmpty())
-        assertNull(tracker.move(0.6f, 0.6f))
+    fun swipeDirectionPicksDominantAxisAboveThreshold() {
+        assertNull(swipeDirection(10f, -10f, 24f))
+        assertEquals(MazeDirection.EAST, swipeDirection(40f, 10f, 24f))
+        assertEquals(MazeDirection.WEST, swipeDirection(-40f, 10f, 24f))
+        assertEquals(MazeDirection.SOUTH, swipeDirection(5f, 30f, 24f))
+        assertEquals(MazeDirection.NORTH, swipeDirection(5f, -30f, 24f))
     }
 
     @Test
