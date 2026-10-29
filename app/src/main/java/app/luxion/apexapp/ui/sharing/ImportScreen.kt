@@ -247,6 +247,8 @@ private fun challengeLabelRes(type: String): Int? = when (type) {
     FlappyChallenge.TYPE.id -> R.string.challenge_type_flappy
     "memory" -> R.string.challenge_type_memory
     "grid_memory" -> R.string.challenge_type_grid_memory
+    "maze" -> R.string.challenge_type_maze
+    "shapes" -> R.string.challenge_type_shapes
     else -> null
 }
 

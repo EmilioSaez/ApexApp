@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=360">
+<title>ApexApp · Notificación · verificar que estoy despierto</title>
+<link rel="stylesheet" href="apex-tokens.css">
+<link rel="stylesheet" href="apex-ui.css">
+</head>
+<body>
+<div class="screen" style="min-height: 800px">
+<div style="flex: 1; display: flex; flex-direction: column; background: var(--surface-container-lowest); padding: 48px 12px 24px">
+  <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 32px">
+    <div class="t-display-l" style="color: var(--on-surface)">06:50</div>
+    <div class="t-body-l muted">martes, 3 de noviembre</div>
+  </div>
+  <article aria-label="Notificación de ApexApp" style="background: var(--surface-container-high); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 4px">
+    <div style="display: flex; align-items: center; gap: 8px; color: var(--on-surface-variant)">
+      <span style="width: 24px; height: 24px; border-radius: 50%; background: var(--primary); color: var(--on-primary); display: inline-flex; align-items: center; justify-content: center"><svg viewBox="0 0 108 108" width="18" height="18" aria-hidden="true" style="fill: currentColor"><path d="M0,97.9L108,45.3L108,108L0,108Z"/><path d="M30.6,83L33.5,64.2L40,53L48.9,50.7M44.6,76.1L42.9,67L33.5,64.2" stroke="currentColor" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/><circle cx="39.3" cy="46" r="4.2"/><circle cx="55.5" cy="34.2" r="3.8"/><circle cx="70.1" cy="34.2" r="3.8"/><path fill-rule="evenodd" d="M47.8,50.6a15,15 0 1 0 30,0a15,15 0 1 0 -30,0Z M51.8,50.6a11,11 0 1 0 22,0a11,11 0 1 0 -22,0Z"/><path d="M55.9,50.3L62.8,50.6L59.5,42.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg></span>
+      <span class="t-body-m">ApexApp · ahora</span>
+    </div>
+    <span class="t-title-m" style="color: var(--on-surface); margin-top: 4px">¿Sigues despierto?</span>
+    <span class="t-body-m muted">Confírmalo antes de 2 min o la alarma volverá a sonar.</span>
+    <div style="display: flex; justify-content: flex-end; margin-top: 4px">
+      <button class="btn-text" style="font-weight: 600">Estoy despierto</button>
+    </div>
+  </article>
+  <p class="t-body-m muted center" style="margin: 16px 8px 0">Pantalla de bloqueo del sistema: la notificación la dibuja Android con su propio estilo; aquí se fija solo el contenido.</p>
+</div>
+</div>
+</body>
+</html>

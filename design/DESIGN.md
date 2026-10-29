@@ -46,3 +46,26 @@ Capturas en `design/screens/*.png` y HTML en `design/screens/html/*.html`. Las v
 
 Son guía de composición, no especificación pixel a pixel: p. ej. la barra inferior (Alarmas / Retos / Historial)
 que propone Stitch en la lista no forma parte de ningún change.
+
+## Pantallas sin Stitch (retos nuevos y mejoras de alarma)
+
+El acento vigente es el rojo de `ui/theme/Color.kt` (`#FF4D4F` oscuro / `#C4161C` claro), no el naranja de Stitch.
+Éxito = `tertiary` y aviso o fallo = `error` en ámbar. Estas pantallas usan esos tokens directamente
+(`screens/html/apex-tokens.css`) y no tienen id de Stitch. Especificación completa en `README.md`, sección «Retos
+nuevos y mejoras de alarma».
+
+| Pantalla | Archivo |
+|---|---|
+| Secuencia de formas | reto-secuencia-formas, reto-secuencia-formas-observar |
+| Laberinto | reto-laberinto, reto-laberinto-error, reto-laberinto-grande |
+| Memoria de cuadrícula | reto-memoria-cuadricula, reto-memoria-cuadricula-observar, reto-memoria-cuadricula-grande |
+| Editor · silencio, posponer y verificar | editor-silencio-posponer-verificar |
+| Editor · ajustes de cada reto | editor-dificultad-retos |
+| Alarma sonando sin posposiciones | alarma-sonando-sin-posposiciones |
+| Notificación de verificación | notificacion-verificar |
+
+Solo existen en HTML (`screens/html/<archivo>.html` y `-claro`); los PNG quedan pendientes. El margen de 2 min de
+«Estoy despierto» y las cifras de ejemplo de dificultad son supuestos que hay que confirmar con el código real.
+
+El laberinto en oscuro de Stitch (`dde4d599f1004427a0c3442ab8a91b80`, trazo en curso) queda solo como referencia:
+usa la paleta naranja de Stitch y lo sustituye `reto-laberinto`.

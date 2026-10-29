@@ -19,10 +19,16 @@ import app.luxion.apexapp.ui.challenge.FlappyParamsEditor
 import app.luxion.apexapp.domain.challenge.gridmemory.GridMemoryChallenge
 import app.luxion.apexapp.ui.challenge.GridMemoryParamsEditor
 import app.luxion.apexapp.ui.challenge.GridMemoryRenderer
+import app.luxion.apexapp.domain.challenge.maze.MazeChallenge
+import app.luxion.apexapp.ui.challenge.MazeParamsEditor
+import app.luxion.apexapp.ui.challenge.MazeRenderer
 import app.luxion.apexapp.ui.challenge.MemoryParamsEditor
 import app.luxion.apexapp.ui.challenge.MemoryRenderer
 import app.luxion.apexapp.domain.challenge.memory.MemoryChallenge
+import app.luxion.apexapp.domain.challenge.shapes.ShapeSequenceChallenge
 import app.luxion.apexapp.ui.challenge.QrParamsEditor
+import app.luxion.apexapp.ui.challenge.ShapeSequenceParamsEditor
+import app.luxion.apexapp.ui.challenge.ShapeSequenceRenderer
 import app.luxion.apexapp.ui.challenge.ShakeParamsEditor
 import app.luxion.apexapp.ui.challenge.StepsParamsEditor
 import app.luxion.apexapp.ui.challenge.rhythm.RhythmParamsEditor
@@ -35,7 +41,6 @@ import app.luxion.apexapp.ui.challenge.StepsRenderer
 import app.luxion.apexapp.domain.challenge.holdrelease.HoldReleaseChallenge
 import app.luxion.apexapp.domain.challenge.flappy.FlappyChallenge
 import app.luxion.apexapp.domain.challenge.qr.QrChallenge
-import app.luxion.apexapp.ui.challenge.HoldReleaseParamsEditor
 import app.luxion.apexapp.ui.challenge.HoldReleaseRenderer
 import app.luxion.apexapp.domain.challenge.DeviceCapabilities
 import app.luxion.apexapp.domain.challenge.sensor.MotionSensors
@@ -147,6 +152,18 @@ interface ChallengeModule {
 
     @Binds
     @IntoSet
+    fun shapeSequence(impl: ShapeSequenceChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun shapeSequenceRenderer(impl: ShapeSequenceRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun shapeSequenceEditor(impl: ShapeSequenceParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
     fun flappyEditor(impl: FlappyParamsEditor): ChallengeParamsEditor
 
     @Binds
@@ -156,10 +173,6 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun holdReleaseRenderer(impl: HoldReleaseRenderer): ChallengeRenderer
-
-    @Binds
-    @IntoSet
-    fun holdReleaseEditor(impl: HoldReleaseParamsEditor): ChallengeParamsEditor
 
     @Binds
     @IntoSet
@@ -196,6 +209,18 @@ interface ChallengeModule {
     @Binds
     @IntoSet
     fun gridMemoryEditor(impl: GridMemoryParamsEditor): ChallengeParamsEditor
+
+    @Binds
+    @IntoSet
+    fun maze(impl: MazeChallenge): Challenge
+
+    @Binds
+    @IntoSet
+    fun mazeRenderer(impl: MazeRenderer): ChallengeRenderer
+
+    @Binds
+    @IntoSet
+    fun mazeEditor(impl: MazeParamsEditor): ChallengeParamsEditor
 
     @Binds
     fun deviceCapabilities(impl: AndroidDeviceCapabilities): DeviceCapabilities

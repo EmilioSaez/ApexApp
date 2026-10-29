@@ -181,11 +181,6 @@
     <string name="challenge_holdrelease_early">Released too soon. A round was added.</string>
     <string name="challenge_holdrelease_late">Released too late. A round was added.</string>
     <string name="challenge_holdrelease_cancelled">The press was interrupted.</string>
-    <string name="challenge_holdrelease_estimate">Estimated duration: about %d s</string>
-    <plurals name="challenge_holdrelease_rounds">
-        <item quantity="one">%d round</item>
-        <item quantity="other">%d rounds</item>
-    </plurals>
     <string name="challenge_type_flappy">Flappy Bird</string>
     <plurals name="challenge_flappy_prompt">
         <item quantity="one">Pass %d pipe without crashing</item>
@@ -220,6 +215,38 @@
     <plurals name="challenge_target_info_grid_memory">
         <item quantity="one">%1$d×%2$d board with %3$d square to remember</item>
         <item quantity="other">%1$d×%2$d board with %3$d squares to remember</item>
+    </plurals>
+
+    <string name="challenge_type_maze">Maze</string>
+    <string name="challenge_maze_title">Take the alarm to the exit</string>
+    <string name="challenge_maze_hint">Trace without lifting your finger. Touch a wall and you start over.</string>
+    <string name="challenge_maze_attempt">Attempt %d</string>
+    <string name="challenge_maze_wrong">You touched a wall. Start again from the alarm.</string>
+    <string name="challenge_maze_rejected">Invalid touch. Use your finger on the screen.</string>
+    <string name="challenge_maze_area_description">Maze: drag your finger from the alarm to the exit</string>
+    <string name="challenge_maze_start">Start</string>
+    <string name="challenge_maze_exit">Exit</string>
+    <string name="challenge_maze_level_info">Maze at this difficulty: %1$d × %2$d cells</string>
+
+    <string name="challenge_type_shapes">Shape sequence</string>
+    <string name="challenge_shapes_watch">Memorize the shapes</string>
+    <string name="challenge_shapes_repeat">Pick them in the same order</string>
+    <string name="challenge_shapes_wrong">Wrong order. Watch again.</string>
+    <string name="challenge_shapes_showing">Shape: %s</string>
+    <string name="challenge_shapes_progress_watch">Shape %1$d of %2$d</string>
+    <string name="challenge_shapes_progress_repeat">%1$d of %2$d</string>
+    <string name="challenge_shapes_your_sequence">Your sequence</string>
+    <string name="challenge_shapes_next_slot">Next</string>
+    <string name="challenge_shapes_delete_last">Delete last</string>
+    <string name="challenge_shape_circle">Circle</string>
+    <string name="challenge_shape_square">Square</string>
+    <string name="challenge_shape_triangle">Triangle</string>
+    <string name="challenge_shape_cross">Cross</string>
+    <string name="challenge_shape_hexagon">Hexagon</string>
+    <string name="challenge_shape_diamond">Diamond</string>
+    <plurals name="challenge_target_info_shapes">
+        <item quantity="one">Sequence at this difficulty: %1$d shape out of %2$d different</item>
+        <item quantity="other">Sequence at this difficulty: %1$d shapes out of %2$d different</item>
     </plurals>
 
     <string name="challenge_type_rhythm">Rhythm</string>

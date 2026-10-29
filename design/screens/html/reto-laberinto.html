@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=360">
+<title>ApexApp · Laberinto · trazo en curso</title>
+<link rel="stylesheet" href="apex-tokens.css">
+<link rel="stylesheet" href="apex-ui.css">
+</head>
+<body>
+<div class="screen" style="min-height: 800px">
+<header class="ring-head">
+  <div class="ring-status"><span class="dot" aria-hidden="true"></span><span class="lbl t-label-m">Alarma sonando</span><span class="vol t-label-m"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/></svg>80%</span></div>
+  <div class="t-display-m" style="color: var(--on-surface); margin-top: 8px">06:30</div>
+  <div class="t-body-l muted">Gimnasio</div>
+</header>
+<main class="session">
+<div class="session-top">
+  <div class="progress-row"><span class="t-label-l" style="color: var(--on-surface)">Reto 2 de 2</span><span class="t-label-l muted">Laberinto</span></div>
+  <div class="segments" aria-hidden="true"><span class="on"></span><span class="on"></span></div>
+</div>
+<div class="prompt"><span class="t-title-m" style="color: var(--on-surface)">Lleva la alarma hasta la salida</span><span class="t-body-m muted">Traza sin levantar el dedo. Si tocas un muro, vuelves a empezar.</span></div>
+<svg class="maze" viewBox="0 0 318 308" width="318" height="308" role="img" aria-label="Laberinto de 8 por 8"><path class="wall" d="M6.0,6.0h37.0 M6.0,6.0v37.0 M6.0,43.0h37.0 M6.0,43.0v37.0 M6.0,80.0v37.0 M6.0,117.0v37.0 M6.0,154.0h37.0 M6.0,154.0v37.0 M6.0,191.0v37.0 M6.0,228.0v37.0 M6.0,265.0h37.0 M6.0,265.0v37.0 M6.0,302.0h37.0 M43.0,6.0h37.0 M43.0,43.0v37.0 M43.0,80.0h37.0 M43.0,117.0h37.0 M43.0,191.0h37.0 M43.0,228.0h37.0 M43.0,302.0h37.0 M80.0,6.0h37.0 M80.0,6.0v37.0 M80.0,43.0h37.0 M80.0,80.0h37.0 M80.0,117.0h37.0 M80.0,117.0v37.0 M80.0,154.0v37.0 M80.0,191.0h37.0 M80.0,228.0v37.0 M80.0,265.0v37.0 M80.0,302.0h37.0 M117.0,6.0h37.0 M117.0,80.0h37.0 M117.0,117.0h37.0 M117.0,154.0h37.0 M117.0,191.0v37.0 M117.0,228.0v37.0 M117.0,265.0h37.0 M117.0,302.0h37.0 M154.0,6.0h37.0 M154.0,43.0v37.0 M154.0,80.0h37.0 M154.0,154.0h37.0 M154.0,191.0h37.0 M154.0,191.0v37.0 M154.0,228.0v37.0 M154.0,302.0h37.0 M191.0,6.0h37.0 M191.0,6.0v37.0 M191.0,43.0h37.0 M191.0,80.0h37.0 M191.0,80.0v37.0 M191.0,117.0v37.0 M191.0,154.0v37.0 M191.0,228.0h37.0 M191.0,228.0v37.0 M191.0,302.0h37.0 M228.0,6.0h37.0 M228.0,80.0h37.0 M228.0,117.0h37.0 M228.0,117.0v37.0 M228.0,154.0v37.0 M228.0,191.0v37.0 M228.0,228.0h37.0 M228.0,265.0h37.0 M228.0,265.0v37.0 M228.0,302.0h37.0 M265.0,6.0h37.0 M302.0,6.0v37.0 M265.0,43.0v37.0 M302.0,43.0v37.0 M302.0,80.0v37.0 M265.0,117.0h37.0 M302.0,117.0v37.0 M265.0,154.0v37.0 M302.0,154.0v37.0 M265.0,191.0v37.0 M302.0,191.0v37.0 M302.0,228.0v37.0 M265.0,302.0h37.0"/><polyline class="trace" points="24.5,24.5 61.5,24.5 61.5,61.5 98.5,61.5 135.5,61.5 135.5,24.5 172.5,24.5 172.5,61.5 209.5,61.5 246.5,61.5 246.5,24.5 283.5,24.5 283.5,61.5 283.5,98.5"/><circle cx="283.5" cy="98.5" r="14.0" fill="none" stroke="var(--primary)" stroke-width="2.5"/><circle cx="283.5" cy="98.5" r="7.0" fill="var(--primary)"/><g aria-label="Inicio: alarma"><circle cx="24.5" cy="24.5" r="13.0" fill="var(--primary)"/><circle cx="24.5" cy="24.5" r="8.1" fill="var(--surface-container-low)"/><path d="M24.5,19.3V24.5h4.5" stroke="var(--on-surface)" stroke-width="1.8" stroke-linecap="round" fill="none"/></g><path d="M296.4,283.5h8m-6,-6l6,6l-6,6" stroke="var(--tertiary)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+<div style="display: flex; justify-content: space-between" class="t-body-m muted"><span>Intento 1</span><span style="display: inline-flex; align-items: center; gap: 6px"><span style="width: 16px; height: 3px; background: var(--tertiary); display: inline-block"></span>Salida</span></div>
+</main>
+<div class="bottom"><button class="btn-outline"><svg class="i" viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px"><circle cx="12" cy="13" r="7.5"/><path d="M9.5 10.5h5l-5 5h5M4 4.5 6.5 2.5M20 4.5l-2.5-2"/></svg>Posponer 5 min · quedan 2</button></div>
+</div>
+</body>
+</html>
