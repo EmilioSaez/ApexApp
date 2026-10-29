@@ -15,7 +15,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SleepPreferencesEntity::class,
         AdaptiveSettingsEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
 )
 abstract class ApexDatabase : RoomDatabase() {
@@ -80,5 +80,13 @@ val MIGRATION_4_5 = object : Migration(4, 5) {
                 "`lastChangeSessionId` TEXT, `noticePending` INTEGER NOT NULL, PRIMARY KEY(`alarmId`), " +
                 "FOREIGN KEY(`alarmId`) REFERENCES `alarms`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)",
         )
+    }
+}
+
+/** v5 → v6: silencio durante los retos por alarma (dos columnas aditivas). */
+val MIGRATION_5_6 = object : Migration(5, 6) {
+    override fun migrate(db: SupportSQLiteDatabase) {
+        db.execSQL("ALTER TABLE alarms ADD COLUMN muteDuringChallenges INTEGER NOT NULL DEFAULT 0")
+        db.execSQL("ALTER TABLE alarms ADD COLUMN muteInactivitySeconds INTEGER NOT NULL DEFAULT 30")
     }
 }
