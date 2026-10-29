@@ -9,15 +9,15 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 /** Formas posibles; el `ordinal` es el identificador que viaja en [ChallengeAnswer.Pattern.taps]. */
-enum class ShapeKind { CIRCLE, SQUARE, TRIANGLE, STAR, DIAMOND }
+enum class ShapeKind { CIRCLE, SQUARE, TRIANGLE, DIAMOND, CROSS, HEXAGON }
 
 /**
  * Longitud de la secuencia, formas distintas y milisegundos por forma en cada nivel (índice 0 = nivel 1). Tabla
- * única: ajustar aquí al calibrar. Longitud 3→7, formas 3→5, 1200→700 ms por forma.
+ * única: ajustar aquí al calibrar. Longitud 3→7, formas 3→6, 1200→700 ms por forma.
  */
 object ShapeSequenceLevels {
     val LENGTH_BY_LEVEL: List<Int> = listOf(3, 4, 5, 6, 7)
-    val DISTINCT_BY_LEVEL: List<Int> = listOf(3, 3, 4, 5, 5)
+    val DISTINCT_BY_LEVEL: List<Int> = listOf(3, 3, 4, 5, 6)
     val SHAPE_MS_BY_LEVEL: List<Long> = listOf(1200L, 1050L, 900L, 800L, 700L)
 
     private fun index(level: Int) =

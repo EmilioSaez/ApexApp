@@ -17,6 +17,10 @@ El sistema SHALL ofrecer el tipo de reto "secuencia de formas", que muestra vari
 - **WHEN** el usuario elige una forma distinta de la que corresponde en esa posición
 - **THEN** el intento falla, se avisa al usuario y se muestra de nuevo la misma secuencia desde el principio
 
+#### Scenario: Borrar la última elección
+- **WHEN** el usuario pulsa «Borrar última» antes de completar la secuencia
+- **THEN** se retira la última forma elegida sin contar como fallo
+
 #### Scenario: Entrada durante la muestra
 - **WHEN** la secuencia se está mostrando
 - **THEN** los toques sobre la paleta se ignoran hasta que termine la muestra

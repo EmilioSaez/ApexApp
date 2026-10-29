@@ -8,7 +8,7 @@
 
 ## 2. UI
 
-- [x] 2.1 `ShapeSequenceRenderer`: fase de muestra (una forma cada vez), fase de elección con paleta, bloqueo de toques durante la muestra y aviso de fallo
+- [x] 2.1 `ShapeSequenceRenderer`: fase de muestra (una forma cada vez), fase de elección con huecos de respuesta, paleta de tres columnas y «Borrar última» (según `design/screens/html/reto-secuencia-formas*.html`), bloqueo de toques durante la muestra y aviso de fallo
 - [x] 2.2 `ShapeSequenceParamsEditor` (solo información de dificultad, sin parámetros propios)
 - [x] 2.3 Bindings en `ChallengeModule` y etiquetas en `ChallengeLabels` e `ImportScreen`
 - [x] 2.4 Strings es/en (nombre, aviso de fallo, nombres de forma para accesibilidad, info de dificultad)

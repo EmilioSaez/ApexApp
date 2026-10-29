@@ -16,8 +16,8 @@ El motor de retos define `Challenge` (fábrica sin estado) y `ChallengeInstance`
 
 ## Decisions
 
-- **Tabla única por nivel** (`ShapeSequenceLevels`): longitud 3→7, formas distintas 3→5 (3, 3, 4, 5, 5) y ms por forma 1200→700. Alternativa descartada: parámetros libres en `params`, que permitirían dejar la alarma en trivial.
-- **Formas como enum** (`ShapeKind`: círculo, cuadrado, triángulo, estrella, rombo) con el `ordinal` como identificador en la respuesta. Se pueden añadir formas al final; reordenarlas cambiaría el significado de las respuestas.
+- **Tabla única por nivel** (`ShapeSequenceLevels`): longitud 3→7, formas distintas 3→6 (3, 3, 4, 5, 6) y ms por forma 1200→700. Alternativa descartada: parámetros libres en `params`, que permitirían dejar la alarma en trivial.
+- **Formas como enum** (`ShapeKind`: círculo, cuadrado, triángulo, rombo, cruz, hexágono) con el `ordinal` como identificador en la respuesta. Se pueden añadir formas al final; reordenarlas cambiaría el significado de las respuestas.
 - **Paleta por instancia**: se eligen al azar `distinct(level)` formas del enum, ordenadas por `ordinal` para que la disposición de la paleta sea estable y no delate la secuencia. La secuencia solo usa formas de la paleta.
 - **Reutilizar `ChallengeAnswer.Pattern`**: `taps` lleva los `ordinal` pulsados; evita tocar la jerarquía sellada y reduce conflictos al fusionar. La instancia compara con la secuencia esperada, así `check` es puro y testeable.
 - **Fallo = misma secuencia**: `keepOnFailure = true`; el estado de la muestra vive en el composable y la instancia solo guarda secuencia, paleta y ritmo.

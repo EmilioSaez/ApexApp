@@ -6,7 +6,7 @@ El reto de memoria con casillas exige recordar posiciones, pero el estímulo es 
 
 ## What Changes
 
-- Nuevo reto **secuencia de formas**: se muestran varias formas (círculo, cuadrado, triángulo, estrella, rombo) una tras otra y el usuario debe elegirlas, de una paleta, en el mismo orden en que salieron.
+- Nuevo reto **secuencia de formas**: se muestran varias formas (círculo, cuadrado, triángulo, rombo, cruz, hexágono) una tras otra y el usuario debe elegirlas, de una paleta, en el mismo orden en que salieron.
 - La dificultad (1..5) fija la longitud de la secuencia, el número de formas distintas de la paleta y el tiempo que se muestra cada forma, desde una tabla única.
 - Un fallo cuenta como intento fallido y repite la misma secuencia, sin pistas.
 - Pantalla de ejecución del reto y editor de parámetros en el editor de alarmas, con el mismo patrón que los demás tipos.
