@@ -112,7 +112,7 @@ class AndroidSnoozeScheduler @Inject constructor(
             0,
             Intent(context, AlarmReceiver::class.java).apply {
                 action = AndroidAlarmClockGateway.ACTION_FIRE
-                data = Uri.parse("apexapp://alarm/$alarmId")
+                data = Uri.parse(AndroidAlarmClockGateway.snoozeData(alarmId))
                 putExtra(AndroidAlarmClockGateway.EXTRA_ALARM_ID, alarmId)
                 putExtra(AndroidAlarmClockGateway.EXTRA_SESSION_ID, sessionId)
             },
