@@ -39,13 +39,21 @@ class AndroidAlarmClockGateway @Inject constructor(
         val intent = Intent(context, AlarmReceiver::class.java).apply {
             action = ACTION_FIRE
             // El data URI hace único el PendingIntent de cada alarma.
-            data = Uri.parse("apexapp://alarm/$alarmId")
+            data = Uri.parse(fireData(alarmId))
             putExtra(EXTRA_ALARM_ID, alarmId)
         }
         return PendingIntent.getBroadcast(context, 0, intent, flags or PendingIntent.FLAG_IMMUTABLE)
     }
 
     companion object {
+        fun fireData(alarmId: Long) = "apexapp://alarm/$alarmId"
+
+        /**
+         * Distinto de [fireData]: `AlarmManager` guarda un solo disparo por `PendingIntent` equivalente
+         * (los extras no cuentan), así que un snooze con el mismo data pisaría la próxima ocurrencia.
+         */
+        fun snoozeData(alarmId: Long) = "apexapp://snooze/$alarmId"
+
         const val ACTION_FIRE = "app.luxion.apexapp.action.FIRE_ALARM"
         const val EXTRA_ALARM_ID = "alarmId"
 
